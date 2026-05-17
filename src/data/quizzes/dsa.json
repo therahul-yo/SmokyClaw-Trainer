@@ -1,0 +1,50 @@
+[
+  {
+    "id": "dsa-q-001",
+    "track": "dsa",
+    "topic": "arrays",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What is the average-case time complexity of accessing an element by index in a Python list?",
+    "options": ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    "answerIndex": 0,
+    "explanation": "Python lists are dynamic arrays backed by contiguous memory. Index access is O(1).",
+    "tags": ["complexity", "fundamentals"]
+  },
+  {
+    "id": "dsa-q-002",
+    "track": "dsa",
+    "topic": "arrays",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What is the worst-case time complexity of `list.insert(0, x)` in Python?",
+    "options": ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    "answerIndex": 2,
+    "explanation": "Inserting at the front requires shifting every element one position right. Use collections.deque for O(1) front-insertions.",
+    "tags": ["complexity", "interview-classic"]
+  },
+  {
+    "id": "dsa-q-003",
+    "track": "dsa",
+    "topic": "sorting",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Which sorting algorithm is used by Python's `sorted()` and `list.sort()`?",
+    "options": ["Quicksort", "Mergesort", "Timsort", "Heapsort"],
+    "answerIndex": 2,
+    "explanation": "Python uses Timsort, a hybrid stable sort that combines mergesort and insertion sort. Average O(n log n), stable.",
+    "tags": ["sorting", "trivia"]
+  },
+  {
+    "id": "dsa-q-004",
+    "track": "dsa",
+    "topic": "hashmap",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What is the average-case lookup time for a Python dict?",
+    "options": ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+    "answerIndex": 0,
+    "explanation": "Python dict is a hash table. Average lookup is O(1); worst case O(n) on hash collisions but this is rare in practice.",
+    "tags": ["complexity"]
+  }
+]

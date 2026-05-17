@@ -1,0 +1,30 @@
+[
+  {
+    "id": "python",
+    "title": "Python",
+    "blurb": "Syntax, data types, OOP, error handling, stdlib — everything TCS NQT and Infosys ask in the programming logic round.",
+    "emoji": "🐍",
+    "topics": ["syntax", "data-types", "control-flow", "functions", "oop", "exceptions", "stdlib"]
+  },
+  {
+    "id": "dsa",
+    "title": "Data Structures & Algorithms",
+    "blurb": "Arrays, strings, recursion, trees, graphs, DP — the patterns that show up in coding rounds.",
+    "emoji": "🧩",
+    "topics": ["arrays", "strings", "hashmap", "recursion", "sorting", "searching", "linkedlist", "stack-queue", "tree", "graph", "dp", "greedy"]
+  },
+  {
+    "id": "sql",
+    "title": "SQL & DBMS",
+    "blurb": "SELECT to transactions: joins, group-by, subqueries, CTEs, indexes, normalization.",
+    "emoji": "🗃️",
+    "topics": ["select", "filtering", "joins", "group-by", "subqueries", "cte", "indexes", "transactions"]
+  },
+  {
+    "id": "aptitude",
+    "title": "Aptitude & Reasoning",
+    "blurb": "Quant + logical + verbal — the section that decides TCS NQT cutoffs.",
+    "emoji": "🧠",
+    "topics": ["quant", "reasoning", "verbal"]
+  }
+]

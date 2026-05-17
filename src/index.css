@@ -1,0 +1,52 @@
+@import "tailwindcss";
+@import "highlight.js/styles/github-dark.css";
+
+@theme {
+  --color-bg: #0b0d10;
+  --color-bg-card: #14181d;
+  --color-bg-card-hover: #1a1f26;
+  --color-border: #232932;
+  --color-text: #e4e6eb;
+  --color-text-dim: #9aa3b2;
+  --color-text-muted: #6b7280;
+  --color-accent: #a78bfa;
+  --color-accent-dim: #7c3aed;
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", Menlo, monospace;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+/* Markdown lesson content */
+.prose-lesson h1 { @apply text-3xl font-bold mt-8 mb-4 text-white; }
+.prose-lesson h2 { @apply text-2xl font-semibold mt-8 mb-3 text-white border-b border-[var(--color-border)] pb-2; }
+.prose-lesson h3 { @apply text-xl font-semibold mt-6 mb-2 text-white; }
+.prose-lesson p  { @apply my-3 leading-7 text-[var(--color-text)]; }
+.prose-lesson ul { @apply list-disc pl-6 my-3 space-y-1; }
+.prose-lesson ol { @apply list-decimal pl-6 my-3 space-y-1; }
+.prose-lesson li { @apply text-[var(--color-text)]; }
+.prose-lesson a  { @apply text-[var(--color-accent)] underline underline-offset-2; }
+.prose-lesson strong { @apply text-white font-semibold; }
+.prose-lesson em { @apply italic; }
+.prose-lesson blockquote { @apply border-l-4 border-[var(--color-accent)] pl-4 my-4 italic text-[var(--color-text-dim)]; }
+.prose-lesson hr { @apply border-[var(--color-border)] my-8; }
+.prose-lesson table { @apply w-full my-4 border-collapse; }
+.prose-lesson th { @apply text-left p-2 border-b border-[var(--color-border)] text-white font-semibold; }
+.prose-lesson td { @apply p-2 border-b border-[var(--color-border)]; }
+.prose-lesson code { @apply px-1.5 py-0.5 rounded bg-[var(--color-bg-card)] text-[var(--color-accent)] text-[0.9em] font-mono; }
+.prose-lesson pre  { @apply my-4 p-4 rounded-lg overflow-x-auto bg-[#0a0d12] border border-[var(--color-border)]; }
+.prose-lesson pre code { @apply bg-transparent text-[var(--color-text)] p-0; }
+
+/* CodeMirror tweaks */
+.cm-editor { border-radius: 0.5rem; }
+.cm-editor.cm-focused { outline: 2px solid var(--color-accent-dim); }

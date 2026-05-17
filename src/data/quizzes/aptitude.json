@@ -1,0 +1,79 @@
+[
+  {
+    "id": "apt-q-001",
+    "track": "aptitude",
+    "topic": "quant",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What is 35% of 280?",
+    "options": ["88", "92", "98", "108"],
+    "answerIndex": 2,
+    "explanation": "35% of 280 = 0.35 × 280 = 98. Mental trick: 10% of 280 = 28, so 35% = 28 × 3.5 = 98.",
+    "tags": ["percentages", "tcs-nqt"]
+  },
+  {
+    "id": "apt-q-002",
+    "track": "aptitude",
+    "topic": "quant",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "A shopkeeper marks up his goods by 40% and gives a 20% discount. What is his profit percent?",
+    "options": ["8%", "12%", "20%", "28%"],
+    "answerIndex": 1,
+    "explanation": "Let CP = 100. MP = 140. SP = 140 × 0.80 = 112. Profit = 12 on CP of 100 = 12%.",
+    "tags": ["percentages", "profit-loss", "tcs-nqt"]
+  },
+  {
+    "id": "apt-q-003",
+    "track": "aptitude",
+    "topic": "quant",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "A's salary is 25% more than B's. By what percent is B's salary less than A's?",
+    "options": ["20%", "25%", "30%", "75%"],
+    "answerIndex": 0,
+    "explanation": "Let B = 100, then A = 125. B is less than A by 25/125 × 100 = 20%. The asymmetry is the trap.",
+    "tags": ["percentages", "ratio", "interview-classic"]
+  },
+  {
+    "id": "apt-q-004",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "If A is the brother of B; B is the sister of C; and C is the father of D, how is A related to D?",
+    "options": ["Brother", "Uncle", "Father", "Grandfather"],
+    "answerIndex": 1,
+    "explanation": "A and B are siblings. B and C are siblings. So A is also C's sibling. C is D's father → A is D's uncle.",
+    "tags": ["blood-relations", "tcs-nqt"]
+  },
+  {
+    "id": "apt-q-005",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Find the next term: 2, 6, 12, 20, 30, ?",
+    "options": ["36", "40", "42", "48"],
+    "answerIndex": 2,
+    "explanation": "Differences are 4, 6, 8, 10, so next difference is 12. 30 + 12 = 42. Pattern: n(n+1) for n=1,2,3...",
+    "tags": ["series", "pattern"]
+  },
+  {
+    "id": "apt-q-006",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Choose the correct sentence:",
+    "options": [
+      "Neither of the boys are coming.",
+      "Neither of the boys is coming.",
+      "Neither of the boy is coming.",
+      "Neither the boys is coming."
+    ],
+    "answerIndex": 1,
+    "explanation": "'Neither' takes singular verb. 'Neither of the boys IS coming.'",
+    "tags": ["grammar", "subject-verb-agreement"]
+  }
+]

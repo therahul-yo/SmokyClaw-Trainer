@@ -1,0 +1,42 @@
+[
+  {
+    "id": "sql-q-001",
+    "track": "sql",
+    "topic": "select",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which clause is used to filter rows in a SELECT statement?",
+    "options": ["HAVING", "WHERE", "FILTER", "GROUP BY"],
+    "answerIndex": 1,
+    "explanation": "WHERE filters rows BEFORE grouping. HAVING filters AFTER grouping (operates on aggregates).",
+    "tags": ["fundamentals"]
+  },
+  {
+    "id": "sql-q-002",
+    "track": "sql",
+    "topic": "select",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which is the correct way to check for NULL in SQL?",
+    "options": ["WHERE x = NULL", "WHERE x == NULL", "WHERE x IS NULL", "WHERE x.isNull()"],
+    "answerIndex": 2,
+    "explanation": "NULL is unknown — equality with NULL is always NULL, not TRUE. Use IS NULL / IS NOT NULL.",
+    "tags": ["null-handling", "interview-classic"]
+  },
+  {
+    "id": "sql-001",
+    "track": "sql",
+    "topic": "select",
+    "type": "sql",
+    "difficulty": "easy",
+    "prompt": "List the names of all employees whose salary is greater than 50000, sorted from highest to lowest salary.",
+    "schema": "employees",
+    "starter": "SELECT name\nFROM employees\nWHERE -- your filter here\nORDER BY -- ...",
+    "expected": {
+      "columns": ["name"],
+      "rows": [["Carol"], ["Alice"]]
+    },
+    "explanation": "WHERE salary > 50000 ORDER BY salary DESC.",
+    "tags": ["select", "tcs-nqt"]
+  }
+]

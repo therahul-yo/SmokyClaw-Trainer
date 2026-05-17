@@ -1,0 +1,151 @@
+[
+  {
+    "id": "py-q-001",
+    "track": "python",
+    "topic": "syntax",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which of the following is a valid Python identifier?",
+    "options": ["1var", "_var", "var-1", "class"],
+    "answerIndex": 1,
+    "explanation": "Identifiers cannot start with a digit (rules out 1var), contain hyphens (var-1), or be reserved keywords (class). _var is valid.",
+    "tags": ["tcs-nqt", "infosys", "fundamentals"]
+  },
+  {
+    "id": "py-q-002",
+    "track": "python",
+    "topic": "syntax",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What is the output of `print(2 ** 3 ** 2)`?",
+    "options": ["64", "512", "12", "TypeError"],
+    "answerIndex": 1,
+    "explanation": "The ** operator is right-associative, so 2 ** 3 ** 2 = 2 ** (3 ** 2) = 2 ** 9 = 512.",
+    "tags": ["tcs-nqt", "operators"]
+  },
+  {
+    "id": "py-q-003",
+    "track": "python",
+    "topic": "syntax",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which of the following is NOT a Python keyword?",
+    "options": ["class", "def", "print", "lambda"],
+    "answerIndex": 2,
+    "explanation": "print is a built-in function, not a keyword. You can reassign it (though you shouldn't).",
+    "tags": ["fundamentals"]
+  },
+  {
+    "id": "py-q-004",
+    "track": "python",
+    "topic": "syntax",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What is the output of `print(bool([]))`?",
+    "options": ["True", "False", "None", "Error"],
+    "answerIndex": 1,
+    "explanation": "Empty containers (list, dict, set, tuple, string) are falsy in Python.",
+    "tags": ["truthiness"]
+  },
+  {
+    "id": "py-q-005",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which data type is mutable in Python?",
+    "options": ["str", "tuple", "list", "frozenset"],
+    "answerIndex": 2,
+    "explanation": "list is mutable. Strings, tuples, and frozensets are immutable.",
+    "tags": ["tcs-nqt", "mutability"]
+  },
+  {
+    "id": "py-q-006",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What is the output of `len({1, 2, 2, 3, 3, 3})`?",
+    "options": ["3", "6", "1", "Error"],
+    "answerIndex": 0,
+    "explanation": "Sets only store unique values, so {1, 2, 3} has length 3.",
+    "tags": ["sets"]
+  },
+  {
+    "id": "py-q-007",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Which of these can be used as a dictionary key?",
+    "options": ["[1, 2]", "{1, 2}", "(1, 2)", "{'a': 1}"],
+    "answerIndex": 2,
+    "explanation": "Dict keys must be hashable. Tuples (of hashable elements) are hashable; lists, sets, and dicts are not.",
+    "tags": ["hashing", "dicts"]
+  },
+  {
+    "id": "py-q-008",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```python\na = [1, 2, 3]\nb = a\nb.append(4)\nprint(a)\n```",
+    "options": ["[1, 2, 3]", "[1, 2, 3, 4]", "[4, 1, 2, 3]", "Error"],
+    "answerIndex": 1,
+    "explanation": "b = a doesn't copy — both names refer to the same list. Mutating through b changes a too. To copy: b = a[:] or b = list(a) or b = a.copy().",
+    "tags": ["tcs-nqt", "references", "aliasing"]
+  },
+  {
+    "id": "py-q-009",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "What is the output?\n\n```python\ndef f(x, lst=[]):\n    lst.append(x)\n    return lst\nprint(f(1))\nprint(f(2))\n```",
+    "options": ["[1]\\n[2]", "[1]\\n[1, 2]", "Error", "[1, 2]\\n[1, 2]"],
+    "answerIndex": 1,
+    "explanation": "Default mutable arguments are created ONCE at function definition. The same list is reused across calls. Use lst=None and create inside instead.",
+    "tags": ["interview-classic", "gotchas"]
+  },
+  {
+    "id": "py-q-010",
+    "track": "python",
+    "topic": "control-flow",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What does `range(2, 8, 2)` produce?",
+    "options": ["[2, 4, 6, 8]", "[2, 4, 6]", "[2, 3, 4, 5, 6, 7]", "[2, 4, 6, 7]"],
+    "answerIndex": 1,
+    "explanation": "range(start, stop, step) is half-open: starts at 2, stops before 8, step 2 → 2, 4, 6.",
+    "tags": ["range", "tcs-nqt"]
+  },
+  {
+    "id": "py-q-011",
+    "track": "python",
+    "topic": "control-flow",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What does the `else` clause on a `for` loop do?",
+    "options": [
+      "Runs every iteration where the condition fails",
+      "Runs only if the loop completes without hitting break",
+      "Runs only if the loop never executes",
+      "Syntax error — for loops cannot have else"
+    ],
+    "answerIndex": 1,
+    "explanation": "The for-else clause runs after the loop ends, ONLY if no break was hit. Confusing but real Python.",
+    "tags": ["interview-classic"]
+  },
+  {
+    "id": "py-q-012",
+    "track": "python",
+    "topic": "control-flow",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What is the output?\n\n```python\nfor i in range(3):\n    for j in range(3):\n        if i == j:\n            continue\n        print(i, j, end=' ')\n```",
+    "options": ["0 1 0 2 1 0 1 2 2 0 2 1", "0 0 0 1 0 2", "0 1 2", "Nothing"],
+    "answerIndex": 0,
+    "explanation": "Outer loop runs i=0..2, inner loop runs j=0..2. Skip when i==j. Pairs printed: (0,1)(0,2)(1,0)(1,2)(2,0)(2,1).",
+    "tags": ["loops", "tracing"]
+  }
+]

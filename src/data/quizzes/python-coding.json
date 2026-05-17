@@ -1,0 +1,60 @@
+[
+  {
+    "id": "py-c-001",
+    "track": "python",
+    "topic": "functions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "prompt": "Write a function `second_largest(nums)` that returns the second-largest distinct number in a list, or `None` if there isn't one.",
+    "starter": "def second_largest(nums):\n    # your code here\n    pass\n",
+    "entry": "second_largest",
+    "tests": [
+      { "args": [[1, 2, 3, 4]], "expect": 3 },
+      { "args": [[5, 5, 4, 4]], "expect": 4 },
+      { "args": [[1]], "expect": null },
+      { "args": [[7, 7, 7]], "expect": null },
+      { "args": [[-1, -2, -3]], "expect": -2 }
+    ],
+    "explanation": "One clean solution: take `set(nums)`, sort descending, return index 1 if it exists. O(n log n) but trivially correct.",
+    "tags": ["dsa-warmup", "tcs-nqt"]
+  },
+  {
+    "id": "py-c-002",
+    "track": "python",
+    "topic": "strings",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "prompt": "Write `is_palindrome(s)` that returns `True` if the string reads the same forwards and backwards (case-insensitive, ignore non-alphanumerics).",
+    "starter": "def is_palindrome(s):\n    # your code here\n    pass\n",
+    "entry": "is_palindrome",
+    "tests": [
+      { "args": ["racecar"], "expect": true },
+      { "args": ["Race Car"], "expect": true },
+      { "args": ["hello"], "expect": false },
+      { "args": [""], "expect": true },
+      { "args": ["A man, a plan, a canal: Panama"], "expect": true }
+    ],
+    "tags": ["strings", "tcs-nqt", "leetcode-easy"]
+  },
+  {
+    "id": "py-c-003",
+    "track": "python",
+    "topic": "functions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "prompt": "Write `count_vowels(s)` that returns the number of vowels (a,e,i,o,u, case-insensitive) in the string.",
+    "starter": "def count_vowels(s):\n    # your code here\n    pass\n",
+    "entry": "count_vowels",
+    "tests": [
+      { "args": ["hello"], "expect": 2 },
+      { "args": ["AEIOU"], "expect": 5 },
+      { "args": [""], "expect": 0 },
+      { "args": ["xyz"], "expect": 0 },
+      { "args": ["Programming"], "expect": 3 }
+    ],
+    "tags": ["strings", "warmup"]
+  }
+]

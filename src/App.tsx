@@ -1,0 +1,32 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Layout } from "./components/Layout";
+import { HomePage } from "./routes/HomePage";
+import { TrackPage } from "./routes/TrackPage";
+import { LessonPage } from "./routes/LessonPage";
+import { QuizPage } from "./routes/QuizPage";
+import { SandboxPage } from "./routes/SandboxPage";
+import { ReviewPage } from "./routes/ReviewPage";
+import { BookmarksPage } from "./routes/BookmarksPage";
+import { ProgressPage } from "./routes/ProgressPage";
+import { MockTestPage } from "./routes/MockTestPage";
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/track/:trackId" element={<TrackPage />} />
+          <Route path="/lesson/:lessonId" element={<LessonPage />} />
+          <Route path="/quiz/:trackId/:topic" element={<QuizPage />} />
+          <Route path="/sandbox/:kind" element={<SandboxPage />} />
+          <Route path="/review" element={<ReviewPage />} />
+          <Route path="/bookmarks" element={<BookmarksPage />} />
+          <Route path="/progress" element={<ProgressPage />} />
+          <Route path="/mock/:id" element={<MockTestPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
+  );
+}
