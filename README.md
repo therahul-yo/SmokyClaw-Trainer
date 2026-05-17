@@ -2,7 +2,7 @@
 
 Solo prep tool for Indian campus hiring tests — TCS NQT, Infosys SP, Wipro Elite NLTH, Capgemini — with in-browser Python and SQL execution, spaced repetition for everything you got wrong, and exact mock-test formats with timers.
 
-**Live:** [interview-trainer-smoky.vercel.app](https://interview-trainer-smoky.vercel.app)
+**Live:** [smokyclaw-trainer.vercel.app](https://smokyclaw-trainer.vercel.app/)
 
 ---
 
