@@ -1,0 +1,263 @@
+[
+  {
+    "id": "arrays-basics",
+    "track": "dsa",
+    "title": "Array fundamentals",
+    "blurb": "Indexing, traversal, in-place updates, complexity of common operations.",
+    "prerequisites": [],
+    "lessonIds": ["dsa-arrays"],
+    "itemIds": ["dsa-q-001", "dsa-q-002", "dsa-c-rotate"]
+  },
+  {
+    "id": "two-pointer",
+    "track": "dsa",
+    "title": "Two pointers",
+    "blurb": "Opposite-end or fast/slow pointers to collapse O(n²) into O(n).",
+    "prerequisites": ["arrays-basics"],
+    "lessonIds": ["dsa-02-two-pointer"],
+    "itemIds": ["dsa-c-pair-sum-sorted", "dsa-c-remove-duplicates", "dsa-c-three-sum"]
+  },
+  {
+    "id": "sliding-window",
+    "track": "dsa",
+    "title": "Sliding window",
+    "blurb": "Maintain a running aggregate over a moving window — fixed or variable size.",
+    "prerequisites": ["two-pointer"],
+    "lessonIds": ["dsa-03-sliding-window"],
+    "itemIds": ["dsa-c-max-sum-k", "dsa-c-longest-unique-substr"]
+  },
+  {
+    "id": "prefix-sums",
+    "track": "dsa",
+    "title": "Prefix sums",
+    "blurb": "Pre-compute cumulative sums for O(1) range queries.",
+    "prerequisites": ["arrays-basics"],
+    "lessonIds": ["dsa-04-prefix-sums"],
+    "itemIds": ["dsa-c-subarray-sum-equals-k"]
+  },
+  {
+    "id": "hashing",
+    "track": "dsa",
+    "title": "Hashing",
+    "blurb": "Dicts / sets for O(1) lookups — frequency counts, complement search, dedup.",
+    "prerequisites": ["arrays-basics"],
+    "lessonIds": ["dsa-05-hashing"],
+    "itemIds": ["dsa-q-004", "dsa-c-two-sum", "dsa-c-anagram-groups"]
+  },
+  {
+    "id": "binary-search",
+    "track": "dsa",
+    "title": "Binary search",
+    "blurb": "Classic + on-answer-space. Find the boundary you can decide in O(1).",
+    "prerequisites": ["arrays-basics"],
+    "lessonIds": ["dsa-06-binary-search"],
+    "itemIds": ["dsa-c-binary-search", "dsa-c-search-rotated"]
+  },
+  {
+    "id": "recursion",
+    "track": "dsa",
+    "title": "Recursion & backtracking",
+    "blurb": "Base case + recursive case, choice/decision trees, pruning.",
+    "prerequisites": [],
+    "lessonIds": ["dsa-07-recursion"],
+    "itemIds": ["dsa-c-subsets", "dsa-c-permutations"]
+  },
+  {
+    "id": "sorting",
+    "track": "dsa",
+    "title": "Sorting",
+    "blurb": "Timsort, mergesort, quicksort. Stable vs not. When to sort.",
+    "prerequisites": [],
+    "lessonIds": ["dsa-08-sorting"],
+    "itemIds": ["dsa-q-003", "dsa-c-merge-intervals"]
+  },
+  {
+    "id": "linked-list",
+    "track": "dsa",
+    "title": "Linked lists",
+    "blurb": "Pointer manipulation, dummy heads, reverse / detect cycle / merge.",
+    "prerequisites": [],
+    "lessonIds": ["dsa-09-linked-list"],
+    "itemIds": ["dsa-c-reverse-list", "dsa-c-detect-cycle"]
+  },
+  {
+    "id": "stack-queue",
+    "track": "dsa",
+    "title": "Stacks & queues",
+    "blurb": "Monotonic stack, balanced parens, BFS queues, deque tricks.",
+    "prerequisites": [],
+    "lessonIds": ["dsa-10-stack-queue"],
+    "itemIds": ["dsa-c-valid-parens", "dsa-c-next-greater"]
+  },
+  {
+    "id": "trees",
+    "track": "dsa",
+    "title": "Trees & BSTs",
+    "blurb": "Traversals, recursion patterns, BST invariants.",
+    "prerequisites": ["recursion"],
+    "lessonIds": ["dsa-11-trees"],
+    "itemIds": ["dsa-c-tree-height", "dsa-c-level-order"]
+  },
+  {
+    "id": "heaps",
+    "track": "dsa",
+    "title": "Heaps / priority queues",
+    "blurb": "Top-K, k-way merge, scheduling. Python's heapq is min-heap only.",
+    "prerequisites": ["sorting"],
+    "lessonIds": ["dsa-12-heaps"],
+    "itemIds": ["dsa-c-kth-largest", "dsa-c-merge-k-sorted"]
+  },
+  {
+    "id": "graphs",
+    "track": "dsa",
+    "title": "Graphs (BFS / DFS / topo)",
+    "blurb": "Adjacency lists, BFS shortest unweighted, DFS components, topo sort.",
+    "prerequisites": ["recursion", "stack-queue"],
+    "lessonIds": ["dsa-13-graphs"],
+    "itemIds": ["dsa-c-num-islands", "dsa-c-course-schedule"]
+  },
+  {
+    "id": "greedy",
+    "track": "dsa",
+    "title": "Greedy",
+    "blurb": "Locally-optimal choices that prove globally optimal. Sort + sweep.",
+    "prerequisites": ["sorting"],
+    "lessonIds": ["dsa-14-greedy"],
+    "itemIds": ["dsa-c-activity-selection", "dsa-c-jump-game"]
+  },
+  {
+    "id": "dp-1d",
+    "track": "dsa",
+    "title": "Dynamic programming — 1D",
+    "blurb": "Climb stairs, house robber, coin change. State = current index.",
+    "prerequisites": ["recursion"],
+    "lessonIds": ["dsa-15-dp-1d"],
+    "itemIds": ["dsa-c-climb-stairs", "dsa-c-house-robber", "dsa-c-coin-change"]
+  },
+  {
+    "id": "dp-2d",
+    "track": "dsa",
+    "title": "Dynamic programming — 2D",
+    "blurb": "Grid paths, LCS, edit distance, knapsack.",
+    "prerequisites": ["dp-1d"],
+    "lessonIds": ["dsa-16-dp-2d"],
+    "itemIds": ["dsa-c-unique-paths", "dsa-c-lcs", "dsa-c-knapsack"]
+  },
+  {
+    "id": "bit-manipulation",
+    "track": "dsa",
+    "title": "Bit manipulation",
+    "blurb": "XOR tricks, masks, single-number, power-of-two checks.",
+    "prerequisites": [],
+    "lessonIds": ["dsa-17-bits"],
+    "itemIds": ["dsa-c-single-number", "dsa-c-count-bits"]
+  },
+  {
+    "id": "math",
+    "track": "dsa",
+    "title": "Math & number theory",
+    "blurb": "GCD/LCM, primes (sieve), modular arithmetic.",
+    "prerequisites": [],
+    "lessonIds": ["dsa-18-math"],
+    "itemIds": ["dsa-c-gcd", "dsa-c-sieve"]
+  },
+  {
+    "id": "python-data-model",
+    "track": "python",
+    "title": "Python data model",
+    "blurb": "Mutability, identity vs equality, references, copy vs deepcopy.",
+    "prerequisites": [],
+    "lessonIds": ["python-02-data-types", "python-03-mutability"],
+    "itemIds": []
+  },
+  {
+    "id": "python-iter",
+    "track": "python",
+    "title": "Iterators & generators",
+    "blurb": "Lazy iteration, yield, generator expressions, itertools.",
+    "prerequisites": ["python-data-model"],
+    "lessonIds": ["python-10-generators"],
+    "itemIds": []
+  },
+  {
+    "id": "python-decorators",
+    "track": "python",
+    "title": "Decorators & closures",
+    "blurb": "First-class functions, decorator pattern, functools.wraps.",
+    "prerequisites": ["python-iter"],
+    "lessonIds": ["python-12-decorators"],
+    "itemIds": []
+  },
+  {
+    "id": "python-oop",
+    "track": "python",
+    "title": "OOP in Python",
+    "blurb": "Classes, dunder methods, dataclasses, inheritance vs composition.",
+    "prerequisites": ["python-data-model"],
+    "lessonIds": ["python-15-oop"],
+    "itemIds": []
+  },
+  {
+    "id": "python-stdlib",
+    "track": "python",
+    "title": "Standard library essentials",
+    "blurb": "collections, itertools, functools — the interview cheats.",
+    "prerequisites": [],
+    "lessonIds": ["python-20-stdlib"],
+    "itemIds": []
+  },
+  {
+    "id": "sql-joins",
+    "track": "sql",
+    "title": "Joins",
+    "blurb": "INNER, LEFT, RIGHT, FULL, CROSS — when and why.",
+    "prerequisites": [],
+    "lessonIds": ["sql-03-joins"],
+    "itemIds": []
+  },
+  {
+    "id": "sql-aggregation",
+    "track": "sql",
+    "title": "GROUP BY & HAVING",
+    "blurb": "Aggregates, grouping sets, HAVING vs WHERE.",
+    "prerequisites": [],
+    "lessonIds": ["sql-04-group-by"],
+    "itemIds": []
+  },
+  {
+    "id": "sql-subqueries",
+    "track": "sql",
+    "title": "Subqueries & CTEs",
+    "blurb": "Correlated subqueries, WITH clauses, recursive CTEs.",
+    "prerequisites": ["sql-joins"],
+    "lessonIds": ["sql-05-subqueries-ctes"],
+    "itemIds": []
+  },
+  {
+    "id": "sql-window",
+    "track": "sql",
+    "title": "Window functions",
+    "blurb": "ROW_NUMBER, RANK, LAG/LEAD, running totals — the senior round filter.",
+    "prerequisites": ["sql-aggregation"],
+    "lessonIds": ["sql-06-window-functions"],
+    "itemIds": ["sql-c-running-total", "sql-c-top-per-group"]
+  },
+  {
+    "id": "sql-indexes",
+    "track": "sql",
+    "title": "Indexes & query plans",
+    "blurb": "B-tree intuition, composite indexes, when not to index.",
+    "prerequisites": [],
+    "lessonIds": ["sql-07-indexes"],
+    "itemIds": []
+  },
+  {
+    "id": "sql-normalization",
+    "track": "sql",
+    "title": "Normalization & ACID",
+    "blurb": "1NF–BCNF, transactions, isolation levels.",
+    "prerequisites": [],
+    "lessonIds": ["sql-08-normalization", "sql-09-acid"],
+    "itemIds": []
+  }
+]

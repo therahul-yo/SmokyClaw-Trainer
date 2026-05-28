@@ -1,5 +1,14 @@
-import type { Lesson, LessonMeta, QuizItem, Track, TrackId } from "../types";
+import type {
+  Lesson,
+  LessonMeta,
+  Pattern,
+  QuizItem,
+  SqlSchemaName,
+  Track,
+  TrackId,
+} from "../types";
 import tracksRaw from "../data/tracks.json";
+import patternsRaw from "../data/patterns.json";
 
 // ────────── Lesson loading (Vite glob raw imports) ──────────
 
@@ -118,9 +127,37 @@ const schemaModules = import.meta.glob<string>("../data/sql-schemas/*.sql", {
   eager: true,
 });
 
-export function getSqlSchema(name: "employees" | "ecommerce"): string {
+export function getSqlSchema(name: SqlSchemaName): string {
   const path = `../data/sql-schemas/${name}.sql`;
   const sql = schemaModules[path];
   if (!sql) throw new Error(`SQL schema not found: ${name}`);
   return sql;
+}
+
+// ────────── Patterns ──────────
+
+const allPatterns = patternsRaw as Pattern[];
+
+export function getPatterns(): Pattern[] {
+  return allPatterns;
+}
+
+export function getPatternsByTrack(track: TrackId): Pattern[] {
+  return allPatterns.filter((p) => p.track === track);
+}
+
+export function getPattern(id: string): Pattern | undefined {
+  return allPatterns.find((p) => p.id === id);
+}
+
+// Resolve a pattern's referenced items to the ones that actually exist —
+// the catalog is intentionally aspirational and may name items not yet authored.
+export function getPatternItems(pattern: Pattern): QuizItem[] {
+  const byId = new Map(allQuizItems.map((q) => [q.id, q]));
+  return pattern.itemIds.map((id) => byId.get(id)).filter((q): q is QuizItem => Boolean(q));
+}
+
+export function getPatternLessons(pattern: Pattern): Lesson[] {
+  const byId = new Map(allLessons.map((l) => [l.id, l]));
+  return pattern.lessonIds.map((id) => byId.get(id)).filter((l): l is Lesson => Boolean(l));
 }

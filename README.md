@@ -17,6 +17,9 @@ Solo prep tool for Indian campus hiring tests — TCS NQT, Infosys SP, Wipro Eli
   - **Infosys SP** — Math (10/35min), Logical (15/25min), Verbal (20/20min), Pseudocode (5/10min), Coding (1 problem / 45min).
   - Per-section timers, auto-submit, scoring per section.
 - **Bookmarks, streaks, progress.** Per-track mastery %, daily streak, bookmark anything for targeted review.
+- **Adaptive study plans.** Pick a 1-week / 2-week / 1-month deadline and a daily-minutes budget; the planner lays out lessons + drills + Leitner-due items every day, biased toward the topics you score weakest on.
+- **Pattern playlists.** Curated DSA patterns (two-pointer, sliding window, hashing, DP, graphs, ...) and SQL patterns (joins, window functions, CTEs) with per-pattern progress.
+- **Editorial flow.** Every coding/SQL drill ships with progressive hints, brute-force-first reveal, optimal solution + complexity, a "what's the time complexity?" post-pass check, and a "give up & show solution" path that demotes the item back into Leitner.
 - **100% local.** All progress persists in `localStorage` via Zustand. No backend, no telemetry, no account.
 
 ## Stack
@@ -42,7 +45,8 @@ src/
   data/
     tracks.json
     quizzes/      # MCQ + coding + SQL items as JSON
-    sql-schemas/  # SQLite seed schemas
+    sql-schemas/  # SQLite seed schemas (employees, ecommerce, social)
+    patterns.json # DSA / SQL / Python pattern catalog (drives PatternsPage + planner)
 public/
   favicon.svg     # 🦞
 vercel.json       # SPA rewrite to /index.html
@@ -61,6 +65,8 @@ pnpm lint
 ```
 
 ## Adding content
+
+See [CONTENT.md](./CONTENT.md) for the full authoring guide, the optional pedagogy schema (hints / examples / brute-force / optimal / complexity-check / companies), and the punch-list of patterns to author.
 
 **A new lesson:** drop a Markdown file into `src/content/<track>/` with frontmatter:
 

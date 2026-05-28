@@ -3,6 +3,7 @@ import {
   getTrack,
   getLessonsByTrack,
   getQuizItemsByTrack,
+  getPatternsByTrack,
 } from "../lib/contentLoader";
 import type { TrackId } from "../types";
 import { useProgressStore } from "../store";
@@ -15,6 +16,7 @@ export function TrackPage() {
 
   const lessons = getLessonsByTrack(track.id);
   const items = getQuizItemsByTrack(track.id);
+  const patterns = getPatternsByTrack(track.id);
   const completedLessons = useProgressStore((s) => s.completedLessons);
 
   const itemIds = items.map((q) => q.id);
@@ -44,6 +46,31 @@ export function TrackPage() {
           <ProgressBar value={pct} />
         </div>
       </header>
+
+      {patterns.length > 0 && (
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xl font-semibold text-white">Patterns</h2>
+            <Link
+              to={`/patterns/${track.id}`}
+              className="text-sm text-[var(--color-accent)] hover:underline"
+            >
+              View all {patterns.length} →
+            </Link>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {patterns.slice(0, 8).map((p) => (
+              <Link
+                key={p.id}
+                to={`/patterns/${track.id}#${p.id}`}
+                className="px-3 py-1.5 rounded-md text-sm bg-[var(--color-bg-card)] border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-white hover:bg-[var(--color-bg-card-hover)]"
+              >
+                {p.title}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section>
         <h2 className="text-xl font-semibold text-white mb-3">Lessons</h2>

@@ -30,6 +30,14 @@ export function Sidebar() {
           <span>🏠</span> Dashboard
         </NavLink>
         <NavLink
+          to="/plan"
+          className={({ isActive }) =>
+            clsx(linkBase, isActive ? linkActive : linkInactive)
+          }
+        >
+          <span>📅</span> Study plan
+        </NavLink>
+        <NavLink
           to="/review"
           className={({ isActive }) =>
             clsx(linkBase, isActive ? linkActive : linkInactive)

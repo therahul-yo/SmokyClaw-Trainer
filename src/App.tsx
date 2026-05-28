@@ -9,6 +9,9 @@ import { ReviewPage } from "./routes/ReviewPage";
 import { BookmarksPage } from "./routes/BookmarksPage";
 import { ProgressPage } from "./routes/ProgressPage";
 import { MockTestPage } from "./routes/MockTestPage";
+import { PlanPage } from "./routes/PlanPage";
+import { PlanSetupPage } from "./routes/PlanSetupPage";
+import { PatternsPage } from "./routes/PatternsPage";
 
 export default function App() {
   return (
@@ -24,6 +27,9 @@ export default function App() {
           <Route path="/bookmarks" element={<BookmarksPage />} />
           <Route path="/progress" element={<ProgressPage />} />
           <Route path="/mock/:id" element={<MockTestPage />} />
+          <Route path="/plan" element={<PlanPage />} />
+          <Route path="/plan/setup" element={<PlanSetupPage />} />
+          <Route path="/patterns/:trackId" element={<PatternsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>

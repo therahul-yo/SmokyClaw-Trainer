@@ -3,6 +3,7 @@
 // an in-browser SQLite instance), NOT Node's child_process.exec.
 import initSqlJs from "sql.js";
 import type { Database, SqlJsStatic } from "sql.js";
+import type { SqlSchemaName } from "../types";
 import { getSqlSchema } from "./contentLoader";
 
 const SQLJS_WASM_URL = "https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.wasm";
@@ -17,7 +18,7 @@ async function loadSqlJs(): Promise<SqlJsStatic> {
   return sqlJsPromise;
 }
 
-function freshDb(SQL: SqlJsStatic, schema: "employees" | "ecommerce"): Database {
+function freshDb(SQL: SqlJsStatic, schema: SqlSchemaName): Database {
   const db = new SQL.Database();
   // db.exec = SQLite WASM run-SQL method (sql.js Database#exec)
   db.exec(getSqlSchema(schema));
@@ -27,7 +28,7 @@ function freshDb(SQL: SqlJsStatic, schema: "employees" | "ecommerce"): Database 
 export type SqlRunResult = { columns: string[]; rows: unknown[][] } | null;
 
 export async function runSql(
-  schema: "employees" | "ecommerce",
+  schema: SqlSchemaName,
   query: string,
 ): Promise<SqlRunResult> {
   const SQL = await loadSqlJs();
@@ -43,7 +44,7 @@ export async function runSql(
 }
 
 export async function getSchemaSummary(
-  schema: "employees" | "ecommerce",
+  schema: SqlSchemaName,
 ): Promise<string> {
   const SQL = await loadSqlJs();
   const db = freshDb(SQL, schema);

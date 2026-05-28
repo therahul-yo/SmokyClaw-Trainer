@@ -9,6 +9,8 @@ import {
 } from "../store";
 import { dueRecords } from "../lib/leitner";
 import { ProgressBar } from "../components/ProgressBar";
+import { OnboardingModal } from "../components/OnboardingModal";
+import { DailyTargetCard } from "../components/DailyTargetCard";
 
 export function HomePage() {
   const tracks = getTracks();
@@ -26,6 +28,7 @@ export function HomePage() {
 
   return (
     <div className="space-y-8">
+      <OnboardingModal />
       <header>
         <h1 className="text-3xl font-bold text-white">
           Crack TCS, Infosys & friends.
@@ -36,6 +39,8 @@ export function HomePage() {
           everything you got wrong.
         </p>
       </header>
+
+      <DailyTargetCard />
 
       <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="Streak" value={`${streak}d`} hint="🔥 keep it going" />

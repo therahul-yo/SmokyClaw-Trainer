@@ -3,11 +3,13 @@ import { useProgressStore } from "./progressStore";
 import { useStreakStore } from "./streakStore";
 import { useReviewQueueStore } from "./reviewQueueStore";
 import { useBookmarksStore } from "./bookmarksStore";
+import { usePlanStore } from "./planStore";
 
 export { useProgressStore } from "./progressStore";
 export { useStreakStore } from "./streakStore";
 export { useReviewQueueStore } from "./reviewQueueStore";
 export { useBookmarksStore } from "./bookmarksStore";
+export { usePlanStore } from "./planStore";
 
 type ExportShape = {
   version: 1;
@@ -16,6 +18,7 @@ type ExportShape = {
   streak: ReturnType<typeof useStreakStore.getState>;
   review: ReturnType<typeof useReviewQueueStore.getState>;
   bookmarks: ReturnType<typeof useBookmarksStore.getState>;
+  plan?: ReturnType<typeof usePlanStore.getState>;
 };
 
 export function exportAllStores(): string {
@@ -26,6 +29,7 @@ export function exportAllStores(): string {
     streak: useStreakStore.getState(),
     review: useReviewQueueStore.getState(),
     bookmarks: useBookmarksStore.getState(),
+    plan: usePlanStore.getState(),
   };
   return JSON.stringify(data, null, 2);
 }
@@ -48,6 +52,12 @@ export function importAllStores(json: string): void {
   useBookmarksStore.setState({
     items: data.bookmarks.items ?? {},
   });
+  if (data.plan) {
+    usePlanStore.setState({
+      plan: data.plan.plan ?? null,
+      completedItemsByDay: data.plan.completedItemsByDay ?? {},
+    });
+  }
 }
 
 export function resetAllStores(): void {
@@ -55,4 +65,5 @@ export function resetAllStores(): void {
   useStreakStore.getState().resetAll();
   useReviewQueueStore.getState().resetAll();
   useBookmarksStore.getState().resetAll();
+  usePlanStore.getState().clearPlan();
 }

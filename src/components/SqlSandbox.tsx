@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { sql } from "@codemirror/lang-sql";
 import clsx from "clsx";
@@ -8,16 +8,27 @@ import { getSchemaSummary } from "../lib/sqljs";
 import { useProgressStore, useReviewQueueStore, useStreakStore } from "../store";
 import { BookmarkButton } from "./BookmarkButton";
 import { LessonRenderer } from "./LessonRenderer";
+import { ProblemContext } from "./ProblemContext";
+import { HintsPanel } from "./HintsPanel";
+import { EditorialReveal } from "./EditorialReveal";
+import { ComplexityCheck } from "./ComplexityCheck";
 
 export function SqlSandbox({ item }: { item: SqlItem }) {
   const [query, setQuery] = useState(item.starter ?? "");
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<SqlGradeResult | null>(null);
   const [schemaText, setSchemaText] = useState("");
+  const [hintsUsed, setHintsUsed] = useState(0);
+  const [editorialUnlocked, setEditorialUnlocked] = useState(false);
+  const [complexityDone, setComplexityDone] = useState(false);
+  const [gaveUp, setGaveUp] = useState(false);
+  const hintsRef = useRef(0);
 
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
   const registerAttempt = useReviewQueueStore((s) => s.registerAttempt);
   const ping = useStreakStore((s) => s.ping);
+
+  // Per-item state is reset by QuizPage remounting us with `key={item.id}`.
 
   useEffect(() => {
     void (async () => {
@@ -41,20 +52,40 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
         itemId: item.id,
         correct: r.ok,
         timeMs: Date.now() - startedAt,
+        hintsUsed: hintsRef.current,
       });
       registerAttempt(item.id, r.ok);
       ping();
+      if (r.ok && !item.complexityCheck) setEditorialUnlocked(true);
     } finally {
       setRunning(false);
     }
   };
 
+  const giveUp = () => {
+    if (!confirm("Reveal the solution? This counts as a failed attempt and pushes the item into your review queue.")) return;
+    recordAttempt({
+      itemId: item.id,
+      correct: false,
+      timeMs: 0,
+      hintsUsed: hintsRef.current,
+      gaveUp: true,
+    });
+    registerAttempt(item.id, false);
+    setGaveUp(true);
+    setEditorialUnlocked(true);
+  };
+
+  const showEditorial = editorialUnlocked || gaveUp;
+  const needsComplexityCheck = result?.ok && item.complexityCheck && !complexityDone;
+
   return (
     <article className="border border-[var(--color-border)] rounded-lg bg-[var(--color-bg-card)] p-6 space-y-4">
       <div className="flex items-start justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wide">
             SQL · {item.topic} · schema: {item.schema}
+            {item.estMinutes && ` · ~${item.estMinutes}m`}
           </div>
           <div className="mt-1 text-[var(--color-text)]">
             <LessonRenderer body={item.prompt} />
@@ -62,6 +93,8 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
         </div>
         <BookmarkButton itemId={item.id} />
       </div>
+
+      <ProblemContext item={item} />
 
       <details className="text-xs text-[var(--color-text-dim)]">
         <summary className="cursor-pointer text-[var(--color-accent)]">
@@ -71,6 +104,16 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
           {schemaText}
         </pre>
       </details>
+
+      {item.hints && item.hints.length > 0 && (
+        <HintsPanel
+          hints={item.hints}
+          onCountChange={(n) => {
+            setHintsUsed(n);
+            hintsRef.current = n;
+          }}
+        />
+      )}
 
       <div className="rounded-md overflow-hidden border border-[var(--color-border)]">
         <CodeMirror
@@ -83,13 +126,29 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
         />
       </div>
 
-      <button
-        onClick={run}
-        disabled={running}
-        className="px-4 py-2 rounded-md bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white font-medium disabled:opacity-50"
-      >
-        {running ? "Running…" : "Run query"}
-      </button>
+      <div className="flex items-center gap-3 flex-wrap">
+        <button
+          onClick={run}
+          disabled={running}
+          className="px-4 py-2 rounded-md bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white font-medium disabled:opacity-50"
+        >
+          {running ? "Running…" : "Run query"}
+        </button>
+        {!showEditorial && (
+          <button
+            type="button"
+            onClick={giveUp}
+            className="px-3 py-2 rounded-md text-sm bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-warning)]"
+          >
+            Give up & show solution
+          </button>
+        )}
+        {hintsUsed > 0 && (
+          <span className="text-xs text-[var(--color-text-muted)]">
+            · {hintsUsed} hint{hintsUsed === 1 ? "" : "s"} used
+          </span>
+        )}
+      </div>
 
       {result && (
         <div className="space-y-3">
@@ -109,17 +168,32 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
             )}
           </div>
 
-          {result.actual && (
-            <ResultTable label="Your result" data={result.actual} />
-          )}
+          {result.actual && <ResultTable label="Your result" data={result.actual} />}
           {!result.ok && <ResultTable label="Expected" data={result.expected} />}
-
-          {result.ok && item.explanation && (
-            <div className="text-sm text-[var(--color-text-dim)] p-3 bg-[var(--color-bg-card-hover)] rounded">
-              <LessonRenderer body={item.explanation} />
-            </div>
-          )}
         </div>
+      )}
+
+      {needsComplexityCheck && item.complexityCheck && (
+        <ComplexityCheck
+          question={item.complexityCheck.question}
+          choices={item.complexityCheck.choices}
+          onPass={() => {
+            setComplexityDone(true);
+            setEditorialUnlocked(true);
+          }}
+          onSkip={() => {
+            setComplexityDone(true);
+            setEditorialUnlocked(true);
+          }}
+        />
+      )}
+
+      {showEditorial && (
+        <EditorialReveal
+          bruteForce={item.bruteForce}
+          optimal={item.optimal}
+          fallback={item.explanation}
+        />
       )}
     </article>
   );

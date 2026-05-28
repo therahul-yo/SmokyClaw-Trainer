@@ -18,6 +18,7 @@ export type LessonMeta = {
   order: number;
   estMinutes: number;
   prerequisites: string[];
+  pattern?: string;
 };
 
 export type Lesson = LessonMeta & {
@@ -26,7 +27,47 @@ export type Lesson = LessonMeta & {
 
 export type Difficulty = "easy" | "medium" | "hard";
 
-export type McqItem = {
+export type CompanyTag =
+  | "tcs"
+  | "infosys"
+  | "wipro"
+  | "capgemini"
+  | "accenture"
+  | "cognizant"
+  | "amazon-india";
+
+export type Approach = {
+  code?: string;
+  complexity: string; // free-form like "O(n log n) time, O(1) space"
+  explanation: string;
+};
+
+export type Example = {
+  input: string;
+  output: string;
+  explanation?: string;
+};
+
+export type ComplexityChoice = {
+  label: string; // e.g. "O(n)"
+  correct: boolean;
+};
+
+// Common optional fields for any quiz item.
+type QuizItemCommon = {
+  pattern?: string;
+  hints?: string[];
+  bruteForce?: Approach;
+  optimal?: Approach;
+  constraints?: string;
+  examples?: Example[];
+  companies?: CompanyTag[];
+  estMinutes?: number;
+  // Used by ComplexityCheck modal after a coding/SQL item passes.
+  complexityCheck?: { question: string; choices: ComplexityChoice[] };
+};
+
+export type McqItem = QuizItemCommon & {
   id: string;
   track: TrackId;
   topic: string;
@@ -44,7 +85,7 @@ export type CodingTest = {
   expect: unknown;
 };
 
-export type CodingItem = {
+export type CodingItem = QuizItemCommon & {
   id: string;
   track: TrackId;
   topic: string;
@@ -59,14 +100,16 @@ export type CodingItem = {
   tags: string[];
 };
 
-export type SqlItem = {
+export type SqlSchemaName = "employees" | "ecommerce" | "social";
+
+export type SqlItem = QuizItemCommon & {
   id: string;
   track: TrackId;
   topic: string;
   type: "sql";
   difficulty: Difficulty;
   prompt: string;
-  schema: "employees" | "ecommerce";
+  schema: SqlSchemaName;
   starter?: string;
   expected: { columns: string[]; rows: unknown[][] };
   explanation?: string;
@@ -74,6 +117,18 @@ export type SqlItem = {
 };
 
 export type QuizItem = McqItem | CodingItem | SqlItem;
+
+// ────────── Patterns ──────────
+
+export type Pattern = {
+  id: string; // e.g. "sliding-window"
+  track: TrackId;
+  title: string;
+  blurb: string;
+  prerequisites: string[]; // other pattern ids
+  lessonIds: string[];
+  itemIds: string[];
+};
 
 // ────────── Leitner spaced repetition ──────────
 
@@ -96,6 +151,9 @@ export type Attempt = {
   correct: boolean;
   timeMs: number;
   attemptedAt: number;
+  // Optional pedagogy signals — older attempts won't have these.
+  hintsUsed?: number;
+  gaveUp?: boolean;
 };
 
 export type LessonProgress = {
@@ -134,4 +192,30 @@ export type MockTestRunState = {
   sectionDeadlines: number[]; // epoch ms when each section auto-submits
   itemIdsBySection: string[][]; // pre-selected items per section
   answersByItemId: Record<string, number | string | null>;
+};
+
+// ────────── Study plan ──────────
+
+export type StudyPlanDay = {
+  dayIndex: number; // 0 = day 1
+  date: string; // YYYY-MM-DD
+  lessonIds: string[];
+  itemIds: string[]; // new practice items
+  reviewItemIds: string[]; // Leitner-due items
+  estMinutes: number;
+  note?: string; // e.g. "Mock test day"
+};
+
+export type StudyPlanMode = "cram" | "thorough";
+
+export type StudyPlan = {
+  id: string; // timestamp-based
+  createdAt: number;
+  startedAt: number;
+  deadline: number; // epoch ms
+  dailyMinutes: number;
+  mode: StudyPlanMode;
+  focusTracks: TrackId[];
+  weakTopics: string[]; // user-declared at setup
+  days: StudyPlanDay[];
 };
