@@ -1,0 +1,467 @@
+[
+  {
+    "id": "py-q-020",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which of these is mutable?",
+    "options": ["tuple", "frozenset", "list", "str"],
+    "answerIndex": 2,
+    "explanation": "Lists are mutable; tuple/frozenset/str are immutable.",
+    "tags": ["mutability"]
+  },
+  {
+    "id": "py-q-021",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What does `a is b` return when `a = [1,2,3]` and `b = [1,2,3]`?",
+    "options": ["True", "False", "TypeError", "depends on Python version"],
+    "answerIndex": 1,
+    "explanation": "`==` checks value equality (True here). `is` checks identity — two list literals create two different objects.",
+    "tags": ["identity", "interview-classic"]
+  },
+  {
+    "id": "py-q-022",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What's printed?\n```\ndef add(item, basket=[]):\n    basket.append(item)\n    return basket\nprint(add(1))\nprint(add(2))\n```",
+    "options": ["[1] [2]", "[1] [1, 2]", "[1, 2] [1, 2]", "error"],
+    "answerIndex": 1,
+    "explanation": "The default `[]` is evaluated ONCE at function definition. Both calls share the same list. Use `basket=None` and create inside.",
+    "tags": ["mutability", "gotcha", "interview-classic"]
+  },
+  {
+    "id": "py-q-023",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which can NOT be a dict key?",
+    "options": ["tuple of strings", "frozenset", "list", "int"],
+    "answerIndex": 2,
+    "explanation": "Dict keys must be hashable. Lists are mutable and not hashable; tuples (if their contents are hashable), frozensets, and ints all are.",
+    "tags": ["hashing"]
+  },
+  {
+    "id": "py-q-024",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What's the difference between `a.copy()` and `copy.deepcopy(a)` on `[[1,2],[3,4]]`?",
+    "options": [
+      "No difference",
+      "`.copy()` is shallow — inner lists are shared. `deepcopy` recurses.",
+      "`.copy()` is deeper",
+      "`deepcopy` is slower but identical in result"
+    ],
+    "answerIndex": 1,
+    "explanation": "Shallow copy duplicates the outer container only — modifying a nested list mutates both. deepcopy recursively copies everything.",
+    "tags": ["copy", "interview-classic"]
+  },
+  {
+    "id": "py-q-025",
+    "track": "python",
+    "topic": "syntax",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which is a valid list comprehension squaring even numbers from 0..9?",
+    "options": [
+      "[x*x for x in range(10) if x % 2 == 0]",
+      "[for x in range(10): x*x if x % 2 == 0]",
+      "[x*x if x % 2 == 0 for x in range(10)]",
+      "[x*x in range(10) where x % 2 == 0]"
+    ],
+    "answerIndex": 0,
+    "explanation": "Filtering: `[expr for var in iter if condition]`. The `if` clause goes after the iterable.",
+    "tags": ["comprehensions"]
+  },
+  {
+    "id": "py-q-026",
+    "track": "python",
+    "topic": "syntax",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What's the memory difference between `sum(x*x for x in range(N))` and `sum([x*x for x in range(N)])` for large N?",
+    "options": [
+      "None",
+      "Generator expression uses O(1) extra memory; list comprehension builds an intermediate list of size N.",
+      "List comprehension is more memory-efficient",
+      "Both are O(N)"
+    ],
+    "answerIndex": 1,
+    "explanation": "Generator expressions yield one value at a time; list comprehensions materialize the whole list. Use generators when you only consume the values once.",
+    "tags": ["comprehensions", "memory"]
+  },
+  {
+    "id": "py-q-027",
+    "track": "python",
+    "topic": "functions",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What does `*args` mean in a function signature?",
+    "options": [
+      "Variable-length keyword arguments",
+      "Variable-length positional arguments — collected into a tuple",
+      "Argument unpacking",
+      "Required arguments"
+    ],
+    "answerIndex": 1,
+    "explanation": "`*args` collects extra positional arguments into a tuple. `**kwargs` collects extra keyword arguments into a dict.",
+    "tags": ["functions"]
+  },
+  {
+    "id": "py-q-028",
+    "track": "python",
+    "topic": "functions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Inside a closure, what does `nonlocal x` do?",
+    "options": [
+      "Declares `x` as a module-level global",
+      "Allows reassigning a name from the nearest enclosing function scope",
+      "Marks `x` as thread-local",
+      "Same as `global x`"
+    ],
+    "answerIndex": 1,
+    "explanation": "`nonlocal` binds to the nearest enclosing (non-global) scope. Without it, an assignment in the inner function creates a new local.",
+    "tags": ["closures", "interview-classic"]
+  },
+  {
+    "id": "py-q-029",
+    "track": "python",
+    "topic": "functions",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Can a `lambda` contain multiple statements?",
+    "options": [
+      "Yes, separated by semicolons",
+      "Yes, but only if wrapped in `()`",
+      "No — a lambda is restricted to a single expression",
+      "Yes, using indentation"
+    ],
+    "answerIndex": 2,
+    "explanation": "Lambdas hold one expression. Multiple statements require `def`.",
+    "tags": ["lambda"]
+  },
+  {
+    "id": "py-q-030",
+    "track": "python",
+    "topic": "iterators",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What happens on the second `for x in g:` over the same generator `g`?",
+    "options": [
+      "It restarts from the beginning",
+      "It picks up where it left off",
+      "It produces nothing — the generator is exhausted",
+      "It raises StopIteration immediately as a runtime error"
+    ],
+    "answerIndex": 2,
+    "explanation": "Generators are single-use. Once exhausted, iterating again yields nothing (the `for` loop ends silently, not raising).",
+    "tags": ["generators", "interview-classic"]
+  },
+  {
+    "id": "py-q-031",
+    "track": "python",
+    "topic": "iterators",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Which statement turns a function into a generator?",
+    "options": ["`@generator`", "`return ... iter`", "`yield`", "`async def`"],
+    "answerIndex": 2,
+    "explanation": "The presence of any `yield` in a function body makes it a generator function — calling it returns a generator object instead of running the body.",
+    "tags": ["generators"]
+  },
+  {
+    "id": "py-q-032",
+    "track": "python",
+    "topic": "iterators",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "What does `yield from sub_iter` do?",
+    "options": [
+      "Imports `sub_iter`",
+      "Delegates: yields all values from `sub_iter`, propagates exceptions and the return value back to the caller",
+      "Yields only the first value of `sub_iter`",
+      "Same as `return sub_iter`"
+    ],
+    "answerIndex": 1,
+    "explanation": "`yield from` delegates iteration to another iterable and is the foundation of generator-based coroutines pre-async.",
+    "tags": ["generators"]
+  },
+  {
+    "id": "py-q-033",
+    "track": "python",
+    "topic": "exceptions",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "When does the `else` block in `try/except/else` execute?",
+    "options": [
+      "Always",
+      "Only if an exception was raised",
+      "Only if the `try` block completed without raising",
+      "Only if `except` didn't match"
+    ],
+    "answerIndex": 2,
+    "explanation": "`else` runs when `try` exits normally (no exception, no return inside try). `finally` runs always.",
+    "tags": ["exceptions"]
+  },
+  {
+    "id": "py-q-034",
+    "track": "python",
+    "topic": "exceptions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Why is bare `except:` discouraged?",
+    "options": [
+      "It's slower than `except Exception:`",
+      "It catches `KeyboardInterrupt`, `SystemExit`, and `GeneratorExit` — making the program impossible to interrupt and hiding bugs.",
+      "It only catches the first exception",
+      "It's a syntax error in Python 3.10+"
+    ],
+    "answerIndex": 1,
+    "explanation": "Prefer `except Exception` if you must be broad. Better: name the specific exceptions you can handle.",
+    "tags": ["exceptions", "best-practice"]
+  },
+  {
+    "id": "py-q-035",
+    "track": "python",
+    "topic": "exceptions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What does `raise ValueError('bad') from e` do that plain `raise ValueError('bad')` doesn't?",
+    "options": [
+      "Nothing — they're equivalent",
+      "Sets `__cause__` so the traceback shows the original exception as the direct cause",
+      "Suppresses the original exception",
+      "Re-raises `e` instead of ValueError"
+    ],
+    "answerIndex": 1,
+    "explanation": "`raise X from Y` chains exceptions — the traceback prints both with 'The above exception was the direct cause...'.",
+    "tags": ["exceptions"]
+  },
+  {
+    "id": "py-q-036",
+    "track": "python",
+    "topic": "decorators",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "`@decorator\\ndef f(): ...` is syntactic sugar for:",
+    "options": ["`f = f(decorator)`", "`f = decorator(f)`", "`f = decorator()`", "`decorator(f())`"],
+    "answerIndex": 1,
+    "explanation": "Applying a decorator rebinds the name to whatever the decorator returns.",
+    "tags": ["decorators"]
+  },
+  {
+    "id": "py-q-037",
+    "track": "python",
+    "topic": "decorators",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Why use `@functools.wraps(fn)` inside your decorator's wrapper?",
+    "options": [
+      "It's required for the decorator to work",
+      "Preserves `__name__`, `__doc__`, and `__wrapped__` on the wrapper so introspection and debugging still work",
+      "Makes the wrapper faster",
+      "Allows decorators to be stacked"
+    ],
+    "answerIndex": 1,
+    "explanation": "Without `@wraps`, your wrapper masquerades with name 'wrapper' — confusing in stack traces and breaks frameworks that introspect functions.",
+    "tags": ["decorators", "best-practice"]
+  },
+  {
+    "id": "py-q-038",
+    "track": "python",
+    "topic": "decorators",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "Stacked decorators: `@a\\n@b\\ndef f(): ...` is equivalent to which?",
+    "options": ["`f = b(a(f))`", "`f = a(b(f))`", "`f = a(b)(f)`", "`f = f(a, b)`"],
+    "answerIndex": 1,
+    "explanation": "Decorators apply bottom-up: `b` runs first wrapping `f`, then `a` wraps the result. Same shape as nested function calls written outside-in.",
+    "tags": ["decorators", "interview-classic"]
+  },
+  {
+    "id": "py-q-039",
+    "track": "python",
+    "topic": "oop",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What's the difference between `@classmethod` and `@staticmethod`?",
+    "options": [
+      "No difference",
+      "`@classmethod` receives the class as its first arg; `@staticmethod` receives nothing — it's just a function in the class namespace",
+      "`@staticmethod` receives the instance",
+      "`@classmethod` can't be called on instances"
+    ],
+    "answerIndex": 1,
+    "explanation": "Use `@classmethod` for alternate constructors (`from_string`); `@staticmethod` when the method doesn't need class or instance but logically belongs to the class.",
+    "tags": ["oop"]
+  },
+  {
+    "id": "py-q-040",
+    "track": "python",
+    "topic": "oop",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Which dunder controls `print(obj)` when `__str__` is NOT defined?",
+    "options": ["`__repr__`", "`__format__`", "`__display__`", "It prints the object id"],
+    "answerIndex": 0,
+    "explanation": "`__str__` is used by `str()` and `print`; if absent it falls back to `__repr__`. Always define at least `__repr__`.",
+    "tags": ["oop", "dunder"]
+  },
+  {
+    "id": "py-q-041",
+    "track": "python",
+    "topic": "oop",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "What's wrong with `class Bag: items = []` if you append to `self.items` in methods?",
+    "options": [
+      "Nothing",
+      "`items` is a class attribute, shared across all instances — mutations leak across instances",
+      "Lists aren't allowed as class attributes",
+      "`self.items` will be `None`"
+    ],
+    "answerIndex": 1,
+    "explanation": "Class-level mutables are shared. Use `self.items = []` inside `__init__` for per-instance state.",
+    "tags": ["oop", "interview-classic"]
+  },
+  {
+    "id": "py-q-042",
+    "track": "python",
+    "topic": "stdlib",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which gives you the 3 most-common elements in a list?",
+    "options": [
+      "`sorted(lst)[:3]`",
+      "`Counter(lst).most_common(3)`",
+      "`set(lst)[:3]`",
+      "`heapq.nlargest(3, lst)`"
+    ],
+    "answerIndex": 1,
+    "explanation": "`Counter.most_common(k)` returns (element, count) pairs for the top-k by frequency.",
+    "tags": ["collections"]
+  },
+  {
+    "id": "py-q-043",
+    "track": "python",
+    "topic": "stdlib",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What's the time complexity of `deque.appendleft(x)` vs `list.insert(0, x)`?",
+    "options": [
+      "Both O(1)",
+      "Both O(n)",
+      "deque: O(1), list: O(n)",
+      "deque: O(n), list: O(1)"
+    ],
+    "answerIndex": 2,
+    "explanation": "deque is a doubly-linked-list-backed structure — O(1) on both ends. list.insert(0, x) shifts every element right.",
+    "tags": ["collections", "complexity"]
+  },
+  {
+    "id": "py-q-044",
+    "track": "python",
+    "topic": "stdlib",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Which builds a max-heap from `[3, 1, 4, 1, 5]`?",
+    "options": [
+      "`heapq.heapify([3,1,4,1,5])`",
+      "`heapq.heapify([-3,-1,-4,-1,-5])` (push negatives, negate on pop)",
+      "`heapq.maxheapify([3,1,4,1,5])`",
+      "Python doesn't support max-heaps"
+    ],
+    "answerIndex": 1,
+    "explanation": "`heapq` is min-heap only. Push negatives to simulate a max-heap, then negate when popping.",
+    "tags": ["heapq", "interview-classic"]
+  },
+  {
+    "id": "py-q-045",
+    "track": "python",
+    "topic": "stdlib",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What does `@functools.cache` do to a function?",
+    "options": [
+      "Logs every call",
+      "Memoizes results — repeated calls with the same args return the cached value",
+      "Compiles the function to bytecode",
+      "Makes it thread-safe"
+    ],
+    "answerIndex": 1,
+    "explanation": "`@cache` (3.9+) is an unbounded memoization decorator. Use `@lru_cache(maxsize=N)` to bound the cache.",
+    "tags": ["functools"]
+  },
+  {
+    "id": "py-q-046",
+    "track": "python",
+    "topic": "strings",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Why is `out = ''; for s in parts: out += s` bad for large `parts`?",
+    "options": [
+      "It's a syntax error",
+      "Strings are immutable — every `+=` allocates a new string, making the loop O(n²)",
+      "Strings can't be concatenated with `+=`",
+      "It uses too much disk"
+    ],
+    "answerIndex": 1,
+    "explanation": "Use `''.join(parts)` — single allocation, O(n).",
+    "tags": ["strings", "performance", "interview-classic"]
+  },
+  {
+    "id": "py-q-047",
+    "track": "python",
+    "topic": "strings",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What does `'abc.txt'.rstrip('.txt')` return?",
+    "options": ["'abc'", "'a'", "'abc.txt'", "Empty string"],
+    "answerIndex": 1,
+    "explanation": "`rstrip` removes any TRAILING characters that appear in the argument SET — not an exact suffix. It strips 'c', then '.', then 't' from the end too. Use `removesuffix('.txt')` (3.9+) for exact-suffix removal.",
+    "tags": ["strings", "gotcha", "interview-classic"]
+  },
+  {
+    "id": "py-q-048",
+    "track": "python",
+    "topic": "file-io",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What's the recommended way to ensure a file is closed?",
+    "options": [
+      "Call `f.close()` at the end",
+      "Use `with open(...) as f:` — closes automatically, even on exceptions",
+      "Garbage collection handles it",
+      "Files close themselves when the program exits"
+    ],
+    "answerIndex": 1,
+    "explanation": "Context managers guarantee cleanup. Relying on GC is unreliable in CPython alternatives and on long-lived programs.",
+    "tags": ["file-io"]
+  },
+  {
+    "id": "py-q-049",
+    "track": "python",
+    "topic": "file-io",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which is the safe way to read a 10GB file?",
+    "options": [
+      "`open(f).read()`",
+      "`for line in open(f, encoding='utf-8'): ...` — streams line by line",
+      "`open(f).readlines()`",
+      "`json.load(open(f))`"
+    ],
+    "answerIndex": 1,
+    "explanation": "Iterating a file object reads line-by-line, never loading the whole file into memory.",
+    "tags": ["file-io", "memory"]
+  }
+]
