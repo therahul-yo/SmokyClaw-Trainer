@@ -1,0 +1,562 @@
+[
+  {
+    "id": "dsa-q-010",
+    "track": "dsa",
+    "topic": "complexity",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which complexity describes a single loop that halves a value each iteration?",
+    "options": ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    "answerIndex": 1,
+    "explanation": "Halving k times reaches 1 when n / 2^k = 1, so k = log₂ n. Single loop with halving = O(log n).",
+    "tags": ["complexity", "fundamentals"]
+  },
+  {
+    "id": "dsa-q-011",
+    "track": "dsa",
+    "topic": "complexity",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What is the complexity of `for i in range(n): for j in range(i): pass`?",
+    "options": ["O(n)", "O(n log n)", "O(n²)", "O(n³)"],
+    "answerIndex": 2,
+    "explanation": "Total iterations = 0 + 1 + 2 + ... + (n-1) = n(n-1)/2 ≈ n²/2. Drop the constant → O(n²).",
+    "tags": ["complexity"]
+  },
+  {
+    "id": "dsa-q-012",
+    "track": "dsa",
+    "topic": "complexity",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Naive recursive fib(n) makes 2^n calls. With @cache it becomes:",
+    "options": ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+    "answerIndex": 2,
+    "explanation": "Memoization caches each subproblem fib(0), fib(1), ..., fib(n) — n+1 unique calls, each O(1) work after the cache fills.",
+    "tags": ["complexity", "dp"]
+  },
+  {
+    "id": "dsa-q-013",
+    "track": "dsa",
+    "topic": "complexity",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What's the complexity of `s = ''` then `for x in items: s += str(x)` for n items?",
+    "options": ["O(n)", "O(n log n)", "O(n²)", "O(n³)"],
+    "answerIndex": 2,
+    "explanation": "Python strings are immutable. Each += creates a new string copying all prior content. 1+2+3+...+n = O(n²). Use `''.join(...)` for O(n).",
+    "tags": ["complexity", "python-trap"]
+  },
+  {
+    "id": "dsa-q-014",
+    "track": "dsa",
+    "topic": "complexity",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Worst case of `x in lst` where lst is a Python list of length n?",
+    "options": ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+    "answerIndex": 2,
+    "explanation": "Lists support only linear scan. O(n). For O(1) membership, convert to a set.",
+    "tags": ["complexity", "python"]
+  },
+  {
+    "id": "dsa-q-015",
+    "track": "dsa",
+    "topic": "hashmap",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Which of these CANNOT be used as a Python dict key?",
+    "options": ["int", "str", "tuple of ints", "list of ints"],
+    "answerIndex": 3,
+    "explanation": "Lists are mutable, hence unhashable. Tuples (immutable) of hashable items are fine. Lists and dicts aren't allowed as keys.",
+    "tags": ["hashing", "python"]
+  },
+  {
+    "id": "dsa-q-016",
+    "track": "dsa",
+    "topic": "hashmap",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Two-sum on an unsorted array of length n. Best time complexity?",
+    "options": ["O(n)", "O(n log n)", "O(n²)", "O(2^n)"],
+    "answerIndex": 0,
+    "explanation": "Single pass with a hashmap of (value → index). For each x, check if (target - x) is already in the map.",
+    "tags": ["hashing", "interview-classic"]
+  },
+  {
+    "id": "dsa-q-017",
+    "track": "dsa",
+    "topic": "hashmap",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "You want to check if two strings are anagrams. Best approach?",
+    "options": [
+      "Sort both and compare — O(n log n)",
+      "Counter on both and compare — O(n)",
+      "Nested loop matching characters — O(n²)",
+      "Both A and B are commonly used; B is asymptotically better"
+    ],
+    "answerIndex": 3,
+    "explanation": "Both work and are common. Counter (or fixed-size 26-array) is O(n) — strictly better asymptotically and simpler to reason about.",
+    "tags": ["hashing", "strings"]
+  },
+  {
+    "id": "dsa-q-018",
+    "track": "dsa",
+    "topic": "prefix-sums",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Prefix array P[i+1] = P[i] + nums[i]. To get sum of nums[l..r-1] (half-open), compute:",
+    "options": ["P[r] - P[l]", "P[r] - P[l-1]", "P[r-1] - P[l]", "P[r+1] - P[l]"],
+    "answerIndex": 0,
+    "explanation": "With the size-(n+1) prefix and 0-based half-open ranges, sum(nums[l:r]) = P[r] - P[l]. The +1 sizing avoids off-by-one entirely.",
+    "tags": ["prefix-sums"]
+  },
+  {
+    "id": "dsa-q-019",
+    "track": "dsa",
+    "topic": "prefix-sums",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Subarray sum equals k on an array of length n. Best time?",
+    "options": ["O(n)", "O(n log n)", "O(n²)", "O(n²) only if values can be negative"],
+    "answerIndex": 0,
+    "explanation": "Running prefix + hashmap of {prefix_sum → count}. For each prefix, add count of (prefix - k). Single pass, O(n).",
+    "tags": ["prefix-sums", "hashing"]
+  },
+  {
+    "id": "dsa-q-020",
+    "track": "dsa",
+    "topic": "binary-search",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Required precondition for binary search?",
+    "options": [
+      "The array must be sorted (or the search space monotonic)",
+      "The array must be of length a power of 2",
+      "The array must contain only positive integers",
+      "Nothing — works on any array"
+    ],
+    "answerIndex": 0,
+    "explanation": "Binary search works on monotonic structures only. Sorted arrays are the canonical case; 'binary-search-on-the-answer' applies when a predicate is monotonic in some parameter.",
+    "tags": ["binary-search"]
+  },
+  {
+    "id": "dsa-q-021",
+    "track": "dsa",
+    "topic": "binary-search",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "bisect.bisect_left([1,3,5,5,7], 5) returns:",
+    "options": ["1", "2", "3", "4"],
+    "answerIndex": 1,
+    "explanation": "bisect_left returns the FIRST index where the element could be inserted to keep sorted order — i.e., before any equal values. For 5 in [1,3,5,5,7], that's index 2.",
+    "tags": ["binary-search", "python"]
+  },
+  {
+    "id": "dsa-q-022",
+    "track": "dsa",
+    "topic": "binary-search",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "Koko eats bananas: pile sizes piles[], must finish in H hours, rate k per hour (ceil per pile). Find min k. Complexity?",
+    "options": [
+      "O(n)",
+      "O(n log n)",
+      "O(n · log(max(piles)))",
+      "O(n²)"
+    ],
+    "answerIndex": 2,
+    "explanation": "Binary search the answer k in [1, max(piles)]. Each feasibility check is O(n). Total O(n · log(max(piles))).",
+    "tags": ["binary-search", "search-on-answer"]
+  },
+  {
+    "id": "dsa-q-023",
+    "track": "dsa",
+    "topic": "recursion",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Python's default recursion limit is approximately:",
+    "options": ["100", "1000", "10000", "Unlimited"],
+    "answerIndex": 1,
+    "explanation": "sys.getrecursionlimit() defaults to 1000. Deep recursive solutions (linked lists of 10⁵ nodes etc.) blow the stack — rewrite iteratively or bump the limit.",
+    "tags": ["recursion", "python"]
+  },
+  {
+    "id": "dsa-q-024",
+    "track": "dsa",
+    "topic": "recursion",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Does CPython optimize tail recursion?",
+    "options": [
+      "Yes — last-call self-references become loops",
+      "No — every recursive call uses a new stack frame",
+      "Only with @cache",
+      "Only at -O optimization level"
+    ],
+    "answerIndex": 1,
+    "explanation": "CPython does NOT perform tail-call optimization. Don't write tail-recursive Python expecting it; use a loop.",
+    "tags": ["recursion", "python"]
+  },
+  {
+    "id": "dsa-q-025",
+    "track": "dsa",
+    "topic": "sorting",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What does it mean for a sort to be 'stable'?",
+    "options": [
+      "It doesn't crash on edge cases",
+      "Equal elements keep their original relative order",
+      "It uses O(1) extra space",
+      "It's deterministic across runs"
+    ],
+    "answerIndex": 1,
+    "explanation": "Stability = equal-keyed elements retain input order. Matters when sorting by secondary keys after a primary sort.",
+    "tags": ["sorting", "fundamentals"]
+  },
+  {
+    "id": "dsa-q-026",
+    "track": "dsa",
+    "topic": "sorting",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Quicksort worst case on an already-sorted array with first-element pivot?",
+    "options": ["O(n)", "O(n log n)", "O(n²)", "O(n³)"],
+    "answerIndex": 2,
+    "explanation": "Already-sorted + first-pivot = partition is always [], [rest] — n recursion depths, O(n) work each = O(n²). Random or median-of-three pivots avoid this.",
+    "tags": ["sorting"]
+  },
+  {
+    "id": "dsa-q-027",
+    "track": "dsa",
+    "topic": "sorting",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Find the k-th largest of n elements (k ≪ n). Most efficient?",
+    "options": [
+      "Sort fully — O(n log n)",
+      "Min-heap of size k — O(n log k)",
+      "Linear scan — O(n)",
+      "Quickselect — O(n) average"
+    ],
+    "answerIndex": 3,
+    "explanation": "Quickselect runs in O(n) average, O(n²) worst. For practical/guaranteed-good behavior, heap of size k (O(n log k)) is common.",
+    "tags": ["sorting", "selection"]
+  },
+  {
+    "id": "dsa-q-028",
+    "track": "dsa",
+    "topic": "linked-list",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Reverse a singly linked list iteratively. Space complexity?",
+    "options": ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+    "answerIndex": 0,
+    "explanation": "Three pointers (prev, cur, nxt) and in-place .next reassignment. O(1) extra space. Recursive version uses O(n) stack.",
+    "tags": ["linked-list", "interview-classic"]
+  },
+  {
+    "id": "dsa-q-029",
+    "track": "dsa",
+    "topic": "linked-list",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Floyd's cycle detection (tortoise and hare). What's true?",
+    "options": [
+      "Needs O(n) extra space",
+      "Detects cycles in O(n) time with O(1) extra space",
+      "Only works on doubly linked lists",
+      "Detects cycles only when the cycle has even length"
+    ],
+    "answerIndex": 1,
+    "explanation": "Two pointers — slow advances by 1, fast by 2. If a cycle exists, they meet. O(n) time, O(1) space. Beats the hashmap approach on space.",
+    "tags": ["linked-list", "two-pointer"]
+  },
+  {
+    "id": "dsa-q-030",
+    "track": "dsa",
+    "topic": "stack",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Best Python data structure for a stack?",
+    "options": ["list (append/pop)", "list (insert(0)/pop(0))", "collections.deque (appendleft/popleft)", "queue.Queue"],
+    "answerIndex": 0,
+    "explanation": "list.append and list.pop are O(1) amortized at the end. Use the end as top-of-stack. Front operations on lists are O(n).",
+    "tags": ["stack", "python"]
+  },
+  {
+    "id": "dsa-q-031",
+    "track": "dsa",
+    "topic": "stack",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Daily temperatures: for each day return days until a warmer day. Using a monotonic stack, total complexity?",
+    "options": ["O(n log n)", "O(n)", "O(n²)", "O(n · max(temps))"],
+    "answerIndex": 1,
+    "explanation": "Each index is pushed and popped at most once. Total work across the inner while across the whole loop is O(n).",
+    "tags": ["stack", "monotonic"]
+  },
+  {
+    "id": "dsa-q-032",
+    "track": "dsa",
+    "topic": "stack",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Best Python data structure for a FIFO queue?",
+    "options": ["list with .pop(0)", "list with .pop()", "collections.deque", "set"],
+    "answerIndex": 2,
+    "explanation": "deque.popleft and deque.append are both O(1). list.pop(0) is O(n) because of the shift.",
+    "tags": ["queue", "python"]
+  },
+  {
+    "id": "dsa-q-033",
+    "track": "dsa",
+    "topic": "trees",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "In-order traversal of a Binary Search Tree gives values in:",
+    "options": [
+      "Random order",
+      "Sorted ascending order",
+      "Insertion order",
+      "Reverse-sorted order"
+    ],
+    "answerIndex": 1,
+    "explanation": "BST invariant: left < node < right. In-order (left, node, right) emits values in ascending order. This is THE most useful fact about BSTs.",
+    "tags": ["trees", "bst"]
+  },
+  {
+    "id": "dsa-q-034",
+    "track": "dsa",
+    "topic": "trees",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "To check if a binary tree is a valid BST, comparing each node only to its immediate children is:",
+    "options": [
+      "Correct",
+      "Wrong — must pass min/max bounds down the recursion",
+      "Wrong — must check leaves only",
+      "Wrong — must do in-order and check sorted-ness"
+    ],
+    "answerIndex": 1,
+    "explanation": "Immediate-child check misses violations like a 6 in the right subtree of a 3 that's the left child of a 5 — 6 > 5 violates BST. Pass (lo, hi) bounds, OR do in-order and check strict ascending.",
+    "tags": ["trees", "bst", "interview-trap"]
+  },
+  {
+    "id": "dsa-q-035",
+    "track": "dsa",
+    "topic": "trees",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "BFS on a binary tree uses what data structure, and what's its space worst-case?",
+    "options": [
+      "Stack — O(height)",
+      "Queue — O(width), which is O(n) for a complete tree's bottom level",
+      "Heap — O(log n)",
+      "Set — O(n)"
+    ],
+    "answerIndex": 1,
+    "explanation": "BFS uses a queue. The bottom level of a complete tree contains ~n/2 nodes, so worst-case queue space is O(n).",
+    "tags": ["trees", "bfs"]
+  },
+  {
+    "id": "dsa-q-036",
+    "track": "dsa",
+    "topic": "heap",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Python's heapq is a:",
+    "options": ["Min-heap", "Max-heap", "Configurable — heap_type=...", "Median-heap"],
+    "answerIndex": 0,
+    "explanation": "heapq is min-heap only. heap[0] is always the smallest. For max-heap behavior, negate values on push and pop.",
+    "tags": ["heap", "python"]
+  },
+  {
+    "id": "dsa-q-037",
+    "track": "dsa",
+    "topic": "heap",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Top-K largest of n items with a heap of size K. Time complexity?",
+    "options": ["O(n)", "O(n log k)", "O(n log n)", "O(k log n)"],
+    "answerIndex": 1,
+    "explanation": "Push each item (O(log k)), pop the smallest if size > k. n pushes × log k = O(n log k). Beats full-sort O(n log n) when k ≪ n.",
+    "tags": ["heap", "top-k"]
+  },
+  {
+    "id": "dsa-q-038",
+    "track": "dsa",
+    "topic": "graphs",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Shortest path on an UNWEIGHTED graph is best found via:",
+    "options": ["DFS", "BFS", "Dijkstra", "Bellman-Ford"],
+    "answerIndex": 1,
+    "explanation": "BFS explores by distance layer. First time you reach the target is the minimum number of edges. Dijkstra works too but is overkill for unweighted.",
+    "tags": ["graphs", "bfs"]
+  },
+  {
+    "id": "dsa-q-039",
+    "track": "dsa",
+    "topic": "graphs",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Dijkstra's algorithm works on graphs with:",
+    "options": [
+      "Any edge weights including negative",
+      "Non-negative edge weights only",
+      "Only unit weights",
+      "Only weights that are 0 or 1"
+    ],
+    "answerIndex": 1,
+    "explanation": "Dijkstra silently gives wrong answers with negative edges (the greedy pop-min decision is no longer safe). For negatives use Bellman-Ford.",
+    "tags": ["graphs", "dijkstra"]
+  },
+  {
+    "id": "dsa-q-040",
+    "track": "dsa",
+    "topic": "graphs",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Topological sort exists for a directed graph if and only if:",
+    "options": [
+      "The graph is connected",
+      "The graph has no cycles (it's a DAG)",
+      "All in-degrees are equal",
+      "The graph has even number of vertices"
+    ],
+    "answerIndex": 1,
+    "explanation": "Topo order requires every edge u→v to have u before v. A cycle makes this impossible. DAG = directed acyclic graph; topo sort exists iff DAG.",
+    "tags": ["graphs", "topological-sort"]
+  },
+  {
+    "id": "dsa-q-041",
+    "track": "dsa",
+    "topic": "backtracking",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "In backtracking, after a recursive call returns, you must usually:",
+    "options": [
+      "Return immediately",
+      "Undo the choice made before the call",
+      "Save the result and continue",
+      "Reset the entire state"
+    ],
+    "answerIndex": 1,
+    "explanation": "Backtracking = try, recurse, UNDO. Without the undo, sibling branches inherit your dirty state and results are wrong.",
+    "tags": ["backtracking", "fundamentals"]
+  },
+  {
+    "id": "dsa-q-042",
+    "track": "dsa",
+    "topic": "backtracking",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Number of subsets of an n-element set?",
+    "options": ["n", "n²", "n!", "2^n"],
+    "answerIndex": 3,
+    "explanation": "Each element: include or exclude — 2 choices per element, n elements, total 2^n subsets. Backtracking enumerates them in O(2^n) time.",
+    "tags": ["backtracking", "subsets"]
+  },
+  {
+    "id": "dsa-q-043",
+    "track": "dsa",
+    "topic": "backtracking",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "You write `out.append(path)` instead of `out.append(path[:])`. What happens?",
+    "options": [
+      "Works fine — Python copies on append",
+      "All saved 'paths' end up identical to the final state of `path`",
+      "TypeError",
+      "Just slower"
+    ],
+    "answerIndex": 1,
+    "explanation": "Lists are reference types. Without [:] you save the same mutating list reference n times. Every saved entry ends as path's final state — usually empty.",
+    "tags": ["backtracking", "python-trap"]
+  },
+  {
+    "id": "dsa-q-044",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "The two essential properties for a DP solution to apply are:",
+    "options": [
+      "Sorted input and unique values",
+      "Optimal substructure and overlapping subproblems",
+      "Recursive structure and memoization",
+      "Greedy choices and small input"
+    ],
+    "answerIndex": 1,
+    "explanation": "Optimal substructure — answer for n built from answers for smaller. Overlapping subproblems — same sub-call appears many times. Memoization exploits the latter.",
+    "tags": ["dp", "fundamentals"]
+  },
+  {
+    "id": "dsa-q-045",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Climb stairs (1 or 2 at a time) to step n. Space-optimized complexity?",
+    "options": ["O(1) time, O(n) space", "O(n) time, O(n) space", "O(n) time, O(1) space", "O(log n) time, O(1) space"],
+    "answerIndex": 2,
+    "explanation": "dp[i] = dp[i-1] + dp[i-2] — only the last two values matter. Roll them as two variables: O(n) time, O(1) space.",
+    "tags": ["dp", "space-optimization"]
+  },
+  {
+    "id": "dsa-q-046",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Coin change (min coins for amount A from denominations D). Complexity?",
+    "options": ["O(A)", "O(A · |D|)", "O(A²)", "O(|D| · 2^A)"],
+    "answerIndex": 1,
+    "explanation": "dp[a] = min over c in D of dp[a - c] + 1. A subproblems × |D| transitions each = O(A · |D|).",
+    "tags": ["dp", "coin-change"]
+  },
+  {
+    "id": "dsa-q-047",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "Longest Increasing Subsequence — O(n²) DP exists. Best possible?",
+    "options": ["O(n)", "O(n log n)", "O(n log log n)", "O(n²) is best"],
+    "answerIndex": 1,
+    "explanation": "Patience-sorting + binary search gives O(n log n). Maintain an array `tails` of smallest possible tail values per length; each new element either extends or replaces via bisect_left.",
+    "tags": ["dp", "lis", "binary-search"]
+  },
+  {
+    "id": "dsa-q-048",
+    "track": "dsa",
+    "topic": "complexity",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Recurrence T(n) = 2·T(n/2) + O(n) solves to:",
+    "options": ["O(n)", "O(n log n)", "O(n²)", "O(2^n)"],
+    "answerIndex": 1,
+    "explanation": "Master theorem case 2 (or merge-sort tree). log n levels × O(n) per level = O(n log n). Same shape as merge sort.",
+    "tags": ["complexity", "master-theorem"]
+  },
+  {
+    "id": "dsa-q-049",
+    "track": "dsa",
+    "topic": "graphs",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Union-Find (DSU) with path compression + union by rank — practical complexity of find/union?",
+    "options": [
+      "O(log n)",
+      "O(α(n)) ≈ O(1)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "answerIndex": 1,
+    "explanation": "Inverse Ackermann α(n) — effectively constant for any n that fits in this universe. Standard answer in interviews: 'essentially O(1)'.",
+    "tags": ["graphs", "dsu"]
+  }
+]

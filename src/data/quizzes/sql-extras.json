@@ -1,0 +1,402 @@
+[
+  {
+    "id": "sql-q-010",
+    "track": "sql",
+    "topic": "joins",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "An INNER JOIN returns:",
+    "options": [
+      "All rows from the left table, NULLs where no match on right",
+      "All rows from the right table, NULLs where no match on left",
+      "Only rows where the join condition matches on both sides",
+      "The Cartesian product of both tables"
+    ],
+    "answerIndex": 2,
+    "explanation": "INNER JOIN keeps only rows where the ON condition is satisfied on both sides. The other options describe LEFT JOIN, RIGHT JOIN, and CROSS JOIN respectively.",
+    "tags": ["joins", "fundamentals"]
+  },
+  {
+    "id": "sql-q-011",
+    "track": "sql",
+    "topic": "joins",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Which query finds employees with no department assigned (dept_id is NULL)?",
+    "options": [
+      "SELECT * FROM employees e LEFT JOIN departments d ON e.dept_id = d.id WHERE d.id IS NULL",
+      "SELECT * FROM employees WHERE dept_id = NULL",
+      "SELECT * FROM employees e JOIN departments d ON e.dept_id = d.id WHERE d.id IS NULL",
+      "SELECT * FROM employees e CROSS JOIN departments d WHERE d.id IS NULL"
+    ],
+    "answerIndex": 0,
+    "explanation": "Left join + WHERE d.id IS NULL is the standard anti-join. INNER JOIN would drop unmatched rows, defeating the purpose. `= NULL` never matches (use IS NULL).",
+    "tags": ["joins", "anti-join", "nulls"]
+  },
+  {
+    "id": "sql-q-012",
+    "track": "sql",
+    "topic": "joins",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "You write `A LEFT JOIN B ON A.id = B.a_id WHERE B.flag = 1`. What's the effective behavior?",
+    "options": [
+      "Same as INNER JOIN — NULL flag rows get filtered out",
+      "Still a LEFT JOIN, returning all A rows",
+      "A syntax error",
+      "Slower than the equivalent INNER JOIN"
+    ],
+    "answerIndex": 0,
+    "explanation": "Putting a B-side filter in WHERE eliminates rows where B is NULL (because NULL = 1 is UNKNOWN, filtered). The LEFT JOIN's outer-ness is lost. Move the condition into ON to preserve unmatched A rows.",
+    "tags": ["joins", "interview-trap"]
+  },
+  {
+    "id": "sql-q-013",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Difference between COUNT(*) and COUNT(col)?",
+    "options": [
+      "No difference — both count rows",
+      "COUNT(*) counts all rows; COUNT(col) counts rows where col IS NOT NULL",
+      "COUNT(*) is faster only on indexed tables",
+      "COUNT(col) returns distinct values"
+    ],
+    "answerIndex": 1,
+    "explanation": "COUNT(*) counts every row. COUNT(col) ignores NULLs in that column. COUNT(DISTINCT col) further deduplicates. Critical interview distinction.",
+    "tags": ["aggregation", "nulls"]
+  },
+  {
+    "id": "sql-q-014",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "WHERE vs HAVING?",
+    "options": [
+      "Synonyms — interchangeable",
+      "WHERE filters rows before GROUP BY; HAVING filters groups after",
+      "HAVING is faster than WHERE",
+      "HAVING can only be used with COUNT"
+    ],
+    "answerIndex": 1,
+    "explanation": "WHERE runs in the FROM → WHERE → GROUP BY → HAVING → SELECT order. WHERE acts on raw rows; HAVING acts on aggregated groups. You can't put an aggregate in WHERE.",
+    "tags": ["aggregation", "fundamentals"]
+  },
+  {
+    "id": "sql-q-015",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "SELECT dept_id, name, COUNT(*) FROM employees GROUP BY dept_id. What's the issue?",
+    "options": [
+      "Nothing — runs fine",
+      "`name` is neither aggregated nor in GROUP BY — undefined in standard SQL",
+      "COUNT(*) is invalid syntax",
+      "Should use HAVING instead of GROUP BY"
+    ],
+    "answerIndex": 1,
+    "explanation": "Every selected column must be in GROUP BY or wrapped in an aggregate. Strict engines reject this; SQLite/MySQL pick an arbitrary `name` per group (undefined which).",
+    "tags": ["aggregation", "interview-classic"]
+  },
+  {
+    "id": "sql-q-016",
+    "track": "sql",
+    "topic": "subqueries",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "What's wrong with `SELECT * FROM emp WHERE dept_id NOT IN (SELECT id FROM dept)` if dept.id can be NULL?",
+    "options": [
+      "Nothing — handles NULL correctly",
+      "Returns empty result if any dept.id is NULL",
+      "Runs but is slow",
+      "Syntax error"
+    ],
+    "answerIndex": 1,
+    "explanation": "NOT IN with NULL in the subquery is the most infamous SQL gotcha. `x NOT IN (1, NULL)` is `x!=1 AND x!=NULL`; the latter is UNKNOWN, so the whole expression can never be TRUE. Use NOT EXISTS.",
+    "tags": ["subqueries", "nulls", "interview-trap"]
+  },
+  {
+    "id": "sql-q-017",
+    "track": "sql",
+    "topic": "subqueries",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Correlated subquery means:",
+    "options": [
+      "A subquery whose result correlates statistically with the outer query",
+      "A subquery that references columns from the outer query — conceptually runs per outer row",
+      "A subquery joined to the outer query",
+      "A subquery with multiple result columns"
+    ],
+    "answerIndex": 1,
+    "explanation": "Correlated = references outer-query columns. Performance-wise, it logically runs per outer row (planners often rewrite as joins). Uncorrelated subqueries run once.",
+    "tags": ["subqueries", "performance"]
+  },
+  {
+    "id": "sql-q-018",
+    "track": "sql",
+    "topic": "cte",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "A CTE (WITH clause) is best described as:",
+    "options": [
+      "A permanent view stored in the database",
+      "A named subquery scoped to the current statement",
+      "A temporary table requiring CREATE permissions",
+      "An index hint for the planner"
+    ],
+    "answerIndex": 1,
+    "explanation": "CTEs are query-scoped names for subqueries. They don't persist beyond the statement and don't require special permissions.",
+    "tags": ["cte", "fundamentals"]
+  },
+  {
+    "id": "sql-q-019",
+    "track": "sql",
+    "topic": "cte",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Recursive CTEs are typically used for:",
+    "options": [
+      "Pagination",
+      "Hierarchies / graph traversal / sequence generation",
+      "Replacing JOINs",
+      "Improving performance of GROUP BY"
+    ],
+    "answerIndex": 1,
+    "explanation": "Recursive CTEs: anchor query + recursive query joined back to itself via UNION ALL. Org charts, BOM explosion, generating number ranges, graph reachability.",
+    "tags": ["cte", "recursive"]
+  },
+  {
+    "id": "sql-q-020",
+    "track": "sql",
+    "topic": "nulls",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What does `NULL = NULL` evaluate to?",
+    "options": ["TRUE", "FALSE", "NULL (UNKNOWN)", "Error"],
+    "answerIndex": 2,
+    "explanation": "NULL = NULL is NULL — not TRUE. NULLs aren't 'equal' to themselves under three-valued logic. Use IS NULL / IS NOT DISTINCT FROM for explicit NULL comparisons.",
+    "tags": ["nulls", "fundamentals"]
+  },
+  {
+    "id": "sql-q-021",
+    "track": "sql",
+    "topic": "nulls",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "SELECT AVG(salary) FROM employees where 5 of 10 rows have NULL salary and the others sum to 500000. The result is:",
+    "options": ["50000", "100000", "NULL", "Error"],
+    "answerIndex": 1,
+    "explanation": "AVG ignores NULLs. It's SUM(non-null) / COUNT(non-null) = 500000 / 5 = 100000. AVG(col) ≠ SUM/COUNT(*).",
+    "tags": ["nulls", "aggregation"]
+  },
+  {
+    "id": "sql-q-022",
+    "track": "sql",
+    "topic": "nulls",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Which expression returns the first non-NULL of its arguments?",
+    "options": ["NULLIF(a, b)", "COALESCE(a, b, c)", "IS NULL(a, b)", "DEFAULT(a, b)"],
+    "answerIndex": 1,
+    "explanation": "COALESCE returns the first non-NULL argument, or NULL if all are NULL. NULLIF(a, b) returns NULL when a=b, else a. IS NULL is not a function.",
+    "tags": ["nulls", "functions"]
+  },
+  {
+    "id": "sql-q-023",
+    "track": "sql",
+    "topic": "indexes",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Trade-off of adding an index?",
+    "options": [
+      "Reads slower, writes faster",
+      "Reads faster on the indexed columns, writes slower (every insert/update/delete updates indexes)",
+      "Only space — no perf impact",
+      "Indexes are always free"
+    ],
+    "answerIndex": 1,
+    "explanation": "Indexes speed up matching SELECTs and slow down writes (every INSERT/UPDATE/DELETE must keep all indexes consistent). They also cost disk space.",
+    "tags": ["indexes", "fundamentals"]
+  },
+  {
+    "id": "sql-q-024",
+    "track": "sql",
+    "topic": "indexes",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "You have a composite index on (dept_id, salary). Which query CAN'T use it efficiently?",
+    "options": [
+      "WHERE dept_id = 5",
+      "WHERE dept_id = 5 AND salary > 100000",
+      "WHERE salary > 100000",
+      "WHERE dept_id = 5 ORDER BY salary"
+    ],
+    "answerIndex": 2,
+    "explanation": "Leftmost-prefix rule. The index is sorted first by dept_id; without a dept_id filter, the engine can't jump into the right region. The first three queries use the index; the third would need either a full scan or a separate index on salary.",
+    "tags": ["indexes", "composite"]
+  },
+  {
+    "id": "sql-q-025",
+    "track": "sql",
+    "topic": "indexes",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Why doesn't `WHERE LOWER(email) = 'x'` use a regular B-tree index on `email`?",
+    "options": [
+      "B-trees can't index strings",
+      "The index stores `email`, but the query asks about `LOWER(email)` — different value space",
+      "LOWER is a non-deterministic function",
+      "It does use the index"
+    ],
+    "answerIndex": 1,
+    "explanation": "The index sorts by `email` values, but the query filters by `LOWER(email)` — the engine can't translate. Solutions: store emails already-lowercased, or create a functional index on LOWER(email).",
+    "tags": ["indexes", "interview-trap"]
+  },
+  {
+    "id": "sql-q-026",
+    "track": "sql",
+    "topic": "normalization",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "1NF requires:",
+    "options": [
+      "No NULL values anywhere",
+      "Atomic values — each cell contains a single, indivisible value",
+      "A composite primary key",
+      "At least three columns per table"
+    ],
+    "answerIndex": 1,
+    "explanation": "1NF: atomic values. No CSV-in-a-cell, no JSON arrays as repeating groups. Split repeating values into a child table.",
+    "tags": ["normalization", "fundamentals"]
+  },
+  {
+    "id": "sql-q-027",
+    "track": "sql",
+    "topic": "normalization",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "employees(id, name, dept_id, dept_name) — what normal form is violated?",
+    "options": [
+      "1NF — repeating values",
+      "2NF — partial dependency",
+      "3NF — transitive dependency (dept_name depends on dept_id, not id)",
+      "Already in 3NF"
+    ],
+    "answerIndex": 2,
+    "explanation": "dept_name depends on dept_id, which is not the primary key. That's a transitive dependency — non-key depending on non-key. Violates 3NF. Fix: separate dept table.",
+    "tags": ["normalization", "3nf"]
+  },
+  {
+    "id": "sql-q-028",
+    "track": "sql",
+    "topic": "joins",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "CROSS JOIN of a 100-row table and a 50-row table produces how many rows?",
+    "options": ["100", "50", "150", "5000"],
+    "answerIndex": 3,
+    "explanation": "CROSS JOIN = Cartesian product = 100 × 50 = 5000. Be very careful with CROSS JOIN on large tables — easy to OOM.",
+    "tags": ["joins", "cross-join"]
+  },
+  {
+    "id": "sql-q-029",
+    "track": "sql",
+    "topic": "subqueries",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Style: when do EXISTS and IN behave differently?",
+    "options": [
+      "Never — they're synonyms",
+      "With NULL handling — IN can produce surprising results with NULL in the subquery, EXISTS doesn't",
+      "EXISTS only works on single-column subqueries",
+      "IN is always faster"
+    ],
+    "answerIndex": 1,
+    "explanation": "EXISTS is just 'does any row come back?' — robust to NULLs. NOT IN with a NULL in the subquery returns empty (the infamous gotcha). For nullable columns, prefer NOT EXISTS over NOT IN.",
+    "tags": ["subqueries", "nulls"]
+  },
+  {
+    "id": "sql-q-030",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "SUM(CASE WHEN salary > 100000 THEN 1 ELSE 0 END) — what's this expressing?",
+    "options": [
+      "Total salary of high earners",
+      "Count of rows where salary > 100000 (the SQL 'count-if' idiom)",
+      "Conditional average",
+      "A syntax error"
+    ],
+    "answerIndex": 1,
+    "explanation": "The classic conditional-count idiom. Equivalent to COUNT(CASE WHEN salary > 100000 THEN 1 END), or in Postgres COUNT(*) FILTER (WHERE salary > 100000).",
+    "tags": ["aggregation", "case", "patterns"]
+  },
+  {
+    "id": "sql-q-031",
+    "track": "sql",
+    "topic": "joins",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "After joining a 1-row order to a 5-row line-items table, how many rows in the result?",
+    "options": ["1", "5", "6", "Depends on the join condition matches"],
+    "answerIndex": 3,
+    "explanation": "Could be 0 (no matches), or up to 5 (one row per matching line item) — depends on how many line items belong to that order. The 'one-to-many fan-out' is a common source of duplicate-looking rows in joins.",
+    "tags": ["joins", "fan-out"]
+  },
+  {
+    "id": "sql-q-032",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Which clause are SELECT aliases visible in?",
+    "options": [
+      "WHERE only",
+      "GROUP BY only",
+      "ORDER BY (always) and HAVING (some engines)",
+      "All clauses"
+    ],
+    "answerIndex": 2,
+    "explanation": "Order of operations: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY. Aliases come into existence at SELECT, so WHERE and GROUP BY can't see them. ORDER BY can. HAVING varies — most engines allow it.",
+    "tags": ["sql-fundamentals", "ordering"]
+  },
+  {
+    "id": "sql-q-033",
+    "track": "sql",
+    "topic": "indexes",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "Pattern `WHERE name LIKE '%smith'` (leading wildcard) — can a B-tree index on `name` help?",
+    "options": [
+      "Yes — index seeks work for any pattern",
+      "No — leading wildcards force a full scan",
+      "Only with a hash index",
+      "Only with a unique index"
+    ],
+    "answerIndex": 1,
+    "explanation": "B-trees are sorted left-to-right; a leading wildcard means the engine can't narrow the starting point. Trigram indexes (Postgres pg_trgm) can help for fuzzy LIKE. Reversed-string trick: store reverse and index that, for trailing-wildcard search on reversed.",
+    "tags": ["indexes", "interview-trap"]
+  },
+  {
+    "id": "sql-q-034",
+    "track": "sql",
+    "topic": "normalization",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "When is denormalization a defensible choice?",
+    "options": [
+      "When the schema designer is lazy",
+      "When measured read-heavy workloads benefit and you accept the write/sync cost",
+      "Always — joins are expensive",
+      "Never — it always causes bugs"
+    ],
+    "answerIndex": 1,
+    "explanation": "Denormalize after profiling shows joins or aggregates dominate. Common: pre-aggregated counters (post.like_count), star-schema dimensions in analytics. Cost: write-side logic to keep duplicates consistent.",
+    "tags": ["normalization", "tradeoffs"]
+  }
+]

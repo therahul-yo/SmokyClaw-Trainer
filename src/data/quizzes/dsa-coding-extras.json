@@ -1,0 +1,624 @@
+[
+  {
+    "id": "dsa-c-two-sum-unsorted",
+    "track": "dsa",
+    "topic": "hashmap",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "pattern": "hashing",
+    "estMinutes": 10,
+    "companies": ["tcs", "infosys", "wipro", "amazon-india"],
+    "prompt": "Given an integer array `nums` and a target, return indices `[i, j]` (i < j) of two numbers that sum to `target`. Exactly one solution exists; do not use the same element twice. If none, return `[]`.",
+    "constraints": "2 <= len(nums) <= 10^5, -10^9 <= nums[i] <= 10^9.",
+    "examples": [
+      { "input": "nums = [2, 7, 11, 15], target = 9", "output": "[0, 1]", "explanation": "nums[0] + nums[1] = 9." },
+      { "input": "nums = [3, 3], target = 6", "output": "[0, 1]" }
+    ],
+    "starter": "def two_sum(nums, target):\n    # your code here\n    pass\n",
+    "entry": "two_sum",
+    "tests": [
+      { "args": [[2, 7, 11, 15], 9], "expect": [0, 1] },
+      { "args": [[3, 2, 4], 6], "expect": [1, 2] },
+      { "args": [[3, 3], 6], "expect": [0, 1] },
+      { "args": [[-1, -2, -3, -4, -5], -8], "expect": [2, 4] },
+      { "args": [[1, 5, 9], 100], "expect": [] }
+    ],
+    "hints": [
+      "Brute force is O(n^2). Can a lookup data structure get you O(n)?",
+      "For each element x, what's the value you NEED to find — and what do you do once you find it?",
+      "Walk the array once. Maintain a dict {value: index}. For each new x, check if (target - x) is already in it BEFORE inserting."
+    ],
+    "bruteForce": {
+      "code": "def two_sum(nums, target):\n    n = len(nums)\n    for i in range(n):\n        for j in range(i + 1, n):\n            if nums[i] + nums[j] == target:\n                return [i, j]\n    return []",
+      "complexity": "O(n^2) time, O(1) space",
+      "explanation": "Check every pair. TLEs for n = 10^5."
+    },
+    "optimal": {
+      "code": "def two_sum(nums, target):\n    index_of = {}\n    for i, x in enumerate(nums):\n        need = target - x\n        if need in index_of:\n            return [index_of[need], i]\n        index_of[x] = i\n    return []",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Single pass with a hashmap. Check before insert handles the 'two equal numbers' case correctly without using the same index twice."
+    },
+    "complexityCheck": {
+      "question": "What's the time complexity of the hashmap solution?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["hashing", "interview-classic", "tcs-nqt"]
+  },
+  {
+    "id": "dsa-c-contains-duplicate",
+    "track": "dsa",
+    "topic": "hashmap",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "pattern": "hashing",
+    "estMinutes": 6,
+    "companies": ["tcs", "infosys"],
+    "prompt": "Given an integer array `nums`, return `True` if any value appears at least twice, else `False`.",
+    "constraints": "1 <= len(nums) <= 10^5.",
+    "examples": [
+      { "input": "nums = [1, 2, 3, 1]", "output": "True" },
+      { "input": "nums = [1, 2, 3, 4]", "output": "False" }
+    ],
+    "starter": "def contains_duplicate(nums):\n    # your code here\n    pass\n",
+    "entry": "contains_duplicate",
+    "tests": [
+      { "args": [[1, 2, 3, 1]], "expect": true },
+      { "args": [[1, 2, 3, 4]], "expect": false },
+      { "args": [[1, 1, 1, 3, 3, 4, 3, 2, 4, 2]], "expect": true },
+      { "args": [[7]], "expect": false },
+      { "args": [[-1, -1]], "expect": true }
+    ],
+    "hints": [
+      "Membership testing — what Python structure does it in O(1)?",
+      "Build the set as you go; if you see a duplicate, return True immediately.",
+      "A one-liner exists: `len(set(nums)) != len(nums)` — but the early-return version is faster on duplicate-heavy inputs."
+    ],
+    "bruteForce": {
+      "code": "def contains_duplicate(nums):\n    n = len(nums)\n    for i in range(n):\n        for j in range(i + 1, n):\n            if nums[i] == nums[j]:\n                return True\n    return False",
+      "complexity": "O(n^2) time, O(1) space",
+      "explanation": "Check every pair. TLEs for large n."
+    },
+    "optimal": {
+      "code": "def contains_duplicate(nums):\n    seen = set()\n    for x in nums:\n        if x in seen:\n            return True\n        seen.add(x)\n    return False",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Hashset gives O(1) membership. Early-exit on the first duplicate."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of the set-based solution?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["hashing", "easy"]
+  },
+  {
+    "id": "dsa-c-subarray-sum-k",
+    "track": "dsa",
+    "topic": "prefix-sums",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "pattern": "prefix-sums",
+    "estMinutes": 18,
+    "companies": ["amazon-india", "infosys"],
+    "prompt": "Given an integer array `nums` and integer `k`, return the number of contiguous subarrays whose sum equals `k`. Values can be negative.",
+    "constraints": "1 <= len(nums) <= 2*10^4, -1000 <= nums[i] <= 1000, -10^7 <= k <= 10^7.",
+    "examples": [
+      { "input": "nums = [1, 1, 1], k = 2", "output": "2", "explanation": "[1,1] at indices 0..1 and 1..2." },
+      { "input": "nums = [1, 2, 3], k = 3", "output": "2", "explanation": "[3] and [1,2]." }
+    ],
+    "starter": "def subarray_sum(nums, k):\n    # your code here\n    pass\n",
+    "entry": "subarray_sum",
+    "tests": [
+      { "args": [[1, 1, 1], 2], "expect": 2 },
+      { "args": [[1, 2, 3], 3], "expect": 2 },
+      { "args": [[1], 0], "expect": 0 },
+      { "args": [[-1, -1, 1], 0], "expect": 1 },
+      { "args": [[3, 4, 7, 2, -3, 1, 4, 2], 7], "expect": 4 }
+    ],
+    "hints": [
+      "If P[r+1] - P[l] = k, then nums[l..r] sums to k. Rewrite: P[l] = P[r+1] - k.",
+      "Walk a running prefix. For each new prefix p, how many earlier prefixes equal p - k?",
+      "Maintain a dict {prefix_value: count_so_far}. Seed it with {0: 1} to account for subarrays starting at index 0."
+    ],
+    "bruteForce": {
+      "code": "def subarray_sum(nums, k):\n    count = 0\n    for i in range(len(nums)):\n        s = 0\n        for j in range(i, len(nums)):\n            s += nums[j]\n            if s == k:\n                count += 1\n    return count",
+      "complexity": "O(n^2) time, O(1) space",
+      "explanation": "Try every (start, end). Correct but slow for n = 2*10^4."
+    },
+    "optimal": {
+      "code": "def subarray_sum(nums, k):\n    count = 0\n    prefix = 0\n    seen = {0: 1}\n    for x in nums:\n        prefix += x\n        count += seen.get(prefix - k, 0)\n        seen[prefix] = seen.get(prefix, 0) + 1\n    return count",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Running prefix sum + hashmap of prefix counts. The seed {0: 1} represents 'empty prefix' so subarrays starting at index 0 are counted. Adding `seen[prefix] += 1` AFTER the lookup avoids counting zero-length subarrays."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of the prefix-sum + hashmap solution?",
+      "choices": [
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false },
+        { "label": "O(n * k)", "correct": false }
+      ]
+    },
+    "tags": ["prefix-sums", "hashing", "interview-classic"]
+  },
+  {
+    "id": "dsa-c-binary-search",
+    "track": "dsa",
+    "topic": "binary-search",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "pattern": "binary-search",
+    "estMinutes": 8,
+    "companies": ["tcs", "wipro"],
+    "prompt": "Given a sorted-ascending integer array `nums` and a `target`, return the index of `target` or `-1` if not present.",
+    "constraints": "1 <= len(nums) <= 10^4, array is sorted ascending, all distinct.",
+    "examples": [
+      { "input": "nums = [-1, 0, 3, 5, 9, 12], target = 9", "output": "4" },
+      { "input": "nums = [-1, 0, 3, 5, 9, 12], target = 2", "output": "-1" }
+    ],
+    "starter": "def search(nums, target):\n    # your code here\n    pass\n",
+    "entry": "search",
+    "tests": [
+      { "args": [[-1, 0, 3, 5, 9, 12], 9], "expect": 4 },
+      { "args": [[-1, 0, 3, 5, 9, 12], 2], "expect": -1 },
+      { "args": [[5], 5], "expect": 0 },
+      { "args": [[5], -5], "expect": -1 },
+      { "args": [[1, 2, 3, 4, 5, 6, 7], 1], "expect": 0 },
+      { "args": [[1, 2, 3, 4, 5, 6, 7], 7], "expect": 6 }
+    ],
+    "hints": [
+      "Two indices lo, hi covering the active region. Compute mid each step.",
+      "If arr[mid] == target, you're done. Otherwise discard half the array.",
+      "Watch the loop condition (`<=` vs `<`) and how you update lo/hi. The standard exact-find template is `while lo <= hi:` with `lo = mid + 1` or `hi = mid - 1`."
+    ],
+    "bruteForce": {
+      "code": "def search(nums, target):\n    for i, x in enumerate(nums):\n        if x == target:\n            return i\n    return -1",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "Linear scan ignores the sorted property entirely."
+    },
+    "optimal": {
+      "code": "def search(nums, target):\n    lo, hi = 0, len(nums) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if nums[mid] == target:\n            return mid\n        if nums[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1",
+      "complexity": "O(log n) time, O(1) space",
+      "explanation": "Halve the search space each step. Loop terminates because the active region shrinks every iteration."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of binary search?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(log n)", "correct": true },
+        { "label": "O(n)", "correct": false },
+        { "label": "O(n log n)", "correct": false }
+      ]
+    },
+    "tags": ["binary-search", "fundamentals"]
+  },
+  {
+    "id": "dsa-c-valid-parens",
+    "track": "dsa",
+    "topic": "stack",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "pattern": "stack",
+    "estMinutes": 8,
+    "companies": ["tcs", "infosys", "wipro"],
+    "prompt": "Given a string `s` containing only the characters `()[]{}`, return `True` if every opening bracket is closed by the correct matching type in the correct order.",
+    "constraints": "0 <= len(s) <= 10^4.",
+    "examples": [
+      { "input": "s = \"()[]{}\"", "output": "True" },
+      { "input": "s = \"([)]\"", "output": "False", "explanation": "Wrong order — the `)` closes a `[`." },
+      { "input": "s = \"{[]}\"", "output": "True" }
+    ],
+    "starter": "def is_valid(s):\n    # your code here\n    pass\n",
+    "entry": "is_valid",
+    "tests": [
+      { "args": ["()"], "expect": true },
+      { "args": ["()[]{}"], "expect": true },
+      { "args": ["(]"], "expect": false },
+      { "args": ["([)]"], "expect": false },
+      { "args": ["{[]}"], "expect": true },
+      { "args": [""], "expect": true },
+      { "args": ["("], "expect": false }
+    ],
+    "hints": [
+      "LIFO — what data structure fits?",
+      "Push opening brackets. When you see a closing bracket, the top of the stack MUST be the matching opening.",
+      "Don't forget two edge cases: closing bracket with empty stack (no match), and leftover stack at the end (unclosed)."
+    ],
+    "bruteForce": {
+      "code": "def is_valid(s):\n    # Repeatedly remove matched pairs from the middle.\n    while True:\n        new_s = s.replace('()', '').replace('[]', '').replace('{}', '')\n        if new_s == s:\n            break\n        s = new_s\n    return s == ''",
+      "complexity": "O(n^2) time",
+      "explanation": "Each pass scans the whole string. Up to n/2 passes."
+    },
+    "optimal": {
+      "code": "def is_valid(s):\n    pairs = {')': '(', ']': '[', '}': '{'}\n    stack = []\n    for c in s:\n        if c in '([{':\n            stack.append(c)\n        else:\n            if not stack or stack[-1] != pairs[c]:\n                return False\n            stack.pop()\n    return not stack",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Single pass with a stack. Mismatched-or-empty top on a closing bracket → False. Stack must be empty at the end."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of the stack solution?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["stack", "interview-classic", "tcs-nqt"]
+  },
+  {
+    "id": "dsa-c-daily-temperatures",
+    "track": "dsa",
+    "topic": "stack",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "pattern": "monotonic-stack",
+    "estMinutes": 16,
+    "companies": ["amazon-india", "infosys"],
+    "prompt": "Given a list `temps`, for each day return the number of days until a warmer temperature. Output is the same length as input; use 0 when there's no warmer future day.",
+    "constraints": "1 <= len(temps) <= 10^5, 30 <= temps[i] <= 100.",
+    "examples": [
+      { "input": "temps = [73, 74, 75, 71, 69, 72, 76, 73]", "output": "[1, 1, 4, 2, 1, 1, 0, 0]" },
+      { "input": "temps = [30, 40, 50, 60]", "output": "[1, 1, 1, 0]" }
+    ],
+    "starter": "def daily_temperatures(temps):\n    # your code here\n    pass\n",
+    "entry": "daily_temperatures",
+    "tests": [
+      { "args": [[73, 74, 75, 71, 69, 72, 76, 73]], "expect": [1, 1, 4, 2, 1, 1, 0, 0] },
+      { "args": [[30, 40, 50, 60]], "expect": [1, 1, 1, 0] },
+      { "args": [[30, 60, 90]], "expect": [1, 1, 0] },
+      { "args": [[100]], "expect": [0] },
+      { "args": [[50, 50, 50]], "expect": [0, 0, 0] }
+    ],
+    "hints": [
+      "Brute force: for each day, scan forward. O(n^2). Aim for O(n).",
+      "Maintain a stack of INDICES of days that don't yet have a warmer day.",
+      "When today is warmer than the day at the top of the stack, pop and record the distance. Each index is pushed/popped at most once → amortized O(n)."
+    ],
+    "bruteForce": {
+      "code": "def daily_temperatures(temps):\n    n = len(temps)\n    out = [0] * n\n    for i in range(n):\n        for j in range(i + 1, n):\n            if temps[j] > temps[i]:\n                out[i] = j - i\n                break\n    return out",
+      "complexity": "O(n^2) time, O(1) extra",
+      "explanation": "Nested scan. Correct but TLEs on n = 10^5."
+    },
+    "optimal": {
+      "code": "def daily_temperatures(temps):\n    n = len(temps)\n    out = [0] * n\n    stack = []\n    for i, t in enumerate(temps):\n        while stack and temps[stack[-1]] < t:\n            j = stack.pop()\n            out[j] = i - j\n        stack.append(i)\n    return out",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Monotonic decreasing stack of indices. Each index is pushed once and popped at most once — total work across the inner while is O(n)."
+    },
+    "complexityCheck": {
+      "question": "Amortized time complexity of the monotonic-stack solution?",
+      "choices": [
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false },
+        { "label": "O(n * avg_distance)", "correct": false }
+      ]
+    },
+    "tags": ["stack", "monotonic", "leetcode-medium"]
+  },
+  {
+    "id": "dsa-c-reverse-linked-list",
+    "track": "dsa",
+    "topic": "linked-list",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "pattern": "linked-list",
+    "estMinutes": 12,
+    "companies": ["tcs", "infosys", "amazon-india"],
+    "prompt": "Reverse a singly linked list represented as a Python list. (Real LL nodes can't round-trip through the sandbox; the tests pass and expect lists, but you should think of the algorithm as pointer manipulation.)",
+    "constraints": "0 <= len(nums) <= 10^4.",
+    "examples": [
+      { "input": "nums = [1, 2, 3, 4, 5]", "output": "[5, 4, 3, 2, 1]" },
+      { "input": "nums = []", "output": "[]" }
+    ],
+    "starter": "def reverse_list(nums):\n    # Implement as if nums were a singly linked list:\n    # walk once, in-place style, build the reversed sequence.\n    pass\n",
+    "entry": "reverse_list",
+    "tests": [
+      { "args": [[1, 2, 3, 4, 5]], "expect": [5, 4, 3, 2, 1] },
+      { "args": [[]], "expect": [] },
+      { "args": [[42]], "expect": [42] },
+      { "args": [[1, 2]], "expect": [2, 1] }
+    ],
+    "hints": [
+      "The pointer-manipulation answer uses three variables: prev, cur, nxt.",
+      "Loop: save next, flip current's pointer to prev, advance prev = cur, advance cur = next.",
+      "For the list version: a one-liner `nums[::-1]` works for the tests — but write the loop version too to internalize the algorithm."
+    ],
+    "bruteForce": {
+      "code": "def reverse_list(nums):\n    out = []\n    for x in nums:\n        out.insert(0, x)   # O(n) per insert!\n    return out",
+      "complexity": "O(n^2) time, O(n) space",
+      "explanation": "Repeated insert(0, x) is O(n) per call. Quadratic in total."
+    },
+    "optimal": {
+      "code": "def reverse_list(nums):\n    # The 'pointer' version, conceptually:\n    # prev = None\n    # cur = head\n    # while cur:\n    #     nxt = cur.next; cur.next = prev; prev = cur; cur = nxt\n    # return prev\n    out = [0] * len(nums)\n    for i, x in enumerate(nums):\n        out[len(nums) - 1 - i] = x\n    return out",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "On real nodes, this is O(n) time and O(1) extra space (in-place via three pointers). The list-version output is O(n) space simply because we return a new list."
+    },
+    "complexityCheck": {
+      "question": "Reversing a real singly linked list in-place — space complexity?",
+      "choices": [
+        { "label": "O(1)", "correct": true },
+        { "label": "O(log n)", "correct": false },
+        { "label": "O(n)", "correct": false },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["linked-list", "interview-classic"]
+  },
+  {
+    "id": "dsa-c-max-subarray",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "pattern": "dp",
+    "estMinutes": 14,
+    "companies": ["tcs", "infosys", "amazon-india"],
+    "prompt": "Given an integer array `nums`, return the maximum sum of any non-empty contiguous subarray. (Kadane's algorithm.)",
+    "constraints": "1 <= len(nums) <= 10^5, -10^4 <= nums[i] <= 10^4.",
+    "examples": [
+      { "input": "nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]", "output": "6", "explanation": "Subarray [4, -1, 2, 1] sums to 6." },
+      { "input": "nums = [1]", "output": "1" },
+      { "input": "nums = [-5, -2, -3]", "output": "-2" }
+    ],
+    "starter": "def max_subarray(nums):\n    # your code here\n    pass\n",
+    "entry": "max_subarray",
+    "tests": [
+      { "args": [[-2, 1, -3, 4, -1, 2, 1, -5, 4]], "expect": 6 },
+      { "args": [[1]], "expect": 1 },
+      { "args": [[-5, -2, -3]], "expect": -2 },
+      { "args": [[5, 4, -1, 7, 8]], "expect": 23 },
+      { "args": [[-1]], "expect": -1 },
+      { "args": [[1, 2, 3, 4, 5]], "expect": 15 }
+    ],
+    "hints": [
+      "Define dp[i] = max subarray sum ENDING at index i. What's the recurrence?",
+      "Either extend the previous subarray, or start fresh at nums[i]: dp[i] = max(nums[i], dp[i-1] + nums[i]).",
+      "You only need the previous dp value — collapse to a single variable. Track the global max separately."
+    ],
+    "bruteForce": {
+      "code": "def max_subarray(nums):\n    n = len(nums)\n    best = nums[0]\n    for i in range(n):\n        s = 0\n        for j in range(i, n):\n            s += nums[j]\n            best = max(best, s)\n    return best",
+      "complexity": "O(n^2) time, O(1) space",
+      "explanation": "Try every (start, end). Correct but slow for n = 10^5."
+    },
+    "optimal": {
+      "code": "def max_subarray(nums):\n    best = cur = nums[0]\n    for x in nums[1:]:\n        cur = max(x, cur + x)\n        best = max(best, cur)\n    return best",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "Kadane's. At each position decide: start fresh at x, or extend with cur + x. The global best tracks the best subarray seen so far. The all-negative case is handled because we initialize with nums[0] and never force a non-empty subarray of strictly positive sum."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of Kadane's algorithm?",
+      "choices": [
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false },
+        { "label": "O(2^n)", "correct": false }
+      ]
+    },
+    "tags": ["dp", "kadane", "interview-classic"]
+  },
+  {
+    "id": "dsa-c-climb-stairs",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "pattern": "dp",
+    "estMinutes": 8,
+    "companies": ["tcs", "infosys", "wipro"],
+    "prompt": "You can climb 1 or 2 stairs at a time. Return the number of distinct ways to reach the top of an n-stair staircase.",
+    "constraints": "0 <= n <= 45.",
+    "examples": [
+      { "input": "n = 2", "output": "2", "explanation": "1+1, or 2." },
+      { "input": "n = 3", "output": "3", "explanation": "1+1+1, 1+2, 2+1." }
+    ],
+    "starter": "def climb_stairs(n):\n    # your code here\n    pass\n",
+    "entry": "climb_stairs",
+    "tests": [
+      { "args": [0], "expect": 1 },
+      { "args": [1], "expect": 1 },
+      { "args": [2], "expect": 2 },
+      { "args": [3], "expect": 3 },
+      { "args": [5], "expect": 8 },
+      { "args": [10], "expect": 89 },
+      { "args": [45], "expect": 1836311903 }
+    ],
+    "hints": [
+      "From step n, the last move was either 1 or 2 stairs. So ways(n) = ways(n-1) + ways(n-2). Fibonacci!",
+      "Base cases: ways(0) = 1 (the empty climb), ways(1) = 1.",
+      "Roll two variables instead of allocating a full dp array."
+    ],
+    "bruteForce": {
+      "code": "def climb_stairs(n):\n    if n <= 1: return 1\n    return climb_stairs(n - 1) + climb_stairs(n - 2)",
+      "complexity": "O(2^n) time",
+      "explanation": "Naive recursion. For n = 45 this would take many seconds; memoize or iterate."
+    },
+    "optimal": {
+      "code": "def climb_stairs(n):\n    if n <= 1: return 1\n    a, b = 1, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "Roll the two prior Fibonacci values. n = 45 finishes instantly."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of the iterative DP solution?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(log n)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(2^n)", "correct": false }
+      ]
+    },
+    "tags": ["dp", "fibonacci", "easy"]
+  },
+  {
+    "id": "dsa-c-house-robber",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "pattern": "dp",
+    "estMinutes": 12,
+    "companies": ["amazon-india"],
+    "prompt": "Houses in a row hold non-negative loot. You can't rob two adjacent houses. Return the maximum loot.",
+    "constraints": "0 <= len(nums) <= 100, 0 <= nums[i] <= 400.",
+    "examples": [
+      { "input": "nums = [1, 2, 3, 1]", "output": "4", "explanation": "Rob houses 0 and 2." },
+      { "input": "nums = [2, 7, 9, 3, 1]", "output": "12", "explanation": "Rob 0, 2, 4." }
+    ],
+    "starter": "def rob(nums):\n    # your code here\n    pass\n",
+    "entry": "rob",
+    "tests": [
+      { "args": [[]], "expect": 0 },
+      { "args": [[5]], "expect": 5 },
+      { "args": [[1, 2, 3, 1]], "expect": 4 },
+      { "args": [[2, 7, 9, 3, 1]], "expect": 12 },
+      { "args": [[2, 1, 1, 2]], "expect": 4 },
+      { "args": [[0, 0, 0]], "expect": 0 }
+    ],
+    "hints": [
+      "Define dp[i] = max loot from houses 0..i. Choice at i: skip (dp[i-1]) or rob (dp[i-2] + nums[i]).",
+      "dp[i] = max(dp[i-1], dp[i-2] + nums[i]).",
+      "Only the last two values matter — collapse to O(1) space."
+    ],
+    "bruteForce": {
+      "code": "def rob(nums):\n    def go(i):\n        if i < 0: return 0\n        return max(go(i - 1), go(i - 2) + nums[i])\n    return go(len(nums) - 1)",
+      "complexity": "O(2^n) time (without memoization)",
+      "explanation": "Naive recursion explores both choices at every house. Memoize or convert to iterative DP."
+    },
+    "optimal": {
+      "code": "def rob(nums):\n    prev1, prev2 = 0, 0\n    for x in nums:\n        prev1, prev2 = max(prev1, prev2 + x), prev1\n    return prev1",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "Roll two scalars. prev1 = best ending at or before current; prev2 = best ending at or before previous. After each step, the new prev1 is the better of (skip) prev1 or (rob) prev2 + x."
+    },
+    "complexityCheck": {
+      "question": "Space complexity of the rolling-variable solution?",
+      "choices": [
+        { "label": "O(1)", "correct": true },
+        { "label": "O(log n)", "correct": false },
+        { "label": "O(n)", "correct": false },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["dp", "interview-classic"]
+  },
+  {
+    "id": "dsa-c-coin-change",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "pattern": "dp",
+    "estMinutes": 18,
+    "companies": ["amazon-india", "infosys"],
+    "prompt": "Given coin denominations `coins` and a target `amount`, return the minimum number of coins needed to make that amount, or `-1` if impossible. You can use each denomination unlimited times.",
+    "constraints": "1 <= len(coins) <= 12, 1 <= coins[i] <= 2^31 - 1, 0 <= amount <= 10^4.",
+    "examples": [
+      { "input": "coins = [1, 2, 5], amount = 11", "output": "3", "explanation": "5 + 5 + 1." },
+      { "input": "coins = [2], amount = 3", "output": "-1" },
+      { "input": "coins = [1], amount = 0", "output": "0" }
+    ],
+    "starter": "def coin_change(coins, amount):\n    # your code here\n    pass\n",
+    "entry": "coin_change",
+    "tests": [
+      { "args": [[1, 2, 5], 11], "expect": 3 },
+      { "args": [[2], 3], "expect": -1 },
+      { "args": [[1], 0], "expect": 0 },
+      { "args": [[1, 2, 5], 100], "expect": 20 },
+      { "args": [[186, 419, 83, 408], 6249], "expect": 20 },
+      { "args": [[3, 5], 7], "expect": -1 },
+      { "args": [[1, 5, 10], 12], "expect": 3 }
+    ],
+    "hints": [
+      "Define dp[a] = min coins to make amount a. dp[0] = 0.",
+      "For each amount a, dp[a] = 1 + min(dp[a - c]) over coins c that don't exceed a.",
+      "Greedy (always pick the largest coin) does NOT work in general. Try coins=[1,3,4], amount=6: greedy gives 4+1+1=3, but 3+3=2 is better."
+    ],
+    "bruteForce": {
+      "code": "def coin_change(coins, amount):\n    def go(a):\n        if a == 0: return 0\n        if a < 0: return float('inf')\n        return 1 + min(go(a - c) for c in coins)\n    ans = go(amount)\n    return ans if ans != float('inf') else -1",
+      "complexity": "O(|coins|^amount) without memo",
+      "explanation": "Exponential without memoization. With @cache it becomes O(amount * |coins|)."
+    },
+    "optimal": {
+      "code": "def coin_change(coins, amount):\n    INF = float('inf')\n    dp = [INF] * (amount + 1)\n    dp[0] = 0\n    for a in range(1, amount + 1):\n        for c in coins:\n            if c <= a and dp[a - c] + 1 < dp[a]:\n                dp[a] = dp[a - c] + 1\n    return dp[amount] if dp[amount] != INF else -1",
+      "complexity": "O(amount * |coins|) time, O(amount) space",
+      "explanation": "Bottom-up: build dp[0..amount] in order. For each amount, try each coin denomination. Returns -1 if dp[amount] never got updated below INF."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of the DP solution?",
+      "choices": [
+        { "label": "O(amount)", "correct": false },
+        { "label": "O(amount * |coins|)", "correct": true },
+        { "label": "O(amount^2)", "correct": false },
+        { "label": "O(|coins|^amount)", "correct": false }
+      ]
+    },
+    "tags": ["dp", "coin-change", "interview-classic"]
+  },
+  {
+    "id": "dsa-c-subsets",
+    "track": "dsa",
+    "topic": "backtracking",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "pattern": "backtracking",
+    "estMinutes": 14,
+    "companies": ["amazon-india"],
+    "prompt": "Given distinct integers `nums`, return all possible subsets (the power set). Any order; each subset as a list. The empty subset is included.",
+    "constraints": "1 <= len(nums) <= 10. Each nums[i] is unique.",
+    "examples": [
+      { "input": "nums = [1, 2, 3]", "output": "[[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]", "explanation": "Order may differ — tests sort each subset and the result list." },
+      { "input": "nums = [0]", "output": "[[], [0]]" }
+    ],
+    "starter": "def subsets(nums):\n    # Return a list-of-lists. Tests are order-independent (canonicalized).\n    pass\n",
+    "entry": "subsets",
+    "tests": [
+      { "args": [[1, 2, 3]], "expect": [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]] },
+      { "args": [[0]], "expect": [[], [0]] },
+      { "args": [[]], "expect": [[]] },
+      { "args": [[1, 2]], "expect": [[], [1], [2], [1, 2]] }
+    ],
+    "hints": [
+      "Two ways to think about it: backtracking (include / exclude each element) or iterative (start with [[]] and for each x, extend with copies appending x).",
+      "Backtracking: track path[], and for each index decide to include or skip — recurse, then undo.",
+      "If your tests fail on order, sort each inner list and sort the outer list before returning."
+    ],
+    "bruteForce": {
+      "code": "def subsets(nums):\n    from itertools import combinations\n    out = []\n    for r in range(len(nums) + 1):\n        for combo in combinations(nums, r):\n            out.append(sorted(combo))\n    return sorted(out)",
+      "complexity": "O(n * 2^n) time, O(n * 2^n) space",
+      "explanation": "itertools shortcut. The 2^n is unavoidable — that's the output size."
+    },
+    "optimal": {
+      "code": "def subsets(nums):\n    out = []\n    path = []\n    def go(i):\n        if i == len(nums):\n            out.append(path[:])\n            return\n        # exclude\n        go(i + 1)\n        # include\n        path.append(nums[i])\n        go(i + 1)\n        path.pop()\n    go(0)\n    return sorted([sorted(s) for s in out])",
+      "complexity": "O(n * 2^n) time, O(n * 2^n) space",
+      "explanation": "Each element: include or exclude. 2^n leaves, each O(n) to copy. Snapshot with path[:] — never append path directly (mutable reference trap)."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of generating all subsets?",
+      "choices": [
+        { "label": "O(n)", "correct": false },
+        { "label": "O(n^2)", "correct": false },
+        { "label": "O(n * 2^n)", "correct": true },
+        { "label": "O(n!)", "correct": false }
+      ]
+    },
+    "tags": ["backtracking", "subsets", "interview-classic"]
+  }
+]

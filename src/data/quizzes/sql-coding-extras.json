@@ -1,0 +1,408 @@
+[
+  {
+    "id": "sql-c-eng-employees",
+    "track": "sql",
+    "topic": "select",
+    "type": "sql",
+    "difficulty": "easy",
+    "pattern": "sql-select",
+    "estMinutes": 5,
+    "companies": ["tcs", "infosys"],
+    "schema": "employees",
+    "prompt": "List the name and salary of all Engineering employees, ordered by salary DESC. The Engineering department has `department_id = 1`.",
+    "constraints": "Use department_id, not the text `department` column.",
+    "examples": [
+      { "input": "employees seed data", "output": "Carol 92000, Alice 75000, Hugo 50000" }
+    ],
+    "starter": "SELECT name, salary\nFROM employees\nWHERE department_id = 1\nORDER BY ...;\n",
+    "expected": {
+      "columns": ["name", "salary"],
+      "rows": [
+        ["Carol", 92000],
+        ["Alice", 75000],
+        ["Hugo", 50000]
+      ]
+    },
+    "hints": [
+      "Filter with WHERE department_id = 1.",
+      "Order by salary DESC.",
+      "The text column `department` and the id column `department_id` both exist — prefer the id for joins/filters."
+    ],
+    "bruteForce": {
+      "code": "SELECT name, salary FROM employees WHERE department = 'Engineering' ORDER BY salary DESC;",
+      "complexity": "O(n)",
+      "explanation": "Works for this seed but couples to a text label — brittle if a department renames. Always prefer the FK id."
+    },
+    "optimal": {
+      "code": "SELECT name, salary\nFROM employees\nWHERE department_id = 1\nORDER BY salary DESC;",
+      "complexity": "O(n)",
+      "explanation": "Filter by FK, sort by salary descending. With an index on department_id this is an O(matches) seek."
+    },
+    "tags": ["select", "where", "order-by", "tcs-nqt"]
+  },
+  {
+    "id": "sql-c-employee-dept-join",
+    "track": "sql",
+    "topic": "joins",
+    "type": "sql",
+    "difficulty": "easy",
+    "pattern": "sql-joins",
+    "estMinutes": 6,
+    "companies": ["tcs", "infosys", "wipro"],
+    "schema": "employees",
+    "prompt": "List each employee's name alongside their department's name, ordered alphabetically by employee name. Exclude employees whose department is NULL.",
+    "constraints": "Use an INNER JOIN — don't filter NULLs after the fact.",
+    "examples": [
+      { "input": "employees + departments", "output": "Alice/Engineering, Bob/Sales, ..., Hugo/Engineering (Frank excluded)" }
+    ],
+    "starter": "SELECT e.name, d.name AS dept_name\nFROM employees e\n...\nORDER BY e.name;\n",
+    "expected": {
+      "columns": ["name", "dept_name"],
+      "rows": [
+        ["Alice", "Engineering"],
+        ["Bob", "Sales"],
+        ["Carol", "Engineering"],
+        ["Dave", "Sales"],
+        ["Eve", "Marketing"],
+        ["Grace", "Finance"],
+        ["Hugo", "Engineering"]
+      ]
+    },
+    "hints": [
+      "INNER JOIN excludes rows where the ON match fails — which neatly excludes Frank's NULL department.",
+      "Both tables have a `name` column. Disambiguate with aliases or AS.",
+      "Order by employee name alphabetically."
+    ],
+    "bruteForce": {
+      "code": "SELECT e.name, (SELECT d.name FROM departments d WHERE d.id = e.department_id) AS dept_name\nFROM employees e\nWHERE e.department_id IS NOT NULL\nORDER BY e.name;",
+      "complexity": "Correlated subquery per row",
+      "explanation": "Works but does a per-row subquery. Join is the idiomatic move."
+    },
+    "optimal": {
+      "code": "SELECT e.name, d.name AS dept_name\nFROM employees e\nINNER JOIN departments d ON e.department_id = d.id\nORDER BY e.name;",
+      "complexity": "O(n + m) with hash join",
+      "explanation": "INNER JOIN naturally drops rows where e.department_id is NULL (NULL never matches via =)."
+    },
+    "tags": ["joins", "inner-join", "tcs-nqt"]
+  },
+  {
+    "id": "sql-c-no-dept",
+    "track": "sql",
+    "topic": "joins",
+    "type": "sql",
+    "difficulty": "easy",
+    "pattern": "sql-anti-join",
+    "estMinutes": 5,
+    "companies": ["tcs", "infosys"],
+    "schema": "employees",
+    "prompt": "Find the names of employees who are not assigned to any department (department_id IS NULL).",
+    "constraints": "One row in the seed: Frank.",
+    "examples": [
+      { "input": "employees seed", "output": "Frank" }
+    ],
+    "starter": "SELECT name\nFROM employees\nWHERE ...;\n",
+    "expected": {
+      "columns": ["name"],
+      "rows": [["Frank"]]
+    },
+    "hints": [
+      "Equality against NULL never matches — use IS NULL.",
+      "Direct filter is simpler than LEFT JOIN here, but the LEFT JOIN ... IS NULL pattern is the general anti-join template.",
+      "`WHERE department_id = NULL` will return zero rows. Always use `IS NULL`."
+    ],
+    "bruteForce": {
+      "code": "SELECT e.name\nFROM employees e\nLEFT JOIN departments d ON e.department_id = d.id\nWHERE d.id IS NULL;",
+      "complexity": "O(n + m)",
+      "explanation": "The general anti-join: left join then keep only unmatched (NULL on the right) rows. Works even when the FK isn't already NULL."
+    },
+    "optimal": {
+      "code": "SELECT name\nFROM employees\nWHERE department_id IS NULL;",
+      "complexity": "O(n)",
+      "explanation": "Direct NULL filter — simplest when the column itself can be NULL. The bruteForce anti-join is the general technique when you want 'in A but not in B' across different tables."
+    },
+    "tags": ["nulls", "anti-join", "joins"]
+  },
+  {
+    "id": "sql-c-dept-headcount",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-aggregation",
+    "estMinutes": 8,
+    "companies": ["tcs", "infosys", "wipro"],
+    "schema": "employees",
+    "prompt": "For each department, output `dept_name` and `headcount` (number of employees). Include only departments with more than 1 employee. Order by headcount DESC, then dept_name ASC.",
+    "constraints": "Use GROUP BY + HAVING. Skip Frank (NULL department).",
+    "examples": [
+      { "input": "employees + departments", "output": "Engineering 3, Sales 2" }
+    ],
+    "starter": "SELECT d.name AS dept_name, COUNT(*) AS headcount\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nGROUP BY d.id, d.name\nHAVING ...\nORDER BY ...;\n",
+    "expected": {
+      "columns": ["dept_name", "headcount"],
+      "rows": [
+        ["Engineering", 3],
+        ["Sales", 2]
+      ]
+    },
+    "hints": [
+      "INNER JOIN naturally excludes Frank (NULL department_id won't match).",
+      "GROUP BY the department, then COUNT(*) per group.",
+      "Filter groups with HAVING — not WHERE — because HAVING runs after grouping. Use `COUNT(*) > 1`."
+    ],
+    "bruteForce": {
+      "code": "SELECT d.name, (SELECT COUNT(*) FROM employees e WHERE e.department_id = d.id) AS headcount\nFROM departments d\nWHERE (SELECT COUNT(*) FROM employees e WHERE e.department_id = d.id) > 1\nORDER BY headcount DESC, d.name;",
+      "complexity": "O(d * n) — correlated subquery twice per department",
+      "explanation": "Functional but does the same count twice. GROUP BY + HAVING is the standard one-pass solution."
+    },
+    "optimal": {
+      "code": "SELECT d.name AS dept_name, COUNT(*) AS headcount\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nGROUP BY d.id, d.name\nHAVING COUNT(*) > 1\nORDER BY headcount DESC, dept_name ASC;",
+      "complexity": "O(n) — single grouped scan",
+      "explanation": "Group, count, filter. HAVING is for post-aggregation filtering (you can't put COUNT(*) > 1 in WHERE because aggregates don't exist yet at WHERE-time)."
+    },
+    "tags": ["aggregation", "group-by", "having", "tcs-nqt"]
+  },
+  {
+    "id": "sql-c-avg-salary-per-dept",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-aggregation",
+    "estMinutes": 8,
+    "companies": ["tcs", "infosys"],
+    "schema": "employees",
+    "prompt": "For each department, output `dept_name` and `avg_salary` (integer-cast average), ordered alphabetically by dept_name. Skip employees with NULL department.",
+    "constraints": "Use CAST(AVG(salary) AS INTEGER) to dodge floating-point representation issues.",
+    "examples": [
+      { "input": "employees + departments", "output": "Engineering 72333, Finance 65000, Marketing 38000, Sales 46500" }
+    ],
+    "starter": "SELECT d.name AS dept_name, CAST(AVG(e.salary) AS INTEGER) AS avg_salary\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nGROUP BY ...\nORDER BY ...;\n",
+    "expected": {
+      "columns": ["dept_name", "avg_salary"],
+      "rows": [
+        ["Engineering", 72333],
+        ["Finance", 65000],
+        ["Marketing", 38000],
+        ["Sales", 46500]
+      ]
+    },
+    "hints": [
+      "Average of integers in SQLite returns a REAL. CAST to INTEGER (truncates) for predictable output.",
+      "GROUP BY the department.",
+      "INNER JOIN excludes Frank (NULL department) — AVG would skip his NULL anyway, but the join also drops the row entirely."
+    ],
+    "bruteForce": {
+      "code": "SELECT (SELECT name FROM departments WHERE id = e.department_id) AS dept_name,\n       CAST(AVG(salary) AS INTEGER) AS avg_salary\nFROM employees e\nWHERE department_id IS NOT NULL\nGROUP BY department_id\nORDER BY dept_name;",
+      "complexity": "Works but does a per-row name lookup",
+      "explanation": "Functional. A direct JOIN is cleaner."
+    },
+    "optimal": {
+      "code": "SELECT d.name AS dept_name, CAST(AVG(e.salary) AS INTEGER) AS avg_salary\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nGROUP BY d.id, d.name\nORDER BY d.name;",
+      "complexity": "O(n) — one grouped scan + sort",
+      "explanation": "JOIN + GROUP BY. CAST forces integer truncation so the test result is deterministic."
+    },
+    "tags": ["aggregation", "avg", "joins"]
+  },
+  {
+    "id": "sql-c-above-dept-avg",
+    "track": "sql",
+    "topic": "subqueries",
+    "type": "sql",
+    "difficulty": "hard",
+    "pattern": "sql-correlated",
+    "estMinutes": 14,
+    "companies": ["amazon-india", "infosys"],
+    "schema": "employees",
+    "prompt": "Find employees whose salary is STRICTLY greater than the average salary of their own department. Output `name`, `salary`. Order by name ASC. Skip employees with NULL department.",
+    "constraints": "Use a correlated subquery (or a window function) for the per-dept average.",
+    "examples": [
+      { "input": "employees seed", "output": "Alice 75000 (Eng avg 72333), Carol 92000, Dave 48000 (Sales avg 46500)" }
+    ],
+    "starter": "SELECT name, salary\nFROM employees e\nWHERE department_id IS NOT NULL\n  AND salary > (SELECT AVG(salary) FROM employees e2 WHERE e2.department_id = e.department_id)\nORDER BY name;\n",
+    "expected": {
+      "columns": ["name", "salary"],
+      "rows": [
+        ["Alice", 75000],
+        ["Carol", 92000],
+        ["Dave", 48000]
+      ]
+    },
+    "hints": [
+      "Correlated subquery: for each employee e, compute AVG over employees in e's department.",
+      "Compare with > (strictly greater), so an employee earning exactly the average is excluded.",
+      "Window function alternative: AVG(salary) OVER (PARTITION BY department_id) inside a CTE, then filter."
+    ],
+    "bruteForce": {
+      "code": "SELECT e.name, e.salary\nFROM employees e\nWHERE e.department_id IS NOT NULL\n  AND e.salary > (SELECT AVG(salary) FROM employees e2 WHERE e2.department_id = e.department_id)\nORDER BY e.name;",
+      "complexity": "O(n^2) worst-case — per-row subquery",
+      "explanation": "Logically clean. Modern planners often rewrite this as a join + window function, but pessimistically it's quadratic."
+    },
+    "optimal": {
+      "code": "WITH dept_avg AS (\n  SELECT department_id, AVG(salary) AS avg_sal FROM employees\n  WHERE department_id IS NOT NULL\n  GROUP BY department_id\n)\nSELECT e.name, e.salary\nFROM employees e\nJOIN dept_avg da ON e.department_id = da.department_id\nWHERE e.salary > da.avg_sal\nORDER BY e.name;",
+      "complexity": "O(n) — two scans",
+      "explanation": "Pre-aggregate once, then a single join. Window-function form (AVG ... OVER (PARTITION BY department_id)) is also clean."
+    },
+    "tags": ["subqueries", "correlated", "cte", "interview-classic"]
+  },
+  {
+    "id": "sql-c-salary-tiers",
+    "track": "sql",
+    "topic": "cte",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-cte",
+    "estMinutes": 10,
+    "companies": ["infosys"],
+    "schema": "employees",
+    "prompt": "Bucket employees into salary tiers and count each tier. Tiers: `low` (salary < 40000), `mid` (40000 ≤ salary ≤ 70000), `high` (salary > 70000). Output `tier`, `n` ordered tier-alphabetically. Include all employees including Frank.",
+    "constraints": "Use CASE WHEN inside a CTE.",
+    "examples": [
+      { "input": "8 employees", "output": "high 2 (Alice, Carol), low 2 (Eve, Frank), mid 4 (Bob, Dave, Grace, Hugo)" }
+    ],
+    "starter": "WITH tiered AS (\n  SELECT name,\n         CASE WHEN salary < 40000 THEN 'low'\n              WHEN salary <= 70000 THEN 'mid'\n              ELSE 'high'\n         END AS tier\n  FROM employees\n)\nSELECT tier, COUNT(*) AS n\nFROM tiered\nGROUP BY tier\nORDER BY tier;\n",
+    "expected": {
+      "columns": ["tier", "n"],
+      "rows": [
+        ["high", 2],
+        ["low", 2],
+        ["mid", 4]
+      ]
+    },
+    "hints": [
+      "CASE WHEN ... THEN ... ELSE ... END returns a value per row — that becomes the bucket label.",
+      "Wrap the CASE in a CTE, then GROUP BY the alias.",
+      "Order: CASE conditions are evaluated top-to-bottom; first match wins. Put the most specific first."
+    ],
+    "bruteForce": {
+      "code": "SELECT 'low' AS tier, COUNT(*) AS n FROM employees WHERE salary < 40000\nUNION ALL\nSELECT 'mid', COUNT(*) FROM employees WHERE salary >= 40000 AND salary <= 70000\nUNION ALL\nSELECT 'high', COUNT(*) FROM employees WHERE salary > 70000\nORDER BY tier;",
+      "complexity": "Three scans of employees",
+      "explanation": "Works but scans three times. The CTE+CASE approach scans once."
+    },
+    "optimal": {
+      "code": "WITH tiered AS (\n  SELECT CASE WHEN salary < 40000 THEN 'low'\n              WHEN salary <= 70000 THEN 'mid'\n              ELSE 'high'\n         END AS tier\n  FROM employees\n)\nSELECT tier, COUNT(*) AS n\nFROM tiered\nGROUP BY tier\nORDER BY tier;",
+      "complexity": "O(n) — single pass",
+      "explanation": "CASE assigns a tier in one scan; GROUP BY tier aggregates. CTE is for readability — could inline the CASE in the GROUP BY column too."
+    },
+    "tags": ["cte", "case", "aggregation"]
+  },
+  {
+    "id": "sql-c-customer-spend",
+    "track": "sql",
+    "topic": "joins",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-joins",
+    "estMinutes": 12,
+    "companies": ["amazon-india", "infosys"],
+    "schema": "ecommerce",
+    "prompt": "For each customer who has placed at least one DELIVERED order, output `customer_name` and `total_spend` (sum over order_items of qty × price). Order by total_spend DESC. Exclude cancelled and shipped orders.",
+    "constraints": "Three-table join: customers + orders + order_items + products.",
+    "examples": [
+      { "input": "ecommerce seed (only orders 1, 2, 5 are delivered)", "output": "Sahil 120000, Riya 66000, Arjun 25000" }
+    ],
+    "starter": "SELECT c.name AS customer_name, SUM(oi.quantity * p.price) AS total_spend\nFROM customers c\nJOIN orders o ON c.id = o.customer_id\nJOIN order_items oi ON oi.order_id = o.id\nJOIN products p ON oi.product_id = p.id\nWHERE o.status = 'delivered'\nGROUP BY c.id, c.name\nORDER BY total_spend DESC;\n",
+    "expected": {
+      "columns": ["customer_name", "total_spend"],
+      "rows": [
+        ["Sahil", 120000],
+        ["Riya", 66000],
+        ["Arjun", 25000]
+      ]
+    },
+    "hints": [
+      "You need price (from products) and quantity (from order_items) per line item — that's a 4-table join.",
+      "Filter status = 'delivered' BEFORE aggregating.",
+      "GROUP BY customer; SUM(qty * price) per group."
+    ],
+    "bruteForce": {
+      "code": "SELECT c.name,\n  (SELECT SUM(oi.quantity * p.price)\n   FROM orders o\n   JOIN order_items oi ON oi.order_id = o.id\n   JOIN products p ON oi.product_id = p.id\n   WHERE o.customer_id = c.id AND o.status = 'delivered'\n  ) AS total_spend\nFROM customers c\nWHERE (SELECT COUNT(*) FROM orders o WHERE o.customer_id = c.id AND o.status = 'delivered') > 0\nORDER BY total_spend DESC;",
+      "complexity": "Correlated subqueries per customer",
+      "explanation": "Works but does multiple correlated subqueries. The join + group-by version is cleaner and faster."
+    },
+    "optimal": {
+      "code": "SELECT c.name AS customer_name, SUM(oi.quantity * p.price) AS total_spend\nFROM customers c\nJOIN orders o ON c.id = o.customer_id\nJOIN order_items oi ON oi.order_id = o.id\nJOIN products p ON oi.product_id = p.id\nWHERE o.status = 'delivered'\nGROUP BY c.id, c.name\nORDER BY total_spend DESC;",
+      "complexity": "O(n) joined-row count + group",
+      "explanation": "Single grouped query; the join produces one row per line-item then SUM collapses to one per customer. Inner joins naturally exclude customers with no delivered orders."
+    },
+    "tags": ["joins", "aggregation", "multi-table", "interview-classic"]
+  },
+  {
+    "id": "sql-c-products-never-delivered",
+    "track": "sql",
+    "topic": "subqueries",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-anti-join",
+    "estMinutes": 10,
+    "companies": ["amazon-india"],
+    "schema": "ecommerce",
+    "prompt": "List products that have never appeared in a DELIVERED order. Output `name` (alphabetical).",
+    "constraints": "Use NOT EXISTS (handles NULLs safely; NOT IN can trip on NULL subqueries).",
+    "examples": [
+      { "input": "ecommerce: deliveries cover Laptop, Phone, Headphones", "output": "Book, Notebook" }
+    ],
+    "starter": "SELECT name\nFROM products p\nWHERE NOT EXISTS (\n  SELECT 1\n  FROM order_items oi\n  JOIN orders o ON oi.order_id = o.id\n  WHERE oi.product_id = p.id AND o.status = 'delivered'\n)\nORDER BY name;\n",
+    "expected": {
+      "columns": ["name"],
+      "rows": [["Book"], ["Notebook"]]
+    },
+    "hints": [
+      "Anti-join pattern: 'products NOT in (products with a delivered order)'.",
+      "NOT EXISTS is safer than NOT IN because of NULL semantics; here either works since product_id is NOT NULL.",
+      "Inside NOT EXISTS, SELECT 1 is idiomatic — we don't care about the columns, just whether a row exists."
+    ],
+    "bruteForce": {
+      "code": "SELECT name\nFROM products\nWHERE id NOT IN (\n  SELECT DISTINCT oi.product_id\n  FROM order_items oi\n  JOIN orders o ON oi.order_id = o.id\n  WHERE o.status = 'delivered'\n)\nORDER BY name;",
+      "complexity": "Works but fragile if product_id could be NULL",
+      "explanation": "NOT IN works here because product_id is NOT NULL. In schemas where it could be NULL, NOT IN would silently return zero rows."
+    },
+    "optimal": {
+      "code": "SELECT name\nFROM products p\nWHERE NOT EXISTS (\n  SELECT 1 FROM order_items oi\n  JOIN orders o ON oi.order_id = o.id\n  WHERE oi.product_id = p.id AND o.status = 'delivered'\n)\nORDER BY name;",
+      "complexity": "O(p * lookup_cost)",
+      "explanation": "Correlated NOT EXISTS — for each product, check if any delivered-order line item references it. Robust to NULLs. Engines optimize this to an anti-semi-join."
+    },
+    "tags": ["subqueries", "not-exists", "anti-join"]
+  },
+  {
+    "id": "sql-c-top-3-salaries",
+    "track": "sql",
+    "topic": "select",
+    "type": "sql",
+    "difficulty": "easy",
+    "pattern": "sql-select",
+    "estMinutes": 5,
+    "companies": ["tcs", "infosys"],
+    "schema": "employees",
+    "prompt": "Find the top 3 highest-paid employees. Output `name` and `salary`, ordered by salary DESC.",
+    "constraints": "Use LIMIT.",
+    "examples": [
+      { "input": "employees seed", "output": "Carol 92000, Alice 75000, Grace 65000" }
+    ],
+    "starter": "SELECT name, salary\nFROM employees\nORDER BY salary DESC\nLIMIT 3;\n",
+    "expected": {
+      "columns": ["name", "salary"],
+      "rows": [
+        ["Carol", 92000],
+        ["Alice", 75000],
+        ["Grace", 65000]
+      ]
+    },
+    "hints": [
+      "ORDER BY salary DESC, then LIMIT 3.",
+      "For top-K per group (e.g. top 3 per department), use ROW_NUMBER() OVER (PARTITION BY department).",
+      "Beware ties: LIMIT 3 picks any 3 if a tie spans the boundary. DENSE_RANK() handles tie-aware top-K."
+    ],
+    "bruteForce": {
+      "code": "SELECT name, salary FROM employees WHERE salary IN (\n  SELECT salary FROM employees ORDER BY salary DESC LIMIT 3\n) ORDER BY salary DESC;",
+      "complexity": "More work, same result",
+      "explanation": "Roundabout. Direct ORDER BY + LIMIT is the standard pattern."
+    },
+    "optimal": {
+      "code": "SELECT name, salary FROM employees ORDER BY salary DESC LIMIT 3;",
+      "complexity": "O(n) scan + sort, or O(n log k) with a heap if the engine optimizes",
+      "explanation": "Standard top-K pattern. Engines may use a heap of size K instead of full sort."
+    },
+    "tags": ["select", "order-by", "limit", "tcs-nqt"]
+  }
+]
