@@ -1,0 +1,517 @@
+[
+  {
+    "id": "py-c-fizzbuzz",
+    "track": "python",
+    "topic": "control-flow",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 8,
+    "companies": ["tcs", "infosys", "wipro"],
+    "prompt": "Return a list of strings of length `n`: for each `i` in 1..n, the entry is 'FizzBuzz' if `i` is divisible by both 3 and 5, 'Fizz' if only 3, 'Buzz' if only 5, otherwise the number as a string.",
+    "constraints": "0 <= n <= 10^4. fizzbuzz(0) returns [].",
+    "examples": [
+      { "input": "n = 5", "output": "['1', '2', 'Fizz', '4', 'Buzz']" },
+      { "input": "n = 15", "output": "['1', '2', 'Fizz', '4', 'Buzz', 'Fizz', '7', '8', 'Fizz', 'Buzz', '11', 'Fizz', '13', '14', 'FizzBuzz']" }
+    ],
+    "starter": "def fizzbuzz(n):\n    # your code here\n    pass\n",
+    "entry": "fizzbuzz",
+    "tests": [
+      { "args": [5], "expect": ["1", "2", "Fizz", "4", "Buzz"] },
+      { "args": [0], "expect": [] },
+      { "args": [1], "expect": ["1"] },
+      { "args": [3], "expect": ["1", "2", "Fizz"] },
+      { "args": [15], "expect": ["1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz"] }
+    ],
+    "hints": [
+      "Loop i from 1 to n inclusive. Check the divisibility cases.",
+      "Check `i % 15 == 0` first (FizzBuzz), then `i % 3 == 0`, then `i % 5 == 0`, else str(i).",
+      "Or: build the string from concatenation — `('Fizz' if i%3==0 else '') + ('Buzz' if i%5==0 else '') or str(i)`."
+    ],
+    "bruteForce": {
+      "code": "def fizzbuzz(n):\n    out = []\n    for i in range(1, n + 1):\n        if i % 15 == 0:\n            out.append('FizzBuzz')\n        elif i % 3 == 0:\n            out.append('Fizz')\n        elif i % 5 == 0:\n            out.append('Buzz')\n        else:\n            out.append(str(i))\n    return out",
+      "complexity": "O(n) time, O(n) space.",
+      "explanation": "Straightforward branching. The only common bug is checking %3 before %15 — then 15 prints 'Fizz' instead of 'FizzBuzz'."
+    },
+    "optimal": {
+      "code": "def fizzbuzz(n):\n    return [\n        ('Fizz' if i % 3 == 0 else '') + ('Buzz' if i % 5 == 0 else '') or str(i)\n        for i in range(1, n + 1)\n    ]",
+      "complexity": "O(n) time, O(n) space.",
+      "explanation": "Same complexity, more Pythonic. Empty string is falsy, so `... or str(i)` falls back when neither divisibility holds."
+    },
+    "complexityCheck": {
+      "question": "Time complexity?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(log n)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false }
+      ]
+    },
+    "tags": ["control-flow", "warmup", "interview-classic"]
+  },
+  {
+    "id": "py-c-fibonacci",
+    "track": "python",
+    "topic": "recursion",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 10,
+    "companies": ["tcs", "infosys"],
+    "prompt": "Return the n-th Fibonacci number (0-indexed): `fib(0) = 0`, `fib(1) = 1`, `fib(n) = fib(n-1) + fib(n-2)`.",
+    "constraints": "0 <= n <= 50. Solution must complete in well under a second for n=50.",
+    "examples": [
+      { "input": "n = 0", "output": "0" },
+      { "input": "n = 10", "output": "55" },
+      { "input": "n = 20", "output": "6765" }
+    ],
+    "starter": "def fib(n):\n    # your code here\n    pass\n",
+    "entry": "fib",
+    "tests": [
+      { "args": [0], "expect": 0 },
+      { "args": [1], "expect": 1 },
+      { "args": [2], "expect": 1 },
+      { "args": [5], "expect": 5 },
+      { "args": [10], "expect": 55 },
+      { "args": [20], "expect": 6765 },
+      { "args": [30], "expect": 832040 }
+    ],
+    "hints": [
+      "Naive recursion `fib(n-1) + fib(n-2)` is correct but explodes — for n=50 it makes ~10^10 calls.",
+      "Two options: memoize with `@functools.cache` (top-down) or build up iteratively from 0, 1 (bottom-up).",
+      "Iterative needs only two variables: `a, b = 0, 1; for _ in range(n): a, b = b, a + b; return a`."
+    ],
+    "bruteForce": {
+      "code": "def fib(n):\n    if n < 2:\n        return n\n    return fib(n - 1) + fib(n - 2)",
+      "complexity": "O(2^n) time, O(n) recursion stack.",
+      "explanation": "Naive recursion recomputes the same subproblems. fib(5) calls fib(3) twice, fib(2) three times, etc."
+    },
+    "optimal": {
+      "code": "def fib(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a",
+      "complexity": "O(n) time, O(1) space.",
+      "explanation": "Iterative bottom-up. Only the last two values matter; throw the rest away."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of the iterative solution?",
+      "choices": [
+        { "label": "O(2^n)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["recursion", "dp", "memoization", "interview-classic"]
+  },
+  {
+    "id": "py-c-is-anagram",
+    "track": "python",
+    "topic": "strings",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 8,
+    "companies": ["tcs", "wipro"],
+    "prompt": "Return `True` if strings `s1` and `s2` are anagrams (same characters with same frequencies), else `False`. Case-sensitive.",
+    "constraints": "0 <= len(s1), len(s2) <= 10^4. Two empty strings are anagrams.",
+    "examples": [
+      { "input": "s1='listen', s2='silent'", "output": "True" },
+      { "input": "s1='hello', s2='world'", "output": "False" },
+      { "input": "s1='Listen', s2='silent'", "output": "False", "explanation": "Case-sensitive: 'L' != 'l'." }
+    ],
+    "starter": "def is_anagram(s1, s2):\n    # your code here\n    pass\n",
+    "entry": "is_anagram",
+    "tests": [
+      { "args": ["listen", "silent"], "expect": true },
+      { "args": ["hello", "world"], "expect": false },
+      { "args": ["", ""], "expect": true },
+      { "args": ["rat", "tar"], "expect": true },
+      { "args": ["a", "ab"], "expect": false },
+      { "args": ["Listen", "silent"], "expect": false },
+      { "args": ["abc", "abd"], "expect": false }
+    ],
+    "hints": [
+      "If their lengths differ, they're not anagrams — quick reject.",
+      "Sort both and compare? Works but O(n log n). What's a linear-time approach?",
+      "Count each character's frequency, compare counts. `collections.Counter` does this in one expression."
+    ],
+    "bruteForce": {
+      "code": "def is_anagram(s1, s2):\n    return sorted(s1) == sorted(s2)",
+      "complexity": "O(n log n) time, O(n) space.",
+      "explanation": "Sort both, compare. Simple and correct. The sort dominates."
+    },
+    "optimal": {
+      "code": "from collections import Counter\n\ndef is_anagram(s1, s2):\n    return Counter(s1) == Counter(s2)",
+      "complexity": "O(n) time, O(k) space where k = alphabet size.",
+      "explanation": "Frequency map of each string; compare maps. Linear scan beats sorting for large strings."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of the Counter solution?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["strings", "hashmap", "interview-classic"]
+  },
+  {
+    "id": "py-c-char-frequency",
+    "track": "python",
+    "topic": "strings",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 6,
+    "companies": ["tcs", "infosys"],
+    "prompt": "Return a dict mapping each character in `s` to its number of occurrences. Empty string returns `{}`.",
+    "constraints": "0 <= len(s) <= 10^4.",
+    "examples": [
+      { "input": "s = 'hello'", "output": "{'h': 1, 'e': 1, 'l': 2, 'o': 1}" },
+      { "input": "s = ''", "output": "{}" }
+    ],
+    "starter": "def char_frequency(s):\n    # your code here\n    pass\n",
+    "entry": "char_frequency",
+    "tests": [
+      { "args": ["hello"], "expect": { "h": 1, "e": 1, "l": 2, "o": 1 } },
+      { "args": [""], "expect": {} },
+      { "args": ["aaa"], "expect": { "a": 3 } },
+      { "args": ["abcabc"], "expect": { "a": 2, "b": 2, "c": 2 } },
+      { "args": ["x"], "expect": { "x": 1 } }
+    ],
+    "hints": [
+      "Iterate the string, accumulate counts in a dict.",
+      "`d.get(c, 0) + 1` avoids a KeyError on first occurrence.",
+      "Or use `collections.Counter(s)` — already a dict subclass."
+    ],
+    "bruteForce": {
+      "code": "def char_frequency(s):\n    d = {}\n    for c in s:\n        if c in d:\n            d[c] += 1\n        else:\n            d[c] = 1\n    return d",
+      "complexity": "O(n) time, O(k) space.",
+      "explanation": "Standard hand-rolled counter. Two dict ops per character."
+    },
+    "optimal": {
+      "code": "from collections import Counter\n\ndef char_frequency(s):\n    return dict(Counter(s))",
+      "complexity": "O(n) time, O(k) space.",
+      "explanation": "Counter is a dict subclass that does this in C. `dict(...)` is only needed if the grader strictly compares to a plain dict."
+    },
+    "complexityCheck": {
+      "question": "Time complexity?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["strings", "hashmap", "collections"]
+  },
+  {
+    "id": "py-c-reverse-words",
+    "track": "python",
+    "topic": "strings",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 7,
+    "companies": ["tcs", "infosys", "capgemini"],
+    "prompt": "Reverse the order of words in `s`. Words are runs of non-whitespace separated by any amount of whitespace. The result has single spaces between words and no leading/trailing whitespace.",
+    "constraints": "0 <= len(s) <= 10^4.",
+    "examples": [
+      { "input": "s = 'hello world'", "output": "'world hello'" },
+      { "input": "s = '  one  two  three  '", "output": "'three two one'", "explanation": "Multiple spaces collapse; leading/trailing trimmed." },
+      { "input": "s = ''", "output": "''" }
+    ],
+    "starter": "def reverse_words(s):\n    # your code here\n    pass\n",
+    "entry": "reverse_words",
+    "tests": [
+      { "args": ["hello world"], "expect": "world hello" },
+      { "args": ["one two three"], "expect": "three two one" },
+      { "args": ["  one  two  three  "], "expect": "three two one" },
+      { "args": [""], "expect": "" },
+      { "args": ["a"], "expect": "a" },
+      { "args": ["   "], "expect": "" }
+    ],
+    "hints": [
+      "Splitting on whitespace with `s.split()` (no arg) collapses runs and ignores leading/trailing — perfect.",
+      "Reverse the list, then join with a single space.",
+      "One-liner: `' '.join(reversed(s.split()))` — or `' '.join(s.split()[::-1])`."
+    ],
+    "bruteForce": {
+      "code": "def reverse_words(s):\n    words = s.split()\n    result = []\n    for i in range(len(words) - 1, -1, -1):\n        result.append(words[i])\n        if i > 0:\n            result.append(' ')\n    return ''.join(result)",
+      "complexity": "O(n) time, O(n) space.",
+      "explanation": "Manual reverse + interleave spaces. Works but more code than needed."
+    },
+    "optimal": {
+      "code": "def reverse_words(s):\n    return ' '.join(reversed(s.split()))",
+      "complexity": "O(n) time, O(n) space.",
+      "explanation": "`s.split()` with no argument handles whitespace collapsing and trimming for free. `reversed` is lazy; `join` consumes it."
+    },
+    "complexityCheck": {
+      "question": "Time complexity?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["strings", "interview-classic"]
+  },
+  {
+    "id": "py-c-flatten",
+    "track": "python",
+    "topic": "recursion",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 12,
+    "companies": ["amazon-india", "infosys"],
+    "prompt": "Given a possibly nested list of integers and lists, return a flat list of integers in left-to-right order.",
+    "constraints": "Nesting depth <= 100. All leaves are ints. Empty lists count as no elements.",
+    "examples": [
+      { "input": "[1, [2, [3, 4]], 5]", "output": "[1, 2, 3, 4, 5]" },
+      { "input": "[[[]]]", "output": "[]" },
+      { "input": "[1, 2, 3]", "output": "[1, 2, 3]" }
+    ],
+    "starter": "def flatten(nested):\n    # your code here\n    pass\n",
+    "entry": "flatten",
+    "tests": [
+      { "args": [[1, [2, [3, 4]], 5]], "expect": [1, 2, 3, 4, 5] },
+      { "args": [[]], "expect": [] },
+      { "args": [[[[]]]], "expect": [] },
+      { "args": [[1, 2, 3]], "expect": [1, 2, 3] },
+      { "args": [[[1, 2], [3, [4, 5]]]], "expect": [1, 2, 3, 4, 5] },
+      { "args": [[[[1]], [[2]], [[3]]]], "expect": [1, 2, 3] }
+    ],
+    "hints": [
+      "Iterate the input. If an element is a list, recurse into it. If it's an int, append.",
+      "`isinstance(x, list)` is the type check.",
+      "Either accumulate into a result list, or write a generator with `yield from`."
+    ],
+    "bruteForce": {
+      "code": "def flatten(nested):\n    out = []\n    for x in nested:\n        if isinstance(x, list):\n            out.extend(flatten(x))\n        else:\n            out.append(x)\n    return out",
+      "complexity": "O(n) time, O(d) recursion stack where d = max depth.",
+      "explanation": "Standard recursive flatten. Builds an intermediate list at each level."
+    },
+    "optimal": {
+      "code": "def flatten(nested):\n    def gen(items):\n        for x in items:\n            if isinstance(x, list):\n                yield from gen(x)\n            else:\n                yield x\n    return list(gen(nested))",
+      "complexity": "O(n) time, O(d) recursion stack.",
+      "explanation": "Generator + `yield from` avoids the intermediate list at each level — slightly less memory churn, same big-O."
+    },
+    "complexityCheck": {
+      "question": "Time complexity in n = total number of leaf integers?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(log n)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["recursion", "generators", "interview-classic"]
+  },
+  {
+    "id": "py-c-merge-dicts",
+    "track": "python",
+    "topic": "data-types",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 5,
+    "companies": ["tcs", "infosys"],
+    "prompt": "Merge two dicts `a` and `b`. When a key exists in both, the value from `b` wins. The original inputs must not be mutated.",
+    "constraints": "0 <= len(a), len(b) <= 1000.",
+    "examples": [
+      { "input": "a={'x':1, 'y':2}, b={'y':3, 'z':4}", "output": "{'x':1, 'y':3, 'z':4}" },
+      { "input": "a={}, b={}", "output": "{}" }
+    ],
+    "starter": "def merge_dicts(a, b):\n    # your code here\n    pass\n",
+    "entry": "merge_dicts",
+    "tests": [
+      { "args": [{ "a": 1 }, { "b": 2 }], "expect": { "a": 1, "b": 2 } },
+      { "args": [{ "a": 1 }, { "a": 2 }], "expect": { "a": 2 } },
+      { "args": [{}, {}], "expect": {} },
+      { "args": [{ "a": 1, "b": 2 }, { "b": 3, "c": 4 }], "expect": { "a": 1, "b": 3, "c": 4 } },
+      { "args": [{ "x": 5 }, {}], "expect": { "x": 5 } }
+    ],
+    "hints": [
+      "Build a new dict — don't mutate either input.",
+      "`{**a, **b}` unpacks both; later keys override earlier ones.",
+      "Or in 3.9+: `a | b` does the same."
+    ],
+    "bruteForce": {
+      "code": "def merge_dicts(a, b):\n    out = dict(a)\n    for k, v in b.items():\n        out[k] = v\n    return out",
+      "complexity": "O(|a| + |b|) time, O(|a| + |b|) space.",
+      "explanation": "Copy a, then write each key from b. The copy step is O(|a|); writes are amortized O(1)."
+    },
+    "optimal": {
+      "code": "def merge_dicts(a, b):\n    return {**a, **b}",
+      "complexity": "O(|a| + |b|) time and space.",
+      "explanation": "Dict-unpacking syntax. Concise and idiomatic. (Python 3.9+ also supports `a | b`.)"
+    },
+    "complexityCheck": {
+      "question": "Time complexity?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(|a|)", "correct": false },
+        { "label": "O(|a| + |b|)", "correct": true },
+        { "label": "O(|a| * |b|)", "correct": false }
+      ]
+    },
+    "tags": ["dict", "warmup"]
+  },
+  {
+    "id": "py-c-group-anagrams",
+    "track": "python",
+    "topic": "strings",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 15,
+    "companies": ["amazon-india", "infosys"],
+    "prompt": "Given a list of lowercase words, group anagrams together. Return a list of groups; each group is the list of its words sorted alphabetically. The outer list is sorted by the first word of each group.",
+    "constraints": "0 <= len(words) <= 10^4. Words are lowercase a-z, length up to 100.",
+    "examples": [
+      { "input": "['eat', 'tea', 'tan', 'ate', 'nat', 'bat']", "output": "[['ate', 'eat', 'tea'], ['bat'], ['nat', 'tan']]" }
+    ],
+    "starter": "def group_anagrams(words):\n    # your code here\n    pass\n",
+    "entry": "group_anagrams",
+    "tests": [
+      { "args": [["eat", "tea", "tan", "ate", "nat", "bat"]], "expect": [["ate", "eat", "tea"], ["bat"], ["nat", "tan"]] },
+      { "args": [[]], "expect": [] },
+      { "args": [["a"]], "expect": [["a"]] },
+      { "args": [["ab", "ba", "abc"]], "expect": [["ab", "ba"], ["abc"]] },
+      { "args": [["bat", "tab", "cat", "tac", "act"]], "expect": [["act", "cat", "tac"], ["bat", "tab"]] }
+    ],
+    "hints": [
+      "Two anagrams share the same multiset of characters — use a canonical form as the key.",
+      "The canonical form can be `''.join(sorted(word))` — anagrams collapse to the same string.",
+      "Group with a `defaultdict(list)`; then sort each group and sort the outer list by first element."
+    ],
+    "bruteForce": {
+      "code": "def group_anagrams(words):\n    groups = []\n    for w in words:\n        placed = False\n        for g in groups:\n            if sorted(g[0]) == sorted(w):\n                g.append(w)\n                placed = True\n                break\n        if not placed:\n            groups.append([w])\n    return sorted([sorted(g) for g in groups])",
+      "complexity": "O(n^2 * k log k) — for each word, compare against every existing group.",
+      "explanation": "Naive scan. Fine for small inputs but quadratic in the number of words."
+    },
+    "optimal": {
+      "code": "from collections import defaultdict\n\ndef group_anagrams(words):\n    buckets = defaultdict(list)\n    for w in words:\n        buckets[''.join(sorted(w))].append(w)\n    return sorted(sorted(g) for g in buckets.values())",
+      "complexity": "O(n * k log k) — for each word, sort its k characters; constant-time bucket insert.",
+      "explanation": "Use the sorted-character string as the bucket key. All anagrams collide on the same key. O(1) lookup per word vs O(n) in the brute force."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of the bucket-based solution? n = #words, k = max word length.",
+      "choices": [
+        { "label": "O(n * k)", "correct": false },
+        { "label": "O(n * k log k)", "correct": true },
+        { "label": "O(n^2 * k)", "correct": false },
+        { "label": "O(n^2 * k log k)", "correct": false }
+      ]
+    },
+    "tags": ["strings", "hashmap", "leetcode-medium"]
+  },
+  {
+    "id": "py-c-balanced-parens",
+    "track": "python",
+    "topic": "stack-queue",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 12,
+    "companies": ["amazon-india", "tcs", "infosys"],
+    "prompt": "Given a string containing only the characters `()[]{}`, return `True` iff every bracket is properly matched and nested. The empty string is balanced.",
+    "constraints": "0 <= len(s) <= 10^4. s contains only bracket characters.",
+    "examples": [
+      { "input": "s = '()[]{}'", "output": "True" },
+      { "input": "s = '([{}])'", "output": "True" },
+      { "input": "s = '(]'", "output": "False" },
+      { "input": "s = '[(])'", "output": "False", "explanation": "The brackets cross — not nested." }
+    ],
+    "starter": "def is_balanced(s):\n    # your code here\n    pass\n",
+    "entry": "is_balanced",
+    "tests": [
+      { "args": ["()"], "expect": true },
+      { "args": ["()[]{}"], "expect": true },
+      { "args": ["(]"], "expect": false },
+      { "args": ["([{}])"], "expect": true },
+      { "args": [""], "expect": true },
+      { "args": ["((("], "expect": false },
+      { "args": [")"], "expect": false },
+      { "args": ["[(])"], "expect": false }
+    ],
+    "hints": [
+      "Use a stack. Push opening brackets; on a closing bracket, check it matches the top of the stack.",
+      "Keep a dict mapping closer → opener: `{')': '(', ']': '[', '}': '{'}`.",
+      "Edge cases: a closing bracket with empty stack (False); leftover brackets at the end (False)."
+    ],
+    "bruteForce": {
+      "code": "def is_balanced(s):\n    # Repeatedly remove inner '()', '[]', '{}' pairs until no more can be removed.\n    prev = None\n    while s != prev:\n        prev = s\n        s = s.replace('()', '').replace('[]', '').replace('{}', '')\n    return s == ''",
+      "complexity": "O(n^2) time — each pass scans the whole string and only removes some pairs.",
+      "explanation": "Eat all innermost pairs; repeat until stable. Works but slow on long inputs."
+    },
+    "optimal": {
+      "code": "def is_balanced(s):\n    pairs = {')': '(', ']': '[', '}': '{'}\n    stack = []\n    for c in s:\n        if c in pairs:\n            if not stack or stack.pop() != pairs[c]:\n                return False\n        else:\n            stack.append(c)\n    return not stack",
+      "complexity": "O(n) time, O(n) space.",
+      "explanation": "Classic stack pattern. Every character is pushed or popped at most once. Empty stack at the end means everything matched."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of the stack-based solution?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["stack", "strings", "interview-classic"]
+  },
+  {
+    "id": "py-c-two-sum",
+    "track": "python",
+    "topic": "functions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 12,
+    "companies": ["amazon-india", "tcs", "infosys"],
+    "prompt": "Given an unsorted integer array `nums` and a target sum `target`, return `[i, j]` (with i < j) such that `nums[i] + nums[j] == target`. Exactly one such pair exists. Return the pair found in a single left-to-right pass.",
+    "constraints": "2 <= len(nums) <= 10^4. -10^9 <= nums[i] <= 10^9. Exactly one valid pair.",
+    "examples": [
+      { "input": "nums=[2,7,11,15], target=9", "output": "[0, 1]" },
+      { "input": "nums=[3,2,4], target=6", "output": "[1, 2]" },
+      { "input": "nums=[3,3], target=6", "output": "[0, 1]" }
+    ],
+    "starter": "def two_sum(nums, target):\n    # your code here\n    pass\n",
+    "entry": "two_sum",
+    "tests": [
+      { "args": [[2, 7, 11, 15], 9], "expect": [0, 1] },
+      { "args": [[3, 2, 4], 6], "expect": [1, 2] },
+      { "args": [[3, 3], 6], "expect": [0, 1] },
+      { "args": [[-1, -2, -3, -4, -5], -8], "expect": [2, 4] },
+      { "args": [[1, 5, 5, 1], 10], "expect": [1, 2] }
+    ],
+    "hints": [
+      "Naive nested loops are O(n²). Can you trade space for time?",
+      "While walking the array, for each `nums[i]` ask: 'have I seen `target - nums[i]` before?'",
+      "A dict mapping `value → its index` answers that in O(1). Return as soon as you find a complement."
+    ],
+    "bruteForce": {
+      "code": "def two_sum(nums, target):\n    n = len(nums)\n    for i in range(n):\n        for j in range(i + 1, n):\n            if nums[i] + nums[j] == target:\n                return [i, j]\n    return []",
+      "complexity": "O(n^2) time, O(1) space.",
+      "explanation": "Try every pair. Correct but quadratic — TLE for n = 10^4."
+    },
+    "optimal": {
+      "code": "def two_sum(nums, target):\n    seen = {}\n    for i, x in enumerate(nums):\n        if target - x in seen:\n            return [seen[target - x], i]\n        seen[x] = i\n    return []",
+      "complexity": "O(n) time, O(n) space.",
+      "explanation": "Hash map of previously-seen values. The complement lookup is O(1). Single pass. Trades O(n) space for an n× speedup."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of the hash-map solution?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n^2)", "correct": false }
+      ]
+    },
+    "tags": ["hashmap", "interview-classic", "leetcode-easy"]
+  }
+]
