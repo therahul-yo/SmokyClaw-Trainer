@@ -197,8 +197,8 @@ export function CodingSandbox({ item }: { item: CodingItem }) {
                     t.pass ? "var(--color-success)" : "var(--color-danger)"
                   }`,
                   background: t.pass
-                    ? "rgba(92, 255, 159, 0.04)"
-                    : "rgba(255, 95, 86, 0.04)",
+                    ? "rgba(255, 140, 0, 0.04)"
+                    : "rgba(255, 68, 68, 0.04)",
                 }}
               >
                 <div
@@ -242,7 +242,7 @@ export function CodingSandbox({ item }: { item: CodingItem }) {
                 className="text-xs p-2 overflow-x-auto"
                 style={{
                   color: "var(--color-danger)",
-                  background: "rgba(255, 95, 86, 0.06)",
+                  background: "rgba(255, 68, 68, 0.06)",
                   border: "1px solid var(--color-danger)",
                 }}
               >

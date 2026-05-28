@@ -29,7 +29,7 @@ function chipStyle(active: boolean) {
   return {
     border: `1px solid ${active ? "var(--color-accent)" : "var(--color-border-bright)"}`,
     color: active ? "var(--color-accent)" : "var(--color-text-dim)",
-    background: active ? "rgba(92, 255, 159, 0.05)" : "transparent",
+    background: active ? "rgba(255, 140, 0, 0.05)" : "transparent",
   };
 }
 

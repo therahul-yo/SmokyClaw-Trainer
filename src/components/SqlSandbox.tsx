@@ -192,8 +192,8 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
                   result.ok ? "var(--color-success)" : "var(--color-danger)"
                 }`,
                 background: result.ok
-                  ? "rgba(92, 255, 159, 0.05)"
-                  : "rgba(255, 95, 86, 0.05)",
+                  ? "rgba(255, 140, 0, 0.05)"
+                  : "rgba(255, 68, 68, 0.05)",
               }}
             >
               <div

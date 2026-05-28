@@ -44,7 +44,7 @@ export function EditorialReveal({
       className="p-4 space-y-4"
       style={{
         border: "1px solid var(--color-accent)",
-        background: "rgba(92, 255, 159, 0.04)",
+        background: "rgba(255, 140, 0, 0.04)",
       }}
     >
       <div

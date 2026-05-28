@@ -23,7 +23,7 @@ export function ComplexityCheck({
       className="p-4 space-y-3 font-mono"
       style={{
         border: "1px solid var(--color-cyan)",
-        background: "rgba(102, 227, 255, 0.04)",
+        background: "rgba(255, 217, 163, 0.04)",
       }}
     >
       <div
@@ -45,8 +45,8 @@ export function ComplexityCheck({
             if (showResult) {
               border = c.correct ? "var(--color-success)" : "var(--color-danger)";
               bg = c.correct
-                ? "rgba(92, 255, 159, 0.07)"
-                : "rgba(255, 95, 86, 0.07)";
+                ? "rgba(255, 140, 0, 0.07)"
+                : "rgba(255, 68, 68, 0.07)";
               fg = c.correct ? "var(--color-success)" : "var(--color-danger)";
             } else {
               border = "var(--color-cyan)";

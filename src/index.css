@@ -3,34 +3,34 @@
 @import "highlight.js/styles/github-dark.css";
 
 /* ───────────────────────────────────────────────────────────────
-   Terminal aesthetic — phosphor green on near-black, monospace.
+   Terminal aesthetic — pitch black, orange accent, cream text.
    ─────────────────────────────────────────────────────────────── */
 
 @theme {
-  /* Base palette — phosphor */
-  --color-bg:           #07090a;
-  --color-bg-alt:       #0a0e0d;
-  --color-bg-card:      #0d1311;
-  --color-bg-card-hover:#121a17;
-  --color-bg-sel:       #14201a;
+  /* Base palette — pitch black + orange + cream */
+  --color-bg:           #000000;
+  --color-bg-alt:       #050505;
+  --color-bg-card:      #0d0d0d;
+  --color-bg-card-hover:#161616;
+  --color-bg-sel:       #1a1208;
 
-  --color-border:       #18261e;
-  --color-border-bright:#2a4032;
+  --color-border:       #2a1a08;
+  --color-border-bright:#4a2e10;
 
-  --color-text:         #bce3c9;   /* phosphor light */
-  --color-text-dim:     #6d9580;
-  --color-text-muted:   #3e5d4d;
+  --color-text:         #f5ead3;   /* cream */
+  --color-text-dim:     #b69772;   /* dim cream */
+  --color-text-muted:   #6b5840;
 
-  --color-accent:       #5cff9f;   /* primary phosphor */
-  --color-accent-dim:   #2bbf6e;
-  --color-amber:        #ffb000;   /* secondary, alerts, hints */
-  --color-amber-dim:    #aa7400;
-  --color-cyan:         #66e3ff;   /* tertiary, links */
-  --color-magenta:      #ff5fbe;   /* rare, special */
+  --color-accent:       #ff8c00;   /* primary orange */
+  --color-accent-dim:   #cc6e00;
+  --color-amber:        #ffb84d;   /* lighter warm — hints */
+  --color-amber-dim:    #aa7530;
+  --color-cyan:         #ffd9a3;   /* warm cream for links */
+  --color-magenta:      #ff5fbe;   /* rare */
 
-  --color-success:      #5cff9f;
-  --color-danger:       #ff5f56;
-  --color-warning:      #ffb000;
+  --color-success:      #ff8c00;   /* orange */
+  --color-danger:       #ff4444;   /* red */
+  --color-warning:      #ffb84d;
 
   --font-sans: "JetBrains Mono", ui-monospace, "Cascadia Code", Menlo, monospace;
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Menlo, monospace;
@@ -53,8 +53,8 @@ body {
   background-image:
     repeating-linear-gradient(
       to bottom,
-      rgba(92, 255, 159, 0.012) 0,
-      rgba(92, 255, 159, 0.012) 1px,
+      rgba(255, 140, 0, 0.015) 0,
+      rgba(255, 140, 0, 0.015) 1px,
       transparent 1px,
       transparent 3px
     );
@@ -81,10 +81,10 @@ body {
 /* Custom utilities — terminal building blocks */
 @layer utilities {
   .crt-glow {
-    text-shadow: 0 0 1px currentColor, 0 0 12px rgba(92, 255, 159, 0.25);
+    text-shadow: 0 0 1px currentColor, 0 0 12px rgba(255, 140, 0, 0.35);
   }
   .crt-glow-amber {
-    text-shadow: 0 0 1px currentColor, 0 0 10px rgba(255, 176, 0, 0.3);
+    text-shadow: 0 0 1px currentColor, 0 0 10px rgba(255, 184, 77, 0.3);
   }
   .border-bracket {
     border: 1px solid var(--color-border-bright);
@@ -177,4 +177,4 @@ body {
 .cm-activeLine { background: var(--color-bg-sel) !important; }
 .cm-activeLineGutter { background: var(--color-bg-sel) !important; color: var(--color-accent) !important; }
 .cm-cursor { border-left-color: var(--color-accent) !important; border-left-width: 2px !important; }
-.cm-selectionBackground { background: rgba(92, 255, 159, 0.18) !important; }
+.cm-selectionBackground { background: rgba(255, 140, 0, 0.18) !important; }

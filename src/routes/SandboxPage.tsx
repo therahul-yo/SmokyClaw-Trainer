@@ -209,7 +209,7 @@ function SqlRepl() {
         <pre
           className="p-3 text-xs whitespace-pre-wrap font-mono"
           style={{
-            background: "rgba(255, 95, 86, 0.06)",
+            background: "rgba(255, 68, 68, 0.06)",
             border: "1px solid var(--color-danger)",
             color: "var(--color-danger)",
           }}

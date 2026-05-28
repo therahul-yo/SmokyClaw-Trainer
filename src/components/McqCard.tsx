@@ -63,10 +63,10 @@ export function McqCard({
             if (submitted) {
               if (isAnswer) {
                 borderColor = "var(--color-success)";
-                bgColor = "rgba(92, 255, 159, 0.07)";
+                bgColor = "rgba(255, 140, 0, 0.07)";
               } else if (chosen) {
                 borderColor = "var(--color-danger)";
-                bgColor = "rgba(255, 95, 86, 0.07)";
+                bgColor = "rgba(255, 68, 68, 0.07)";
               } else {
                 opacity = 0.5;
               }
@@ -104,8 +104,8 @@ export function McqCard({
             style={{
               borderLeft: `3px solid ${correct ? "var(--color-success)" : "var(--color-danger)"}`,
               background: correct
-                ? "rgba(92, 255, 159, 0.05)"
-                : "rgba(255, 95, 86, 0.05)",
+                ? "rgba(255, 140, 0, 0.05)"
+                : "rgba(255, 68, 68, 0.05)",
             }}
           >
             <div

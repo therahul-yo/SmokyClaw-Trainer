@@ -59,7 +59,7 @@ export function OnboardingModal() {
         style={{
           background: "var(--color-bg-alt)",
           border: "1px solid var(--color-accent)",
-          boxShadow: "0 0 40px rgba(92, 255, 159, 0.15)",
+          boxShadow: "0 0 40px rgba(255, 140, 0, 0.15)",
         }}
       >
         <div

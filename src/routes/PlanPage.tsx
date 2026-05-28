@@ -242,7 +242,7 @@ export function PlanPage() {
           background: compact
             ? "var(--color-bg)"
             : highlighted
-              ? "rgba(92, 255, 159, 0.04)"
+              ? "rgba(255, 140, 0, 0.04)"
               : "var(--color-bg-alt)",
           border: highlighted
             ? "1px solid var(--color-accent)"

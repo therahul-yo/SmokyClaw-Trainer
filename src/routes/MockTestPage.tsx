@@ -206,7 +206,7 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
                             style={{
                               border: `1px solid ${checked ? "var(--color-accent)" : "transparent"}`,
                               background: checked
-                                ? "rgba(92, 255, 159, 0.05)"
+                                ? "rgba(255, 140, 0, 0.05)"
                                 : "transparent",
                             }}
                           >

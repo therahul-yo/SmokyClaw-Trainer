@@ -115,7 +115,7 @@ export function PatternsPage() {
                       style={{
                         border: "1px solid var(--color-cyan)",
                         color: "var(--color-cyan)",
-                        background: "rgba(102, 227, 255, 0.04)",
+                        background: "rgba(255, 217, 163, 0.04)",
                       }}
                     >
                       lsn/{l.id}
@@ -138,7 +138,7 @@ export function PatternsPage() {
                             ? "var(--color-accent)"
                             : "var(--color-text-dim)",
                           background: passed
-                            ? "rgba(92, 255, 159, 0.04)"
+                            ? "rgba(255, 140, 0, 0.04)"
                             : "transparent",
                         }}
                         title={it.type === "mcq" ? it.question : it.prompt}
