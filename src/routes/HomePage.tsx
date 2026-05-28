@@ -31,12 +31,13 @@ export function HomePage() {
       <OnboardingModal />
       <header>
         <h1 className="text-3xl font-bold text-white">
-          Crack TCS, Infosys & friends.
+          Train your interview brain like a machine.
         </h1>
         <p className="mt-2 text-[var(--color-text-dim)] max-w-2xl">
-          Python · DSA · SQL · Aptitude — one place, daily practice, in-browser
-          code & SQL execution. Curated MCQs and drills, spaced-repetition for
-          everything you got wrong.
+          Python · DSA · LeetCode patterns · SQL · Aptitude — one adaptive
+          system for building recall, speed, and problem-solving under time
+          pressure. Learn the concept, recognize the pattern, code it, review
+          mistakes, and repeat until it becomes automatic.
         </p>
       </header>
 
@@ -95,10 +96,11 @@ export function HomePage() {
             className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] hover:bg-[var(--color-bg-card-hover)]"
           >
             <div className="font-semibold text-white">
-              🔁 Review queue ({dueIds.length} due)
+              🔁 Machine recall queue ({dueIds.length} due)
             </div>
             <div className="text-sm text-[var(--color-text-dim)] mt-1">
-              Wrong-answered items resurface here on a Leitner schedule.
+              Wrong answers resurface until the concept is fast, clean, and
+              reliable under pressure.
             </div>
           </Link>
           <Link

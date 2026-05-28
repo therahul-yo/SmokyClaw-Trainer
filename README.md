@@ -1,6 +1,14 @@
 # 🦞 SmokyClaw Trainer
 
-Solo prep tool for Indian campus hiring tests — TCS NQT, Infosys SP, Wipro Elite NLTH, Capgemini — with in-browser Python and SQL execution, spaced repetition for everything you got wrong, and exact mock-test formats with timers.
+Solo interview-training system for Indian campus hiring tests and coding rounds
+— TCS NQT, Infosys SP, Wipro Elite NLTH, Capgemini, Python, SQL, aptitude, and
+DSA/LeetCode patterns — with in-browser Python and SQL execution, spaced
+repetition for everything you got wrong, and exact mock-test formats with
+timers.
+
+The goal is to train the learner from basics to automatic execution: learn the
+foundation, recognize the pattern, write the template, handle edge cases,
+explain complexity, and repeat weak areas until they become fast.
 
 **Live:** [smokyclaw-trainer.vercel.app](https://smokyclaw-trainer.vercel.app/)
 
@@ -8,7 +16,8 @@ Solo prep tool for Indian campus hiring tests — TCS NQT, Infosys SP, Wipro Eli
 
 ## What it does
 
-- **Four tracks.** Python, DSA, SQL & DBMS, Aptitude & Reasoning. Each track has lessons (Markdown), MCQs, and hands-on problems.
+- **Four tracks from basics upward.** Python, DSA & LeetCode patterns, SQL & DBMS, Aptitude & Reasoning. Each track has lessons (Markdown), MCQs, and hands-on problems.
+- **Machine-style training loop.** Each serious topic is designed around basics → mental model → recognition triggers → brute force → optimal template → edge cases → timed recall.
 - **Run code in the browser.** Python problems run on Pyodide (CPython compiled to WebAssembly) — no server, no signup. Test cases are graded against your function's return value.
 - **Run SQL in the browser.** SQL problems run on sql.js (SQLite in WASM) against bundled `employees` and `ecommerce` schemas. Your result set is diffed against the expected output.
 - **Spaced repetition (Leitner).** Anything you get wrong is added to a 5-bucket Leitner queue (1d / 3d / 7d / 14d / 30d). The Review page surfaces only what's due.
@@ -66,7 +75,7 @@ pnpm lint
 
 ## Adding content
 
-See [CONTENT.md](./CONTENT.md) for the full authoring guide, the optional pedagogy schema (hints / examples / brute-force / optimal / complexity-check / companies), and the punch-list of patterns to author.
+See [CURRICULUM.md](./CURRICULUM.md) for the training path and [CONTENT.md](./CONTENT.md) for the full authoring guide, the optional pedagogy schema (hints / examples / brute-force / optimal / complexity-check / companies), and the punch-list of patterns to author.
 
 **A new lesson:** drop a Markdown file into `src/content/<track>/` with frontmatter:
 

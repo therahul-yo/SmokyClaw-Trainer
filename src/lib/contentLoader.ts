@@ -61,6 +61,7 @@ function buildLessons(): Lesson[] {
       order: Number(meta.order ?? 999),
       estMinutes: Number(meta.estMinutes ?? 10),
       prerequisites: Array.isArray(meta.prerequisites) ? (meta.prerequisites as string[]) : [],
+      pattern: meta.pattern ? String(meta.pattern) : undefined,
       body,
     });
   }
