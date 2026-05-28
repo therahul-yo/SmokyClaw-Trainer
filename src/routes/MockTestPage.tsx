@@ -9,6 +9,9 @@ import type {
 import { getBlueprint } from "../lib/mockTestFormats";
 import { getAllQuizItems } from "../lib/contentLoader";
 import { useProgressStore } from "../store";
+import { Prompt } from "../components/terminal/Prompt";
+import { Box } from "../components/terminal/Box";
+import { BracketButton } from "../components/terminal/BracketButton";
 
 type Phase = "intro" | "section" | "done";
 
@@ -18,7 +21,9 @@ type PickedSection = {
 };
 
 function pickItemsForSection(section: MockSection, pool: QuizItem[]): McqItem[] {
-  const criteria = Array.isArray(section.pickFrom) ? section.pickFrom : [section.pickFrom];
+  const criteria = Array.isArray(section.pickFrom)
+    ? section.pickFrom
+    : [section.pickFrom];
   const matches: McqItem[] = [];
   for (const item of pool) {
     if (item.type !== "mcq") continue;
@@ -30,7 +35,6 @@ function pickItemsForSection(section: MockSection, pool: QuizItem[]): McqItem[] 
     });
     if (ok) matches.push(item);
   }
-  // Shuffle, then take questionCount (or all if pool smaller).
   for (let i = matches.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [matches[i], matches[j]] = [matches[j], matches[i]];
@@ -41,9 +45,7 @@ function pickItemsForSection(section: MockSection, pool: QuizItem[]): McqItem[] 
 export function MockTestPage() {
   const { id } = useParams<{ id: string }>();
   const blueprint = id ? getBlueprint(id as MockTestBlueprint["id"]) : undefined;
-
   if (!blueprint) return <Navigate to="/" replace />;
-
   return <MockTestRun blueprint={blueprint} />;
 }
 
@@ -56,7 +58,6 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
   const [now, setNow] = useState(Date.now());
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
 
-  // Timer tick
   useEffect(() => {
     if (phase !== "section") return;
     const t = setInterval(() => setNow(Date.now()), 500);
@@ -83,7 +84,6 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
     setPhase("section");
   };
 
-  // Auto-advance when section deadline hit
   useEffect(() => {
     if (phase !== "section") return;
     const deadline = deadlines[sectionIdx];
@@ -99,7 +99,6 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
   }, [now, deadlines, sectionIdx, sections.length, phase]);
 
   const finalize = () => {
-    // Record all answers as attempts (scored items only).
     for (const sec of sections) {
       for (const item of sec.items) {
         const ans = answers[item.id];
@@ -110,75 +109,131 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
     setPhase("done");
   };
 
-  if (phase === "intro") {
-    return <Intro blueprint={blueprint} onStart={start} />;
-  }
-
-  if (phase === "done") {
+  if (phase === "intro") return <Intro blueprint={blueprint} onStart={start} />;
+  if (phase === "done")
     return <Report blueprint={blueprint} sections={sections} answers={answers} />;
-  }
 
   const section = sections[sectionIdx];
   if (!section) return null;
   const deadline = deadlines[sectionIdx];
   const remaining = Math.max(0, deadline - now);
+  const lowTime = remaining < 60_000;
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
+      <Prompt path={`~/mock/${blueprint.id}`}>
+        <span>section {sectionIdx + 1}/{sections.length} --running</span>
+      </Prompt>
+
+      <div
+        className="flex items-center justify-between px-3 py-2 font-mono"
+        style={{
+          background: "var(--color-bg-alt)",
+          border: `1px solid ${lowTime ? "var(--color-danger)" : "var(--color-border-bright)"}`,
+        }}
+      >
         <div>
-          <div className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">
-            Section {sectionIdx + 1} / {sections.length}
+          <div
+            className="text-[10px] tracking-widest uppercase"
+            style={{ color: "var(--color-text-muted)" }}
+          >
+            section {sectionIdx + 1} / {sections.length}
           </div>
-          <div className="text-xl font-bold text-white">{section.meta.title}</div>
+          <div
+            className="text-lg font-bold"
+            style={{ color: "var(--color-text)" }}
+          >
+            {section.meta.title}
+          </div>
         </div>
         <div className="text-right">
-          <div className="text-xs text-[var(--color-text-muted)]">time left</div>
-          <div className="text-2xl font-mono text-white">{formatTime(remaining)}</div>
+          <div
+            className="text-[10px] tracking-widest uppercase"
+            style={{ color: "var(--color-text-muted)" }}
+          >
+            time left
+          </div>
+          <div
+            className={"text-2xl font-bold tabular-nums" + (lowTime ? " crt-glow" : "")}
+            style={{
+              color: lowTime ? "var(--color-danger)" : "var(--color-accent)",
+            }}
+          >
+            {formatTime(remaining)}
+          </div>
         </div>
       </div>
 
       {section.items.length === 0 ? (
-        <div className="text-[var(--color-text-dim)]">
-          No questions available for this section yet. Skip ahead.
+        <div
+          className="text-sm italic font-mono"
+          style={{ color: "var(--color-text-dim)" }}
+        >
+          // no questions available for this section yet — skip ahead.
         </div>
       ) : (
-        <ol className="space-y-4">
+        <ol className="space-y-3">
           {section.items.map((q, qi) => (
             <li
               key={q.id}
-              className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]"
+              className="p-3 font-mono"
+              style={{
+                background: "var(--color-bg-card)",
+                border: "1px solid var(--color-border)",
+              }}
             >
               <div className="flex items-start gap-3">
-                <span className="font-mono text-[var(--color-text-muted)]">
-                  Q{qi + 1}.
+                <span
+                  className="font-bold"
+                  style={{ color: "var(--color-amber)" }}
+                >
+                  Q{String(qi + 1).padStart(2, "0")}
                 </span>
                 <div className="flex-1">
-                  <div className="text-[var(--color-text)] whitespace-pre-wrap">
+                  <div
+                    className="whitespace-pre-wrap text-sm"
+                    style={{ color: "var(--color-text)" }}
+                  >
                     {q.question}
                   </div>
-                  <ul className="mt-3 space-y-1.5">
-                    {q.options.map((opt, oi) => (
-                      <li key={oi}>
-                        <label className="flex gap-2 items-start cursor-pointer p-2 rounded hover:bg-[var(--color-bg-card-hover)]">
-                          <input
-                            type="radio"
-                            name={q.id}
-                            checked={answers[q.id] === oi}
-                            onChange={() =>
-                              setAnswers((a) => ({ ...a, [q.id]: oi }))
-                            }
-                            className="mt-1.5"
-                          />
-                          <span>
-                            <span className="font-mono text-[var(--color-text-muted)] mr-2">
-                              {String.fromCharCode(65 + oi)}.
+                  <ul className="mt-3 space-y-1">
+                    {q.options.map((opt, oi) => {
+                      const checked = answers[q.id] === oi;
+                      return (
+                        <li key={oi}>
+                          <label
+                            className="flex gap-2 items-start cursor-pointer px-2 py-1 transition-colors"
+                            style={{
+                              border: `1px solid ${checked ? "var(--color-accent)" : "transparent"}`,
+                              background: checked
+                                ? "rgba(255, 140, 0, 0.05)"
+                                : "transparent",
+                            }}
+                          >
+                            <input
+                              type="radio"
+                              name={q.id}
+                              checked={checked}
+                              onChange={() =>
+                                setAnswers((a) => ({ ...a, [q.id]: oi }))
+                              }
+                              className="mt-1 accent-[var(--color-accent)]"
+                            />
+                            <span className="text-sm">
+                              <span
+                                className="mr-2"
+                                style={{ color: "var(--color-text-muted)" }}
+                              >
+                                [{String.fromCharCode(65 + oi)}]
+                              </span>
+                              <span style={{ color: "var(--color-text)" }}>
+                                {opt}
+                              </span>
                             </span>
-                            {opt}
-                          </span>
-                        </label>
-                      </li>
-                    ))}
+                          </label>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               </div>
@@ -189,19 +244,16 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
 
       <div className="flex justify-end gap-2">
         {sectionIdx < sections.length - 1 ? (
-          <button
+          <BracketButton
+            variant="primary"
             onClick={() => setSectionIdx(sectionIdx + 1)}
-            className="px-4 py-2 rounded-md bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white"
           >
-            Submit & next section →
-          </button>
+            submit & next section →
+          </BracketButton>
         ) : (
-          <button
-            onClick={finalize}
-            className="px-4 py-2 rounded-md bg-[var(--color-success)]/80 hover:bg-[var(--color-success)] text-white"
-          >
-            Submit final
-          </button>
+          <BracketButton variant="primary" onClick={finalize}>
+            submit final
+          </BracketButton>
         )}
       </div>
     </div>
@@ -217,53 +269,63 @@ function Intro({
 }) {
   const totalMin = blueprint.sections.reduce((a, s) => a + s.durationMinutes, 0);
   return (
-    <div className="max-w-2xl space-y-6">
-      <header>
-        <h1 className="text-3xl font-bold text-white">{blueprint.title}</h1>
-        <p className="text-[var(--color-text-dim)] mt-1">{blueprint.subtitle}</p>
-      </header>
+    <div className="max-w-2xl space-y-4">
+      <Prompt path={`~/mock/${blueprint.id}`}>
+        <span>start --simulator</span>
+      </Prompt>
+      <div
+        className="text-2xl font-bold crt-glow"
+        style={{ color: "var(--color-danger)" }}
+      >
+        {blueprint.title}
+      </div>
+      <div className="text-sm" style={{ color: "var(--color-text-dim)" }}>
+        {blueprint.subtitle}
+      </div>
 
-      <div className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]">
-        <div className="text-sm font-semibold text-white mb-3">Format</div>
-        <ol className="space-y-2 text-sm">
-          {blueprint.sections.map((s, i) => (
-            <li key={s.id} className="flex justify-between gap-4">
-              <span>
-                <span className="text-[var(--color-text-muted)] mr-2">
-                  Section {i + 1}.
+      <Box title="$ format" trailing={`${totalMin} min total`}>
+        <ol className="space-y-1.5 text-sm font-mono">
+          {blueprint.sections.map((s, i) => {
+            const last = i === blueprint.sections.length - 1;
+            return (
+              <li key={s.id} className="flex justify-between gap-4">
+                <span style={{ color: "var(--color-text)" }}>
+                  <span style={{ color: "var(--color-text-muted)" }}>
+                    {last ? "└─ " : "├─ "}
+                  </span>
+                  <span style={{ color: "var(--color-amber)" }}>
+                    sec {i + 1}.
+                  </span>{" "}
+                  {s.title}
                 </span>
-                {s.title}
-              </span>
-              <span className="text-[var(--color-text-muted)]">
-                {s.questionCount} q · {s.durationMinutes} min
-              </span>
-            </li>
-          ))}
+                <span style={{ color: "var(--color-text-muted)" }}>
+                  {s.questionCount}q · {s.durationMinutes}m
+                </span>
+              </li>
+            );
+          })}
         </ol>
-        <div className="mt-3 pt-3 border-t border-[var(--color-border)] text-sm flex justify-between">
-          <span className="font-semibold">Total cognitive time</span>
-          <span>{totalMin} min</span>
-        </div>
         {blueprint.codingSection && (
-          <div className="mt-2 text-xs text-[var(--color-text-dim)]">
-            + coding round: {blueprint.codingSection.problemCount} problem(s) ·{" "}
-            {blueprint.codingSection.durationMinutes} min (not auto-graded; use
-            the Python sandbox)
+          <div
+            className="mt-3 text-xs font-mono"
+            style={{ color: "var(--color-text-dim)" }}
+          >
+            // + coding round: {blueprint.codingSection.problemCount} problem(s)
+            · {blueprint.codingSection.durationMinutes} min (use python sandbox)
           </div>
         )}
-      </div>
+      </Box>
 
-      <div className="p-4 rounded-lg border border-[var(--color-warning)]/40 bg-yellow-900/10 text-sm">
-        ⏱ Timers auto-advance sections. Refresh resets the run. Submit early
-        with "next section" if you finish before time.
-      </div>
+      <Box title="$ warning" variant="amber">
+        <div className="text-sm" style={{ color: "var(--color-text-dim)" }}>
+          ⏱ timers auto-advance sections. refresh resets the run. submit early
+          with "next section" if you finish before time.
+        </div>
+      </Box>
 
-      <button
-        onClick={onStart}
-        className="px-6 py-3 rounded-md bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white font-medium"
-      >
-        Start mock test →
-      </button>
+      <BracketButton variant="danger" onClick={onStart}>
+        start simulation →
+      </BracketButton>
     </div>
   );
 }
@@ -289,39 +351,74 @@ function Report({
   const pct = totalQs > 0 ? Math.round((totalCorrect / totalQs) * 100) : 0;
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <header>
-        <h1 className="text-3xl font-bold text-white">
-          {blueprint.title} · score report
-        </h1>
-        <p className="text-[var(--color-text-dim)] mt-1">
-          You scored {totalCorrect} / {totalQs} = <b>{pct}%</b>
-        </p>
-      </header>
-
-      <div className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] space-y-2">
-        {sectionResults.map((r) => (
-          <div key={r.title} className="flex justify-between text-sm">
-            <span>{r.title}</span>
-            <span className="text-[var(--color-text-dim)]">
-              {r.correct} / {r.total}
-            </span>
-          </div>
-        ))}
+    <div className="max-w-2xl space-y-4">
+      <Prompt path={`~/mock/${blueprint.id}/report`}>
+        <span>cat score.report</span>
+      </Prompt>
+      <div
+        className="text-2xl font-bold crt-glow"
+        style={{ color: "var(--color-accent)" }}
+      >
+        {blueprint.title}.report
+      </div>
+      <div
+        className="text-3xl font-bold tabular-nums font-mono"
+        style={{
+          color: pct >= 65 ? "var(--color-accent)" : "var(--color-amber)",
+        }}
+      >
+        {totalCorrect}/{totalQs}
+        <span
+          className="text-base font-normal ml-3"
+          style={{ color: "var(--color-text-dim)" }}
+        >
+          = {pct}%
+        </span>
       </div>
 
-      <p className="text-sm text-[var(--color-text-dim)]">
-        Cutoffs vary by year and role. As a rough TCS NQT prime-target band, aim
-        for {Math.ceil(totalQs * 0.65)}+ correct (~65%). Wrong-answered items
-        have been added to your review queue.
-      </p>
+      <Box title="$ section --breakdown">
+        <div className="space-y-1 font-mono text-sm">
+          {sectionResults.map((r) => {
+            const sectionPct =
+              r.total > 0 ? Math.round((r.correct / r.total) * 100) : 0;
+            return (
+              <div key={r.title} className="flex justify-between">
+                <span style={{ color: "var(--color-text)" }}>{r.title}</span>
+                <span>
+                  <span
+                    style={{
+                      color:
+                        sectionPct >= 65
+                          ? "var(--color-accent)"
+                          : "var(--color-amber)",
+                    }}
+                  >
+                    {r.correct}/{r.total}
+                  </span>
+                  <span
+                    className="ml-2"
+                    style={{ color: "var(--color-text-muted)" }}
+                  >
+                    ({sectionPct}%)
+                  </span>
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </Box>
 
-      <button
-        onClick={() => window.location.reload()}
-        className="px-4 py-2 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-bg-card)] text-white"
+      <div
+        className="text-sm font-mono"
+        style={{ color: "var(--color-text-dim)" }}
       >
-        ↻ Take again
-      </button>
+        // cutoffs vary. TCS NQT prime band ≈ {Math.ceil(totalQs * 0.65)}+
+        correct (65%). wrong items added to review queue.
+      </div>
+
+      <BracketButton onClick={() => window.location.reload()}>
+        ↻ take again
+      </BracketButton>
     </div>
   );
 }

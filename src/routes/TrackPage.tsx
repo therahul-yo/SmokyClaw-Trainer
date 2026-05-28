@@ -7,7 +7,9 @@ import {
 } from "../lib/contentLoader";
 import type { TrackId } from "../types";
 import { useProgressStore } from "../store";
-import { ProgressBar } from "../components/ProgressBar";
+import { Box } from "../components/terminal/Box";
+import { AsciiProgress } from "../components/terminal/AsciiProgress";
+import { Prompt } from "../components/terminal/Prompt";
 
 export function TrackPage() {
   const { trackId } = useParams<{ trackId: string }>();
@@ -22,7 +24,6 @@ export function TrackPage() {
   const itemIds = items.map((q) => q.id);
   const pct = useProgressStore.getState().trackMasteryPct(track.id, itemIds);
 
-  // Group items by topic
   const byTopic = new Map<string, typeof items>();
   for (const it of items) {
     const arr = byTopic.get(it.topic) ?? [];
@@ -31,114 +32,169 @@ export function TrackPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <header>
-        <div className="text-4xl mb-2">{track.emoji}</div>
-        <h1 className="text-3xl font-bold text-white">{track.title}</h1>
-        <p className="mt-2 text-[var(--color-text-dim)] max-w-2xl">{track.blurb}</p>
-        <div className="mt-4 max-w-md">
-          <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] mb-1">
-            <span>track mastery</span>
-            <span>
-              {pct}% — {items.length} quiz items, {lessons.length} lessons
-            </span>
-          </div>
-          <ProgressBar value={pct} />
+    <div className="space-y-6">
+      <Prompt path={`~/tracks/${track.id}`}>
+        <span>cat README.md</span>
+      </Prompt>
+
+      <div>
+        <div
+          className="text-3xl font-bold crt-glow mb-1"
+          style={{ color: "var(--color-accent)" }}
+        >
+          {track.id}/
         </div>
-      </header>
+        <div className="text-sm" style={{ color: "var(--color-text-dim)" }}>
+          {track.blurb}
+        </div>
+        <div className="mt-4 max-w-md flex items-center gap-3 text-xs">
+          <span style={{ color: "var(--color-text-muted)" }}>mastery</span>
+          <AsciiProgress value={pct} width={20} />
+          <span className="tabular-nums" style={{ color: "var(--color-accent)" }}>
+            {pct}%
+          </span>
+          <span style={{ color: "var(--color-text-muted)" }}>
+            · {items.length} items · {lessons.length} lessons
+          </span>
+        </div>
+      </div>
 
       {patterns.length > 0 && (
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xl font-semibold text-white">Patterns</h2>
+        <Box
+          title={`$ ls patterns/`}
+          trailing={
             <Link
               to={`/patterns/${track.id}`}
-              className="text-sm text-[var(--color-accent)] hover:underline"
+              className="underline"
+              style={{ color: "var(--color-cyan)" }}
             >
-              View all {patterns.length} →
+              view all {patterns.length} →
             </Link>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {patterns.slice(0, 8).map((p) => (
+          }
+        >
+          <div className="flex flex-wrap gap-2 text-sm">
+            {patterns.slice(0, 12).map((p) => (
               <Link
                 key={p.id}
                 to={`/patterns/${track.id}#${p.id}`}
-                className="px-3 py-1.5 rounded-md text-sm bg-[var(--color-bg-card)] border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-white hover:bg-[var(--color-bg-card-hover)]"
+                className="px-2 py-1 transition-colors hover:brightness-125"
+                style={{
+                  border: "1px solid var(--color-border-bright)",
+                  background: "var(--color-bg-card)",
+                  color: "var(--color-amber)",
+                }}
               >
-                {p.title}
+                #{p.id}
               </Link>
             ))}
           </div>
-        </section>
+        </Box>
       )}
 
-      <section>
-        <h2 className="text-xl font-semibold text-white mb-3">Lessons</h2>
+      <Box title={`$ ls lessons/`} trailing={`${lessons.length} files`}>
         {lessons.length === 0 ? (
-          <div className="text-sm text-[var(--color-text-dim)] italic">
-            No lessons yet. Add markdown files in <code>src/content/{track.id}/</code>.
+          <div className="text-sm italic" style={{ color: "var(--color-text-dim)" }}>
+            No lessons yet. Add markdown files in{" "}
+            <code style={{ color: "var(--color-amber)" }}>
+              src/content/{track.id}/
+            </code>.
           </div>
         ) : (
-          <ol className="space-y-2">
-            {lessons.map((l) => (
-              <li key={l.id}>
-                <Link
-                  to={`/lesson/${l.id}`}
-                  className="flex items-center justify-between p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] hover:bg-[var(--color-bg-card-hover)]"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-[var(--color-text-muted)] font-mono">
-                      {String(l.order).padStart(2, "0")}.
+          <ol className="font-mono text-sm">
+            {lessons.map((l, i) => {
+              const last = i === lessons.length - 1;
+              const done = completedLessons[l.id];
+              return (
+                <li key={l.id}>
+                  <Link
+                    to={`/lesson/${l.id}`}
+                    className="flex items-center gap-2 py-1 px-1 transition-colors"
+                    style={{ color: done ? "var(--color-text-dim)" : "var(--color-text)" }}
+                  >
+                    <span style={{ color: "var(--color-text-muted)" }}>
+                      {last ? "└─" : "├─"}
                     </span>
-                    <div>
-                      <div className="font-semibold text-white">{l.title}</div>
-                      <div className="text-xs text-[var(--color-text-muted)]">
-                        {l.estMinutes} min · {l.topic}
-                      </div>
-                    </div>
-                  </div>
-                  {completedLessons[l.id] ? (
-                    <span className="text-xs text-[var(--color-success)]">✓ done</span>
-                  ) : (
-                    <span className="text-xs text-[var(--color-text-muted)]">read →</span>
-                  )}
-                </Link>
-              </li>
-            ))}
+                    <span style={{ color: "var(--color-text-muted)" }} className="tabular-nums">
+                      {String(l.order).padStart(2, "0")}
+                    </span>
+                    <span className="flex-1 truncate">{l.title}</span>
+                    <span
+                      className="text-xs"
+                      style={{ color: "var(--color-text-muted)" }}
+                    >
+                      {l.estMinutes}m
+                    </span>
+                    <span
+                      className="text-xs w-12 text-right"
+                      style={{
+                        color: done ? "var(--color-accent)" : "var(--color-text-muted)",
+                      }}
+                    >
+                      {done ? "[✓ done]" : "[ read ]"}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
           </ol>
         )}
-      </section>
+      </Box>
 
-      <section>
-        <h2 className="text-xl font-semibold text-white mb-3">Practice by topic</h2>
+      <Box title={`$ ls practice/`} trailing={`${byTopic.size} topics`}>
         {byTopic.size === 0 ? (
-          <div className="text-sm text-[var(--color-text-dim)] italic">
-            No quiz items yet. Add them to <code>src/data/quizzes/{track.id}.json</code>.
+          <div className="text-sm italic" style={{ color: "var(--color-text-dim)" }}>
+            No quiz items yet. Add them under{" "}
+            <code style={{ color: "var(--color-amber)" }}>src/data/quizzes/</code>.
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 gap-3">
-            {Array.from(byTopic.entries()).map(([topic, list]) => (
-              <Link
-                key={topic}
-                to={`/quiz/${track.id}/${topic}`}
-                className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)] hover:bg-[var(--color-bg-card-hover)]"
-              >
-                <div className="font-semibold text-white capitalize">{topic}</div>
-                <div className="text-xs text-[var(--color-text-muted)] mt-1">
-                  {list.length} items ·{" "}
-                  {[
-                    list.filter((q) => q.type === "mcq").length && `${list.filter((q) => q.type === "mcq").length} MCQ`,
-                    list.filter((q) => q.type === "coding").length && `${list.filter((q) => q.type === "coding").length} coding`,
-                    list.filter((q) => q.type === "sql").length && `${list.filter((q) => q.type === "sql").length} SQL`,
-                  ]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </div>
-              </Link>
-            ))}
+          <div className="grid md:grid-cols-2 gap-2 font-mono text-sm">
+            {Array.from(byTopic.entries()).map(([topic, list]) => {
+              const mcq = list.filter((q) => q.type === "mcq").length;
+              const coding = list.filter((q) => q.type === "coding").length;
+              const sql = list.filter((q) => q.type === "sql").length;
+              return (
+                <Link
+                  key={topic}
+                  to={`/quiz/${track.id}/${topic}`}
+                  className="px-2 py-2 transition-colors hover:brightness-110"
+                  style={{
+                    background: "var(--color-bg-card)",
+                    border: "1px solid var(--color-border)",
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: "var(--color-text-muted)" }}>▸</span>
+                    <span
+                      style={{ color: "var(--color-amber)" }}
+                      className="font-bold capitalize"
+                    >
+                      {topic}
+                    </span>
+                    <span
+                      className="ml-auto text-xs"
+                      style={{ color: "var(--color-text-muted)" }}
+                    >
+                      {list.length}
+                    </span>
+                  </div>
+                  <div
+                    className="text-xs mt-1 pl-5"
+                    style={{ color: "var(--color-text-dim)" }}
+                  >
+                    {[
+                      mcq && `${mcq} mcq`,
+                      coding && `${coding} coding`,
+                      sql && `${sql} sql`,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
-      </section>
+      </Box>
     </div>
   );
 }

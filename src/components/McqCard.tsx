@@ -1,9 +1,9 @@
 import { useState } from "react";
-import clsx from "clsx";
 import type { McqItem } from "../types";
 import { useProgressStore, useReviewQueueStore, useStreakStore } from "../store";
 import { BookmarkButton } from "./BookmarkButton";
 import { LessonRenderer } from "./LessonRenderer";
+import { Box } from "./terminal/Box";
 
 export function McqCard({
   item,
@@ -36,71 +36,92 @@ export function McqCard({
   const correct = submitted && selected === item.answerIndex;
 
   return (
-    <article className="border border-[var(--color-border)] rounded-lg bg-[var(--color-bg-card)] p-6 space-y-4">
-      <div className="flex items-start justify-between gap-4">
-        <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wide">
-          {item.track} · {item.topic} · {item.difficulty}
+    <Box
+      title={
+        <span>
+          <span style={{ color: "var(--color-amber)" }}>{item.id}</span>
+          <span style={{ color: "var(--color-text-muted)" }}> · </span>
+          <span>{item.track}/{item.topic}</span>
+          <span style={{ color: "var(--color-text-muted)" }}> · </span>
+          <span>{item.difficulty}</span>
+        </span>
+      }
+      trailing={<BookmarkButton itemId={item.id} />}
+    >
+      <div className="space-y-4">
+        <div style={{ color: "var(--color-text)" }}>
+          <LessonRenderer body={item.question} />
         </div>
-        <BookmarkButton itemId={item.id} />
-      </div>
 
-      <div className="text-[var(--color-text)]">
-        <LessonRenderer body={item.question} />
-      </div>
+        <ul className="space-y-2">
+          {item.options.map((opt, i) => {
+            const chosen = i === selected;
+            const isAnswer = i === item.answerIndex;
+            let borderColor = "var(--color-border-bright)";
+            let bgColor = "transparent";
+            let opacity = 1;
+            if (submitted) {
+              if (isAnswer) {
+                borderColor = "var(--color-success)";
+                bgColor = "rgba(255, 140, 0, 0.07)";
+              } else if (chosen) {
+                borderColor = "var(--color-danger)";
+                bgColor = "rgba(255, 68, 68, 0.07)";
+              } else {
+                opacity = 0.5;
+              }
+            }
+            return (
+              <li key={i}>
+                <button
+                  onClick={() => submit(i)}
+                  disabled={submitted}
+                  className="w-full text-left px-3 py-2 font-mono text-sm transition-colors hover:brightness-110 disabled:cursor-not-allowed"
+                  style={{
+                    border: `1px solid ${borderColor}`,
+                    background: bgColor,
+                    opacity,
+                  }}
+                >
+                  <span
+                    className="mr-2"
+                    style={{ color: "var(--color-text-muted)" }}
+                  >
+                    [{String.fromCharCode(65 + i)}]
+                  </span>
+                  <span style={{ color: "var(--color-text)" }}>
+                    <LessonRenderer body={opt} />
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
 
-      <ul className="space-y-2">
-        {item.options.map((opt, i) => {
-          const chosen = i === selected;
-          const isAnswer = i === item.answerIndex;
-          return (
-            <li key={i}>
-              <button
-                onClick={() => submit(i)}
-                disabled={submitted}
-                className={clsx(
-                  "w-full text-left px-4 py-3 rounded-md border transition-colors",
-                  !submitted &&
-                    "border-[var(--color-border)] hover:bg-[var(--color-bg-card-hover)] hover:border-[var(--color-text-dim)]",
-                  submitted && isAnswer && "border-[var(--color-success)] bg-green-900/20",
-                  submitted &&
-                    chosen &&
-                    !isAnswer &&
-                    "border-[var(--color-danger)] bg-red-900/20",
-                  submitted &&
-                    !chosen &&
-                    !isAnswer &&
-                    "border-[var(--color-border)] opacity-60",
-                )}
-              >
-                <span className="font-mono text-[var(--color-text-muted)] mr-3">
-                  {String.fromCharCode(65 + i)}.
-                </span>
-                <span>
-                  <LessonRenderer body={opt} />
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-
-      {submitted && (
-        <div
-          className={clsx(
-            "p-4 rounded-md border-l-4",
-            correct
-              ? "border-[var(--color-success)] bg-green-900/10"
-              : "border-[var(--color-danger)] bg-red-900/10",
-          )}
-        >
-          <div className="font-semibold mb-2">
-            {correct ? "✓ Correct" : "✗ Wrong"}
+        {submitted && (
+          <div
+            className="p-3 text-sm"
+            style={{
+              borderLeft: `3px solid ${correct ? "var(--color-success)" : "var(--color-danger)"}`,
+              background: correct
+                ? "rgba(255, 140, 0, 0.05)"
+                : "rgba(255, 68, 68, 0.05)",
+            }}
+          >
+            <div
+              className="font-bold mb-1 font-mono"
+              style={{
+                color: correct ? "var(--color-success)" : "var(--color-danger)",
+              }}
+            >
+              {correct ? "PASS // ✓ correct" : "FAIL // ✗ wrong"}
+            </div>
+            <div style={{ color: "var(--color-text-dim)" }}>
+              <LessonRenderer body={item.explanation} />
+            </div>
           </div>
-          <div className="text-sm text-[var(--color-text-dim)]">
-            <LessonRenderer body={item.explanation} />
-          </div>
-        </div>
-      )}
-    </article>
+        )}
+      </div>
+    </Box>
   );
 }

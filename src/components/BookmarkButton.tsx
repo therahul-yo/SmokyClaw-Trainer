@@ -6,10 +6,15 @@ export function BookmarkButton({ itemId }: { itemId: string }) {
   return (
     <button
       onClick={() => toggle(itemId)}
-      className="text-xs px-2 py-1 rounded border border-[var(--color-border)] hover:bg-[var(--color-bg-card)] text-[var(--color-text-dim)]"
+      className="text-xs px-2 py-0.5 font-mono transition-colors hover:brightness-110"
+      style={{
+        border: `1px solid ${isBookmarked ? "var(--color-amber)" : "var(--color-border-bright)"}`,
+        color: isBookmarked ? "var(--color-amber)" : "var(--color-text-dim)",
+        background: "transparent",
+      }}
       title={isBookmarked ? "Remove bookmark" : "Bookmark for review"}
     >
-      {isBookmarked ? "🔖 Saved" : "🔖 Save"}
+      {isBookmarked ? "★ saved" : "☆ save"}
     </button>
   );
 }

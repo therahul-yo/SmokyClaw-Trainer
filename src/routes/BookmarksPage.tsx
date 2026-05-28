@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useBookmarksStore } from "../store";
 import { getQuizItem } from "../lib/contentLoader";
+import { Prompt } from "../components/terminal/Prompt";
+import { Box } from "../components/terminal/Box";
 
 export function BookmarksPage() {
   const items = useBookmarksStore((s) => s.items);
@@ -14,13 +16,29 @@ export function BookmarksPage() {
   );
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">🔖 Bookmarks</h1>
+    <div className="space-y-4">
+      <Prompt path="~/bookmarks">
+        <span>cat saved.list</span>
+      </Prompt>
+      <div
+        className="text-2xl font-bold crt-glow"
+        style={{ color: "var(--color-amber)" }}
+      >
+        ★ bookmarks{" "}
+        <span
+          style={{ color: "var(--color-text-muted)" }}
+          className="text-sm font-normal"
+        >
+          // {ids.length} saved
+        </span>
+      </div>
+
       {ids.length === 0 ? (
-        <p className="text-[var(--color-text-dim)]">
-          No bookmarks yet. Tap the 🔖 button on any quiz item to save it for
-          targeted review.
-        </p>
+        <Box title="$ ls" variant="amber">
+          <div className="text-sm" style={{ color: "var(--color-text-dim)" }}>
+            no bookmarks yet. tap ☆ on any quiz item to save it for targeted review.
+          </div>
+        </Box>
       ) : (
         <ul className="space-y-2">
           {ids.map((id) => {
@@ -29,9 +47,14 @@ export function BookmarksPage() {
               return (
                 <li
                   key={id}
-                  className="p-3 rounded border border-[var(--color-border)] text-[var(--color-text-muted)]"
+                  className="px-3 py-2 font-mono text-sm"
+                  style={{
+                    border: "1px solid var(--color-border)",
+                    color: "var(--color-text-muted)",
+                  }}
                 >
-                  <code>{id}</code> (item missing)
+                  <code>{id}</code>{" "}
+                  <span style={{ color: "var(--color-danger)" }}>// missing</span>
                 </li>
               );
             }
@@ -39,17 +62,24 @@ export function BookmarksPage() {
               <li key={id}>
                 <Link
                   to={`/quiz/${item.track}/${item.topic}`}
-                  className="block p-4 rounded border border-[var(--color-border)] bg-[var(--color-bg-card)] hover:bg-[var(--color-bg-card-hover)]"
+                  className="block px-3 py-2 font-mono text-sm transition-colors hover:brightness-110"
+                  style={{
+                    background: "var(--color-bg-card)",
+                    border: "1px solid var(--color-border)",
+                  }}
                 >
-                  <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wide">
-                    {item.track} · {item.topic} · {item.difficulty}
+                  <div
+                    className="text-xs"
+                    style={{ color: "var(--color-text-muted)" }}
+                  >
+                    <span style={{ color: "var(--color-amber)" }}>★</span>{" "}
+                    {item.track}/{item.topic} · {item.difficulty}
                   </div>
-                  <div className="mt-1 text-[var(--color-text)] line-clamp-2">
-                    {item.type === "mcq"
-                      ? item.question
-                      : item.type === "coding"
-                        ? item.prompt
-                        : item.prompt}
+                  <div
+                    className="mt-1 line-clamp-2"
+                    style={{ color: "var(--color-text)" }}
+                  >
+                    {item.type === "mcq" ? item.question : item.prompt}
                   </div>
                 </Link>
               </li>

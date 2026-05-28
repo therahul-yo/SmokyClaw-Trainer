@@ -7,6 +7,10 @@ import {
   useStreakStore,
 } from "../store";
 import { getAllQuizItems, getTracks } from "../lib/contentLoader";
+import { Prompt } from "../components/terminal/Prompt";
+import { Box } from "../components/terminal/Box";
+import { BracketButton } from "../components/terminal/BracketButton";
+import { AsciiProgress } from "../components/terminal/AsciiProgress";
 
 export function ProgressPage() {
   const attempts = useProgressStore((s) => s.attempts);
@@ -20,14 +24,15 @@ export function ProgressPage() {
 
   const totalAttempts = attempts.length;
   const correctAttempts = attempts.filter((a) => a.correct).length;
-  const accuracy = totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 0;
+  const accuracy =
+    totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 0;
 
   const handleExport = () => {
     const blob = new Blob([exportAllStores()], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `interview-trainer-progress-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `smokyclaw-progress-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -43,64 +48,72 @@ export function ProgressPage() {
   };
 
   return (
-    <div className="space-y-8">
-      <header>
-        <h1 className="text-2xl font-bold text-white">📊 Progress</h1>
-        <p className="text-[var(--color-text-dim)] mt-1">
-          All stats stored locally in your browser. Export to back up; import to
-          restore after a cache wipe.
-        </p>
-      </header>
+    <div className="space-y-4">
+      <Prompt path="~/progress">
+        <span>stat --verbose</span>
+      </Prompt>
 
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Stat label="Streak" value={`${streak}d`} />
-        <Stat label="Longest streak" value={`${longest}d`} />
-        <Stat label="Attempts" value={String(totalAttempts)} />
-        <Stat label="Accuracy" value={`${accuracy}%`} />
-      </section>
+      <div
+        className="text-2xl font-bold crt-glow"
+        style={{ color: "var(--color-accent)" }}
+      >
+        progress.log
+        <span
+          style={{ color: "var(--color-text-muted)" }}
+          className="text-sm ml-2"
+        >
+          // 100% local — export to backup
+        </span>
+      </div>
 
-      <section>
-        <h2 className="text-lg font-semibold text-white mb-3">Mastery by track</h2>
-        <div className="space-y-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 font-mono">
+        <Stat label="streak" value={`${streak}d`} accent />
+        <Stat label="longest" value={`${longest}d`} />
+        <Stat label="attempts" value={String(totalAttempts)} />
+        <Stat
+          label="accuracy"
+          value={`${accuracy}%`}
+          accent={accuracy >= 70}
+        />
+      </div>
+
+      <Box title="$ mastery --by-track">
+        <div className="space-y-2 font-mono text-sm">
           {tracks.map((t) => {
             const trackItems = allItems.filter((q) => q.track === t.id);
             const ids = trackItems.map((q) => q.id);
-            const pct = useProgressStore.getState().trackMasteryPct(t.id, ids);
+            const pct = useProgressStore
+              .getState()
+              .trackMasteryPct(t.id, ids);
             return (
               <div key={t.id} className="flex items-center gap-3">
-                <div className="w-32 text-sm">
-                  {t.emoji} {t.title}
+                <div
+                  className="w-24 truncate"
+                  style={{ color: "var(--color-amber)" }}
+                >
+                  {t.id}/
                 </div>
-                <div className="flex-1 h-2 rounded-full bg-[var(--color-bg-card)] overflow-hidden">
-                  <div
-                    className="h-full bg-[var(--color-accent)]"
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
-                <div className="w-16 text-right text-sm text-[var(--color-text-dim)]">
-                  {pct}%
-                </div>
+                <AsciiProgress value={pct} width={32} showPercent />
+                <span
+                  className="ml-auto text-xs"
+                  style={{ color: "var(--color-text-muted)" }}
+                >
+                  {trackItems.length} items
+                </span>
               </div>
             );
           })}
         </div>
-      </section>
+      </Box>
 
-      <section>
-        <h2 className="text-lg font-semibold text-white mb-3">Backup & restore</h2>
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={handleExport}
-            className="px-4 py-2 rounded-md bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white"
-          >
-            Export JSON
-          </button>
-          <button
-            onClick={() => fileRef.current?.click()}
-            className="px-4 py-2 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-bg-card)] text-white"
-          >
-            Import JSON
-          </button>
+      <Box title="$ backup">
+        <div className="flex flex-wrap gap-2 text-sm">
+          <BracketButton variant="primary" onClick={handleExport}>
+            export json
+          </BracketButton>
+          <BracketButton onClick={() => fileRef.current?.click()}>
+            import json
+          </BracketButton>
           <input
             ref={fileRef}
             type="file"
@@ -111,32 +124,65 @@ export function ProgressPage() {
               if (f) void handleImportFile(f);
             }}
           />
-          <button
+          <BracketButton
+            variant="danger"
             onClick={() => {
-              if (confirm("Reset all progress, streak, bookmarks, and review queue? This cannot be undone unless you exported first.")) {
+              if (
+                confirm(
+                  "Reset all progress, streak, bookmarks, and review queue? This cannot be undone unless you exported first.",
+                )
+              ) {
                 resetAllStores();
               }
             }}
-            className="px-4 py-2 rounded-md border border-[var(--color-danger)]/40 hover:bg-red-900/20 text-[var(--color-danger)]"
           >
-            Reset everything
-          </button>
+            reset all
+          </BracketButton>
         </div>
         {importMsg && (
-          <p className="text-sm text-[var(--color-text-dim)] mt-2">{importMsg}</p>
+          <div
+            className="text-sm mt-2 font-mono"
+            style={{ color: "var(--color-text-dim)" }}
+          >
+            {importMsg}
+          </div>
         )}
-      </section>
+      </Box>
     </div>
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({
+  label,
+  value,
+  accent = false,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+}) {
   return (
-    <div className="p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]">
-      <div className="text-xs uppercase tracking-wide text-[var(--color-text-muted)]">
+    <div
+      className="px-3 py-2"
+      style={{
+        background: "var(--color-bg-alt)",
+        border: "1px solid var(--color-border-bright)",
+      }}
+    >
+      <div
+        className="text-[10px] tracking-widest uppercase"
+        style={{ color: "var(--color-text-muted)" }}
+      >
         {label}
       </div>
-      <div className="text-2xl font-bold text-white mt-1">{value}</div>
+      <div
+        className="text-2xl font-bold tabular-nums crt-glow"
+        style={{
+          color: accent ? "var(--color-accent)" : "var(--color-text)",
+        }}
+      >
+        {value}
+      </div>
     </div>
   );
 }

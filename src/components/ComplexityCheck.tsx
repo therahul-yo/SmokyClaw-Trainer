@@ -1,9 +1,7 @@
 import { useState } from "react";
 import type { ComplexityChoice } from "../types";
+import { BracketButton } from "./terminal/BracketButton";
 
-// Post-pass modal: "what's the time complexity of your solution?"
-// Drives the habit interviewers actually care about. Cosmetic — gates the
-// editorial reveal but doesn't change Leitner state.
 export function ComplexityCheck({
   question,
   choices,
@@ -21,69 +19,94 @@ export function ComplexityCheck({
   const pickedChoice = picked !== null ? choices[picked] : null;
 
   return (
-    <div className="rounded-lg border border-[var(--color-warning)]/40 bg-[var(--color-warning)]/5 p-4 space-y-3">
-      <div className="font-semibold text-white">🧮 Complexity check</div>
-      <div className="text-sm text-[var(--color-text)]">{question}</div>
-      <div className="grid grid-cols-2 gap-2">
-        {choices.map((c, i) => (
-          <button
-            key={i}
-            type="button"
-            disabled={showResult}
-            onClick={() => setPicked(i)}
-            className={`px-3 py-2 rounded-md text-sm border text-left transition-colors ${
-              picked === i
-                ? showResult
-                  ? c.correct
-                    ? "bg-[var(--color-success)]/20 border-[var(--color-success)] text-white"
-                    : "bg-[var(--color-danger)]/20 border-[var(--color-danger)] text-white"
-                  : "bg-[var(--color-accent-dim)] border-[var(--color-accent)] text-white"
-                : "bg-[var(--color-bg-card)] border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-white"
-            }`}
-          >
-            <span className="font-mono">{c.label}</span>
-            {showResult && c.correct && (
-              <span className="ml-2 text-[var(--color-success)]">✓</span>
-            )}
-          </button>
-        ))}
+    <div
+      className="p-4 space-y-3 font-mono"
+      style={{
+        border: "1px solid var(--color-cyan)",
+        background: "rgba(255, 217, 163, 0.04)",
+      }}
+    >
+      <div
+        className="text-sm font-bold"
+        style={{ color: "var(--color-cyan)" }}
+      >
+        ── COMPLEXITY CHECK ──────────────────────────
+      </div>
+      <div className="text-sm" style={{ color: "var(--color-text)" }}>
+        {question}
+      </div>
+      <div className="grid grid-cols-2 gap-2 text-sm">
+        {choices.map((c, i) => {
+          let border = "var(--color-border-bright)";
+          let bg = "transparent";
+          let fg = "var(--color-text)";
+          const isPicked = picked === i;
+          if (isPicked) {
+            if (showResult) {
+              border = c.correct ? "var(--color-success)" : "var(--color-danger)";
+              bg = c.correct
+                ? "rgba(255, 140, 0, 0.07)"
+                : "rgba(255, 68, 68, 0.07)";
+              fg = c.correct ? "var(--color-success)" : "var(--color-danger)";
+            } else {
+              border = "var(--color-cyan)";
+              fg = "var(--color-cyan)";
+            }
+          } else if (showResult && c.correct) {
+            border = "var(--color-success)";
+            fg = "var(--color-success)";
+          }
+          return (
+            <button
+              key={i}
+              type="button"
+              disabled={showResult}
+              onClick={() => setPicked(i)}
+              className="px-3 py-2 text-left transition-colors hover:brightness-110 disabled:cursor-not-allowed"
+              style={{
+                border: `1px solid ${border}`,
+                background: bg,
+                color: fg,
+              }}
+            >
+              <span style={{ color: "var(--color-text-muted)" }}>
+                [{String.fromCharCode(65 + i)}]
+              </span>{" "}
+              {c.label}
+              {showResult && c.correct && " ✓"}
+            </button>
+          );
+        })}
       </div>
       {showResult ? (
-        <div className="flex items-center justify-between">
-          <div className="text-sm">
-            {pickedChoice?.correct ? (
-              <span className="text-[var(--color-success)]">Correct.</span>
-            ) : (
-              <span className="text-[var(--color-warning)]">
-                Not quite — see editorial.
-              </span>
-            )}
-          </div>
-          <button
-            type="button"
-            onClick={onPass}
-            className="px-3 py-1.5 rounded-md text-sm bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white"
+        <div className="flex items-center justify-between text-sm">
+          <span
+            style={{
+              color: pickedChoice?.correct
+                ? "var(--color-success)"
+                : "var(--color-amber)",
+            }}
           >
-            Show editorial →
-          </button>
+            {pickedChoice?.correct
+              ? "// correct."
+              : "// not quite — see editorial."}
+          </span>
+          <BracketButton variant="primary" onClick={onPass}>
+            show editorial →
+          </BracketButton>
         </div>
       ) : (
         <div className="flex items-center gap-2">
-          <button
-            type="button"
+          <BracketButton
+            variant="primary"
             disabled={picked === null}
             onClick={() => setShowResult(true)}
-            className="px-3 py-1.5 rounded-md text-sm bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white disabled:opacity-40"
           >
-            Check
-          </button>
-          <button
-            type="button"
-            onClick={onSkip}
-            className="px-3 py-1.5 rounded-md text-sm text-[var(--color-text-muted)] hover:text-white"
-          >
-            Skip
-          </button>
+            check
+          </BracketButton>
+          <BracketButton variant="ghost" onClick={onSkip}>
+            skip
+          </BracketButton>
         </div>
       )}
     </div>

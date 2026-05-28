@@ -1,11 +1,5 @@
-export function ProgressBar({ value }: { value: number }) {
-  const v = Math.max(0, Math.min(100, value));
-  return (
-    <div className="w-full h-2 rounded-full bg-[var(--color-bg-card)] overflow-hidden">
-      <div
-        className="h-full bg-[var(--color-accent)] transition-all"
-        style={{ width: `${v}%` }}
-      />
-    </div>
-  );
+import { AsciiProgress } from "./terminal/AsciiProgress";
+
+export function ProgressBar({ value, width = 24 }: { value: number; width?: number }) {
+  return <AsciiProgress value={value} width={width} showPercent={false} />;
 }

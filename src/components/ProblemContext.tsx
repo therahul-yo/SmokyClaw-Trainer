@@ -1,17 +1,15 @@
 import type { CodingItem, SqlItem, Example, CompanyTag } from "../types";
 
 const COMPANY_LABELS: Record<CompanyTag, string> = {
-  tcs: "TCS",
-  infosys: "Infosys",
-  wipro: "Wipro",
-  capgemini: "Capgemini",
-  accenture: "Accenture",
-  cognizant: "Cognizant",
-  "amazon-india": "Amazon India",
+  tcs: "tcs",
+  infosys: "infosys",
+  wipro: "wipro",
+  capgemini: "capgemini",
+  accenture: "accenture",
+  cognizant: "cognizant",
+  "amazon-india": "amazon-in",
 };
 
-// Renders the static problem context — examples, constraints, companies —
-// shown above the editor for both coding and SQL items.
 export function ProblemContext({ item }: { item: CodingItem | SqlItem }) {
   const examples: Example[] = item.examples ?? [];
   const constraints = item.constraints;
@@ -20,27 +18,38 @@ export function ProblemContext({ item }: { item: CodingItem | SqlItem }) {
   if (examples.length === 0 && !constraints && companies.length === 0) return null;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 font-mono">
       {examples.length > 0 && (
         <div className="space-y-2">
           {examples.map((ex, i) => (
             <div
               key={i}
-              className="p-3 rounded-md bg-[var(--color-bg)] border border-[var(--color-border)] text-sm font-mono"
+              className="p-3 text-sm"
+              style={{
+                background: "var(--color-bg)",
+                border: "1px solid var(--color-border)",
+              }}
             >
-              <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider mb-1">
-                Example {i + 1}
+              <div
+                className="text-xs mb-1"
+                style={{ color: "var(--color-text-muted)" }}
+              >
+                ── example {i + 1} ──
               </div>
               <div>
-                <span className="text-[var(--color-text-muted)]">input:</span>{" "}
-                <span className="text-[var(--color-text)]">{ex.input}</span>
+                <span style={{ color: "var(--color-text-muted)" }}>in   </span>
+                <span style={{ color: "var(--color-text)" }}>{ex.input}</span>
               </div>
               <div>
-                <span className="text-[var(--color-text-muted)]">output:</span>{" "}
-                <span className="text-[var(--color-success)]">{ex.output}</span>
+                <span style={{ color: "var(--color-text-muted)" }}>out  </span>
+                <span style={{ color: "var(--color-accent)" }}>{ex.output}</span>
               </div>
               {ex.explanation && (
-                <div className="mt-1 text-xs text-[var(--color-text-dim)] font-sans">
+                <div
+                  className="mt-1 text-xs"
+                  style={{ color: "var(--color-text-dim)" }}
+                >
+                  <span style={{ color: "var(--color-text-muted)" }}>//   </span>
                   {ex.explanation}
                 </div>
               )}
@@ -50,20 +59,26 @@ export function ProblemContext({ item }: { item: CodingItem | SqlItem }) {
       )}
 
       {constraints && (
-        <div className="text-xs text-[var(--color-text-dim)] font-mono">
-          <span className="text-[var(--color-text-muted)] uppercase tracking-wider">
-            Constraints:
-          </span>{" "}
-          {constraints}
+        <div className="text-xs">
+          <span style={{ color: "var(--color-text-muted)" }}>
+            // constraints —{" "}
+          </span>
+          <span style={{ color: "var(--color-text-dim)" }}>{constraints}</span>
         </div>
       )}
 
       {companies.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1 text-xs">
+          <span style={{ color: "var(--color-text-muted)" }}>asked at:</span>
           {companies.map((c) => (
             <span
               key={c}
-              className="px-2 py-0.5 rounded text-xs bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-text-dim)]"
+              className="px-1.5"
+              style={{
+                border: "1px solid var(--color-border-bright)",
+                color: "var(--color-cyan)",
+                background: "var(--color-bg)",
+              }}
             >
               {COMPANY_LABELS[c] ?? c}
             </span>

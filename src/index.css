@@ -1,52 +1,180 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "highlight.js/styles/github-dark.css";
 
-@theme {
-  --color-bg: #0b0d10;
-  --color-bg-card: #14181d;
-  --color-bg-card-hover: #1a1f26;
-  --color-border: #232932;
-  --color-text: #e4e6eb;
-  --color-text-dim: #9aa3b2;
-  --color-text-muted: #6b7280;
-  --color-accent: #a78bfa;
-  --color-accent-dim: #7c3aed;
-  --color-success: #22c55e;
-  --color-danger: #ef4444;
-  --color-warning: #f59e0b;
+/* ───────────────────────────────────────────────────────────────
+   Terminal aesthetic — pitch black, orange accent, cream text.
+   ─────────────────────────────────────────────────────────────── */
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: ui-monospace, "Cascadia Code", Menlo, monospace;
+@theme {
+  /* Base palette — pitch black + orange + cream */
+  --color-bg:           #000000;
+  --color-bg-alt:       #050505;
+  --color-bg-card:      #0d0d0d;
+  --color-bg-card-hover:#161616;
+  --color-bg-sel:       #1a1208;
+
+  --color-border:       #2a1a08;
+  --color-border-bright:#4a2e10;
+
+  --color-text:         #f5ead3;   /* cream */
+  --color-text-dim:     #b69772;   /* dim cream */
+  --color-text-muted:   #6b5840;
+
+  --color-accent:       #ff8c00;   /* primary orange */
+  --color-accent-dim:   #cc6e00;
+  --color-amber:        #ffb84d;   /* lighter warm — hints */
+  --color-amber-dim:    #aa7530;
+  --color-cyan:         #ffd9a3;   /* warm cream for links */
+  --color-magenta:      #ff5fbe;   /* rare */
+
+  --color-success:      #ff8c00;   /* orange */
+  --color-danger:       #ff4444;   /* red */
+  --color-warning:      #ffb84d;
+
+  --font-sans: "JetBrains Mono", ui-monospace, "Cascadia Code", Menlo, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Menlo, monospace;
 }
 
+/* Base reset & background */
 html, body, #root {
   height: 100%;
   margin: 0;
   background: var(--color-bg);
   color: var(--color-text);
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
+  font-feature-settings: "calt" 1, "liga" 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Markdown lesson content */
-.prose-lesson h1 { @apply text-3xl font-bold mt-8 mb-4 text-white; }
-.prose-lesson h2 { @apply text-2xl font-semibold mt-8 mb-3 text-white border-b border-[var(--color-border)] pb-2; }
-.prose-lesson h3 { @apply text-xl font-semibold mt-6 mb-2 text-white; }
-.prose-lesson p  { @apply my-3 leading-7 text-[var(--color-text)]; }
-.prose-lesson ul { @apply list-disc pl-6 my-3 space-y-1; }
-.prose-lesson ol { @apply list-decimal pl-6 my-3 space-y-1; }
-.prose-lesson li { @apply text-[var(--color-text)]; }
-.prose-lesson a  { @apply text-[var(--color-accent)] underline underline-offset-2; }
-.prose-lesson strong { @apply text-white font-semibold; }
-.prose-lesson em { @apply italic; }
-.prose-lesson blockquote { @apply border-l-4 border-[var(--color-accent)] pl-4 my-4 italic text-[var(--color-text-dim)]; }
-.prose-lesson hr { @apply border-[var(--color-border)] my-8; }
-.prose-lesson table { @apply w-full my-4 border-collapse; }
-.prose-lesson th { @apply text-left p-2 border-b border-[var(--color-border)] text-white font-semibold; }
-.prose-lesson td { @apply p-2 border-b border-[var(--color-border)]; }
-.prose-lesson code { @apply px-1.5 py-0.5 rounded bg-[var(--color-bg-card)] text-[var(--color-accent)] text-[0.9em] font-mono; }
-.prose-lesson pre  { @apply my-4 p-4 rounded-lg overflow-x-auto bg-[#0a0d12] border border-[var(--color-border)]; }
-.prose-lesson pre code { @apply bg-transparent text-[var(--color-text)] p-0; }
+body {
+  /* Subtle scanline texture — very faint */
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 140, 0, 0.015) 0,
+      rgba(255, 140, 0, 0.015) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  background-attachment: fixed;
+}
 
-/* CodeMirror tweaks */
-.cm-editor { border-radius: 0.5rem; }
-.cm-editor.cm-focused { outline: 2px solid var(--color-accent-dim); }
+/* Override Tailwind's default rounded corners — terminal has none */
+*, *::before, *::after {
+  border-radius: 0 !important;
+}
+
+/* Hide scrollbars but keep scroll */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border-bright); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+/* Selection */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* Custom utilities — terminal building blocks */
+@layer utilities {
+  .crt-glow {
+    text-shadow: 0 0 1px currentColor, 0 0 12px rgba(255, 140, 0, 0.35);
+  }
+  .crt-glow-amber {
+    text-shadow: 0 0 1px currentColor, 0 0 10px rgba(255, 184, 77, 0.3);
+  }
+  .border-bracket {
+    border: 1px solid var(--color-border-bright);
+  }
+  .border-double-bracket {
+    border: 3px double var(--color-border-bright);
+  }
+}
+
+/* Caret blink */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.caret-blink {
+  animation: blink 1.2s steps(1) infinite;
+}
+
+/* Boot fade */
+@keyframes boot-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.boot-in { animation: boot-in 0.4s ease-out both; }
+
+/* ──────────────────────────────────────────────
+   Markdown lesson content — terminal-styled prose
+   ────────────────────────────────────────────── */
+.prose-lesson { font-family: var(--font-mono); }
+.prose-lesson h1 { @apply text-2xl font-bold mt-8 mb-4; color: var(--color-accent); }
+.prose-lesson h1::before { content: "## "; color: var(--color-text-muted); }
+.prose-lesson h2 { @apply text-xl font-semibold mt-8 mb-3 pb-1; color: var(--color-accent); border-bottom: 1px solid var(--color-border-bright); }
+.prose-lesson h2::before { content: "### "; color: var(--color-text-muted); }
+.prose-lesson h3 { @apply text-lg font-semibold mt-6 mb-2; color: var(--color-amber); }
+.prose-lesson h3::before { content: "#### "; color: var(--color-text-muted); }
+.prose-lesson p  { @apply my-3 leading-7; color: var(--color-text); }
+.prose-lesson ul { @apply my-3 space-y-1; list-style: none; padding-left: 0; }
+.prose-lesson ul > li::before { content: "▸ "; color: var(--color-accent); }
+.prose-lesson ol { @apply my-3 space-y-1; padding-left: 1.5rem; }
+.prose-lesson li { @apply leading-7; color: var(--color-text); }
+.prose-lesson a  { color: var(--color-cyan); text-decoration: underline; text-underline-offset: 2px; }
+.prose-lesson strong { color: var(--color-accent); font-weight: 600; }
+.prose-lesson em { font-style: italic; color: var(--color-amber); }
+.prose-lesson blockquote { border-left: 2px solid var(--color-accent); padding-left: 1rem; margin: 1rem 0; color: var(--color-text-dim); }
+.prose-lesson blockquote::before { content: "│ "; color: var(--color-text-muted); }
+.prose-lesson hr { border: 0; border-top: 1px dashed var(--color-border-bright); margin: 2rem 0; }
+.prose-lesson hr::before {
+  content: "── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─";
+  display: block;
+  color: var(--color-text-muted);
+  text-align: center;
+  letter-spacing: -2px;
+}
+.prose-lesson table { @apply w-full my-4 border-collapse; }
+.prose-lesson th { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--color-border-bright); color: var(--color-accent); font-weight: 600; }
+.prose-lesson td { padding: 0.5rem; border-bottom: 1px solid var(--color-border); color: var(--color-text); }
+.prose-lesson code {
+  padding: 0.05rem 0.35rem;
+  background: var(--color-bg-card);
+  color: var(--color-amber);
+  font-size: 0.9em;
+  border: 1px solid var(--color-border);
+}
+.prose-lesson pre  {
+  margin: 1rem 0;
+  padding: 1rem;
+  overflow-x: auto;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border-bright);
+  position: relative;
+}
+.prose-lesson pre::before {
+  content: "─── code ─────────────────────────────────────────";
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin: -0.5rem -0.25rem 0.5rem;
+  letter-spacing: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.prose-lesson pre code { background: transparent; color: var(--color-text); padding: 0; border: 0; }
+
+/* ──────────────────────────────────────────────
+   CodeMirror — terminal skin
+   ────────────────────────────────────────────── */
+.cm-editor { border: 1px solid var(--color-border-bright) !important; background: var(--color-bg-alt) !important; }
+.cm-editor.cm-focused { outline: 1px solid var(--color-accent) !important; }
+.cm-gutters { background: var(--color-bg) !important; border-right: 1px solid var(--color-border) !important; color: var(--color-text-muted) !important; }
+.cm-activeLine { background: var(--color-bg-sel) !important; }
+.cm-activeLineGutter { background: var(--color-bg-sel) !important; color: var(--color-accent) !important; }
+.cm-cursor { border-left-color: var(--color-accent) !important; border-left-width: 2px !important; }
+.cm-selectionBackground { background: rgba(255, 140, 0, 0.18) !important; }
