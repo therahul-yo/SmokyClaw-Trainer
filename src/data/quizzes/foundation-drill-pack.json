@@ -1,0 +1,131 @@
+[
+  {
+    "id": "py-c-parse-int-list",
+    "track": "python",
+    "topic": "coding-io",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 8,
+    "prompt": "Given a whitespace-separated string of integers, return them as a list of ints. Empty or whitespace-only input returns `[]`.",
+    "constraints": "0 <= number of tokens <= 10^5.",
+    "examples": [
+      { "input": "text = '10 -2 5'", "output": "[10, -2, 5]" },
+      { "input": "text = '   '", "output": "[]" }
+    ],
+    "starter": "def parse_int_list(text):\n    # your code here\n    pass\n",
+    "entry": "parse_int_list",
+    "tests": [
+      { "args": ["10 -2 5"], "expect": [10, -2, 5] },
+      { "args": ["   "], "expect": [] },
+      { "args": ["1\n2\n3"], "expect": [1, 2, 3] },
+      { "args": ["0"], "expect": [0] }
+    ],
+    "hints": ["str.split() with no argument handles spaces and newlines.", "Map each token through int.", "list(map(int, text.split())) is the compact template."],
+    "bruteForce": { "code": "def parse_int_list(text):\n    out = []\n    for token in text.split():\n        out.append(int(token))\n    return out", "complexity": "O(n) time, O(n) space", "explanation": "Manual parse loop is clear and correct." },
+    "optimal": { "code": "def parse_int_list(text):\n    return list(map(int, text.split()))", "complexity": "O(n) time, O(n) space", "explanation": "The standard coding-test input parsing idiom." },
+    "complexityCheck": { "question": "What does split() without arguments do?", "choices": [{ "label": "Splits on any whitespace and drops empty tokens", "correct": true }, { "label": "Splits only commas", "correct": false }, { "label": "Keeps empty spaces", "correct": false }, { "label": "Sorts tokens", "correct": false }] },
+    "tags": ["python", "coding-io", "basics"]
+  },
+  {
+    "id": "py-c-safe-get-counts",
+    "track": "python",
+    "topic": "data-types",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 8,
+    "prompt": "Return a frequency dict for all values in `items` using normal dictionaries.",
+    "constraints": "0 <= len(items) <= 10^5.",
+    "examples": [{ "input": "items = ['a','b','a']", "output": "{'a': 2, 'b': 1}" }],
+    "starter": "def count_items(items):\n    # your code here\n    pass\n",
+    "entry": "count_items",
+    "tests": [
+      { "args": [["a", "b", "a"]], "expect": { "a": 2, "b": 1 } },
+      { "args": [[]], "expect": {} },
+      { "args": [[1, 1, 2]], "expect": { "1": 2, "2": 1 } }
+    ],
+    "hints": ["Use d.get(key, 0).", "Increment the count for each value.", "Return a normal dict."],
+    "bruteForce": { "code": "def count_items(items):\n    counts = {}\n    for x in items:\n        if x not in counts:\n            counts[x] = 0\n        counts[x] += 1\n    return counts", "complexity": "O(n) time, O(k) space", "explanation": "Correct but noisier than get." },
+    "optimal": { "code": "def count_items(items):\n    counts = {}\n    for x in items:\n        counts[x] = counts.get(x, 0) + 1\n    return counts", "complexity": "O(n) time, O(k) space", "explanation": "get avoids a separate membership branch." },
+    "complexityCheck": { "question": "Why use dict.get?", "choices": [{ "label": "It supplies a default for missing keys", "correct": true }, { "label": "It sorts the dict", "correct": false }, { "label": "It deletes keys", "correct": false }, { "label": "It makes lookup O(n)", "correct": false }] },
+    "tags": ["python", "dict", "basics"]
+  },
+  {
+    "id": "sql-c-basic-filter-order",
+    "track": "sql",
+    "topic": "select",
+    "type": "sql",
+    "difficulty": "easy",
+    "pattern": "sql-foundations",
+    "estMinutes": 5,
+    "schema": "employees",
+    "prompt": "List `name` and `salary` for employees with salary at least 60000, ordered by salary descending.",
+    "constraints": "Use WHERE and ORDER BY.",
+    "examples": [{ "input": "employees seed", "output": "Carol, Alice, Grace" }],
+    "starter": "SELECT name, salary\nFROM employees\nWHERE ...\nORDER BY ...;\n",
+    "expected": {
+      "columns": ["name", "salary"],
+      "rows": [["Carol", 92000], ["Alice", 75000], ["Grace", 65000]]
+    },
+    "hints": ["Filter rows with WHERE salary >= 60000.", "Sort with ORDER BY salary DESC.", "Select only name and salary."],
+    "bruteForce": { "code": "SELECT * FROM employees WHERE salary >= 60000;", "complexity": "O(n)", "explanation": "Returns extra columns and misses the required sort." },
+    "optimal": { "code": "SELECT name, salary\nFROM employees\nWHERE salary >= 60000\nORDER BY salary DESC;", "complexity": "O(n log n) due to sorting", "explanation": "Filters rows first, then orders the result." },
+    "tags": ["sql", "select", "where", "order-by"]
+  },
+  {
+    "id": "sql-c-count-all-employees",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "sql",
+    "difficulty": "easy",
+    "pattern": "sql-aggregation",
+    "estMinutes": 5,
+    "schema": "employees",
+    "prompt": "Return the total number of rows in the employees table as `total_employees`.",
+    "constraints": "Use COUNT(*).",
+    "examples": [{ "input": "employees seed", "output": "8" }],
+    "starter": "SELECT ... AS total_employees\nFROM employees;\n",
+    "expected": { "columns": ["total_employees"], "rows": [[8]] },
+    "hints": ["COUNT(*) counts rows.", "Alias the result exactly as total_employees.", "No GROUP BY is needed for one total."],
+    "bruteForce": { "code": "SELECT id FROM employees;", "complexity": "O(n)", "explanation": "Lists rows instead of returning the count." },
+    "optimal": { "code": "SELECT COUNT(*) AS total_employees\nFROM employees;", "complexity": "O(n)", "explanation": "Aggregate over the whole table." },
+    "tags": ["sql", "count", "basics"]
+  },
+  {
+    "id": "apt-q-foundation-percent-001",
+    "track": "aptitude",
+    "topic": "basics",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "What is 15% of 240?",
+    "options": ["24", "30", "36", "42"],
+    "answerIndex": 2,
+    "explanation": "10% of 240 is 24 and 5% is 12, so 15% is 36.",
+    "tags": ["basics", "percentages"]
+  },
+  {
+    "id": "apt-q-foundation-ratio-001",
+    "track": "aptitude",
+    "topic": "basics",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "Simplify the ratio 36:60.",
+    "options": ["3:5", "4:5", "5:3", "6:10"],
+    "answerIndex": 0,
+    "explanation": "Divide both terms by HCF 12: 36:60 = 3:5.",
+    "tags": ["basics", "ratios"]
+  },
+  {
+    "id": "apt-q-foundation-average-001",
+    "track": "aptitude",
+    "topic": "basics",
+    "type": "mcq",
+    "difficulty": "easy",
+    "question": "The average of 8, 12, 20 is:",
+    "options": ["12", "13.33", "14", "15"],
+    "answerIndex": 1,
+    "explanation": "Sum = 40, count = 3, average = 40/3 = 13.33.",
+    "tags": ["basics", "averages"]
+  }
+]

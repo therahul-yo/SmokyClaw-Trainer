@@ -2,29 +2,29 @@
   {
     "id": "python",
     "title": "Python",
-    "blurb": "Syntax, data types, OOP, error handling, stdlib — everything TCS NQT and Infosys ask in the programming logic round.",
+    "blurb": "From absolute basics to interview Python: syntax, data types, control flow, functions, OOP, error handling, stdlib, and coding-test input/output.",
     "emoji": "🐍",
-    "topics": ["syntax", "data-types", "control-flow", "functions", "oop", "exceptions", "stdlib"]
+    "topics": ["basics", "syntax", "data-types", "control-flow", "functions", "oop", "exceptions", "stdlib", "coding-io"]
   },
   {
     "id": "dsa",
-    "title": "Data Structures & Algorithms",
-    "blurb": "Arrays, strings, recursion, trees, graphs, DP — the patterns that show up in coding rounds.",
+    "title": "DSA & LeetCode Patterns",
+    "blurb": "Start with Big-O and arrays, then train reusable LeetCode patterns: two pointers, sliding window, hashing, binary search, stacks, trees, graphs, DP, and greedy.",
     "emoji": "🧩",
-    "topics": ["arrays", "strings", "hashmap", "recursion", "sorting", "searching", "linkedlist", "stack-queue", "tree", "graph", "dp", "greedy"]
+    "topics": ["basics", "big-o", "arrays", "strings", "hashmap", "recursion", "sorting", "searching", "linkedlist", "stack-queue", "tree", "graph", "dp", "greedy"]
   },
   {
     "id": "sql",
     "title": "SQL & DBMS",
-    "blurb": "SELECT to transactions: joins, group-by, subqueries, CTEs, indexes, normalization.",
+    "blurb": "From table basics to interview SQL: SELECT, filtering, joins, group-by, subqueries, CTEs, windows, indexes, normalization, and transactions.",
     "emoji": "🗃️",
-    "topics": ["select", "filtering", "joins", "group-by", "subqueries", "cte", "indexes", "transactions"]
+    "topics": ["basics", "select", "filtering", "joins", "group-by", "subqueries", "cte", "windows", "indexes", "transactions"]
   },
   {
     "id": "aptitude",
     "title": "Aptitude & Reasoning",
-    "blurb": "Quant + logical + verbal — the section that decides TCS NQT cutoffs.",
+    "blurb": "Basic arithmetic speed, formulas, quant, logical reasoning, verbal, and company-style timed drills.",
     "emoji": "🧠",
-    "topics": ["quant", "reasoning", "verbal"]
+    "topics": ["basics", "quant", "reasoning", "verbal", "timed-drills"]
   }
 ]

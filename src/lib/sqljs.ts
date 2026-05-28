@@ -1,18 +1,46 @@
 // Lazy-loaded sql.js singleton.
 // Note: db.exec below refers to sql.js Database.exec (SQL execution against
 // an in-browser SQLite instance), NOT Node's child_process.exec.
-import initSqlJs from "sql.js";
 import type { Database, SqlJsStatic } from "sql.js";
 import type { SqlSchemaName } from "../types";
 import { getSqlSchema } from "./contentLoader";
 
-const SQLJS_WASM_URL = "https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.wasm";
+const SQLJS_BASE_URL = "https://cdn.jsdelivr.net/npm/sql.js@1.14.1/dist";
+const SQLJS_SCRIPT_URL = `${SQLJS_BASE_URL}/sql-wasm.js`;
+const SQLJS_WASM_URL = `${SQLJS_BASE_URL}/sql-wasm.wasm`;
 
 let sqlJsPromise: Promise<SqlJsStatic> | null = null;
+let scriptPromise: Promise<void> | null = null;
+
+type SqlJsGlobal = {
+  initSqlJs?: (config: { locateFile: () => string }) => Promise<SqlJsStatic>;
+};
+
+function loadSqlJsScript(): Promise<void> {
+  const sqlGlobal = globalThis as unknown as SqlJsGlobal;
+  if (sqlGlobal.initSqlJs) return Promise.resolve();
+  if (scriptPromise) return scriptPromise;
+
+  scriptPromise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = SQLJS_SCRIPT_URL;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Failed to load sql.js"));
+    document.head.appendChild(script);
+  });
+
+  return scriptPromise;
+}
 
 async function loadSqlJs(): Promise<SqlJsStatic> {
   if (sqlJsPromise) return sqlJsPromise;
-  sqlJsPromise = initSqlJs({
+  await loadSqlJsScript();
+  const sqlGlobal = globalThis as unknown as SqlJsGlobal;
+  if (!sqlGlobal.initSqlJs) {
+    throw new Error("sql.js loaded, but initSqlJs was not available");
+  }
+  sqlJsPromise = sqlGlobal.initSqlJs({
     locateFile: () => SQLJS_WASM_URL,
   });
   return sqlJsPromise;

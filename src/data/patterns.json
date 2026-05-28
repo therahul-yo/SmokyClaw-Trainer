@@ -1,12 +1,21 @@
 [
   {
+    "id": "dsa-foundations",
+    "track": "dsa",
+    "title": "DSA foundations",
+    "blurb": "Big-O, constraints, edge cases, brute force, and the LeetCode pattern-recognition loop.",
+    "prerequisites": [],
+    "lessonIds": ["dsa-00-foundations", "dsa-04-big-o"],
+    "itemIds": []
+  },
+  {
     "id": "arrays-basics",
     "track": "dsa",
     "title": "Array fundamentals",
     "blurb": "Indexing, traversal, in-place updates, complexity of common operations.",
-    "prerequisites": [],
+    "prerequisites": ["dsa-foundations"],
     "lessonIds": ["dsa-arrays"],
-    "itemIds": ["dsa-q-001", "dsa-q-002", "dsa-c-rotate"]
+    "itemIds": ["dsa-c-array-sum", "dsa-c-second-largest", "dsa-c-move-zeroes", "dsa-c-rotate-array", "dsa-c-kadane-max-subarray", "dsa-c-merge-sorted-arrays"]
   },
   {
     "id": "two-pointer",
@@ -15,7 +24,7 @@
     "blurb": "Opposite-end or fast/slow pointers to collapse O(n²) into O(n).",
     "prerequisites": ["arrays-basics"],
     "lessonIds": ["dsa-02-two-pointer"],
-    "itemIds": ["dsa-c-pair-sum-sorted", "dsa-c-remove-duplicates", "dsa-c-three-sum"]
+    "itemIds": ["dsa-c-pair-sum-sorted", "dsa-c-remove-duplicates", "dsa-c-valid-palindrome", "dsa-c-container-most-water", "dsa-c-three-sum", "dsa-c-trap-rain-water"]
   },
   {
     "id": "sliding-window",
@@ -24,7 +33,7 @@
     "blurb": "Maintain a running aggregate over a moving window — fixed or variable size.",
     "prerequisites": ["two-pointer"],
     "lessonIds": ["dsa-03-sliding-window"],
-    "itemIds": ["dsa-c-max-sum-k", "dsa-c-longest-unique-substr"]
+    "itemIds": ["dsa-c-max-sum-k", "dsa-c-longest-unique-substr", "dsa-c-min-size-subarray-sum", "dsa-c-max-vowels", "dsa-c-longest-ones", "dsa-c-permutation-in-string"]
   },
   {
     "id": "prefix-sums",
@@ -32,8 +41,8 @@
     "title": "Prefix sums",
     "blurb": "Pre-compute cumulative sums for O(1) range queries.",
     "prerequisites": ["arrays-basics"],
-    "lessonIds": ["dsa-04-prefix-sums"],
-    "itemIds": ["dsa-c-subarray-sum-equals-k"]
+    "lessonIds": ["dsa-06-prefix-sums"],
+    "itemIds": ["dsa-c-subarray-sum-k", "dsa-c-running-sum", "dsa-c-range-sum-query", "dsa-c-pivot-index", "dsa-c-product-except-self", "dsa-c-odd-sum-subarrays"]
   },
   {
     "id": "hashing",
@@ -42,7 +51,7 @@
     "blurb": "Dicts / sets for O(1) lookups — frequency counts, complement search, dedup.",
     "prerequisites": ["arrays-basics"],
     "lessonIds": ["dsa-05-hashing"],
-    "itemIds": ["dsa-q-004", "dsa-c-two-sum", "dsa-c-anagram-groups"]
+    "itemIds": ["dsa-c-two-sum-unsorted", "dsa-c-contains-duplicate", "dsa-c-group-anagrams", "dsa-c-first-unique-char", "dsa-c-top-k-frequent", "dsa-c-longest-consecutive"]
   },
   {
     "id": "binary-search",
@@ -50,8 +59,8 @@
     "title": "Binary search",
     "blurb": "Classic + on-answer-space. Find the boundary you can decide in O(1).",
     "prerequisites": ["arrays-basics"],
-    "lessonIds": ["dsa-06-binary-search"],
-    "itemIds": ["dsa-c-binary-search", "dsa-c-search-rotated"]
+    "lessonIds": ["dsa-07-binary-search"],
+    "itemIds": ["dsa-c-binary-search", "dsa-c-search-insert", "dsa-c-first-last-position", "dsa-c-search-rotated", "dsa-c-sqrt", "dsa-c-find-peak"]
   },
   {
     "id": "recursion",
@@ -59,8 +68,8 @@
     "title": "Recursion & backtracking",
     "blurb": "Base case + recursive case, choice/decision trees, pruning.",
     "prerequisites": [],
-    "lessonIds": ["dsa-07-recursion"],
-    "itemIds": ["dsa-c-subsets", "dsa-c-permutations"]
+    "lessonIds": ["dsa-08-recursion", "dsa-16-backtracking"],
+    "itemIds": ["dsa-q-023", "dsa-q-024", "dsa-c-subsets"]
   },
   {
     "id": "sorting",
@@ -68,8 +77,8 @@
     "title": "Sorting",
     "blurb": "Timsort, mergesort, quicksort. Stable vs not. When to sort.",
     "prerequisites": [],
-    "lessonIds": ["dsa-08-sorting"],
-    "itemIds": ["dsa-q-003", "dsa-c-merge-intervals"]
+    "lessonIds": ["dsa-09-sorting"],
+    "itemIds": ["dsa-q-003", "dsa-q-025", "dsa-q-026", "dsa-q-027"]
   },
   {
     "id": "linked-list",
@@ -77,8 +86,8 @@
     "title": "Linked lists",
     "blurb": "Pointer manipulation, dummy heads, reverse / detect cycle / merge.",
     "prerequisites": [],
-    "lessonIds": ["dsa-09-linked-list"],
-    "itemIds": ["dsa-c-reverse-list", "dsa-c-detect-cycle"]
+    "lessonIds": ["dsa-10-linked-lists"],
+    "itemIds": ["dsa-q-028", "dsa-q-029", "dsa-c-reverse-linked-list"]
   },
   {
     "id": "stack-queue",
@@ -86,8 +95,8 @@
     "title": "Stacks & queues",
     "blurb": "Monotonic stack, balanced parens, BFS queues, deque tricks.",
     "prerequisites": [],
-    "lessonIds": ["dsa-10-stack-queue"],
-    "itemIds": ["dsa-c-valid-parens", "dsa-c-next-greater"]
+    "lessonIds": ["dsa-11-stacks-queues"],
+    "itemIds": ["dsa-q-030", "dsa-q-031", "dsa-q-032", "dsa-c-valid-parens", "dsa-c-daily-temperatures"]
   },
   {
     "id": "trees",
@@ -95,8 +104,8 @@
     "title": "Trees & BSTs",
     "blurb": "Traversals, recursion patterns, BST invariants.",
     "prerequisites": ["recursion"],
-    "lessonIds": ["dsa-11-trees"],
-    "itemIds": ["dsa-c-tree-height", "dsa-c-level-order"]
+    "lessonIds": ["dsa-12-trees", "dsa-13-tree-traversals"],
+    "itemIds": ["dsa-q-033", "dsa-q-034", "dsa-q-035"]
   },
   {
     "id": "heaps",
@@ -104,8 +113,8 @@
     "title": "Heaps / priority queues",
     "blurb": "Top-K, k-way merge, scheduling. Python's heapq is min-heap only.",
     "prerequisites": ["sorting"],
-    "lessonIds": ["dsa-12-heaps"],
-    "itemIds": ["dsa-c-kth-largest", "dsa-c-merge-k-sorted"]
+    "lessonIds": ["dsa-14-heaps"],
+    "itemIds": ["dsa-q-036", "dsa-q-037"]
   },
   {
     "id": "graphs",
@@ -113,8 +122,8 @@
     "title": "Graphs (BFS / DFS / topo)",
     "blurb": "Adjacency lists, BFS shortest unweighted, DFS components, topo sort.",
     "prerequisites": ["recursion", "stack-queue"],
-    "lessonIds": ["dsa-13-graphs"],
-    "itemIds": ["dsa-c-num-islands", "dsa-c-course-schedule"]
+    "lessonIds": ["dsa-15-graphs"],
+    "itemIds": ["dsa-q-038", "dsa-q-039", "dsa-q-040", "dsa-q-049"]
   },
   {
     "id": "greedy",
@@ -122,8 +131,8 @@
     "title": "Greedy",
     "blurb": "Locally-optimal choices that prove globally optimal. Sort + sweep.",
     "prerequisites": ["sorting"],
-    "lessonIds": ["dsa-14-greedy"],
-    "itemIds": ["dsa-c-activity-selection", "dsa-c-jump-game"]
+    "lessonIds": ["dsa-09-sorting"],
+    "itemIds": []
   },
   {
     "id": "dp-1d",
@@ -131,8 +140,8 @@
     "title": "Dynamic programming — 1D",
     "blurb": "Climb stairs, house robber, coin change. State = current index.",
     "prerequisites": ["recursion"],
-    "lessonIds": ["dsa-15-dp-1d"],
-    "itemIds": ["dsa-c-climb-stairs", "dsa-c-house-robber", "dsa-c-coin-change"]
+    "lessonIds": ["dsa-17-dp-1d"],
+    "itemIds": ["dsa-q-044", "dsa-q-045", "dsa-q-046", "dsa-q-047", "dsa-c-max-subarray", "dsa-c-climb-stairs", "dsa-c-house-robber", "dsa-c-coin-change"]
   },
   {
     "id": "dp-2d",
@@ -140,8 +149,8 @@
     "title": "Dynamic programming — 2D",
     "blurb": "Grid paths, LCS, edit distance, knapsack.",
     "prerequisites": ["dp-1d"],
-    "lessonIds": ["dsa-16-dp-2d"],
-    "itemIds": ["dsa-c-unique-paths", "dsa-c-lcs", "dsa-c-knapsack"]
+    "lessonIds": ["dsa-17-dp-1d"],
+    "itemIds": []
   },
   {
     "id": "bit-manipulation",
@@ -149,8 +158,8 @@
     "title": "Bit manipulation",
     "blurb": "XOR tricks, masks, single-number, power-of-two checks.",
     "prerequisites": [],
-    "lessonIds": ["dsa-17-bits"],
-    "itemIds": ["dsa-c-single-number", "dsa-c-count-bits"]
+    "lessonIds": [],
+    "itemIds": []
   },
   {
     "id": "math",
@@ -158,16 +167,25 @@
     "title": "Math & number theory",
     "blurb": "GCD/LCM, primes (sieve), modular arithmetic.",
     "prerequisites": [],
-    "lessonIds": ["dsa-18-math"],
-    "itemIds": ["dsa-c-gcd", "dsa-c-sieve"]
+    "lessonIds": [],
+    "itemIds": []
+  },
+  {
+    "id": "python-foundations",
+    "track": "python",
+    "title": "Python foundations",
+    "blurb": "Variables, loops, functions, containers, and coding-test input/output before advanced Python.",
+    "prerequisites": [],
+    "lessonIds": ["python-00-foundations", "python-syntax", "python-control-flow"],
+    "itemIds": []
   },
   {
     "id": "python-data-model",
     "track": "python",
     "title": "Python data model",
     "blurb": "Mutability, identity vs equality, references, copy vs deepcopy.",
-    "prerequisites": [],
-    "lessonIds": ["python-02-data-types", "python-03-mutability"],
+    "prerequisites": ["python-foundations"],
+    "lessonIds": ["python-data-types", "python-03-mutability"],
     "itemIds": []
   },
   {
@@ -202,8 +220,17 @@
     "track": "python",
     "title": "Standard library essentials",
     "blurb": "collections, itertools, functools — the interview cheats.",
-    "prerequisites": [],
+    "prerequisites": ["python-foundations"],
     "lessonIds": ["python-20-stdlib"],
+    "itemIds": []
+  },
+  {
+    "id": "sql-foundations",
+    "track": "sql",
+    "title": "SQL foundations",
+    "blurb": "Tables, rows, SELECT, WHERE, GROUP BY, HAVING, ORDER BY, and the result-table mental model.",
+    "prerequisites": [],
+    "lessonIds": ["sql-00-foundations", "sql-select"],
     "itemIds": []
   },
   {
@@ -211,8 +238,8 @@
     "track": "sql",
     "title": "Joins",
     "blurb": "INNER, LEFT, RIGHT, FULL, CROSS — when and why.",
-    "prerequisites": [],
-    "lessonIds": ["sql-03-joins"],
+    "prerequisites": ["sql-foundations"],
+    "lessonIds": ["sql-02-joins"],
     "itemIds": []
   },
   {
@@ -220,8 +247,8 @@
     "track": "sql",
     "title": "GROUP BY & HAVING",
     "blurb": "Aggregates, grouping sets, HAVING vs WHERE.",
-    "prerequisites": [],
-    "lessonIds": ["sql-04-group-by"],
+    "prerequisites": ["sql-foundations"],
+    "lessonIds": ["sql-03-group-by"],
     "itemIds": []
   },
   {
@@ -230,7 +257,7 @@
     "title": "Subqueries & CTEs",
     "blurb": "Correlated subqueries, WITH clauses, recursive CTEs.",
     "prerequisites": ["sql-joins"],
-    "lessonIds": ["sql-05-subqueries-ctes"],
+    "lessonIds": ["sql-04-subqueries", "sql-05-cte"],
     "itemIds": []
   },
   {
@@ -247,8 +274,8 @@
     "track": "sql",
     "title": "Indexes & query plans",
     "blurb": "B-tree intuition, composite indexes, when not to index.",
-    "prerequisites": [],
-    "lessonIds": ["sql-07-indexes"],
+    "prerequisites": ["sql-foundations"],
+    "lessonIds": ["sql-08-indexes"],
     "itemIds": []
   },
   {
@@ -256,8 +283,17 @@
     "track": "sql",
     "title": "Normalization & ACID",
     "blurb": "1NF–BCNF, transactions, isolation levels.",
+    "prerequisites": ["sql-foundations"],
+    "lessonIds": ["sql-09-normalization"],
+    "itemIds": []
+  },
+  {
+    "id": "aptitude-foundations",
+    "track": "aptitude",
+    "title": "Aptitude foundations",
+    "blurb": "Arithmetic speed, formulas, classification, and timed accuracy before company-style sections.",
     "prerequisites": [],
-    "lessonIds": ["sql-08-normalization", "sql-09-acid"],
+    "lessonIds": ["aptitude-00-foundations"],
     "itemIds": []
   }
 ]

@@ -2,6 +2,72 @@
 
 Content here is plain Markdown + JSON. Vite's `import.meta.glob` picks up new files automatically — no wiring needed beyond writing them.
 
+## Product content mission
+
+SmokyClaw Trainer should not feel like a random notes app. It should feel like
+an interview training machine: it takes a learner from basics to automatic
+problem recognition, then forces repeated execution until the concept sticks.
+
+The content must cover:
+
+- **Basics first** — no skipped foundations. Teach syntax, arithmetic, tables,
+  arrays, loops, complexity, and input/output before advanced tricks.
+- **Python knowledge** — core language, data structures, functions, OOP,
+  exceptions, standard library, and coding-test input/output.
+- **DSA + LeetCode patterns** — arrays, strings, two pointers, sliding window,
+  hashing, prefix sums, binary search, stacks, queues, linked lists, trees,
+  heaps, graphs, recursion, backtracking, greedy, dynamic programming, bits,
+  and math.
+- **SQL + DBMS** — SELECT, joins, aggregation, subqueries, CTEs, windows, NULLs,
+  indexes, normalization, transactions, and practical query drills.
+- **Aptitude** — arithmetic foundations, formulas, quant, logical reasoning,
+  verbal, and timed company-style sections.
+- **Limited-time adaptation** — every concept must be teachable through a
+  daily plan, with weak areas repeated more often than strong areas.
+
+## Lesson quality bar
+
+Every serious lesson should use this structure:
+
+1. **Why this matters** — where it appears in interviews or tests.
+2. **Basics** — the minimum foundation needed before solving problems.
+3. **Mental model** — the idea in plain language.
+4. **Recognition triggers** — words or constraints that reveal the pattern.
+5. **Template** — reusable Python/SQL/formula skeleton.
+6. **Worked example** — trace the algorithm or calculation step by step.
+7. **Common traps** — off-by-one, edge cases, TLE, NULL behavior, formula misuse.
+8. **Drills** — easy → medium → hard.
+9. **Recall hook** — one short rule the learner should remember under pressure.
+
+## Problem quality bar
+
+Every coding or SQL drill should train the learner like an interview:
+
+- Show the prompt in 1-3 crisp sentences.
+- Include constraints so the learner must think about complexity.
+- Include at least 2 examples, including one edge case.
+- Provide 3 progressive hints: nudge, data structure/pattern, algorithm sketch.
+- Include brute force and optimal approaches.
+- Explain what repeated work the optimal approach removes.
+- Include complexity check after solving.
+- Include tags for pattern, company, and difficulty when honest.
+
+## Training loop
+
+Each topic should move through this loop:
+
+1. **Learn** the foundation.
+2. **Recognize** the pattern from keywords and constraints.
+3. **Solve** using a reusable template.
+4. **Stress test** with edge cases and timed practice.
+5. **Review** every wrong answer through the Leitner queue.
+6. **Retest** through mock-test sections.
+
+The goal is not to claim that a learner can magically solve every problem. The
+goal is to build the habit that strong interviewers use: classify the problem,
+choose the pattern, write the clean template, handle edge cases, and explain
+complexity under time pressure.
+
 ## Item-schema reference
 
 All quiz items live under `src/data/quizzes/<track>.json` (or split into `<track>-coding.json`). Every item type accepts the following **optional** fields on top of the original required ones — author them when you can, the UI degrades gracefully when missing.
@@ -85,12 +151,12 @@ Three bundled schemas:
 Tick patterns as their definition-of-done is met:
 
 ### DSA (`src/content/dsa/`, `src/data/quizzes/dsa.json`, `dsa-coding.json`)
-- [x] `arrays-basics` — lesson exists, 2 MCQs exist, coding TBD
-- [ ] `two-pointer`
-- [ ] `sliding-window` (seed lesson + 2 problems shipped)
-- [ ] `prefix-sums`
-- [ ] `hashing`
-- [ ] `binary-search`
+- [x] `arrays-basics` — 6 coding drills authored
+- [x] `two-pointer` — 6 coding drills authored
+- [x] `sliding-window` — 6 coding drills authored
+- [x] `prefix-sums` — 6 coding drills authored
+- [x] `hashing` — 6 coding drills authored
+- [x] `binary-search` — 6 coding drills authored
 - [ ] `recursion`
 - [ ] `sorting`
 - [ ] `linked-list`

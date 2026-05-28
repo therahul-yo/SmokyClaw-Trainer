@@ -1,0 +1,172 @@
+[
+  {
+    "id": "dsa-c-array-sum",
+    "track": "dsa",
+    "topic": "arrays",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "pattern": "arrays-basics",
+    "estMinutes": 6,
+    "prompt": "Return the sum of all integers in `nums`. Empty array returns `0`.",
+    "constraints": "0 <= len(nums) <= 10^5.",
+    "examples": [
+      { "input": "nums = [1, 2, 3]", "output": "6" },
+      { "input": "nums = []", "output": "0" }
+    ],
+    "starter": "def array_sum(nums):\n    # your code here\n    pass\n",
+    "entry": "array_sum",
+    "tests": [
+      { "args": [[1, 2, 3]], "expect": 6 },
+      { "args": [[]], "expect": 0 },
+      { "args": [[-2, 5, -1]], "expect": 2 },
+      { "args": [[10]], "expect": 10 }
+    ],
+    "hints": ["Scan each element once.", "Maintain a running total.", "Initialize total = 0 so empty input works."],
+    "bruteForce": { "code": "def array_sum(nums):\n    total = 0\n    for x in nums:\n        total += x\n    return total", "complexity": "O(n) time, O(1) space", "explanation": "A single scan is already optimal because every element may affect the answer." },
+    "optimal": { "code": "def array_sum(nums):\n    return sum(nums)", "complexity": "O(n) time, O(1) extra space", "explanation": "Python's built-in sum performs the same scan clearly and safely." },
+    "complexityCheck": { "question": "Time complexity?", "choices": [{ "label": "O(1)", "correct": false }, { "label": "O(n)", "correct": true }, { "label": "O(n log n)", "correct": false }, { "label": "O(n^2)", "correct": false }] },
+    "tags": ["arrays", "basics"]
+  },
+  {
+    "id": "dsa-c-second-largest",
+    "track": "dsa",
+    "topic": "arrays",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "pattern": "arrays-basics",
+    "estMinutes": 8,
+    "prompt": "Return the second largest distinct value in `nums`. If it does not exist, return `None`.",
+    "constraints": "0 <= len(nums) <= 10^5.",
+    "examples": [
+      { "input": "nums = [4, 1, 7, 7, 3]", "output": "4" },
+      { "input": "nums = [5, 5]", "output": "None" }
+    ],
+    "starter": "def second_largest(nums):\n    # your code here\n    pass\n",
+    "entry": "second_largest",
+    "tests": [
+      { "args": [[4, 1, 7, 7, 3]], "expect": 4 },
+      { "args": [[5, 5]], "expect": null },
+      { "args": [[]], "expect": null },
+      { "args": [[-1, -5, -3]], "expect": -3 }
+    ],
+    "hints": ["Distinct values matter, so duplicates of the max do not count.", "Track first and second best while scanning.", "Update second when x is between first and second."],
+    "bruteForce": { "code": "def second_largest(nums):\n    vals = sorted(set(nums))\n    return vals[-2] if len(vals) >= 2 else None", "complexity": "O(n log n) time, O(n) space", "explanation": "Sort distinct values, then take the second from the end." },
+    "optimal": { "code": "def second_largest(nums):\n    first = second = None\n    for x in nums:\n        if first is None or x > first:\n            if x != first:\n                second = first\n            first = x\n        elif x != first and (second is None or x > second):\n            second = x\n    return second", "complexity": "O(n) time, O(1) space", "explanation": "One pass keeps the top two distinct values without sorting." },
+    "complexityCheck": { "question": "Why is one pass enough?", "choices": [{ "label": "Every value is compared to current top two", "correct": true }, { "label": "The array is sorted", "correct": false }, { "label": "Duplicates are impossible", "correct": false }, { "label": "It uses binary search", "correct": false }] },
+    "tags": ["arrays", "edge-cases"]
+  },
+  {
+    "id": "dsa-c-move-zeroes",
+    "track": "dsa",
+    "topic": "arrays",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "pattern": "arrays-basics",
+    "estMinutes": 10,
+    "prompt": "Move all zeroes to the end of `nums` in-place while preserving the relative order of non-zero values. Return `nums`.",
+    "constraints": "1 <= len(nums) <= 10^5.",
+    "examples": [
+      { "input": "nums = [0, 1, 0, 3, 12]", "output": "[1, 3, 12, 0, 0]" }
+    ],
+    "starter": "def move_zeroes(nums):\n    # modify nums in place\n    return nums\n",
+    "entry": "move_zeroes",
+    "tests": [
+      { "args": [[0, 1, 0, 3, 12]], "expect": [1, 3, 12, 0, 0] },
+      { "args": [[0, 0, 1]], "expect": [1, 0, 0] },
+      { "args": [[1, 2]], "expect": [1, 2] },
+      { "args": [[0]], "expect": [0] }
+    ],
+    "hints": ["Use a write pointer for the next non-zero slot.", "First compact non-zero values to the front.", "Fill the remaining positions with zero."],
+    "bruteForce": { "code": "def move_zeroes(nums):\n    nonzero = [x for x in nums if x != 0]\n    nums[:] = nonzero + [0] * (len(nums) - len(nonzero))\n    return nums", "complexity": "O(n) time, O(n) space", "explanation": "Correct but allocates an extra list." },
+    "optimal": { "code": "def move_zeroes(nums):\n    write = 0\n    for x in nums:\n        if x != 0:\n            nums[write] = x\n            write += 1\n    for i in range(write, len(nums)):\n        nums[i] = 0\n    return nums", "complexity": "O(n) time, O(1) space", "explanation": "Stable compaction with a write pointer, then zero-fill the tail." },
+    "complexityCheck": { "question": "Space complexity of the write-pointer solution?", "choices": [{ "label": "O(1)", "correct": true }, { "label": "O(n)", "correct": false }, { "label": "O(log n)", "correct": false }, { "label": "O(n^2)", "correct": false }] },
+    "tags": ["arrays", "in-place"]
+  },
+  {
+    "id": "dsa-c-rotate-array",
+    "track": "dsa",
+    "topic": "arrays",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "pattern": "arrays-basics",
+    "estMinutes": 12,
+    "prompt": "Rotate `nums` to the right by `k` steps and return the rotated array.",
+    "constraints": "0 <= len(nums) <= 10^5, 0 <= k <= 10^9.",
+    "examples": [
+      { "input": "nums = [1,2,3,4,5,6,7], k = 3", "output": "[5,6,7,1,2,3,4]" }
+    ],
+    "starter": "def rotate_array(nums, k):\n    # your code here\n    pass\n",
+    "entry": "rotate_array",
+    "tests": [
+      { "args": [[1, 2, 3, 4, 5, 6, 7], 3], "expect": [5, 6, 7, 1, 2, 3, 4] },
+      { "args": [[-1, -100, 3, 99], 2], "expect": [3, 99, -1, -100] },
+      { "args": [[], 4], "expect": [] },
+      { "args": [[1, 2], 5], "expect": [2, 1] }
+    ],
+    "hints": ["Reduce k with modulo n.", "The last k elements move to the front.", "Slicing template: nums[-k:] + nums[:-k]."],
+    "bruteForce": { "code": "def rotate_array(nums, k):\n    for _ in range(k):\n        nums = [nums[-1]] + nums[:-1]\n    return nums", "complexity": "O(n*k) time", "explanation": "Rotates one step at a time; fails when k is huge." },
+    "optimal": { "code": "def rotate_array(nums, k):\n    if not nums:\n        return []\n    k %= len(nums)\n    return nums[-k:] + nums[:-k] if k else nums[:]", "complexity": "O(n) time, O(n) space", "explanation": "One slice operation after reducing k." },
+    "complexityCheck": { "question": "Why use k %= len(nums)?", "choices": [{ "label": "Rotating by n changes nothing", "correct": true }, { "label": "It sorts the array", "correct": false }, { "label": "It removes duplicates", "correct": false }, { "label": "It makes space O(1)", "correct": false }] },
+    "tags": ["arrays", "rotation"]
+  },
+  {
+    "id": "dsa-c-kadane-max-subarray",
+    "track": "dsa",
+    "topic": "arrays",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "pattern": "arrays-basics",
+    "estMinutes": 15,
+    "prompt": "Return the maximum sum of any non-empty contiguous subarray.",
+    "constraints": "1 <= len(nums) <= 10^5, values may be negative.",
+    "examples": [
+      { "input": "nums = [-2,1,-3,4,-1,2,1,-5,4]", "output": "6", "explanation": "[4,-1,2,1]" }
+    ],
+    "starter": "def max_subarray(nums):\n    # your code here\n    pass\n",
+    "entry": "max_subarray",
+    "tests": [
+      { "args": [[-2, 1, -3, 4, -1, 2, 1, -5, 4]], "expect": 6 },
+      { "args": [[1]], "expect": 1 },
+      { "args": [[5, 4, -1, 7, 8]], "expect": 23 },
+      { "args": [[-3, -2, -5]], "expect": -2 }
+    ],
+    "hints": ["At each index, decide whether to extend the previous subarray or start fresh.", "Keep current best ending here and global best.", "cur = max(x, cur + x); best = max(best, cur)."],
+    "bruteForce": { "code": "def max_subarray(nums):\n    best = nums[0]\n    for i in range(len(nums)):\n        s = 0\n        for j in range(i, len(nums)):\n            s += nums[j]\n            best = max(best, s)\n    return best", "complexity": "O(n^2) time, O(1) space", "explanation": "Tries every subarray." },
+    "optimal": { "code": "def max_subarray(nums):\n    cur = best = nums[0]\n    for x in nums[1:]:\n        cur = max(x, cur + x)\n        best = max(best, cur)\n    return best", "complexity": "O(n) time, O(1) space", "explanation": "Kadane's algorithm keeps only the best sum ending at the current index." },
+    "complexityCheck": { "question": "Kadane's time complexity?", "choices": [{ "label": "O(n)", "correct": true }, { "label": "O(n^2)", "correct": false }, { "label": "O(log n)", "correct": false }, { "label": "O(1)", "correct": false }] },
+    "tags": ["arrays", "kadane", "leetcode-medium"]
+  },
+  {
+    "id": "dsa-c-merge-sorted-arrays",
+    "track": "dsa",
+    "topic": "arrays",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "hard",
+    "pattern": "arrays-basics",
+    "estMinutes": 18,
+    "prompt": "Given two sorted arrays `a` and `b`, return one sorted merged array.",
+    "constraints": "0 <= len(a), len(b) <= 10^5.",
+    "examples": [
+      { "input": "a = [1,3,5], b = [2,4,6]", "output": "[1,2,3,4,5,6]" }
+    ],
+    "starter": "def merge_sorted(a, b):\n    # your code here\n    pass\n",
+    "entry": "merge_sorted",
+    "tests": [
+      { "args": [[1, 3, 5], [2, 4, 6]], "expect": [1, 2, 3, 4, 5, 6] },
+      { "args": [[], [1, 2]], "expect": [1, 2] },
+      { "args": [[1, 1], [1]], "expect": [1, 1, 1] },
+      { "args": [[-3, 4], [-5, 0, 9]], "expect": [-5, -3, 0, 4, 9] }
+    ],
+    "hints": ["Use two read pointers.", "Append the smaller current value.", "When one array ends, append the remaining tail."],
+    "bruteForce": { "code": "def merge_sorted(a, b):\n    return sorted(a + b)", "complexity": "O((n+m) log(n+m)) time", "explanation": "Correct but ignores that both inputs are already sorted." },
+    "optimal": { "code": "def merge_sorted(a, b):\n    i = j = 0\n    out = []\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            out.append(a[i]); i += 1\n        else:\n            out.append(b[j]); j += 1\n    out.extend(a[i:])\n    out.extend(b[j:])\n    return out", "complexity": "O(n+m) time, O(n+m) space", "explanation": "Classic merge step from merge sort." },
+    "complexityCheck": { "question": "Why is merge linear?", "choices": [{ "label": "Each element is appended once", "correct": true }, { "label": "It uses hashing", "correct": false }, { "label": "It sorts twice", "correct": false }, { "label": "It uses recursion", "correct": false }] },
+    "tags": ["arrays", "merge", "sorting"]
+  }
+]
