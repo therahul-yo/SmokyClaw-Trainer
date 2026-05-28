@@ -69,7 +69,7 @@
     "blurb": "Base case + recursive case, choice/decision trees, pruning.",
     "prerequisites": [],
     "lessonIds": ["dsa-08-recursion", "dsa-16-backtracking"],
-    "itemIds": ["dsa-q-023", "dsa-q-024", "dsa-c-subsets"]
+    "itemIds": ["dsa-q-023", "dsa-q-024", "dsa-c-factorial-recursive", "dsa-c-subsets", "dsa-c-permutations"]
   },
   {
     "id": "sorting",
@@ -78,7 +78,7 @@
     "blurb": "Timsort, mergesort, quicksort. Stable vs not. When to sort.",
     "prerequisites": [],
     "lessonIds": ["dsa-09-sorting"],
-    "itemIds": ["dsa-q-003", "dsa-q-025", "dsa-q-026", "dsa-q-027"]
+    "itemIds": ["dsa-q-003", "dsa-q-025", "dsa-q-026", "dsa-q-027", "dsa-c-merge-intervals"]
   },
   {
     "id": "linked-list",
@@ -87,7 +87,7 @@
     "blurb": "Pointer manipulation, dummy heads, reverse / detect cycle / merge.",
     "prerequisites": [],
     "lessonIds": ["dsa-10-linked-lists"],
-    "itemIds": ["dsa-q-028", "dsa-q-029", "dsa-c-reverse-linked-list"]
+    "itemIds": ["dsa-q-028", "dsa-q-029", "dsa-c-reverse-linked-list", "dsa-c-reverse-list", "dsa-c-detect-cycle-array"]
   },
   {
     "id": "stack-queue",
@@ -96,7 +96,7 @@
     "blurb": "Monotonic stack, balanced parens, BFS queues, deque tricks.",
     "prerequisites": [],
     "lessonIds": ["dsa-11-stacks-queues"],
-    "itemIds": ["dsa-q-030", "dsa-q-031", "dsa-q-032", "dsa-c-valid-parens", "dsa-c-daily-temperatures"]
+    "itemIds": ["dsa-q-030", "dsa-q-031", "dsa-q-032", "dsa-c-valid-parens", "dsa-c-daily-temperatures", "dsa-c-next-greater"]
   },
   {
     "id": "trees",
@@ -105,7 +105,7 @@
     "blurb": "Traversals, recursion patterns, BST invariants.",
     "prerequisites": ["recursion"],
     "lessonIds": ["dsa-12-trees", "dsa-13-tree-traversals"],
-    "itemIds": ["dsa-q-033", "dsa-q-034", "dsa-q-035"]
+    "itemIds": ["dsa-q-033", "dsa-q-034", "dsa-q-035", "dsa-c-tree-height-array", "dsa-c-level-order-array"]
   },
   {
     "id": "heaps",
@@ -114,7 +114,7 @@
     "blurb": "Top-K, k-way merge, scheduling. Python's heapq is min-heap only.",
     "prerequisites": ["sorting"],
     "lessonIds": ["dsa-14-heaps"],
-    "itemIds": ["dsa-q-036", "dsa-q-037"]
+    "itemIds": ["dsa-q-036", "dsa-q-037", "dsa-c-kth-largest"]
   },
   {
     "id": "graphs",
@@ -123,7 +123,7 @@
     "blurb": "Adjacency lists, BFS shortest unweighted, DFS components, topo sort.",
     "prerequisites": ["recursion", "stack-queue"],
     "lessonIds": ["dsa-15-graphs"],
-    "itemIds": ["dsa-q-038", "dsa-q-039", "dsa-q-040", "dsa-q-049"]
+    "itemIds": ["dsa-q-038", "dsa-q-039", "dsa-q-040", "dsa-q-049", "dsa-c-num-islands", "dsa-c-course-schedule"]
   },
   {
     "id": "greedy",
@@ -132,7 +132,7 @@
     "blurb": "Locally-optimal choices that prove globally optimal. Sort + sweep.",
     "prerequisites": ["sorting"],
     "lessonIds": ["dsa-09-sorting"],
-    "itemIds": []
+    "itemIds": ["dsa-c-activity-selection", "dsa-c-jump-game"]
   },
   {
     "id": "dp-1d",
@@ -150,7 +150,7 @@
     "blurb": "Grid paths, LCS, edit distance, knapsack.",
     "prerequisites": ["dp-1d"],
     "lessonIds": ["dsa-17-dp-1d"],
-    "itemIds": []
+    "itemIds": ["dsa-c-unique-paths", "dsa-c-lcs"]
   },
   {
     "id": "bit-manipulation",
@@ -159,7 +159,7 @@
     "blurb": "XOR tricks, masks, single-number, power-of-two checks.",
     "prerequisites": [],
     "lessonIds": [],
-    "itemIds": []
+    "itemIds": ["dsa-c-single-number", "dsa-c-count-bits"]
   },
   {
     "id": "math",
@@ -168,7 +168,7 @@
     "blurb": "GCD/LCM, primes (sieve), modular arithmetic.",
     "prerequisites": [],
     "lessonIds": [],
-    "itemIds": []
+    "itemIds": ["dsa-c-gcd", "dsa-c-sieve"]
   },
   {
     "id": "python-foundations",
