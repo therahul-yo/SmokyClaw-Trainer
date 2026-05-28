@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
 import { sql } from "@codemirror/lang-sql";
 import { runPython } from "../lib/pyodide";
 import { runSql, getSchemaSummary } from "../lib/sqljs";
-import { useEffect } from "react";
+import { Prompt } from "../components/terminal/Prompt";
+import { Box } from "../components/terminal/Box";
+import { BracketButton } from "../components/terminal/BracketButton";
 
 const PY_STARTER = `# Free-form Python REPL — runs in your browser via Pyodide.
 # Try anything: list comprehensions, classes, regex, ...
@@ -23,10 +25,19 @@ export function SandboxPage() {
   if (kind !== "python" && kind !== "sql") return <Navigate to="/" replace />;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-white mb-4">
-        {kind === "python" ? "🐍 Python sandbox" : "🗃️ SQL sandbox"}
-      </h1>
+    <div className="space-y-4">
+      <Prompt path={`~/sandbox/${kind}`}>
+        <span>start --repl</span>
+      </Prompt>
+      <div
+        className="text-2xl font-bold crt-glow"
+        style={{ color: "var(--color-accent)" }}
+      >
+        {kind === "python" ? "python.repl" : "sql.repl"}
+        <span style={{ color: "var(--color-text-muted)" }} className="text-sm ml-2">
+          // scratch space — runs locally
+        </span>
+      </div>
       {kind === "python" ? <PythonRepl /> : <SqlRepl />}
     </div>
   );
@@ -50,7 +61,23 @@ function PythonRepl() {
 
   return (
     <div className="space-y-3">
-      <div className="rounded-md overflow-hidden border border-[var(--color-border)]">
+      <div
+        style={{
+          border: "1px solid var(--color-border-bright)",
+          background: "var(--color-bg-alt)",
+        }}
+      >
+        <div
+          className="px-3 py-1 text-xs flex items-center justify-between"
+          style={{
+            borderBottom: "1px solid var(--color-border)",
+            color: "var(--color-text-muted)",
+            background: "var(--color-bg)",
+          }}
+        >
+          <span>── scratch.py ──</span>
+          <span>python 3.11</span>
+        </div>
         <CodeMirror
           value={code}
           onChange={setCode}
@@ -59,26 +86,28 @@ function PythonRepl() {
           extensions={[python()]}
         />
       </div>
-      <button
-        onClick={run}
-        disabled={running}
-        className="px-4 py-2 rounded-md bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white font-medium disabled:opacity-50"
-      >
-        {running ? "Running…" : "Run"}
-      </button>
+      <BracketButton variant="primary" onClick={run} disabled={running}>
+        {running ? "running…" : "run"}
+      </BracketButton>
       {(out || err) && (
-        <div className="space-y-2">
+        <Box title="$ stdout">
           {out && (
-            <pre className="p-3 rounded bg-black/30 border border-[var(--color-border)] text-xs whitespace-pre-wrap">
+            <pre
+              className="text-xs whitespace-pre-wrap"
+              style={{ color: "var(--color-accent)" }}
+            >
               {out}
             </pre>
           )}
           {err && (
-            <pre className="p-3 rounded bg-red-900/20 border border-[var(--color-danger)]/40 text-xs text-[var(--color-danger)] whitespace-pre-wrap">
+            <pre
+              className="text-xs whitespace-pre-wrap mt-2"
+              style={{ color: "var(--color-danger)" }}
+            >
               {err}
             </pre>
           )}
-        </div>
+        </Box>
       )}
     </div>
   );
@@ -114,61 +143,97 @@ function SqlRepl() {
 
   return (
     <div className="space-y-3">
-      <div className="flex gap-2 items-center text-sm">
-        <span className="text-[var(--color-text-muted)]">schema:</span>
+      <div className="flex gap-2 items-center text-sm font-mono">
+        <span style={{ color: "var(--color-text-muted)" }}>$ schema =</span>
         {(["employees", "ecommerce"] as const).map((s) => (
           <button
             key={s}
             onClick={() => setSchema(s)}
-            className={`px-3 py-1 rounded border ${
-              schema === s
-                ? "border-[var(--color-accent)] text-white"
-                : "border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-white"
-            }`}
+            className="px-2 py-0.5 text-xs"
+            style={{
+              border: `1px solid ${schema === s ? "var(--color-accent)" : "var(--color-border-bright)"}`,
+              color: schema === s ? "var(--color-accent)" : "var(--color-text-dim)",
+              background: "transparent",
+            }}
           >
             {s}
           </button>
         ))}
       </div>
 
-      <details className="text-xs text-[var(--color-text-dim)]">
-        <summary className="cursor-pointer text-[var(--color-accent)]">
-          Schema reference
+      <details className="text-xs" style={{ color: "var(--color-text-dim)" }}>
+        <summary className="cursor-pointer" style={{ color: "var(--color-cyan)" }}>
+          ▸ schema reference
         </summary>
-        <pre className="mt-2 p-3 bg-black/30 rounded border border-[var(--color-border)] whitespace-pre overflow-x-auto">
+        <pre
+          className="mt-2 p-3 whitespace-pre overflow-x-auto font-mono"
+          style={{
+            background: "var(--color-bg)",
+            border: "1px solid var(--color-border)",
+          }}
+        >
           {schemaText}
         </pre>
       </details>
 
-      <div className="rounded-md overflow-hidden border border-[var(--color-border)]">
+      <div
+        style={{
+          border: "1px solid var(--color-border-bright)",
+          background: "var(--color-bg-alt)",
+        }}
+      >
+        <div
+          className="px-3 py-1 text-xs flex items-center justify-between"
+          style={{
+            borderBottom: "1px solid var(--color-border)",
+            color: "var(--color-text-muted)",
+            background: "var(--color-bg)",
+          }}
+        >
+          <span>── query.sql ──</span>
+          <span>sqlite</span>
+        </div>
         <CodeMirror
           value={code}
           onChange={setCode}
           theme="dark"
-          height="220px"
+          height="240px"
           extensions={[sql()]}
         />
       </div>
-      <button
-        onClick={run}
-        disabled={running}
-        className="px-4 py-2 rounded-md bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white font-medium disabled:opacity-50"
-      >
-        {running ? "Running…" : "Run query"}
-      </button>
+      <BracketButton variant="primary" onClick={run} disabled={running}>
+        {running ? "running…" : "run query"}
+      </BracketButton>
 
       {error && (
-        <pre className="p-3 rounded bg-red-900/20 border border-[var(--color-danger)]/40 text-xs text-[var(--color-danger)] whitespace-pre-wrap">
+        <pre
+          className="p-3 text-xs whitespace-pre-wrap font-mono"
+          style={{
+            background: "rgba(255, 95, 86, 0.06)",
+            border: "1px solid var(--color-danger)",
+            color: "var(--color-danger)",
+          }}
+        >
           {error}
         </pre>
       )}
       {result && (
-        <div className="overflow-x-auto border border-[var(--color-border)] rounded">
-          <table className="w-full text-sm">
+        <div
+          className="overflow-x-auto"
+          style={{ border: "1px solid var(--color-border-bright)" }}
+        >
+          <table className="w-full text-sm font-mono">
             <thead>
-              <tr className="bg-[var(--color-bg-card-hover)]">
+              <tr style={{ background: "var(--color-bg)" }}>
                 {result.columns.map((c) => (
-                  <th key={c} className="text-left px-3 py-2 font-semibold">
+                  <th
+                    key={c}
+                    className="text-left px-3 py-1.5"
+                    style={{
+                      color: "var(--color-amber)",
+                      borderBottom: "1px solid var(--color-border-bright)",
+                    }}
+                  >
                     {c}
                   </th>
                 ))}
@@ -177,16 +242,33 @@ function SqlRepl() {
             <tbody>
               {result.rows.length === 0 ? (
                 <tr>
-                  <td colSpan={result.columns.length} className="px-3 py-2 text-[var(--color-text-muted)]">
+                  <td
+                    colSpan={result.columns.length}
+                    className="px-3 py-2 italic"
+                    style={{ color: "var(--color-text-muted)" }}
+                  >
                     (no rows)
                   </td>
                 </tr>
               ) : (
                 result.rows.map((row, i) => (
-                  <tr key={i} className="border-t border-[var(--color-border)]">
+                  <tr
+                    key={i}
+                    style={{ borderTop: "1px solid var(--color-border)" }}
+                  >
                     {row.map((v, j) => (
-                      <td key={j} className="px-3 py-1.5 font-mono text-xs">
-                        {v === null ? "NULL" : String(v)}
+                      <td
+                        key={j}
+                        className="px-3 py-1 text-xs"
+                        style={{ color: "var(--color-text)" }}
+                      >
+                        {v === null ? (
+                          <span style={{ color: "var(--color-text-muted)" }}>
+                            NULL
+                          </span>
+                        ) : (
+                          String(v)
+                        )}
                       </td>
                     ))}
                   </tr>

@@ -3,6 +3,9 @@ import { useEffect } from "react";
 import { getLesson, getQuizItemsByTopic } from "../lib/contentLoader";
 import { useProgressStore } from "../store";
 import { LessonRenderer } from "../components/LessonRenderer";
+import { Prompt } from "../components/terminal/Prompt";
+import { Box } from "../components/terminal/Box";
+import { BracketButton } from "../components/terminal/BracketButton";
 
 export function LessonPage() {
   const { lessonId } = useParams<{ lessonId: string }>();
@@ -18,30 +21,46 @@ export function LessonPage() {
   const practiceItems = getQuizItemsByTopic(lesson.track, lesson.topic);
 
   return (
-    <div>
-      <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wide mb-2">
-        <Link to={`/track/${lesson.track}`} className="hover:text-white">
-          ← back to {lesson.track}
-        </Link>
+    <div className="space-y-4">
+      <Prompt path={`~/tracks/${lesson.track}/lessons/${lesson.id}`}>
+        <span>cat lesson.md</span>
+      </Prompt>
+      <div
+        className="text-xs"
+        style={{ color: "var(--color-text-muted)" }}
+      >
+        <Link
+          to={`/track/${lesson.track}`}
+          style={{ color: "var(--color-cyan)" }}
+          className="underline"
+        >
+          ← {lesson.track}/
+        </Link>{" "}
+        · {lesson.topic} · {lesson.estMinutes}m
       </div>
-      <LessonRenderer body={lesson.body} />
 
-      <div className="mt-12 p-6 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]">
-        <div className="font-semibold text-white">Practice this topic</div>
-        <div className="text-sm text-[var(--color-text-dim)] mt-1">
+      <article className="prose-lesson">
+        <LessonRenderer body={lesson.body} />
+      </article>
+
+      <Box
+        title="$ next steps"
+        trailing={`${practiceItems.length} drills`}
+        variant={practiceItems.length > 0 ? "amber" : "default"}
+      >
+        <div className="text-sm" style={{ color: "var(--color-text-dim)" }}>
           {practiceItems.length > 0
-            ? `${practiceItems.length} drills queued — apply what you just read.`
-            : "No drills wired for this topic yet."}
+            ? `${practiceItems.length} drills queued — code what you just read.`
+            : "no drills wired for this topic yet."}
         </div>
         {practiceItems.length > 0 && (
-          <Link
-            to={`/quiz/${lesson.track}/${lesson.topic}`}
-            className="inline-block mt-3 px-4 py-2 rounded-md bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white font-medium"
-          >
-            Start practice →
-          </Link>
+          <div className="mt-3">
+            <Link to={`/quiz/${lesson.track}/${lesson.topic}`}>
+              <BracketButton variant="primary">start practice →</BracketButton>
+            </Link>
+          </div>
         )}
-      </div>
+      </Box>
     </div>
   );
 }

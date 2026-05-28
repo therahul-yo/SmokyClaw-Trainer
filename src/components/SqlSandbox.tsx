@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { sql } from "@codemirror/lang-sql";
-import clsx from "clsx";
 import type { SqlItem } from "../types";
 import { gradeSql, type SqlGradeResult } from "../lib/grader";
 import { getSchemaSummary } from "../lib/sqljs";
@@ -12,6 +11,8 @@ import { ProblemContext } from "./ProblemContext";
 import { HintsPanel } from "./HintsPanel";
 import { EditorialReveal } from "./EditorialReveal";
 import { ComplexityCheck } from "./ComplexityCheck";
+import { Box } from "./terminal/Box";
+import { BracketButton } from "./terminal/BracketButton";
 
 export function SqlSandbox({ item }: { item: SqlItem }) {
   const [query, setQuery] = useState(item.starter ?? "");
@@ -27,8 +28,6 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
   const registerAttempt = useReviewQueueStore((s) => s.registerAttempt);
   const ping = useStreakStore((s) => s.ping);
-
-  // Per-item state is reset by QuizPage remounting us with `key={item.id}`.
 
   useEffect(() => {
     void (async () => {
@@ -63,7 +62,12 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
   };
 
   const giveUp = () => {
-    if (!confirm("Reveal the solution? This counts as a failed attempt and pushes the item into your review queue.")) return;
+    if (
+      !confirm(
+        "Reveal the solution? This counts as a failed attempt and pushes the item into your review queue.",
+      )
+    )
+      return;
     recordAttempt({
       itemId: item.id,
       correct: false,
@@ -77,125 +81,172 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
   };
 
   const showEditorial = editorialUnlocked || gaveUp;
-  const needsComplexityCheck = result?.ok && item.complexityCheck && !complexityDone;
+  const needsComplexityCheck =
+    result?.ok && item.complexityCheck && !complexityDone;
 
   return (
-    <article className="border border-[var(--color-border)] rounded-lg bg-[var(--color-bg-card)] p-6 space-y-4">
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wide">
-            SQL · {item.topic} · schema: {item.schema}
-            {item.estMinutes && ` · ~${item.estMinutes}m`}
-          </div>
-          <div className="mt-1 text-[var(--color-text)]">
-            <LessonRenderer body={item.prompt} />
-          </div>
+    <Box
+      title={
+        <span>
+          <span style={{ color: "var(--color-amber)" }}>{item.id}</span>
+          <span style={{ color: "var(--color-text-muted)" }}> · </span>
+          <span>sql</span>
+          <span style={{ color: "var(--color-text-muted)" }}> · </span>
+          <span>{item.topic}</span>
+          <span style={{ color: "var(--color-text-muted)" }}> · </span>
+          <span>schema: {item.schema}</span>
+          {item.estMinutes && (
+            <>
+              <span style={{ color: "var(--color-text-muted)" }}> · </span>
+              <span>~{item.estMinutes}m</span>
+            </>
+          )}
+        </span>
+      }
+      trailing={<BookmarkButton itemId={item.id} />}
+    >
+      <div className="space-y-4">
+        <div style={{ color: "var(--color-text)" }}>
+          <LessonRenderer body={item.prompt} />
         </div>
-        <BookmarkButton itemId={item.id} />
-      </div>
 
-      <ProblemContext item={item} />
+        <ProblemContext item={item} />
 
-      <details className="text-xs text-[var(--color-text-dim)]">
-        <summary className="cursor-pointer text-[var(--color-accent)]">
-          Schema reference
-        </summary>
-        <pre className="mt-2 p-3 bg-black/30 rounded border border-[var(--color-border)] overflow-x-auto whitespace-pre">
-          {schemaText}
-        </pre>
-      </details>
+        <details className="text-xs" style={{ color: "var(--color-text-dim)" }}>
+          <summary
+            className="cursor-pointer"
+            style={{ color: "var(--color-cyan)" }}
+          >
+            ▸ schema reference
+          </summary>
+          <pre
+            className="mt-2 p-3 overflow-x-auto whitespace-pre"
+            style={{
+              background: "var(--color-bg)",
+              border: "1px solid var(--color-border)",
+            }}
+          >
+            {schemaText}
+          </pre>
+        </details>
 
-      {item.hints && item.hints.length > 0 && (
-        <HintsPanel
-          hints={item.hints}
-          onCountChange={(n) => {
-            setHintsUsed(n);
-            hintsRef.current = n;
+        {item.hints && item.hints.length > 0 && (
+          <HintsPanel
+            hints={item.hints}
+            onCountChange={(n) => {
+              setHintsUsed(n);
+              hintsRef.current = n;
+            }}
+          />
+        )}
+
+        <div
+          style={{
+            border: "1px solid var(--color-border-bright)",
+            background: "var(--color-bg-alt)",
           }}
-        />
-      )}
-
-      <div className="rounded-md overflow-hidden border border-[var(--color-border)]">
-        <CodeMirror
-          value={query}
-          onChange={setQuery}
-          theme="dark"
-          height="180px"
-          extensions={[sql()]}
-          basicSetup={{ lineNumbers: true, foldGutter: false }}
-        />
-      </div>
-
-      <div className="flex items-center gap-3 flex-wrap">
-        <button
-          onClick={run}
-          disabled={running}
-          className="px-4 py-2 rounded-md bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white font-medium disabled:opacity-50"
         >
-          {running ? "Running…" : "Run query"}
-        </button>
-        {!showEditorial && (
-          <button
-            type="button"
-            onClick={giveUp}
-            className="px-3 py-2 rounded-md text-sm bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-warning)]"
-          >
-            Give up & show solution
-          </button>
-        )}
-        {hintsUsed > 0 && (
-          <span className="text-xs text-[var(--color-text-muted)]">
-            · {hintsUsed} hint{hintsUsed === 1 ? "" : "s"} used
-          </span>
-        )}
-      </div>
-
-      {result && (
-        <div className="space-y-3">
           <div
-            className={clsx(
-              "p-3 rounded-md border-l-4",
-              result.ok
-                ? "border-[var(--color-success)] bg-green-900/10"
-                : "border-[var(--color-danger)] bg-red-900/10",
-            )}
+            className="px-3 py-1 text-xs flex items-center justify-between"
+            style={{
+              borderBottom: "1px solid var(--color-border)",
+              color: "var(--color-text-muted)",
+              background: "var(--color-bg)",
+            }}
           >
-            <div className="font-semibold">
-              {result.ok ? "✓ Query result matches expected output" : "✗ Result mismatch"}
+            <span>── query.sql ─────────────────────────</span>
+            <span>sqlite</span>
+          </div>
+          <CodeMirror
+            value={query}
+            onChange={setQuery}
+            theme="dark"
+            height="200px"
+            extensions={[sql()]}
+            basicSetup={{ lineNumbers: true, foldGutter: false }}
+          />
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap text-sm">
+          <BracketButton variant="primary" onClick={run} disabled={running}>
+            {running ? "running…" : "run query"}
+          </BracketButton>
+          {!showEditorial && (
+            <BracketButton variant="ghost" onClick={giveUp}>
+              give up
+            </BracketButton>
+          )}
+          {hintsUsed > 0 && (
+            <span className="text-xs" style={{ color: "var(--color-amber)" }}>
+              · {hintsUsed} hint{hintsUsed === 1 ? "" : "s"}
+            </span>
+          )}
+        </div>
+
+        {result && (
+          <div className="space-y-3">
+            <div
+              className="p-3 font-mono text-sm"
+              style={{
+                borderLeft: `3px solid ${
+                  result.ok ? "var(--color-success)" : "var(--color-danger)"
+                }`,
+                background: result.ok
+                  ? "rgba(92, 255, 159, 0.05)"
+                  : "rgba(255, 95, 86, 0.05)",
+              }}
+            >
+              <div
+                className="font-bold"
+                style={{
+                  color: result.ok ? "var(--color-success)" : "var(--color-danger)",
+                }}
+              >
+                {result.ok ? "PASS // result matches" : "FAIL // result mismatch"}
+              </div>
+              {result.error && (
+                <div
+                  className="text-xs mt-1"
+                  style={{ color: "var(--color-danger)" }}
+                >
+                  {result.error}
+                </div>
+              )}
             </div>
-            {result.error && (
-              <div className="text-xs text-[var(--color-danger)] mt-1">{result.error}</div>
+
+            {result.actual && (
+              <ResultTable label="── your result" data={result.actual} />
+            )}
+            {!result.ok && (
+              <ResultTable label="── expected" data={result.expected} />
             )}
           </div>
+        )}
 
-          {result.actual && <ResultTable label="Your result" data={result.actual} />}
-          {!result.ok && <ResultTable label="Expected" data={result.expected} />}
-        </div>
-      )}
+        {needsComplexityCheck && item.complexityCheck && (
+          <ComplexityCheck
+            question={item.complexityCheck.question}
+            choices={item.complexityCheck.choices}
+            onPass={() => {
+              setComplexityDone(true);
+              setEditorialUnlocked(true);
+            }}
+            onSkip={() => {
+              setComplexityDone(true);
+              setEditorialUnlocked(true);
+            }}
+          />
+        )}
 
-      {needsComplexityCheck && item.complexityCheck && (
-        <ComplexityCheck
-          question={item.complexityCheck.question}
-          choices={item.complexityCheck.choices}
-          onPass={() => {
-            setComplexityDone(true);
-            setEditorialUnlocked(true);
-          }}
-          onSkip={() => {
-            setComplexityDone(true);
-            setEditorialUnlocked(true);
-          }}
-        />
-      )}
-
-      {showEditorial && (
-        <EditorialReveal
-          bruteForce={item.bruteForce}
-          optimal={item.optimal}
-          fallback={item.explanation}
-        />
-      )}
-    </article>
+        {showEditorial && (
+          <EditorialReveal
+            bruteForce={item.bruteForce}
+            optimal={item.optimal}
+            fallback={item.explanation}
+          />
+        )}
+      </div>
+    </Box>
   );
 }
 
@@ -208,15 +259,28 @@ function ResultTable({
 }) {
   return (
     <div>
-      <div className="text-xs uppercase tracking-wider text-[var(--color-text-muted)] mb-1">
+      <div
+        className="text-xs mb-1 font-mono"
+        style={{ color: "var(--color-text-muted)" }}
+      >
         {label}
       </div>
-      <div className="overflow-x-auto border border-[var(--color-border)] rounded">
-        <table className="w-full text-sm">
+      <div
+        className="overflow-x-auto"
+        style={{ border: "1px solid var(--color-border-bright)" }}
+      >
+        <table className="w-full text-sm font-mono">
           <thead>
-            <tr className="bg-[var(--color-bg-card-hover)]">
+            <tr style={{ background: "var(--color-bg)" }}>
               {data.columns.map((c) => (
-                <th key={c} className="text-left px-3 py-2 font-semibold">
+                <th
+                  key={c}
+                  className="text-left px-3 py-1.5 font-semibold"
+                  style={{
+                    color: "var(--color-amber)",
+                    borderBottom: "1px solid var(--color-border-bright)",
+                  }}
+                >
                   {c}
                 </th>
               ))}
@@ -227,17 +291,31 @@ function ResultTable({
               <tr>
                 <td
                   colSpan={data.columns.length || 1}
-                  className="px-3 py-2 text-[var(--color-text-muted)]"
+                  className="px-3 py-2 italic"
+                  style={{ color: "var(--color-text-muted)" }}
                 >
                   (no rows)
                 </td>
               </tr>
             ) : (
               data.rows.map((row, i) => (
-                <tr key={i} className="border-t border-[var(--color-border)]">
+                <tr
+                  key={i}
+                  style={{ borderTop: "1px solid var(--color-border)" }}
+                >
                   {row.map((v, j) => (
-                    <td key={j} className="px-3 py-1.5 font-mono text-xs">
-                      {v === null ? "NULL" : String(v)}
+                    <td
+                      key={j}
+                      className="px-3 py-1 text-xs"
+                      style={{ color: "var(--color-text)" }}
+                    >
+                      {v === null ? (
+                        <span style={{ color: "var(--color-text-muted)" }}>
+                          NULL
+                        </span>
+                      ) : (
+                        String(v)
+                      )}
                     </td>
                   ))}
                 </tr>

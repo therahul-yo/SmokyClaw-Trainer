@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { BracketButton } from "./terminal/BracketButton";
 
 const STORAGE_KEY = "smokyclaw/onboarded";
 
@@ -14,19 +15,16 @@ function shouldShowOnMount(): boolean {
 
 const SLIDES = [
   {
-    emoji: "🦞",
-    title: "Welcome to SmokyClaw Trainer",
-    body: "Solo prep for Indian campus tests — TCS NQT, Infosys SP, Wipro, Capgemini. Python + DSA + SQL + Aptitude, in-browser, no signup.",
+    title: "// boot smokyclaw v3",
+    body: "solo prep for indian campus tests — tcs nqt, infosys sp, wipro, capgemini. python + dsa + sql + aptitude, in-browser, no signup, 100% local.",
   },
   {
-    emoji: "📅",
-    title: "Tell us your deadline",
-    body: "Build a study plan: pick a 1-week, 2-week, or 1-month deadline plus how much time you can give it daily. We lay out lessons and practice every day.",
+    title: "// configure plan",
+    body: "pick a deadline (7 / 14 / 30 days) plus daily minutes. we lay out lessons + practice every day, weakness-prioritized.",
   },
   {
-    emoji: "🎯",
-    title: "Practice + mocks",
-    body: "Code Python and SQL right here. Wrong answers go into a Leitner spaced-repetition queue. Run full TCS NQT / Infosys SP mocks under timer to taste the real thing.",
+    title: "// practice + mocks",
+    body: "code python + sql here. wrong answers go into a leitner spaced-repetition queue. run full tcs nqt / infosys sp mocks under timer.",
   },
 ];
 
@@ -49,47 +47,78 @@ export function OnboardingModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="max-w-md w-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-6 space-y-5 shadow-xl">
-        <div className="text-5xl text-center">{slide.emoji}</div>
-        <div className="text-center space-y-2">
-          <h2 className="text-xl font-bold text-white">{slide.title}</h2>
-          <p className="text-sm text-[var(--color-text-dim)]">{slide.body}</p>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{
+        background: "rgba(0, 0, 0, 0.85)",
+        backdropFilter: "blur(4px)",
+      }}
+    >
+      <div
+        className="max-w-md w-full p-5 space-y-4 font-mono boot-in"
+        style={{
+          background: "var(--color-bg-alt)",
+          border: "1px solid var(--color-accent)",
+          boxShadow: "0 0 40px rgba(92, 255, 159, 0.15)",
+        }}
+      >
+        <div
+          className="flex items-center justify-between text-xs"
+          style={{
+            borderBottom: "1px dashed var(--color-border-bright)",
+            paddingBottom: "0.5rem",
+          }}
+        >
+          <span style={{ color: "var(--color-text-muted)" }}>
+            ── ONBOARD.SH ──
+          </span>
+          <span style={{ color: "var(--color-text-muted)" }}>
+            step {step + 1}/{SLIDES.length}
+          </span>
         </div>
-        <div className="flex justify-center gap-1.5">
+
+        <div
+          className="text-base font-bold crt-glow"
+          style={{ color: "var(--color-accent)" }}
+        >
+          {slide.title}
+        </div>
+        <div className="text-sm" style={{ color: "var(--color-text)" }}>
+          {slide.body}
+        </div>
+
+        <div className="flex justify-center gap-1">
           {SLIDES.map((_, i) => (
             <span
               key={i}
-              className={`h-1.5 w-6 rounded-full ${
-                i === step ? "bg-[var(--color-accent)]" : "bg-[var(--color-border)]"
-              }`}
+              className="h-1 w-8"
+              style={{
+                background:
+                  i === step
+                    ? "var(--color-accent)"
+                    : "var(--color-border-bright)",
+              }}
             />
           ))}
         </div>
+
         <div className="flex items-center justify-between gap-2">
-          <button
-            type="button"
-            onClick={finish}
-            className="text-xs text-[var(--color-text-muted)] hover:text-white"
-          >
-            Skip
-          </button>
+          <BracketButton variant="ghost" onClick={finish}>
+            skip
+          </BracketButton>
           {isLast ? (
-            <Link
-              to="/plan/setup"
-              onClick={finish}
-              className="px-4 py-2 rounded-md text-sm bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white font-semibold"
-            >
-              Build my plan →
+            <Link to="/plan/setup" onClick={finish}>
+              <BracketButton variant="primary">build my plan →</BracketButton>
             </Link>
           ) : (
-            <button
-              type="button"
-              onClick={() => setStep((s) => Math.min(SLIDES.length - 1, s + 1))}
-              className="px-4 py-2 rounded-md text-sm bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white font-semibold"
+            <BracketButton
+              variant="primary"
+              onClick={() =>
+                setStep((s) => Math.min(SLIDES.length - 1, s + 1))
+              }
             >
-              Next →
-            </button>
+              next →
+            </BracketButton>
           )}
         </div>
       </div>

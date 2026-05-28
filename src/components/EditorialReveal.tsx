@@ -1,11 +1,6 @@
 import type { Approach } from "../types";
 import { LessonRenderer } from "./LessonRenderer";
 
-// Editorial reveal — brute-force first, then optimal. Shown after either:
-//  (a) all tests pass, or
-//  (b) user clicks "Give up & show solution".
-// The "Show brute-force approach" variant (collapsed by default) can also
-// be revealed *before* you start, to encourage the brute→optimal habit.
 export function EditorialReveal({
   bruteForce,
   optimal,
@@ -22,24 +17,49 @@ export function EditorialReveal({
   if (variant === "pre-solve") {
     if (!bruteForce) return null;
     return (
-      <details className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg)]/40">
-        <summary className="cursor-pointer px-3 py-2 text-sm text-[var(--color-warning)] select-none">
-          🐢 Peek at the brute-force approach (recommended: code it first)
+      <details
+        style={{
+          border: "1px solid var(--color-amber-dim)",
+          background: "rgba(255, 176, 0, 0.04)",
+        }}
+      >
+        <summary
+          className="cursor-pointer px-3 py-1.5 text-sm select-none font-mono"
+          style={{ color: "var(--color-amber)" }}
+        >
+          ▸ peek brute-force (recommended: write yours first)
         </summary>
-        <div className="p-3 border-t border-[var(--color-border)]">
-          <ApproachBlock approach={bruteForce} label="Brute force" />
+        <div
+          className="p-3"
+          style={{ borderTop: "1px solid var(--color-amber-dim)" }}
+        >
+          <ApproachBlock approach={bruteForce} label="brute-force" />
         </div>
       </details>
     );
   }
 
   return (
-    <div className="rounded-lg border border-[var(--color-accent)]/40 bg-[var(--color-accent)]/5 p-4 space-y-4">
-      <div className="font-semibold text-white">📘 Editorial</div>
-      {bruteForce && <ApproachBlock approach={bruteForce} label="Brute force" />}
-      {optimal && <ApproachBlock approach={optimal} label="Optimal" />}
+    <div
+      className="p-4 space-y-4"
+      style={{
+        border: "1px solid var(--color-accent)",
+        background: "rgba(92, 255, 159, 0.04)",
+      }}
+    >
+      <div
+        className="font-bold font-mono text-sm crt-glow"
+        style={{ color: "var(--color-accent)" }}
+      >
+        ── EDITORIAL ─────────────────────────────────
+      </div>
+      {bruteForce && <ApproachBlock approach={bruteForce} label="brute-force" />}
+      {optimal && <ApproachBlock approach={optimal} label="optimal" />}
       {!bruteForce && !optimal && fallback && (
-        <div className="text-sm text-[var(--color-text-dim)]">
+        <div
+          className="text-sm"
+          style={{ color: "var(--color-text-dim)" }}
+        >
           <LessonRenderer body={fallback} />
         </div>
       )}
@@ -50,14 +70,22 @@ export function EditorialReveal({
 function ApproachBlock({ approach, label }: { approach: Approach; label: string }) {
   return (
     <div>
-      <div className="text-xs uppercase tracking-wider text-[var(--color-text-muted)] mb-1">
-        {label} · <span className="text-[var(--color-accent)]">{approach.complexity}</span>
+      <div className="text-xs font-mono mb-1">
+        <span style={{ color: "var(--color-text-muted)" }}>// {label} · </span>
+        <span style={{ color: "var(--color-accent)" }}>{approach.complexity}</span>
       </div>
-      <div className="text-sm text-[var(--color-text)] mb-2">
+      <div className="text-sm mb-2" style={{ color: "var(--color-text)" }}>
         <LessonRenderer body={approach.explanation} />
       </div>
       {approach.code && (
-        <pre className="text-xs p-3 rounded bg-[#0a0d12] border border-[var(--color-border)] overflow-x-auto">
+        <pre
+          className="text-xs p-3 overflow-x-auto"
+          style={{
+            background: "var(--color-bg)",
+            border: "1px solid var(--color-border-bright)",
+            color: "var(--color-text)",
+          }}
+        >
           <code>{approach.code}</code>
         </pre>
       )}

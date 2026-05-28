@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
-import clsx from "clsx";
 import type { CodingItem } from "../types";
 import { gradeCoding, type CodingGradeResult } from "../lib/grader";
 import { preloadPyodide } from "../lib/pyodide";
@@ -12,6 +11,8 @@ import { ProblemContext } from "./ProblemContext";
 import { HintsPanel } from "./HintsPanel";
 import { EditorialReveal } from "./EditorialReveal";
 import { ComplexityCheck } from "./ComplexityCheck";
+import { Box } from "./terminal/Box";
+import { BracketButton } from "./terminal/BracketButton";
 
 export function CodingSandbox({ item }: { item: CodingItem }) {
   const [code, setCode] = useState(item.starter);
@@ -27,9 +28,6 @@ export function CodingSandbox({ item }: { item: CodingItem }) {
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
   const registerAttempt = useReviewQueueStore((s) => s.registerAttempt);
   const ping = useStreakStore((s) => s.ping);
-
-  // Per-item state is reset by QuizPage remounting us with `key={item.id}`,
-  // so useState re-runs its initializer on each item change.
 
   useEffect(() => {
     setPyodideLoading(true);
@@ -54,7 +52,6 @@ export function CodingSandbox({ item }: { item: CodingItem }) {
       });
       registerAttempt(item.id, r.ok);
       ping();
-      // If passing + no complexity check defined, unlock editorial immediately.
       if (r.ok && !item.complexityCheck) setEditorialUnlocked(true);
     } finally {
       setRunning(false);
@@ -62,7 +59,12 @@ export function CodingSandbox({ item }: { item: CodingItem }) {
   };
 
   const giveUp = () => {
-    if (!confirm("Reveal the solution? This counts as a failed attempt and pushes the item into your review queue.")) return;
+    if (
+      !confirm(
+        "Reveal the solution? This counts as a failed attempt and pushes the item into your review queue.",
+      )
+    )
+      return;
     recordAttempt({
       itemId: item.id,
       correct: false,
@@ -76,143 +78,203 @@ export function CodingSandbox({ item }: { item: CodingItem }) {
   };
 
   const showEditorial = editorialUnlocked || gaveUp;
-  const needsComplexityCheck = result?.ok && item.complexityCheck && !complexityDone;
+  const needsComplexityCheck =
+    result?.ok && item.complexityCheck && !complexityDone;
 
   return (
-    <article className="border border-[var(--color-border)] rounded-lg bg-[var(--color-bg-card)] p-6 space-y-4">
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wide">
-            Coding · {item.topic} · {item.difficulty}
-            {item.estMinutes && ` · ~${item.estMinutes}m`}
-          </div>
-          <div className="mt-1 text-[var(--color-text)]">
-            <LessonRenderer body={item.prompt} />
-          </div>
+    <Box
+      title={
+        <span>
+          <span style={{ color: "var(--color-amber)" }}>{item.id}</span>
+          <span style={{ color: "var(--color-text-muted)" }}> · </span>
+          <span>coding</span>
+          <span style={{ color: "var(--color-text-muted)" }}> · </span>
+          <span>{item.topic}</span>
+          <span style={{ color: "var(--color-text-muted)" }}> · </span>
+          <span>{item.difficulty}</span>
+          {item.estMinutes && (
+            <>
+              <span style={{ color: "var(--color-text-muted)" }}> · </span>
+              <span>~{item.estMinutes}m</span>
+            </>
+          )}
+        </span>
+      }
+      trailing={<BookmarkButton itemId={item.id} />}
+    >
+      <div className="space-y-4">
+        <div style={{ color: "var(--color-text)" }}>
+          <LessonRenderer body={item.prompt} />
         </div>
-        <BookmarkButton itemId={item.id} />
-      </div>
 
-      <ProblemContext item={item} />
+        <ProblemContext item={item} />
 
-      {item.hints && item.hints.length > 0 && (
-        <HintsPanel
-          hints={item.hints}
-          onCountChange={(n) => {
-            setHintsUsed(n);
-            hintsRef.current = n;
+        {item.hints && item.hints.length > 0 && (
+          <HintsPanel
+            hints={item.hints}
+            onCountChange={(n) => {
+              setHintsUsed(n);
+              hintsRef.current = n;
+            }}
+          />
+        )}
+
+        {item.bruteForce && !showEditorial && (
+          <EditorialReveal bruteForce={item.bruteForce} variant="pre-solve" />
+        )}
+
+        <div
+          style={{
+            border: "1px solid var(--color-border-bright)",
+            background: "var(--color-bg-alt)",
           }}
-        />
-      )}
-
-      {item.bruteForce && !showEditorial && (
-        <EditorialReveal bruteForce={item.bruteForce} variant="pre-solve" />
-      )}
-
-      <div className="rounded-md overflow-hidden border border-[var(--color-border)]">
-        <CodeMirror
-          value={code}
-          onChange={setCode}
-          theme="dark"
-          height="280px"
-          extensions={[python()]}
-          basicSetup={{ lineNumbers: true, foldGutter: false }}
-        />
-      </div>
-
-      <div className="flex items-center gap-3 flex-wrap">
-        <button
-          onClick={run}
-          disabled={running}
-          className="px-4 py-2 rounded-md bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white font-medium disabled:opacity-50"
         >
-          {running ? "Running…" : "Run tests"}
-        </button>
-        {!showEditorial && (
-          <button
-            type="button"
-            onClick={giveUp}
-            className="px-3 py-2 rounded-md text-sm bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-[var(--color-warning)]"
+          <div
+            className="px-3 py-1 text-xs flex items-center justify-between"
+            style={{
+              borderBottom: "1px solid var(--color-border)",
+              color: "var(--color-text-muted)",
+              background: "var(--color-bg)",
+            }}
           >
-            Give up & show solution
-          </button>
-        )}
-        {pyodideLoading && !result && (
-          <span className="text-xs text-[var(--color-text-muted)]">
-            (first run loads Python ~10MB)
-          </span>
-        )}
-        {result && (
-          <span
-            className={clsx(
-              "text-sm font-medium",
-              result.ok ? "text-[var(--color-success)]" : "text-[var(--color-warning)]",
-            )}
-          >
-            {result.passed} / {result.total} tests passed
-          </span>
-        )}
-        {hintsUsed > 0 && (
-          <span className="text-xs text-[var(--color-text-muted)]">
-            · {hintsUsed} hint{hintsUsed === 1 ? "" : "s"} used
-          </span>
-        )}
-      </div>
+            <span>
+              ── solution.py ─────────────────────────
+            </span>
+            <span>python 3.11</span>
+          </div>
+          <CodeMirror
+            value={code}
+            onChange={setCode}
+            theme="dark"
+            height="320px"
+            extensions={[python()]}
+            basicSetup={{ lineNumbers: true, foldGutter: false }}
+          />
+        </div>
 
-      {result && (
-        <div className="space-y-2">
-          {result.tests.map((t) => (
-            <div
-              key={t.index}
-              className={clsx(
-                "border rounded-md p-3 text-sm font-mono",
-                t.pass
-                  ? "border-[var(--color-success)]/40 bg-green-900/10"
-                  : "border-[var(--color-danger)]/40 bg-red-900/10",
-              )}
+        <div className="flex items-center gap-2 flex-wrap text-sm">
+          <BracketButton variant="primary" onClick={run} disabled={running}>
+            {running ? "running…" : "run tests"}
+          </BracketButton>
+          {!showEditorial && (
+            <BracketButton variant="ghost" onClick={giveUp}>
+              give up
+            </BracketButton>
+          )}
+          {pyodideLoading && !result && (
+            <span
+              className="text-xs"
+              style={{ color: "var(--color-text-muted)" }}
             >
-              <div className="flex items-center gap-2 mb-1">
-                <span>{t.pass ? "✓" : "✗"}</span>
-                <span>Test #{t.index + 1}</span>
-              </div>
-              <div className="text-xs space-y-0.5 text-[var(--color-text-dim)]">
-                <div>args: {JSON.stringify(t.args)}</div>
-                <div>expected: {JSON.stringify(t.expected)}</div>
-                <div>got: {JSON.stringify(t.actual)}</div>
-                {t.error && <div className="text-[var(--color-danger)]">error: {t.error}</div>}
-              </div>
-            </div>
-          ))}
-          {result.stderr && (
-            <pre className="text-xs text-[var(--color-danger)] bg-red-900/10 p-2 rounded overflow-x-auto">
-              {result.stderr}
-            </pre>
+              (first run loads python ~10MB)
+            </span>
+          )}
+          {result && (
+            <span
+              className="text-sm font-mono ml-auto"
+              style={{
+                color: result.ok ? "var(--color-success)" : "var(--color-amber)",
+              }}
+            >
+              {result.passed}/{result.total} passed
+            </span>
+          )}
+          {hintsUsed > 0 && (
+            <span className="text-xs" style={{ color: "var(--color-amber)" }}>
+              · {hintsUsed} hint{hintsUsed === 1 ? "" : "s"}
+            </span>
           )}
         </div>
-      )}
 
-      {needsComplexityCheck && item.complexityCheck && (
-        <ComplexityCheck
-          question={item.complexityCheck.question}
-          choices={item.complexityCheck.choices}
-          onPass={() => {
-            setComplexityDone(true);
-            setEditorialUnlocked(true);
-          }}
-          onSkip={() => {
-            setComplexityDone(true);
-            setEditorialUnlocked(true);
-          }}
-        />
-      )}
+        {result && (
+          <div className="space-y-1">
+            {result.tests.map((t) => (
+              <div
+                key={t.index}
+                className="px-3 py-2 text-xs font-mono"
+                style={{
+                  border: `1px solid ${
+                    t.pass ? "var(--color-success)" : "var(--color-danger)"
+                  }`,
+                  background: t.pass
+                    ? "rgba(92, 255, 159, 0.04)"
+                    : "rgba(255, 95, 86, 0.04)",
+                }}
+              >
+                <div
+                  className="flex items-center gap-2 mb-1 font-bold"
+                  style={{
+                    color: t.pass ? "var(--color-success)" : "var(--color-danger)",
+                  }}
+                >
+                  <span>{t.pass ? "✓ PASS" : "✗ FAIL"}</span>
+                  <span style={{ color: "var(--color-text-muted)" }}>
+                    test #{t.index + 1}
+                  </span>
+                </div>
+                <div
+                  className="space-y-0.5"
+                  style={{ color: "var(--color-text-dim)" }}
+                >
+                  <div>
+                    <span style={{ color: "var(--color-text-muted)" }}>args  </span>
+                    {JSON.stringify(t.args)}
+                  </div>
+                  <div>
+                    <span style={{ color: "var(--color-text-muted)" }}>want  </span>
+                    {JSON.stringify(t.expected)}
+                  </div>
+                  <div>
+                    <span style={{ color: "var(--color-text-muted)" }}>got   </span>
+                    {JSON.stringify(t.actual)}
+                  </div>
+                  {t.error && (
+                    <div style={{ color: "var(--color-danger)" }}>
+                      <span style={{ color: "var(--color-text-muted)" }}>err   </span>
+                      {t.error}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+            {result.stderr && (
+              <pre
+                className="text-xs p-2 overflow-x-auto"
+                style={{
+                  color: "var(--color-danger)",
+                  background: "rgba(255, 95, 86, 0.06)",
+                  border: "1px solid var(--color-danger)",
+                }}
+              >
+                {result.stderr}
+              </pre>
+            )}
+          </div>
+        )}
 
-      {showEditorial && (
-        <EditorialReveal
-          bruteForce={item.bruteForce}
-          optimal={item.optimal}
-          fallback={item.explanation}
-        />
-      )}
-    </article>
+        {needsComplexityCheck && item.complexityCheck && (
+          <ComplexityCheck
+            question={item.complexityCheck.question}
+            choices={item.complexityCheck.choices}
+            onPass={() => {
+              setComplexityDone(true);
+              setEditorialUnlocked(true);
+            }}
+            onSkip={() => {
+              setComplexityDone(true);
+              setEditorialUnlocked(true);
+            }}
+          />
+        )}
+
+        {showEditorial && (
+          <EditorialReveal
+            bruteForce={item.bruteForce}
+            optimal={item.optimal}
+            fallback={item.explanation}
+          />
+        )}
+      </div>
+    </Box>
   );
 }

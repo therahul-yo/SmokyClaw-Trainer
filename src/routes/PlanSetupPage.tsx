@@ -13,14 +13,25 @@ import {
 } from "../store";
 import { dueRecords } from "../lib/leitner";
 import type { TrackId } from "../types";
+import { Prompt } from "../components/terminal/Prompt";
+import { Box } from "../components/terminal/Box";
+import { BracketButton } from "../components/terminal/BracketButton";
 
 const ALL_TRACKS: TrackId[] = ["python", "dsa", "sql", "aptitude"];
 
 const PRESETS = [
-  { label: "1 week (cram)", days: 7 },
-  { label: "2 weeks", days: 14 },
-  { label: "1 month", days: 30 },
+  { label: "7d (cram)", days: 7 },
+  { label: "14d", days: 14 },
+  { label: "30d", days: 30 },
 ];
+
+function chipStyle(active: boolean) {
+  return {
+    border: `1px solid ${active ? "var(--color-accent)" : "var(--color-border-bright)"}`,
+    color: active ? "var(--color-accent)" : "var(--color-text-dim)",
+    background: active ? "rgba(92, 255, 159, 0.05)" : "transparent",
+  };
+}
 
 export function PlanSetupPage() {
   const navigate = useNavigate();
@@ -67,30 +78,34 @@ export function PlanSetupPage() {
   }
 
   return (
-    <div className="max-w-2xl space-y-8">
-      <header>
-        <h1 className="text-3xl font-bold text-white">Build your study plan</h1>
-        <p className="mt-2 text-[var(--color-text-dim)]">
-          Pick a deadline and how much time you can give it daily. We'll lay
-          out lessons + practice every day, with weakness-prioritized items.
-        </p>
-      </header>
+    <div className="max-w-2xl space-y-4">
+      <Prompt path="~/plan/setup">
+        <span>plan --new</span>
+      </Prompt>
+      <div
+        className="text-2xl font-bold crt-glow"
+        style={{ color: "var(--color-accent)" }}
+      >
+        configure.plan
+        <span
+          style={{ color: "var(--color-text-muted)" }}
+          className="text-sm ml-2"
+        >
+          // weakness-prioritized, deadline-aware
+        </span>
+      </div>
 
-      <section className="space-y-3">
-        <div className="text-sm font-semibold text-white">Timeline</div>
-        <div className="flex flex-wrap gap-2">
+      <Box title="$ timeline">
+        <div className="flex flex-wrap gap-2 items-center text-sm font-mono">
           {PRESETS.map((p) => (
             <button
               key={p.days}
               type="button"
               onClick={() => setDays(p.days)}
-              className={`px-3 py-1.5 rounded-md text-sm border transition-colors ${
-                days === p.days
-                  ? "bg-[var(--color-accent-dim)] border-[var(--color-accent)] text-white"
-                  : "bg-[var(--color-bg-card)] border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-white"
-              }`}
+              className="px-2 py-1 transition-colors hover:brightness-110"
+              style={chipStyle(days === p.days)}
             >
-              {p.label}
+              [{p.label}]
             </button>
           ))}
           <input
@@ -98,17 +113,30 @@ export function PlanSetupPage() {
             min={1}
             max={90}
             value={days}
-            onChange={(e) => setDays(Math.max(1, Math.min(90, Number(e.target.value) || 1)))}
-            className="w-20 px-2 py-1.5 rounded-md bg-[var(--color-bg-card)] border border-[var(--color-border)] text-sm text-white"
+            onChange={(e) =>
+              setDays(Math.max(1, Math.min(90, Number(e.target.value) || 1)))
+            }
+            className="w-16 px-2 py-1 font-mono text-sm"
+            style={{
+              background: "var(--color-bg)",
+              border: "1px solid var(--color-border-bright)",
+              color: "var(--color-text)",
+            }}
             aria-label="Days until deadline"
           />
-          <span className="text-sm text-[var(--color-text-muted)] self-center">days</span>
+          <span style={{ color: "var(--color-text-muted)" }}>days</span>
         </div>
-      </section>
+      </Box>
 
-      <section className="space-y-3">
-        <label className="text-sm font-semibold text-white block">
-          Daily budget: <span className="text-[var(--color-accent)]">{dailyMinutes} min</span>
+      <Box title="$ daily-budget">
+        <label
+          className="text-sm font-mono block mb-2"
+          style={{ color: "var(--color-text)" }}
+        >
+          minutes/day ={" "}
+          <span style={{ color: "var(--color-accent)" }} className="font-bold">
+            {dailyMinutes}
+          </span>
         </label>
         <input
           type="range"
@@ -117,68 +145,71 @@ export function PlanSetupPage() {
           step={10}
           value={dailyMinutes}
           onChange={(e) => setDailyMinutes(Number(e.target.value))}
-          className="w-full"
+          className="w-full accent-[var(--color-accent)]"
         />
-        <div className="flex justify-between text-xs text-[var(--color-text-muted)]">
+        <div
+          className="flex justify-between text-xs mt-1 font-mono"
+          style={{ color: "var(--color-text-muted)" }}
+        >
           <span>20m</span>
           <span>1h</span>
           <span>2h</span>
           <span>4h</span>
         </div>
-      </section>
+      </Box>
 
-      <section className="space-y-3">
-        <div className="text-sm font-semibold text-white">Focus tracks</div>
-        <div className="flex flex-wrap gap-2">
+      <Box title="$ focus-tracks">
+        <div className="flex flex-wrap gap-2 text-sm font-mono">
           {tracks.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => toggleTrack(t.id)}
-              className={`px-3 py-1.5 rounded-md text-sm border transition-colors ${
-                focusTracks.includes(t.id)
-                  ? "bg-[var(--color-accent-dim)] border-[var(--color-accent)] text-white"
-                  : "bg-[var(--color-bg-card)] border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-white"
-              }`}
+              className="px-2 py-1 transition-colors hover:brightness-110"
+              style={chipStyle(focusTracks.includes(t.id))}
             >
-              {t.emoji} {t.title}
+              [{t.id}]
             </button>
           ))}
         </div>
-      </section>
+      </Box>
 
-      <section className="space-y-3">
-        <label className="text-sm font-semibold text-white block" htmlFor="weak-input">
-          Weak areas (optional, comma-separated topic tags)
+      <Box title="$ weak-areas">
+        <label
+          className="text-xs font-mono block mb-2"
+          style={{ color: "var(--color-text-muted)" }}
+          htmlFor="weak-input"
+        >
+          // optional · comma-separated topic tags
         </label>
         <input
           id="weak-input"
           type="text"
-          placeholder="e.g. dp, recursion, joins"
+          placeholder="dp, recursion, joins"
           value={weakInput}
           onChange={(e) => setWeakInput(e.target.value)}
-          className="w-full px-3 py-2 rounded-md bg-[var(--color-bg-card)] border border-[var(--color-border)] text-sm text-white"
+          className="w-full px-2 py-1.5 font-mono text-sm"
+          style={{
+            background: "var(--color-bg)",
+            border: "1px solid var(--color-border-bright)",
+            color: "var(--color-text)",
+          }}
         />
-        <p className="text-xs text-[var(--color-text-muted)]">
-          We'll also auto-detect weaknesses from your attempts history.
-        </p>
-      </section>
+        <div
+          className="text-xs font-mono mt-2"
+          style={{ color: "var(--color-text-muted)" }}
+        >
+          // also auto-detected from your attempts history.
+        </div>
+      </Box>
 
-      <div className="flex gap-3">
-        <button
-          type="button"
-          onClick={handleCreate}
-          className="px-4 py-2 rounded-md bg-[var(--color-accent-dim)] hover:bg-[var(--color-accent)] text-white font-semibold text-sm"
-        >
-          Create plan
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate("/")}
-          className="px-4 py-2 rounded-md bg-[var(--color-bg-card)] border border-[var(--color-border)] text-[var(--color-text-dim)] hover:text-white text-sm"
-        >
-          Cancel
-        </button>
+      <div className="flex gap-2 text-sm">
+        <BracketButton variant="primary" onClick={handleCreate}>
+          create plan →
+        </BracketButton>
+        <BracketButton variant="ghost" onClick={() => navigate("/")}>
+          cancel
+        </BracketButton>
       </div>
     </div>
   );
