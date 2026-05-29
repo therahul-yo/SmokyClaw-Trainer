@@ -14,6 +14,8 @@ import { PlanSetupPage } from "./routes/PlanSetupPage";
 import { PatternsPage } from "./routes/PatternsPage";
 import { CoachPage } from "./routes/CoachPage";
 import { MachinePage } from "./routes/MachinePage";
+import { RulebookPage } from "./routes/RulebookPage";
+
 
 export default function App() {
   return (
@@ -27,6 +29,7 @@ export default function App() {
           <Route path="/sandbox/:kind" element={<SandboxPage />} />
           <Route path="/review" element={<ReviewPage />} />
           <Route path="/bookmarks" element={<BookmarksPage />} />
+          <Route path="/rulebook" element={<RulebookPage />} />
           <Route path="/progress" element={<ProgressPage />} />
           <Route path="/coach" element={<CoachPage />} />
           <Route path="/machine" element={<MachinePage />} />
