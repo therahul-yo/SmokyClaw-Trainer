@@ -118,6 +118,14 @@ function CommandPaletteInner({
         action: () => navigate("/bookmarks"),
       },
       {
+        id: "go:rulebook",
+        label: "mistake dna & rulebook",
+        hint: "/rulebook",
+        kind: "page",
+        action: () => navigate("/rulebook"),
+      },
+
+      {
         id: "go:progress",
         label: "progress stats",
         hint: "/progress",
