@@ -4,12 +4,14 @@ import { useStreakStore } from "./streakStore";
 import { useReviewQueueStore } from "./reviewQueueStore";
 import { useBookmarksStore } from "./bookmarksStore";
 import { usePlanStore } from "./planStore";
+import { useDailyStore } from "./dailyStore";
 
 export { useProgressStore } from "./progressStore";
 export { useStreakStore } from "./streakStore";
 export { useReviewQueueStore } from "./reviewQueueStore";
 export { useBookmarksStore } from "./bookmarksStore";
 export { usePlanStore } from "./planStore";
+export { useDailyStore } from "./dailyStore";
 
 type ExportShape = {
   version: 1;
@@ -66,4 +68,5 @@ export function resetAllStores(): void {
   useReviewQueueStore.getState().resetAll();
   useBookmarksStore.getState().resetAll();
   usePlanStore.getState().clearPlan();
+  useDailyStore.getState().resetAll();
 }

@@ -11,6 +11,7 @@ import { Prompt } from "../components/terminal/Prompt";
 import { Box } from "../components/terminal/Box";
 import { BracketButton } from "../components/terminal/BracketButton";
 import { AsciiProgress } from "../components/terminal/AsciiProgress";
+import { AttemptHeatmap } from "../components/AttemptHeatmap";
 
 export function ProgressPage() {
   const attempts = useProgressStore((s) => s.attempts);
@@ -76,6 +77,10 @@ export function ProgressPage() {
           accent={accuracy >= 70}
         />
       </div>
+
+      <Box title="$ heatmap --last 91d">
+        <AttemptHeatmap attempts={attempts} weeks={13} />
+      </Box>
 
       <Box title="$ mastery --by-track">
         <div className="space-y-2 font-mono text-sm">

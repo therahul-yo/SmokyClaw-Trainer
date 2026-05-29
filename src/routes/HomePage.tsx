@@ -10,6 +10,7 @@ import {
 import { dueRecords } from "../lib/leitner";
 import { OnboardingModal } from "../components/OnboardingModal";
 import { DailyTargetCard } from "../components/DailyTargetCard";
+import { DailyChallengeCard } from "../components/DailyChallengeCard";
 import { Box } from "../components/terminal/Box";
 import { Prompt } from "../components/terminal/Prompt";
 import { AsciiProgress } from "../components/terminal/AsciiProgress";
@@ -63,7 +64,10 @@ export function HomePage() {
         </span>
       </Prompt>
 
-      <DailyTargetCard />
+      <div className="grid md:grid-cols-2 gap-3">
+        <DailyChallengeCard />
+        <DailyTargetCard />
+      </div>
 
       {/* Stat row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

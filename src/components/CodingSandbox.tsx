@@ -13,6 +13,7 @@ import { EditorialReveal } from "./EditorialReveal";
 import { ComplexityCheck } from "./ComplexityCheck";
 import { Box } from "./terminal/Box";
 import { BracketButton } from "./terminal/BracketButton";
+import { Stopwatch } from "./Stopwatch";
 
 export function CodingSandbox({ item }: { item: CodingItem }) {
   const [code, setCode] = useState(item.starter);
@@ -100,7 +101,12 @@ export function CodingSandbox({ item }: { item: CodingItem }) {
           )}
         </span>
       }
-      trailing={<BookmarkButton itemId={item.id} />}
+      trailing={
+        <div className="flex items-center gap-2">
+          <Stopwatch estMinutes={item.estMinutes} />
+          <BookmarkButton itemId={item.id} />
+        </div>
+      }
     >
       <div className="space-y-4">
         <div style={{ color: "var(--color-text)" }}>
