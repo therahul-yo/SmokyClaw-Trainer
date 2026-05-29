@@ -116,6 +116,13 @@ export function TreeNav() {
         />
         <TreeRow prefix="├─ " to="/bookmarks" label="bookmarks" />
         <TreeRow
+          prefix="├─ "
+          to="/machine"
+          label="machine"
+          trailing="gates"
+          color="var(--color-cyan)"
+        />
+        <TreeRow
           prefix="└─ "
           to="/coach"
           label="coach"

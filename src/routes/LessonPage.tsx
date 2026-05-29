@@ -7,6 +7,7 @@ import {
 } from "../lib/contentLoader";
 import { useProgressStore } from "../store";
 import { LessonRenderer } from "../components/LessonRenderer";
+import { HumanCompilerPanel } from "../components/HumanCompilerPanel";
 import { Prompt } from "../components/terminal/Prompt";
 import { Box } from "../components/terminal/Box";
 import { BracketButton } from "../components/terminal/BracketButton";
@@ -206,6 +207,16 @@ export function LessonPage() {
 
       <div className="grid lg:grid-cols-[1fr_220px] gap-6">
         <article ref={articleRef}>
+          <HumanCompilerPanel
+            mode="lesson"
+            lessonId={lesson.id}
+            track={lesson.track}
+            topic={lesson.topic}
+            title={lesson.title}
+          />
+
+          <div className="mt-6" />
+
           <LessonRenderer body={lesson.body} withHeadingIds />
 
           <div className="mt-8 grid sm:grid-cols-2 gap-3">

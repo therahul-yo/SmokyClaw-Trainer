@@ -53,8 +53,21 @@ export type ComplexityChoice = {
   correct: boolean;
 };
 
+export type TrainingStage =
+  | "foundation"
+  | "core-patterns"
+  | "intermediate-patterns"
+  | "advanced-patterns"
+  | "interview-simulation"
+  | "machine-mode";
+
+export type RecognitionPrompt = {
+  question: string;
+  choices: ComplexityChoice[];
+};
+
 // Common optional fields for any quiz item.
-type QuizItemCommon = {
+export type QuizItemCommon = {
   pattern?: string;
   hints?: string[];
   bruteForce?: Approach;
@@ -65,6 +78,12 @@ type QuizItemCommon = {
   estMinutes?: number;
   // Used by ComplexityCheck modal after a coding/SQL item passes.
   complexityCheck?: { question: string; choices: ComplexityChoice[] };
+  // Machine-training metadata. Older content can omit these; the training
+  // engine infers stage and speed gates from track, type, topic, and difficulty.
+  stage?: TrainingStage;
+  recognitionPrompt?: RecognitionPrompt;
+  speedTargetSec?: number;
+  unlockPrerequisites?: string[];
 };
 
 export type McqItem = QuizItemCommon & {

@@ -5,6 +5,7 @@ import type { TrackId } from "../types";
 import { McqCard } from "../components/McqCard";
 import { CodingSandbox } from "../components/CodingSandbox";
 import { SqlSandbox } from "../components/SqlSandbox";
+import { HumanCompilerPanel } from "../components/HumanCompilerPanel";
 import { Prompt } from "../components/terminal/Prompt";
 import { BracketButton } from "../components/terminal/BracketButton";
 import { useDailyStore, useProgressStore } from "../store";
@@ -106,6 +107,8 @@ export function QuizPage() {
           </BracketButton>
         </div>
       </div>
+
+      <HumanCompilerPanel key={`trace:${current.id}`} mode="item" item={current} />
 
       {current.type === "mcq" && <McqCard key={current.id} item={current} />}
       {current.type === "coding" && <CodingSandbox key={current.id} item={current} />}

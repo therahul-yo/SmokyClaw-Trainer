@@ -163,6 +163,12 @@ export function HomePage() {
             blurb="wrong answers resurface until they're fast and clean."
           />
           <ActionRow
+            to="/machine"
+            cmd="loop"
+            label="machine loop — gates + repair"
+            blurb="daily warm-up, pattern, mixed, repair, and speed blocks."
+          />
+          <ActionRow
             to="/mock/tcs-nqt"
             cmd="mock"
             label="tcs-nqt — full simulation"
