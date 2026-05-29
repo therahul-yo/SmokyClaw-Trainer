@@ -47,14 +47,22 @@ export function HomePage() {
     <div className="space-y-6">
       <OnboardingModal />
 
-      <div className="overflow-x-auto -mx-2">
+      <div className="-mx-2">
+        {/* Phones can't fit the 78-col ASCII banner without ugly clipping —
+            show a compact wordmark there, full banner on sm+ screens. */}
+        <div
+          className="sm:hidden px-2 text-4xl font-bold tracking-widest crt-glow"
+          style={{ color: "var(--color-accent)", fontFamily: "var(--font-mono)" }}
+        >
+          SMOKYCLAW
+        </div>
         <pre
-          className="text-[8px] sm:text-[10px] leading-[1.1] whitespace-pre crt-glow px-2"
+          className="hidden sm:block sm:text-[10px] leading-[1.1] whitespace-pre crt-glow px-2 overflow-x-auto"
           style={{ color: "var(--color-accent)", fontFamily: "var(--font-mono)" }}
         >
           {BANNER}
         </pre>
-        <div className="px-2 text-sm" style={{ color: "var(--color-text-muted)" }}>
+        <div className="px-2 mt-1 text-sm" style={{ color: "var(--color-text-muted)" }}>
           interview cracker · 100% local · no signup · v3.0
         </div>
       </div>

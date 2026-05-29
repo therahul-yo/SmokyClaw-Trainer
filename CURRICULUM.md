@@ -149,3 +149,35 @@ formula path?
 
 If a user cannot answer the track question, more random practice will not help.
 They should return to the lesson, template, and mistake log.
+
+## Worked Example Standard
+
+For machine-brain training, a worked example is stronger than a solved answer.
+Every major concept should eventually include examples with this shape:
+
+1. Problem statement.
+2. Input parser.
+3. Output contract.
+4. Constraint signal.
+5. Brute force.
+6. Repeated work.
+7. Pattern classifier.
+8. State builder.
+9. Dry run.
+10. Final solution.
+11. Proof.
+12. Mistake rule.
+
+The current worked-example expansion adds this layer for:
+
+- DSA arrays and hashing.
+- DSA sliding window and prefix sums.
+- DSA trees, graphs, and dynamic programming.
+- Python implementation fluency.
+- Python debugging and edge cases.
+- SQL business queries.
+- Aptitude speed math.
+
+The long-term bar is one worked-example lesson for every important pattern,
+plus at least three modeled examples per pattern before expecting the learner to
+solve independently.
