@@ -63,25 +63,6 @@ export function RecognitionDrill({ item, mode = "medium", onAnswered }: Props) {
   const [timeLeft, setTimeLeft] = useState(25); // 25 seconds limit
   const [startedAt] = useState(() => Date.now());
 
-  // Handle countdown timer
-  useEffect(() => {
-    if (isSubmitted) return;
-
-    if (timeLeft <= 0) {
-      handleAnswer(null); // Time out counts as incorrect/unselected
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setTimeLeft((t) => t - 1);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-    // handleAnswer is intentionally omitted: including it would reset the 1s
-    // countdown on every render. It's only invoked on timeout, when it's stable.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, isSubmitted]);
-
   const handleAnswer = (choiceId: string | null) => {
     if (isSubmitted) return;
 
@@ -101,6 +82,26 @@ export function RecognitionDrill({ item, mode = "medium", onAnswered }: Props) {
 
     onAnswered?.(isCorrect);
   };
+
+  // Handle countdown timer. The decrement and the final timeout-submit both
+  // run inside the async setTimeout callback (setState in a callback is fine),
+  // rather than synchronously in the effect body.
+  useEffect(() => {
+    if (isSubmitted || timeLeft <= 0) return;
+
+    const timer = setTimeout(() => {
+      if (timeLeft <= 1) {
+        handleAnswer(null); // time out — counts as incorrect/unselected
+      } else {
+        setTimeLeft((t) => t - 1);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+    // handleAnswer is intentionally omitted from deps — including it would reset
+    // the 1s countdown on every render; it's only invoked on timeout.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeLeft, isSubmitted]);
 
   const isCorrect = selectedId === correctChoiceId;
   const timerColor = timeLeft > 10 ? "var(--color-success)" : timeLeft > 5 ? "var(--color-amber)" : "var(--color-danger)";

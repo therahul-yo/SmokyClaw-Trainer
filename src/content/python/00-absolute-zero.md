@@ -77,14 +77,70 @@ STACK (Labels)                   HEAP (Warehouse Objects)
 
 Because variables are labels pointing to warehouse boxes, multiple labels can point to the **same box**. This is where beginners write their first major bugs.
 
-Look at this code:
-
 ```python
 box_a = [1, 2, 3]
 box_b = box_a
 box_b.append(4)
 
 print(box_a)
+```
+
+```memory-trace
+{
+  "code": [
+    "box_a = [1, 2, 3]",
+    "box_b = box_a",
+    "box_b.append(4)",
+    "box_c = box_a.copy()"
+  ],
+  "steps": [
+    {
+      "line": 1,
+      "stack": [
+        {"name": "box_a", "type": "ref", "value": "0x7a"}
+      ],
+      "heap": [
+        {"id": "0x7a", "type": "list", "value": [1, 2, 3]}
+      ],
+      "note": "box_a allocates a list in the Heap and points its stack variable to it."
+    },
+    {
+      "line": 2,
+      "stack": [
+        {"name": "box_a", "type": "ref", "value": "0x7a"},
+        {"name": "box_b", "type": "ref", "value": "0x7a"}
+      ],
+      "heap": [
+        {"id": "0x7a", "type": "list", "value": [1, 2, 3]}
+      ],
+      "note": "box_b copies the REFERENCE (0x7a). Both variables now point to the exact same list."
+    },
+    {
+      "line": 3,
+      "stack": [
+        {"name": "box_a", "type": "ref", "value": "0x7a"},
+        {"name": "box_b", "type": "ref", "value": "0x7a"}
+      ],
+      "heap": [
+        {"id": "0x7a", "type": "list", "value": [1, 2, 3, 4]}
+      ],
+      "note": "Appending to box_b modifies the shared heap list. box_a is affected because it references the same object."
+    },
+    {
+      "line": 4,
+      "stack": [
+        {"name": "box_a", "type": "ref", "value": "0x7a"},
+        {"name": "box_b", "type": "ref", "value": "0x7a"},
+        {"name": "box_c", "type": "ref", "value": "0x9f"}
+      ],
+      "heap": [
+        {"id": "0x7a", "type": "list", "value": [1, 2, 3, 4]},
+        {"id": "0x9f", "type": "list", "value": [1, 2, 3, 4]}
+      ],
+      "note": "box_a.copy() allocates a brand new list in the heap (0x9f). box_c is fully independent of box_a."
+    }
+  ]
+}
 ```
 
 If you guess that `box_a` is `[1, 2, 3]`, you are incorrect. The output is:
