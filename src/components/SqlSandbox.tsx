@@ -13,6 +13,7 @@ import { EditorialReveal } from "./EditorialReveal";
 import { ComplexityCheck } from "./ComplexityCheck";
 import { Box } from "./terminal/Box";
 import { BracketButton } from "./terminal/BracketButton";
+import { Stopwatch } from "./Stopwatch";
 
 export function SqlSandbox({ item }: { item: SqlItem }) {
   const [query, setQuery] = useState(item.starter ?? "");
@@ -103,7 +104,12 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
           )}
         </span>
       }
-      trailing={<BookmarkButton itemId={item.id} />}
+      trailing={
+        <div className="flex items-center gap-2">
+          <Stopwatch estMinutes={item.estMinutes} />
+          <BookmarkButton itemId={item.id} />
+        </div>
+      }
     >
       <div className="space-y-4">
         <div style={{ color: "var(--color-text)" }}>
