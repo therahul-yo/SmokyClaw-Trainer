@@ -2,13 +2,14 @@ import { useProgressStore } from "../store";
 import { Box } from "./terminal/Box";
 import { useMemo } from "react";
 import { useSmokey } from "../lib/useSmokey";
+import { nowMs } from "../lib/daily";
 
 export function WeeklyReport() {
   const attempts = useProgressStore((s) => s.attempts);
   const report = useSmokey();
 
   const metrics = useMemo(() => {
-    const now = Date.now();
+    const now = nowMs();
     const oneDay = 24 * 60 * 60 * 1000;
     const sevenDays = 7 * oneDay;
     const fourteenDays = 14 * oneDay;

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { MockTestBlueprint, McqItem } from "../types";
+import type { MockTestBlueprint, McqItem, MockSection } from "../types";
 import { Box } from "./terminal/Box";
 import { BracketButton } from "./terminal/BracketButton";
 import { Prompt } from "./terminal/Prompt";
@@ -10,7 +10,7 @@ type PickedSection = {
     title: string;
     durationMinutes: number;
     questionCount: number;
-    pickFrom: any;
+    pickFrom: MockSection["pickFrom"];
   };
   items: McqItem[];
 };
@@ -119,10 +119,19 @@ export function PostMockReport({ blueprint, sections, answers }: PostMockReportP
           </div>
           <div className="space-y-3">
             {sectionsToRepair.map((sec) => {
-              // Extract unique topics and tracks from wrong items
+              // Extract unique tracks, and unique (track, topic) pairs — keying
+              // topics by track alone collapses same-named topics from different
+              // tracks and would link to the wrong track's quiz.
               const tracks = Array.from(new Set(sec.wrongItems.map((item) => item.track)));
-              const topics = Array.from(new Set(sec.wrongItems.map((item) => item.topic)));
-              
+              const topicPairs = Array.from(
+                new Map(
+                  sec.wrongItems.map((item) => [
+                    `${item.track}::${item.topic}`,
+                    { track: item.track, topic: item.topic },
+                  ]),
+                ).values(),
+              );
+
               return (
                 <div key={sec.id} className="text-xs border-l-2 pl-3 py-1" style={{ borderColor: "var(--color-amber)" }}>
                   <div className="font-bold text-white mb-1">
@@ -137,14 +146,11 @@ export function PostMockReport({ blueprint, sections, answers }: PostMockReportP
                         <BracketButton variant="primary">drill {track}</BracketButton>
                       </Link>
                     ))}
-                    {topics.map((topic) => {
-                      const track = sec.wrongItems.find((w) => w.topic === topic)?.track || "dsa";
-                      return (
-                        <Link key={topic} to={`/quiz/${track}/${topic}`}>
-                          <BracketButton>quiz: {topic}</BracketButton>
-                        </Link>
-                      );
-                    })}
+                    {topicPairs.map(({ track, topic }) => (
+                      <Link key={`${track}::${topic}`} to={`/quiz/${track}/${topic}`}>
+                        <BracketButton>quiz: {topic}</BracketButton>
+                      </Link>
+                    ))}
                   </div>
                 </div>
               );

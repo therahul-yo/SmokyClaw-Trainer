@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { useProgressStore } from "../store";
 import { getAllQuizItems } from "../lib/contentLoader";
-import { RecognitionDrill, PATTERN_LABELS } from "../components/RecognitionDrill";
+import { RecognitionDrill } from "../components/RecognitionDrill";
+import { PATTERN_LABELS } from "../lib/patternLabels";
 import { Box } from "../components/terminal/Box";
 import { BracketButton } from "../components/terminal/BracketButton";
 import { Prompt } from "../components/terminal/Prompt";

@@ -2,29 +2,10 @@ import { useState, useEffect, useMemo } from "react";
 import type { QuizItem } from "../types";
 import { useProgressStore, useStreakStore } from "../store";
 import { getPatterns } from "../lib/contentLoader";
+import { PATTERN_LABELS } from "../lib/patternLabels";
+import { shuffle } from "../lib/rng";
 import { Box } from "./terminal/Box";
 import { LessonRenderer } from "./LessonRenderer";
-
-export const PATTERN_LABELS: Record<string, string> = {
-  "arrays-basics": "Array Basics / Fundamentals",
-  "two-pointer": "Two Pointers",
-  "sliding-window": "Sliding Window",
-  "prefix-sums": "Prefix Sums",
-  "hashing": "Hashing (Map/Set)",
-  "binary-search": "Binary Search",
-  "recursion": "Recursion & Backtracking",
-  "sorting": "Sorting Algorithms",
-  "linked-list": "Linked Lists",
-  "stack-queue": "Stacks & Queues",
-  "trees": "Trees & Binary Search Trees",
-  "heaps": "Heaps / Priority Queues",
-  "graphs": "Graphs (BFS/DFS/Topology)",
-  "greedy": "Greedy Algorithms",
-  "dp-1d": "1D Dynamic Programming",
-  "dp-2d": "2D Dynamic Programming",
-  "bit-manipulation": "Bit Manipulation",
-  "math": "Math & Number Theory",
-};
 
 type Props = {
   item: QuizItem;
@@ -57,8 +38,7 @@ export function RecognitionDrill({ item, mode = "medium", onAnswered }: Props) {
 
     const distractorCount = mode === "easy" ? 2 : mode === "medium" ? 5 : allPatternIds.length - 1;
     const others = allPatternIds.filter((p) => p !== correctPattern);
-    const shuffledOthers = [...others].sort(() => Math.random() - 0.5);
-    const selectedDistractors = shuffledOthers.slice(0, distractorCount);
+    const selectedDistractors = shuffle(others).slice(0, distractorCount);
 
     const merged = [correctPattern, ...selectedDistractors].map((pId) => ({
       id: pId,
@@ -66,8 +46,17 @@ export function RecognitionDrill({ item, mode = "medium", onAnswered }: Props) {
       correct: pId === correctPattern,
     }));
 
-    return merged.sort(() => Math.random() - 0.5);
+    return shuffle(merged);
   }, [item, correctPattern, allPatternIds, mode]);
+
+  // Single source of truth for the correct option: prefer the choice's own
+  // `correct` flag (set for both prompt-provided and pool-generated choices),
+  // falling back to the pattern id. Comparing against `correctPattern` alone
+  // breaks prompt-provided choices, whose ids are label slugs, not pattern ids.
+  const correctChoiceId = useMemo(
+    () => choices.find((c) => c.correct)?.id ?? correctPattern,
+    [choices, correctPattern],
+  );
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -88,6 +77,9 @@ export function RecognitionDrill({ item, mode = "medium", onAnswered }: Props) {
     }, 1000);
 
     return () => clearTimeout(timer);
+    // handleAnswer is intentionally omitted: including it would reset the 1s
+    // countdown on every render. It's only invoked on timeout, when it's stable.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, isSubmitted]);
 
   const handleAnswer = (choiceId: string | null) => {
@@ -96,7 +88,7 @@ export function RecognitionDrill({ item, mode = "medium", onAnswered }: Props) {
     setSelectedId(choiceId);
     setIsSubmitted(true);
 
-    const isCorrect = choiceId === correctPattern;
+    const isCorrect = choiceId === correctChoiceId;
     const timeMs = Date.now() - startedAt;
 
     recordRecognitionAttempt({
@@ -110,7 +102,7 @@ export function RecognitionDrill({ item, mode = "medium", onAnswered }: Props) {
     onAnswered?.(isCorrect);
   };
 
-  const isCorrect = selectedId === correctPattern;
+  const isCorrect = selectedId === correctChoiceId;
   const timerColor = timeLeft > 10 ? "var(--color-success)" : timeLeft > 5 ? "var(--color-amber)" : "var(--color-danger)";
 
   // Find pattern blurb
@@ -176,7 +168,7 @@ export function RecognitionDrill({ item, mode = "medium", onAnswered }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
             {choices.map((c) => {
               const isSelected = c.id === selectedId;
-              const isCorrectChoice = c.id === correctPattern;
+              const isCorrectChoice = c.id === correctChoiceId;
               let border = "1px solid var(--color-border-bright)";
               let bg = "transparent";
               let color = "var(--color-text)";

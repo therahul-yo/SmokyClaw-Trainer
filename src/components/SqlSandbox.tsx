@@ -20,7 +20,7 @@ export function SqlSandbox({
   onAnswered,
 }: {
   item: SqlItem;
-  onAnswered?: (correct: boolean) => void;
+  onAnswered?: (correct: boolean, gaveUp?: boolean) => void;
 }) {
   const [query, setQuery] = useState(item.starter ?? "");
   const [running, setRunning] = useState(false);
@@ -86,7 +86,7 @@ export function SqlSandbox({
     registerAttempt(item.id, false);
     setGaveUp(true);
     setEditorialUnlocked(true);
-    onAnswered?.(false);
+    onAnswered?.(false, true);
   };
 
   const showEditorial = editorialUnlocked || gaveUp;

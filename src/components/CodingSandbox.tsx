@@ -20,7 +20,7 @@ export function CodingSandbox({
   onAnswered,
 }: {
   item: CodingItem;
-  onAnswered?: (correct: boolean) => void;
+  onAnswered?: (correct: boolean, gaveUp?: boolean) => void;
 }) {
   const [code, setCode] = useState(item.starter);
   const [running, setRunning] = useState(false);
@@ -83,7 +83,7 @@ export function CodingSandbox({
     registerAttempt(item.id, false);
     setGaveUp(true);
     setEditorialUnlocked(true);
-    onAnswered?.(false);
+    onAnswered?.(false, true);
   };
 
   const showEditorial = editorialUnlocked || gaveUp;

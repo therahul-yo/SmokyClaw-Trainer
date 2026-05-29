@@ -1,6 +1,7 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useProgressStore, useStreakStore } from "../store";
 import { getAllQuizItems } from "../lib/contentLoader";
+import { shuffle } from "../lib/rng";
 import type { QuizItem, TrackId } from "../types";
 import { McqCard } from "../components/McqCard";
 import { CodingSandbox } from "../components/CodingSandbox";
@@ -29,7 +30,12 @@ export function SpeedChallengePage() {
   const [totalDuration, setTotalDuration] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [itemAnswered, setItemAnswered] = useState(false);
-  const [lastCorrect, setLastCorrect] = useState(false);
+
+  // Final result snapshot, computed once at completion (not in a render-phase
+  // memo) so recording the high score can't feed back and clear the PB banner.
+  type RunResult = { score: number; timeBonus: number; isNewHigh: boolean; previousHigh: number };
+  const [results, setResults] = useState<RunResult | null>(null);
+  const finishedRef = useRef(false);
 
   // Challenge Setup Pools
   const tracks: { id: TrackId; label: string; emoji: string }[] = [
@@ -38,6 +44,36 @@ export function SpeedChallengePage() {
     { id: "sql", label: "SQL & Databases", emoji: "🛢️" },
     { id: "aptitude", label: "Quantitative Aptitude", emoji: "🧮" },
   ];
+
+  // Finalize the run exactly once: tally is already in `correctCount` (counted
+  // at answer time), so a timeout never loses the last answer. previousHigh is
+  // read straight from the store *before* we record, so the "new best" banner
+  // is stable.
+  const handleComplete = () => {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+
+    const total = sessionItems.length;
+    const base = correctCount * 100;
+    let timeBonus = 0;
+    if (correctCount === total && timeLeft > 0) {
+      timeBonus = Math.round(100 * (timeLeft / totalDuration));
+    }
+    const finalScore = base + timeBonus;
+    const challengeId = `${selectedMode}:${selectedTrack}`;
+    const previousHigh =
+      useProgressStore.getState().speedChallengeHighScores?.[challengeId] ?? 0;
+    const isNewHigh = finalScore > previousHigh;
+
+    if (finalScore > 0) {
+      recordSpeedChallengeScore(challengeId, finalScore);
+    }
+
+    setResults({ score: finalScore, timeBonus, isNewHigh, previousHigh });
+    setIsActive(false);
+    setIsCompleted(true);
+    ping();
+  };
 
   // Run countdown timers
   useEffect(() => {
@@ -53,6 +89,9 @@ export function SpeedChallengePage() {
     }, 1000);
 
     return () => clearInterval(timer);
+    // handleComplete is intentionally omitted — it's recreated each render and
+    // only fires on timeout; including it would reset the interval every tick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, isCompleted, timeLeft]);
 
   const handleStart = (track: TrackId, mode: ChallengeMode) => {
@@ -77,8 +116,7 @@ export function SpeedChallengePage() {
     const duration = mode === "blitz" ? 180 : 1200; // 3 min or 20 min
 
     // Shuffle and slice
-    const shuffled = [...pool].sort(() => Math.random() - 0.5);
-    const selected = shuffled.slice(0, itemAmt);
+    const selected = shuffle(pool).slice(0, itemAmt);
 
     setSessionItems(selected);
     setCurrentIndex(0);
@@ -86,20 +124,22 @@ export function SpeedChallengePage() {
     setTotalDuration(duration);
     setCorrectCount(0);
     setItemAnswered(false);
+    setResults(null);
+    finishedRef.current = false;
     setIsActive(true);
     setIsCompleted(false);
   };
 
+  // Count correctness when the item is answered, not on advance — otherwise a
+  // timeout (or not clicking "advance") would drop the last answer. Guarded so
+  // re-runs of a coding/SQL item only count the first result.
   const handleAnswered = (correct: boolean) => {
-    setLastCorrect(correct);
+    if (itemAnswered) return;
     setItemAnswered(true);
+    if (correct) setCorrectCount((c) => c + 1);
   };
 
-  const handleContinue = () => {
-    if (lastCorrect) {
-      setCorrectCount((c) => c + 1);
-    }
-
+  const advance = () => {
     const nextIndex = currentIndex + 1;
     if (nextIndex < sessionItems.length) {
       setCurrentIndex(nextIndex);
@@ -109,21 +149,8 @@ export function SpeedChallengePage() {
     }
   };
 
-  const handleSkip = () => {
-    const nextIndex = currentIndex + 1;
-    if (nextIndex < sessionItems.length) {
-      setCurrentIndex(nextIndex);
-      setItemAnswered(false);
-    } else {
-      handleComplete();
-    }
-  };
-
-  const handleComplete = () => {
-    setIsActive(false);
-    setIsCompleted(true);
-    ping();
-  };
+  const handleContinue = advance;
+  const handleSkip = advance;
 
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60);
@@ -131,29 +158,13 @@ export function SpeedChallengePage() {
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
-  // Final score computations
-  const finalResults = useMemo(() => {
-    if (!isCompleted) return { score: 0, timeBonus: 0, isNewHigh: false };
-
-    // Base score: 100 points per correct
-    const base = correctCount * 100;
-    // Speed bonus: proportion of remaining time if they got everything correct
-    let timeBonus = 0;
-    if (correctCount === sessionItems.length && timeLeft > 0) {
-      timeBonus = Math.round(100 * (timeLeft / totalDuration));
-    }
-
-    const finalScore = base + timeBonus;
-    const challengeId = `${selectedMode}:${selectedTrack}`;
-    const previousHigh = speedChallengeHighScores[challengeId] ?? 0;
-    const isNewHigh = finalScore > previousHigh;
-
-    if (finalScore > 0) {
-      recordSpeedChallengeScore(challengeId, finalScore);
-    }
-
-    return { score: finalScore, timeBonus, isNewHigh, previousHigh };
-  }, [isCompleted, correctCount, timeLeft, totalDuration, sessionItems, selectedMode, selectedTrack, speedChallengeHighScores]);
+  // Read the snapshot captured at completion (see handleComplete).
+  const finalResults: RunResult = results ?? {
+    score: 0,
+    timeBonus: 0,
+    isNewHigh: false,
+    previousHigh: 0,
+  };
 
   const currentItem = sessionItems[currentIndex];
 

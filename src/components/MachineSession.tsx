@@ -6,6 +6,7 @@ import {
   useMachineSessionStore,
 } from "../store";
 import { getAllQuizItems } from "../lib/contentLoader";
+import { nowMs } from "../lib/daily";
 import { defaultSpeedTargetSec } from "../lib/trainingMachine";
 import { McqCard } from "./McqCard";
 import { CodingSandbox } from "./CodingSandbox";
@@ -57,28 +58,33 @@ export function MachineSession() {
   // Track if current item is already answered.
   const isAnswered = currentItemId ? Boolean(results[currentItemId]) : false;
 
+  // Reset item timer and recognition sub-phase when the current item changes.
+  // Done during render (React's "adjust state on prop change" pattern) rather
+  // than in an effect — avoids an extra commit and the prior item's timer
+  // flashing for a frame.
+  const [trackedItemId, setTrackedItemId] = useState(currentItemId);
+  if (currentItemId !== trackedItemId) {
+    setTrackedItemId(currentItemId);
+    setElapsedItemSec(0);
+    setPatternRecognized(false);
+    setRecognitionDrillSubmitted(false);
+  }
+
   // Handle intervals for the item and session timers.
   useEffect(() => {
     if (!isActive || isCompleted || showBlockSummary) return;
 
     const timer = setInterval(() => {
       if (itemStartedAt) {
-        setElapsedItemSec(Math.floor((Date.now() - itemStartedAt) / 1000));
+        setElapsedItemSec(Math.floor((nowMs() - itemStartedAt) / 1000));
       }
       if (sessionStartedAt) {
-        setElapsedSessionSec(Math.floor((Date.now() - sessionStartedAt) / 1000));
+        setElapsedSessionSec(Math.floor((nowMs() - sessionStartedAt) / 1000));
       }
     }, 1000);
 
     return () => clearInterval(timer);
   }, [isActive, isCompleted, showBlockSummary, itemStartedAt, sessionStartedAt]);
-
-  // Reset item timer and recognition sub-phase when current item changes.
-  useEffect(() => {
-    setElapsedItemSec(0);
-    setPatternRecognized(false);
-    setRecognitionDrillSubmitted(false);
-  }, [currentItemId]);
 
   // If session is not active and not completed, render nothing or redirect (should be handled by page).
   if (!isActive && !isCompleted) {
@@ -132,16 +138,18 @@ export function MachineSession() {
     handleContinue();
   };
 
-  // Called when item is answered (e.g. McqCard chosen, Coding sandbox run passes, etc.)
-  const handleAnswered = (correct: boolean) => {
+  // Called when item is answered (McqCard chosen, sandbox run graded, etc.).
+  // `gaveUp` is passed explicitly by the sandboxes' "give up" action — a failed
+  // run is NOT a give-up, so we no longer infer it from `!correct`.
+  const handleAnswered = (correct: boolean, gaveUp = false) => {
     if (!currentBlock || !currentItem || isAnswered) return;
 
-    const timeTakenMs = itemStartedAt ? Date.now() - itemStartedAt : 0;
+    const timeTakenMs = itemStartedAt ? nowMs() - itemStartedAt : 0;
     recordItemResult(currentItem.id, currentBlock.id, {
       correct,
       timeMs: timeTakenMs,
       skipped: false,
-      gaveUp: !correct && currentItem.type !== "mcq", // gave up or failed coding/sql
+      gaveUp,
     });
   };
 

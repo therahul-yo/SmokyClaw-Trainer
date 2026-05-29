@@ -51,7 +51,7 @@ export function MachinePage() {
     useMachineSessionStore.setState({
       currentBlockIndex: blockIndex,
       currentItemIndex: 0,
-      itemStartedAt: Date.now(),
+      itemStartedAt: nowMs(),
     });
   };
 
