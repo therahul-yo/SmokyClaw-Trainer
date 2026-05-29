@@ -107,8 +107,10 @@ export function Layout({ children }: { children: ReactNode }) {
         else if (e.key === "s") navigate("/progress");
         else if (e.key === "b") navigate("/bookmarks");
         else if (e.key === "c") navigate("/coach");
+        else if (e.key === "d") navigate("/rulebook");
         else if (e.key === "h") navigate("/");
         else return;
+
         e.preventDefault();
       }
     }

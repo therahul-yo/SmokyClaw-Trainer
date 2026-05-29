@@ -115,6 +115,8 @@ export function TreeNav() {
           color={dueCount > 0 ? "var(--color-amber)" : undefined}
         />
         <TreeRow prefix="├─ " to="/bookmarks" label="bookmarks" />
+        <TreeRow prefix="├─ " to="/rulebook" label="rulebook" color="var(--color-amber)" />
+
         <TreeRow
           prefix="├─ "
           to="/machine"
