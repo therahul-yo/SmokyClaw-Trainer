@@ -142,42 +142,47 @@ export function Layout({ children }: { children: ReactNode }) {
           <span style={{ color: "var(--color-accent)" }} className="crt-glow font-bold tracking-wider">
             SMOKYCLAW
           </span>
-          <span style={{ color: "var(--color-text-muted)" }}>·</span>
-          <span style={{ color: "var(--color-text-dim)" }}>v3.0 / interview cracker</span>
+          <span className="hidden md:inline" style={{ color: "var(--color-text-muted)" }}>·</span>
+          <span className="hidden md:inline" style={{ color: "var(--color-text-dim)" }}>v3.0 / interview cracker</span>
         </div>
         <div className="flex items-center gap-3" style={{ color: "var(--color-text-dim)" }}>
-          <InstallButton />
-          <button
-            type="button"
-            onClick={() => {
-              setPaletteMode("command");
-              setPaletteOpen(true);
-            }}
-            className="px-2 py-0.5 transition-colors hover:brightness-125"
-            style={{
-              border: "1px solid var(--color-border-bright)",
-              color: "var(--color-text-dim)",
-              fontSize: 10,
-            }}
-            title="open command palette (⌘K)"
-          >
-            ⌘K
-          </button>
-          <button
-            type="button"
-            onClick={() => setKeysOpen(true)}
-            className="px-2 py-0.5 transition-colors hover:brightness-125"
-            style={{
-              border: "1px solid var(--color-border-bright)",
-              color: "var(--color-text-dim)",
-              fontSize: 10,
-            }}
-            title="keyboard shortcuts (?)"
-          >
-            ?
-          </button>
-          <span>{crumb}</span>
-          <span style={{ color: "var(--color-text-muted)" }}>·</span>
+          {/* Install + keyboard affordances are desktop-only — hidden on phones
+              to keep the top bar uncluttered (mobile users navigate via the
+              bottom tab bar; the app stays installable from the browser menu). */}
+          <div className="hidden md:flex items-center gap-3">
+            <InstallButton />
+            <button
+              type="button"
+              onClick={() => {
+                setPaletteMode("command");
+                setPaletteOpen(true);
+              }}
+              className="px-2 py-0.5 transition-colors hover:brightness-125"
+              style={{
+                border: "1px solid var(--color-border-bright)",
+                color: "var(--color-text-dim)",
+                fontSize: 10,
+              }}
+              title="open command palette (⌘K)"
+            >
+              ⌘K
+            </button>
+            <button
+              type="button"
+              onClick={() => setKeysOpen(true)}
+              className="px-2 py-0.5 transition-colors hover:brightness-125"
+              style={{
+                border: "1px solid var(--color-border-bright)",
+                color: "var(--color-text-dim)",
+                fontSize: 10,
+              }}
+              title="keyboard shortcuts (?)"
+            >
+              ?
+            </button>
+            <span>{crumb}</span>
+            <span style={{ color: "var(--color-text-muted)" }}>·</span>
+          </div>
           <span className="tabular-nums">{formatTime(now)}</span>
         </div>
       </header>

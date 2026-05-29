@@ -30,7 +30,7 @@ export function StatusBar() {
 
   return (
     <footer
-      className="shrink-0 flex items-center justify-between px-3 text-[11px] font-mono tabular-nums"
+      className="shrink-0 flex items-center justify-between px-3 text-[10px] sm:text-[11px] font-mono tabular-nums"
       style={{
         height: 24,
         borderTop: "1px solid var(--color-border-bright)",
@@ -44,9 +44,9 @@ export function StatusBar() {
         >
           {m.tag}
         </span>
-        <span style={{ color: "var(--color-text-dim)" }}>{location.pathname}</span>
+        <span className="hidden sm:inline" style={{ color: "var(--color-text-dim)" }}>{location.pathname}</span>
       </div>
-      <div className="flex items-center gap-4" style={{ color: "var(--color-text-dim)" }}>
+      <div className="flex items-center gap-3 sm:gap-4" style={{ color: "var(--color-text-dim)" }}>
         <span>
           <span style={{ color: "var(--color-text-muted)" }}>streak </span>
           <span style={{ color: "var(--color-accent)" }}>{streak}d</span>
