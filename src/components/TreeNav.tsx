@@ -135,8 +135,12 @@ export function TreeNav() {
         <TreeRow prefix="└─ " to="/sandbox/sql" label="sql" />
 
         <SectionLabel>mock/</SectionLabel>
-        <TreeRow prefix="├─ " to="/mock/tcs-nqt" label="tcs-nqt" />
-        <TreeRow prefix="└─ " to="/mock/infosys-sp" label="infosys-sp" />
+        <TreeRow prefix="├─ " to="/mock/tcs-nqt-cognitive" label="tcs-cognitive" />
+        <TreeRow prefix="├─ " to="/mock/tcs-nqt-it-full" label="tcs-it-full" />
+        <TreeRow prefix="├─ " to="/mock/infosys-irt" label="infosys-irt" />
+        <TreeRow prefix="├─ " to="/mock/infosys-pseudocode-sprint" label="infosys-pseudo" />
+        <TreeRow prefix="├─ " to="/mock/accenture-cognitive-technical" label="accenture-tech" />
+        <TreeRow prefix="└─ " to="/mock/accenture-full-flow" label="accenture-full" />
 
         <SectionLabel>meta/</SectionLabel>
         <TreeRow prefix="└─ " to="/progress" label="progress" />

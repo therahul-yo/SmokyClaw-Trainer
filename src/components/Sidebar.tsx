@@ -107,20 +107,36 @@ export function Sidebar() {
       </div>
       <nav className="flex flex-col gap-0.5">
         <NavLink
-          to="/mock/tcs-nqt"
+          to="/mock/tcs-nqt-cognitive"
           className={({ isActive }) =>
             clsx(linkBase, isActive ? linkActive : linkInactive)
           }
         >
-          🎯 TCS NQT
+          🎯 TCS Cognitive
         </NavLink>
         <NavLink
-          to="/mock/infosys-sp"
+          to="/mock/tcs-nqt-it-full"
           className={({ isActive }) =>
             clsx(linkBase, isActive ? linkActive : linkInactive)
           }
         >
-          🎯 Infosys SP
+          🎯 TCS IT Full
+        </NavLink>
+        <NavLink
+          to="/mock/infosys-irt"
+          className={({ isActive }) =>
+            clsx(linkBase, isActive ? linkActive : linkInactive)
+          }
+        >
+          🎯 Infosys IRT
+        </NavLink>
+        <NavLink
+          to="/mock/accenture-cognitive-technical"
+          className={({ isActive }) =>
+            clsx(linkBase, isActive ? linkActive : linkInactive)
+          }
+        >
+          🎯 Accenture
         </NavLink>
       </nav>
     </aside>

@@ -193,7 +193,16 @@ export type MockSection = {
 };
 
 export type MockTestBlueprint = {
-  id: "tcs-nqt" | "infosys-sp";
+  id:
+    | "tcs-nqt"
+    | "tcs-nqt-cognitive"
+    | "tcs-nqt-it-full"
+    | "infosys-sp"
+    | "infosys-irt"
+    | "infosys-pseudocode-sprint"
+    | "accenture-cognitive-technical"
+    | "accenture-coding"
+    | "accenture-full-flow";
   title: string;
   subtitle: string;
   sections: MockSection[];

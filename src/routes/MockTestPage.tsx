@@ -412,8 +412,8 @@ function Report({
         className="text-sm font-mono"
         style={{ color: "var(--color-text-dim)" }}
       >
-        // cutoffs vary. TCS NQT prime band ≈ {Math.ceil(totalQs * 0.65)}+
-        correct (65%). wrong items added to review queue.
+        // cutoffs vary by company, role, batch, and drive. use 75%+ as a
+        strong readiness target. wrong items added to review queue.
       </div>
 
       <BracketButton onClick={() => window.location.reload()}>
