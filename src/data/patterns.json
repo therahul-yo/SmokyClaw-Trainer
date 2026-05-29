@@ -5,7 +5,7 @@
     "title": "DSA foundations",
     "blurb": "Big-O, constraints, edge cases, brute force, and the LeetCode pattern-recognition loop.",
     "prerequisites": [],
-    "lessonIds": ["dsa-00-foundations", "dsa-04-big-o"],
+    "lessonIds": ["dsa-00-absolute-zero", "dsa-00-foundations", "dsa-04-big-o"],
     "itemIds": []
   },
   {
@@ -153,6 +153,15 @@
     "itemIds": ["dsa-c-unique-paths", "dsa-c-lcs"]
   },
   {
+    "id": "dsa-advanced",
+    "track": "dsa",
+    "title": "Advanced structures & algorithms",
+    "blurb": "Segment trees, Fenwick trees, strongly connected components, and bitmask/digit/tree DP.",
+    "prerequisites": ["dp-1d", "graphs"],
+    "lessonIds": ["dsa-19-advanced-range-queries", "dsa-20-advanced-graph-algorithms", "dsa-21-heavyweight-dp"],
+    "itemIds": ["dsa-c-range-sum-query-mutable", "dsa-c-strongly-connected-components", "dsa-c-bitmask-tsp"]
+  },
+  {
     "id": "bit-manipulation",
     "track": "dsa",
     "title": "Bit manipulation",
@@ -176,7 +185,7 @@
     "title": "Python foundations",
     "blurb": "Variables, loops, functions, containers, and coding-test input/output before advanced Python.",
     "prerequisites": [],
-    "lessonIds": ["python-00-foundations", "python-syntax", "python-control-flow"],
+    "lessonIds": ["python-00-absolute-zero", "python-00-foundations", "python-syntax", "python-control-flow"],
     "itemIds": ["py-c-001", "py-c-002", "py-c-003", "py-c-fizzbuzz"]
   },
   {
@@ -225,12 +234,21 @@
     "itemIds": ["py-q-042", "py-q-043", "py-q-044", "py-q-045"]
   },
   {
+    "id": "python-advanced",
+    "track": "python",
+    "title": "Advanced Python & Internals",
+    "blurb": "CPython allocation sizing, garbage collection, event loops, and Global Interpreter Lock (GIL).",
+    "prerequisites": ["python-oop", "python-decorators"],
+    "lessonIds": ["python-35-cpython-internals-gc", "python-40-concurrency-gil"],
+    "itemIds": ["py-q-050", "py-q-051", "py-q-052", "py-q-053", "py-c-custom-range"]
+  },
+  {
     "id": "sql-foundations",
     "track": "sql",
     "title": "SQL foundations",
     "blurb": "Tables, rows, SELECT, WHERE, GROUP BY, HAVING, ORDER BY, and the result-table mental model.",
     "prerequisites": [],
-    "lessonIds": ["sql-00-foundations", "sql-select"],
+    "lessonIds": ["sql-00-absolute-zero", "sql-00-foundations", "sql-select"],
     "itemIds": ["sql-q-001", "sql-q-002", "sql-001", "sql-c-basic-filter-order", "sql-c-count-all-employees"]
   },
   {
@@ -288,12 +306,21 @@
     "itemIds": ["sql-q-normalization-001", "sql-q-transaction-001"]
   },
   {
+    "id": "sql-advanced",
+    "track": "sql",
+    "title": "Advanced engine internals & transactions",
+    "blurb": "Execution plans, B-Tree vs Hash index scans, transaction isolation anomalies, locks, and MVCC.",
+    "prerequisites": ["sql-indexes", "sql-normalization", "sql-subqueries"],
+    "lessonIds": ["sql-11-engine-optimization-explain", "sql-12-transactions-isolation-mvcc"],
+    "itemIds": ["sql-q-035", "sql-q-036", "sql-q-037", "sql-c-degrees-separation"]
+  },
+  {
     "id": "aptitude-foundations",
     "track": "aptitude",
     "title": "Aptitude foundations",
     "blurb": "Arithmetic speed, formulas, classification, and timed accuracy before company-style sections.",
     "prerequisites": [],
-    "lessonIds": ["aptitude-00-foundations"],
-    "itemIds": ["apt-q-001", "apt-q-002", "apt-q-003", "apt-q-004", "apt-q-005", "apt-q-006", "apt-q-010", "apt-q-011", "apt-q-012", "apt-q-013", "apt-q-014", "apt-q-015", "apt-q-016", "apt-q-017", "apt-q-018", "apt-q-019", "apt-q-020", "apt-q-021", "apt-q-022", "apt-q-023", "apt-q-024", "apt-q-025", "apt-q-026", "apt-q-027", "apt-q-028", "apt-q-029", "apt-q-030", "apt-q-031", "apt-q-032", "apt-q-033", "apt-q-034", "apt-q-035", "apt-q-036", "apt-q-037", "apt-q-038", "apt-q-039", "apt-q-040", "apt-q-041", "apt-q-042", "apt-q-043", "apt-q-044", "apt-q-045", "apt-q-046", "apt-q-047", "apt-q-048", "apt-q-049", "apt-q-050", "apt-q-051", "apt-q-052", "apt-q-053", "apt-q-054", "apt-q-055", "apt-q-056", "apt-q-057", "apt-q-058", "apt-q-059", "apt-q-060", "apt-q-061"]
+    "lessonIds": ["aptitude-00-absolute-zero", "aptitude-00-foundations", "aptitude-13-advanced-probability-combinatorics", "aptitude-14-logical-deductions-syllogisms"],
+    "itemIds": ["apt-q-001", "apt-q-002", "apt-q-003", "apt-q-004", "apt-q-005", "apt-q-006", "apt-q-010", "apt-q-011", "apt-q-012", "apt-q-013", "apt-q-014", "apt-q-015", "apt-q-016", "apt-q-017", "apt-q-018", "apt-q-019", "apt-q-020", "apt-q-021", "apt-q-022", "apt-q-023", "apt-q-024", "apt-q-025", "apt-q-026", "apt-q-027", "apt-q-028", "apt-q-029", "apt-q-030", "apt-q-031", "apt-q-032", "apt-q-033", "apt-q-034", "apt-q-035", "apt-q-036", "apt-q-037", "apt-q-038", "apt-q-039", "apt-q-040", "apt-q-041", "apt-q-042", "apt-q-043", "apt-q-044", "apt-q-045", "apt-q-046", "apt-q-047", "apt-q-048", "apt-q-049", "apt-q-050", "apt-q-051", "apt-q-052", "apt-q-053", "apt-q-054", "apt-q-055", "apt-q-056", "apt-q-057", "apt-q-058", "apt-q-059", "apt-q-060", "apt-q-061", "apt-q-062", "apt-q-063", "apt-q-064"]
   }
 ]

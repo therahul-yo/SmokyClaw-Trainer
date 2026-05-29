@@ -562,5 +562,60 @@
       ]
     },
     "tags": ["decorators", "meta-programming"]
+  },
+  {
+    "id": "py-c-custom-range",
+    "track": "python",
+    "topic": "advanced-python",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 10,
+    "prompt": "Create a generator function named `custom_range` that behaves like Python's built-in `range`. It should accept three arguments: `start`, `stop`, and `step` (which defaults to 1). It yields integers starting from `start` up to (but not including) `stop`, incrementing by `step` each time. The generator must consume O(1) memory and must not construct a list of numbers.",
+    "constraints": "step != 0. If step is positive and start >= stop, or step is negative and start <= stop, yield nothing.",
+    "examples": [
+      {
+        "input": "list(custom_range(1, 5, 1))",
+        "output": "[1, 2, 3, 4]"
+      },
+      {
+        "input": "list(custom_range(5, 1, -2))",
+        "output": "[5, 3]"
+      }
+    ],
+    "starter": "def custom_range(start, stop, step=1):\n    # Write your generator here\n    pass\n",
+    "entry": "custom_range",
+    "tests": [
+      { "args": [1, 5, 1], "expect": [1, 2, 3, 4] },
+      { "args": [5, 1, -2], "expect": [5, 3] },
+      { "args": [0, 10, 3], "expect": [0, 3, 6, 9] },
+      { "args": [10, 0, -1], "expect": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1] },
+      { "args": [5, 5, 1], "expect": [] }
+    ],
+    "hints": [
+      "Use a `while` loop that yields the current value.",
+      "Update the value by `step` on each iteration.",
+      "Make sure to handle conditions for both positive and negative steps."
+    ],
+    "bruteForce": {
+      "code": "def custom_range(start, stop, step=1):\n    res = []\n    curr = start\n    if step > 0:\n        while curr < stop:\n            res.append(curr)\n            curr += step\n    else:\n        while curr > stop:\n            res.append(curr)\n            curr += step\n    return res",
+      "complexity": "O(N) time and space",
+      "explanation": "Constructing a list of values violates the O(1) space constraint."
+    },
+    "optimal": {
+      "code": "def custom_range(start, stop, step=1):\n    curr = start\n    if step > 0:\n        while curr < stop:\n            yield curr\n            curr += step\n    elif step < 0:\n        while curr > stop:\n            yield curr\n            curr += step",
+      "complexity": "O(1) auxiliary space, O(N) execution time.",
+      "explanation": "Using the `yield` keyword makes it a generator, maintaining O(1) memory regardless of the range length."
+    },
+    "complexityCheck": {
+      "question": "What is the space complexity of calling custom_range(1, 1000000)?",
+      "choices": [
+        { "label": "O(1) because it generates values lazily", "correct": true },
+        { "label": "O(N) to store all the numbers", "correct": false },
+        { "label": "O(log N)", "correct": false }
+      ]
+    },
+    "tags": ["generators", "memory-optimization"]
   }
 ]
+
