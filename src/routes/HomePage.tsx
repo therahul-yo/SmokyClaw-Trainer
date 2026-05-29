@@ -179,10 +179,22 @@ export function HomePage() {
             blurb="daily warm-up, pattern, mixed, repair, and speed blocks."
           />
           <ActionRow
-            to="/mock/tcs-nqt"
+            to="/mock/tcs-nqt-cognitive"
             cmd="mock"
-            label="tcs-nqt — full simulation"
-            blurb="timed, sectioned, exact format. find the leaks."
+            label="tcs cognitive — official-style"
+            blurb="65 questions across numerical, verbal, and reasoning."
+          />
+          <ActionRow
+            to="/mock/infosys-irt"
+            cmd="mock"
+            label="infosys irt — logic + pseudocode"
+            blurb="timed logic, technical, verbal, pseudocode, and puzzles."
+          />
+          <ActionRow
+            to="/mock/accenture-cognitive-technical"
+            cmd="mock"
+            label="accenture — cognitive + technical"
+            blurb="company-style cognitive speed plus CS fundamentals."
           />
           <ActionRow
             to="/plan/setup"

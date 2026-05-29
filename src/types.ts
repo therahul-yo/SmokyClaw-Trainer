@@ -193,7 +193,20 @@ export type MockSection = {
 };
 
 export type MockTestBlueprint = {
-  id: "tcs-nqt" | "infosys-sp" | "wipro-elite" | "capgemini" | "generic-dsa" | "sql-only";
+  id:
+    | "tcs-nqt"
+    | "tcs-nqt-cognitive"
+    | "tcs-nqt-it-full"
+    | "infosys-sp"
+    | "infosys-irt"
+    | "infosys-pseudocode-sprint"
+    | "accenture-cognitive-technical"
+    | "accenture-coding"
+    | "accenture-full-flow"
+    | "wipro-elite"
+    | "capgemini"
+    | "generic-dsa"
+    | "sql-only";
   title: string;
   subtitle: string;
   sections: MockSection[];
