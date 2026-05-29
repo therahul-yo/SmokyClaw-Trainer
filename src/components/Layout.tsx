@@ -6,6 +6,8 @@ import { StatusBar } from "./StatusBar";
 import { CommandPalette } from "./CommandPalette";
 import { KeysHelp } from "./KeysHelp";
 import { BootOverlay } from "./BootOverlay";
+import { InstallButton } from "./InstallButton";
+import { MobileNav } from "./MobileNav";
 
 function useClock() {
   const [now, setNow] = useState(() => new Date());
@@ -144,6 +146,7 @@ export function Layout({ children }: { children: ReactNode }) {
           <span style={{ color: "var(--color-text-dim)" }}>v3.0 / interview cracker</span>
         </div>
         <div className="flex items-center gap-3" style={{ color: "var(--color-text-dim)" }}>
+          <InstallButton />
           <button
             type="button"
             onClick={() => {
@@ -189,6 +192,9 @@ export function Layout({ children }: { children: ReactNode }) {
           <div className="px-6 py-5 max-w-6xl mx-auto boot-in">{children}</div>
         </main>
       </div>
+
+      {/* Mobile bottom tab bar (hidden on md+) */}
+      <MobileNav />
 
       {/* Status bar */}
       <StatusBar />
