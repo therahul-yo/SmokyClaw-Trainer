@@ -114,7 +114,14 @@ export function TreeNav() {
           trailing={dueCount > 0 ? `${dueCount} due` : undefined}
           color={dueCount > 0 ? "var(--color-amber)" : undefined}
         />
-        <TreeRow prefix="└─ " to="/bookmarks" label="bookmarks" />
+        <TreeRow prefix="├─ " to="/bookmarks" label="bookmarks" />
+        <TreeRow
+          prefix="└─ "
+          to="/coach"
+          label="coach"
+          trailing="smokey"
+          color="var(--color-accent)"
+        />
 
         <SectionLabel>sandbox/</SectionLabel>
         <TreeRow prefix="├─ " to="/sandbox/python" label="python" />

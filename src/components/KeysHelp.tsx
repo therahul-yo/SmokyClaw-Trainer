@@ -17,6 +17,8 @@ const BINDINGS: { group: string; items: Binding[] }[] = [
       { keys: ["g p"], desc: "go to plan" },
       { keys: ["g r"], desc: "go to review queue" },
       { keys: ["g s"], desc: "go to progress" },
+      { keys: ["g c"], desc: "go to smokey (coach)" },
+      { keys: ["g b"], desc: "go to bookmarks" },
       { keys: ["j"], desc: "scroll down" },
       { keys: ["k"], desc: "scroll up" },
     ],

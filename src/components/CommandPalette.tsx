@@ -125,6 +125,13 @@ function CommandPaletteInner({
         action: () => navigate("/progress"),
       },
       {
+        id: "go:coach",
+        label: "smokey — coach",
+        hint: "/coach",
+        kind: "page",
+        action: () => navigate("/coach"),
+      },
+      {
         id: "go:mock-tcs",
         label: "mock test — tcs nqt",
         hint: "/mock/tcs-nqt",
