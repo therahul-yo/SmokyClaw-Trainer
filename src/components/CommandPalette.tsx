@@ -125,6 +125,13 @@ function CommandPaletteInner({
         action: () => navigate("/progress"),
       },
       {
+        id: "go:machine",
+        label: "machine training loop",
+        hint: "/machine",
+        kind: "page",
+        action: () => navigate("/machine"),
+      },
+      {
         id: "go:coach",
         label: "smokey — coach",
         hint: "/coach",

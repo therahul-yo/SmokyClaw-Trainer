@@ -13,6 +13,7 @@ import { PlanPage } from "./routes/PlanPage";
 import { PlanSetupPage } from "./routes/PlanSetupPage";
 import { PatternsPage } from "./routes/PatternsPage";
 import { CoachPage } from "./routes/CoachPage";
+import { MachinePage } from "./routes/MachinePage";
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/bookmarks" element={<BookmarksPage />} />
           <Route path="/progress" element={<ProgressPage />} />
           <Route path="/coach" element={<CoachPage />} />
+          <Route path="/machine" element={<MachinePage />} />
           <Route path="/mock/:id" element={<MockTestPage />} />
           <Route path="/plan" element={<PlanPage />} />
           <Route path="/plan/setup" element={<PlanSetupPage />} />
