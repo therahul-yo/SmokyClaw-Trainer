@@ -48,6 +48,15 @@
         { "label": "O(n log n)", "correct": false }
       ]
     },
+    "recognitionPrompt": {
+      "question": "You are given a sorted integer array and a target sum. You need to find two indices whose values sum to the target in O(n) time and O(1) space. Which pattern is optimal?",
+      "choices": [
+        { "label": "Two Pointers", "correct": true },
+        { "label": "Sliding Window", "correct": false },
+        { "label": "Binary Search", "correct": false },
+        { "label": "Hashing", "correct": false }
+      ]
+    },
     "tags": ["two-pointer", "interview-classic", "tcs-nqt"]
   },
   {

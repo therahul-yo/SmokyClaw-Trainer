@@ -404,5 +404,47 @@
       "explanation": "Standard top-K pattern. Engines may use a heap of size K instead of full sort."
     },
     "tags": ["select", "order-by", "limit", "tcs-nqt"]
+  },
+  {
+    "id": "sql-c-dept-salary-rank",
+    "track": "sql",
+    "topic": "window-functions",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-window",
+    "estMinutes": 10,
+    "companies": ["tcs", "infosys", "amazon-india"],
+    "schema": "employees",
+    "prompt": "Assign a rank to each employee within their department based on their salary in descending order. Return the department name as `dept_name`, employee name as `employee_name`, `salary`, and the rank as `salary_rank`. Exclude employees with no department. Order by `dept_name` ASC, `salary_rank` ASC.",
+    "constraints": "Use RANK() or DENSE_RANK() as a window function.",
+    "expected": {
+      "columns": ["dept_name", "employee_name", "salary", "salary_rank"],
+      "rows": [
+        ["Engineering", "Carol", 92000, 1],
+        ["Engineering", "Alice", 75000, 2],
+        ["Engineering", "Hugo", 50000, 3],
+        ["Finance", "Grace", 65000, 1],
+        ["Marketing", "Eve", 38000, 1],
+        ["Sales", "Dave", 48000, 1],
+        ["Sales", "Bob", 45000, 2]
+      ]
+    },
+    "starter": "SELECT d.name AS dept_name, e.name AS employee_name, e.salary,\n       DENSE_RANK() OVER (PARTITION BY ... ORDER BY ...) AS salary_rank\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nORDER BY dept_name, salary_rank;\n",
+    "hints": [
+      "Join employees to departments to get `dept_name`.",
+      "Partition by `d.id` or `d.name` and order by `salary DESC` inside the window function.",
+      "Order the final output by `dept_name` ASC and `salary_rank` ASC."
+    ],
+    "bruteForce": {
+      "code": "SELECT d.name AS dept_name, e.name AS employee_name, e.salary,\n       (SELECT COUNT(*) FROM employees e2 WHERE e2.department_id = e.department_id AND e2.salary >= e.salary) AS salary_rank\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nORDER BY dept_name, salary_rank;",
+      "complexity": "O(n^2)",
+      "explanation": "Correlated count of employees with higher salary. Easy to write but slow."
+    },
+    "optimal": {
+      "code": "SELECT d.name AS dept_name, e.name AS employee_name, e.salary,\n       DENSE_RANK() OVER (PARTITION BY d.id ORDER BY e.salary DESC) AS salary_rank\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nORDER BY dept_name, salary_rank;",
+      "complexity": "O(n log n)",
+      "explanation": "DENSE_RANK() OVER partition ranks employees by salary descending within department. The join retrieves department names."
+    },
+    "tags": ["window-functions", "rank", "joins"]
   }
 ]

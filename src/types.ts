@@ -193,7 +193,7 @@ export type MockSection = {
 };
 
 export type MockTestBlueprint = {
-  id: "tcs-nqt" | "infosys-sp";
+  id: "tcs-nqt" | "infosys-sp" | "wipro-elite" | "capgemini" | "generic-dsa" | "sql-only";
   title: string;
   subtitle: string;
   sections: MockSection[];

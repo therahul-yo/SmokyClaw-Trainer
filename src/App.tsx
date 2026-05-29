@@ -14,6 +14,8 @@ import { PlanSetupPage } from "./routes/PlanSetupPage";
 import { PatternsPage } from "./routes/PatternsPage";
 import { CoachPage } from "./routes/CoachPage";
 import { MachinePage } from "./routes/MachinePage";
+import { RecognitionPage } from "./routes/RecognitionPage";
+import { SpeedChallengePage } from "./routes/SpeedChallengePage";
 
 export default function App() {
   return (
@@ -30,6 +32,8 @@ export default function App() {
           <Route path="/progress" element={<ProgressPage />} />
           <Route path="/coach" element={<CoachPage />} />
           <Route path="/machine" element={<MachinePage />} />
+          <Route path="/recognition" element={<RecognitionPage />} />
+          <Route path="/speedrun" element={<SpeedChallengePage />} />
           <Route path="/mock/:id" element={<MockTestPage />} />
           <Route path="/plan" element={<PlanPage />} />
           <Route path="/plan/setup" element={<PlanSetupPage />} />

@@ -12,6 +12,7 @@ import { useProgressStore } from "../store";
 import { Prompt } from "../components/terminal/Prompt";
 import { Box } from "../components/terminal/Box";
 import { BracketButton } from "../components/terminal/BracketButton";
+import { PostMockReport } from "../components/PostMockReport";
 
 type Phase = "intro" | "section" | "done";
 
@@ -111,7 +112,7 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
 
   if (phase === "intro") return <Intro blueprint={blueprint} onStart={start} />;
   if (phase === "done")
-    return <Report blueprint={blueprint} sections={sections} answers={answers} />;
+    return <PostMockReport blueprint={blueprint} sections={sections} answers={answers} />;
 
   const section = sections[sectionIdx];
   if (!section) return null;
@@ -330,98 +331,7 @@ function Intro({
   );
 }
 
-function Report({
-  blueprint,
-  sections,
-  answers,
-}: {
-  blueprint: MockTestBlueprint;
-  sections: PickedSection[];
-  answers: Record<string, number>;
-}) {
-  const sectionResults = sections.map((sec) => {
-    let correct = 0;
-    for (const q of sec.items) {
-      if (answers[q.id] === q.answerIndex) correct += 1;
-    }
-    return { title: sec.meta.title, correct, total: sec.items.length };
-  });
-  const totalCorrect = sectionResults.reduce((a, s) => a + s.correct, 0);
-  const totalQs = sectionResults.reduce((a, s) => a + s.total, 0);
-  const pct = totalQs > 0 ? Math.round((totalCorrect / totalQs) * 100) : 0;
 
-  return (
-    <div className="max-w-2xl space-y-4">
-      <Prompt path={`~/mock/${blueprint.id}/report`}>
-        <span>cat score.report</span>
-      </Prompt>
-      <div
-        className="text-2xl font-bold crt-glow"
-        style={{ color: "var(--color-accent)" }}
-      >
-        {blueprint.title}.report
-      </div>
-      <div
-        className="text-3xl font-bold tabular-nums font-mono"
-        style={{
-          color: pct >= 65 ? "var(--color-accent)" : "var(--color-amber)",
-        }}
-      >
-        {totalCorrect}/{totalQs}
-        <span
-          className="text-base font-normal ml-3"
-          style={{ color: "var(--color-text-dim)" }}
-        >
-          = {pct}%
-        </span>
-      </div>
-
-      <Box title="$ section --breakdown">
-        <div className="space-y-1 font-mono text-sm">
-          {sectionResults.map((r) => {
-            const sectionPct =
-              r.total > 0 ? Math.round((r.correct / r.total) * 100) : 0;
-            return (
-              <div key={r.title} className="flex justify-between">
-                <span style={{ color: "var(--color-text)" }}>{r.title}</span>
-                <span>
-                  <span
-                    style={{
-                      color:
-                        sectionPct >= 65
-                          ? "var(--color-accent)"
-                          : "var(--color-amber)",
-                    }}
-                  >
-                    {r.correct}/{r.total}
-                  </span>
-                  <span
-                    className="ml-2"
-                    style={{ color: "var(--color-text-muted)" }}
-                  >
-                    ({sectionPct}%)
-                  </span>
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </Box>
-
-      <div
-        className="text-sm font-mono"
-        style={{ color: "var(--color-text-dim)" }}
-      >
-        // cutoffs vary. TCS NQT prime band ≈ {Math.ceil(totalQs * 0.65)}+
-        correct (65%). wrong items added to review queue.
-      </div>
-
-      <BracketButton onClick={() => window.location.reload()}>
-        ↻ take again
-      </BracketButton>
-    </div>
-  );
-}
 
 function formatTime(ms: number): string {
   const totalSec = Math.max(0, Math.floor(ms / 1000));

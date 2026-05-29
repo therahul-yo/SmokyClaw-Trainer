@@ -127,7 +127,7 @@ export function TrackPage() {
                       {last ? "└─" : "├─"}
                     </span>
                     <span style={{ color: "var(--color-text-muted)" }} className="tabular-nums">
-                      {String(l.order).padStart(2, "0")}
+                      {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="flex-1 truncate">{l.title}</span>
                     <span

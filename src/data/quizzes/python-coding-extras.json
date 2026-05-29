@@ -513,5 +513,54 @@
       ]
     },
     "tags": ["hashmap", "interview-classic", "leetcode-easy"]
+  },
+  {
+    "id": "py-c-decorator-timer",
+    "track": "python",
+    "topic": "decorators",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 15,
+    "prompt": "Create a decorator named `execution_counter` that tracks how many times the decorated function is called. The decorator should add a custom attribute `call_count` to the decorated function, which starts at 0 and increments on each invocation. Keep the function's original docstring and name intact using `@functools.wraps`.",
+    "constraints": "Function signature must accept any positional/keyword arguments (*args, **kwargs) and return the original function output.",
+    "examples": [
+      {
+        "input": "@execution_counter\ndef add(a, b):\n    return a + b\nadd(1, 2)\nadd(3, 4)\nprint(add.call_count)",
+        "output": "2"
+      }
+    ],
+    "starter": "import functools\n\ndef execution_counter(func):\n    # Write your decorator here\n    pass\n\ndef test_decorator(n):\n    # This helper function is used by the test runner to verify your decorator.\n    @execution_counter\n    def dummy():\n        \"\"\"Hello Doc\"\"\"\n        return 42\n    for _ in range(n):\n        dummy()\n    return [dummy.call_count, dummy.__name__, dummy.__doc__]\n",
+    "entry": "test_decorator",
+    "tests": [
+      { "args": [3], "expect": [3, "dummy", "Hello Doc"] },
+      { "args": [0], "expect": [0, "dummy", "Hello Doc"] },
+      { "args": [5], "expect": [5, "dummy", "Hello Doc"] }
+    ],
+    "hints": [
+      "Use `functools.wraps(func)` on the inner wrapper function.",
+      "Initialize wrapper.call_count = 0 inside the decorator.",
+      "Inside the wrapper, increment wrapper.call_count before calling the wrapped func."
+    ],
+    "bruteForce": {
+      "code": "def execution_counter(func):\n    def wrapper(*args, **kwargs):\n        wrapper.call_count += 1\n        return func(*args, **kwargs)\n    wrapper.call_count = 0\n    return wrapper",
+      "complexity": "O(1) time and space",
+      "explanation": "Simple decorator but doesn't preserve metadata without wraps."
+    },
+    "optimal": {
+      "code": "import functools\n\ndef execution_counter(func):\n    @functools.wraps(func)\n    def wrapper(*args, **kwargs):\n        wrapper.call_count += 1\n        return func(*args, **kwargs)\n    wrapper.call_count = 0\n    return wrapper",
+      "complexity": "O(1) time and space",
+      "explanation": "Using @functools.wraps(func) ensures the docstring, name, etc., are preserved. The call_count attribute is attached to the wrapper function object itself."
+    },
+    "complexityCheck": {
+      "question": "What does @functools.wraps do?",
+      "choices": [
+        { "label": "Preserves name, docstring, and metadata of the decorated function", "correct": true },
+        { "label": "Speeds up execution of the function", "correct": false },
+        { "label": "Forces variables to be local", "correct": false },
+        { "label": "Automatically handles recursion limits", "correct": false }
+      ]
+    },
+    "tags": ["decorators", "meta-programming"]
   }
 ]

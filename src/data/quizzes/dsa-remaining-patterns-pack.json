@@ -488,5 +488,31 @@
     "optimal": { "code": "def primes_upto(n):\n    if n < 2: return []\n    prime = [True] * (n + 1)\n    prime[0] = prime[1] = False\n    p = 2\n    while p * p <= n:\n        if prime[p]:\n            for m in range(p*p, n+1, p):\n                prime[m] = False\n        p += 1\n    return [i for i in range(n+1) if prime[i]]", "complexity": "O(n log log n) time, O(n) space", "explanation": "Sieve of Eratosthenes marks each composite via prime factors." },
     "complexityCheck": { "question": "Why start marking from p*p?", "choices": [{ "label": "Smaller multiples were marked by smaller primes", "correct": true }, { "label": "It avoids all memory", "correct": false }, { "label": "It sorts primes", "correct": false }, { "label": "It handles only odd n", "correct": false }] },
     "tags": ["math", "sieve"]
+  },
+  {
+    "id": "dsa-c-graph-bfs",
+    "track": "dsa",
+    "topic": "graphs",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "pattern": "graphs",
+    "estMinutes": 15,
+    "prompt": "Given an undirected unweighted graph represented as an adjacency list (list of lists of integers), return the shortest path length from node `start` to node `target`. If there is no path, return -1.",
+    "constraints": "0 <= number of nodes <= 1000.",
+    "examples": [{ "input": "graph = [[1, 2], [0, 3], [0, 3], [1, 2]], start = 0, target = 3", "output": "2" }],
+    "starter": "def shortest_path(graph, start, target):\n    # your code here\n    pass\n",
+    "entry": "shortest_path",
+    "tests": [
+      { "args": [[[1, 2], [0, 3], [0, 3], [1, 2]], 0, 3], "expect": 2 },
+      { "args": [[[1], [0], [], []], 0, 2], "expect": -1 },
+      { "args": [[[1, 2], [0], [0], []], 0, 0], "expect": 0 },
+      { "args": [[[], [], []], 0, 1], "expect": -1 }
+    ],
+    "hints": ["Use a queue for BFS.", "Keep track of visited nodes to avoid infinite cycles.", "Track the depth/distance from start node."],
+    "bruteForce": { "code": "def shortest_path(graph, start, target):\n    if start == target: return 0\n    seen = {start}\n    def dfs(node):\n        if node == target: return 0\n        res = float('inf')\n        for nxt in graph[node]:\n            if nxt not in seen:\n                seen.add(nxt)\n                res = min(res, 1 + dfs(nxt))\n                seen.remove(nxt)\n        return res\n    ans = dfs(start)\n    return ans if ans != float('inf') else -1", "complexity": "O(V!) time", "explanation": "DFS explores all paths, which is very inefficient." },
+    "optimal": { "code": "from collections import deque\n\ndef shortest_path(graph, start, target):\n    if start == target: return 0\n    if not graph or start >= len(graph) or target >= len(graph): return -1\n    q = deque([(start, 0)])\n    seen = {start}\n    while q:\n        node, dist = q.popleft()\n        if node == target: return dist\n        for nxt in graph[node]:\n            if nxt not in seen:\n                seen.add(nxt)\n                q.append((nxt, dist + 1))\n    return -1", "complexity": "O(V + E) time, O(V) space", "explanation": "BFS guarantees finding the shortest path first in an unweighted graph." },
+    "complexityCheck": { "question": "Why is BFS suitable for shortest path in unweighted graphs?", "choices": [{ "label": "It visits nodes in order of increasing distance", "correct": true }, { "label": "It uses a stack", "correct": false }, { "label": "It sorts the vertices", "correct": false }, { "label": "It uses less memory than DFS", "correct": false }] },
+    "tags": ["graphs", "bfs", "shortest-path"]
   }
 ]

@@ -623,5 +623,29 @@
     "answerIndex": 0,
     "explanation": "Let B = 100, A = 125. B less than A = 25/125 × 100 = 20%. Asymmetry between 'more than' and 'less than'.",
     "tags": ["percentages", "interview-classic"]
+  },
+  {
+    "id": "apt-q-060",
+    "track": "aptitude",
+    "topic": "quant",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "If a person walks at 14 km/h instead of 10 km/h, he would have walked 20 km more in the same time. The actual distance travelled by him is:",
+    "options": ["50 km", "56 km", "70 km", "80 km"],
+    "answerIndex": 0,
+    "explanation": "Let actual distance be x. Time = x/10. At 14 km/h, time = (x+20)/14. Since times are equal: x/10 = (x+20)/14 -> 14x = 10x + 200 -> 4x = 200 -> x = 50 km.",
+    "tags": ["tsd", "ratios", "tcs-nqt"]
+  },
+  {
+    "id": "apt-q-061",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "In a certain code, 'COMPUTER' is written as 'RFUVQNPC'. How is 'MEDICINE' written in that code?",
+    "options": ["EOJDJEFM", "EOJDEJFM", "MFEJDJOE", "DJEFMEOJ"],
+    "answerIndex": 0,
+    "explanation": "First and last letters are swapped. The intermediate letters are shifted +1 and written in reverse order. Apply to MEDICINE: Swap M/E -> E...M. Intermediate letters E-D-I-C-I-N shifted +1 is F-E-J-D-J-O. Reversed is O-J-D-J-E-F. Combine -> EOJDJEFM.",
+    "tags": ["coding-decoding", "logic", "capgemini"]
   }
 ]

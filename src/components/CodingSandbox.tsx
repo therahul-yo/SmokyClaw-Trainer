@@ -15,7 +15,13 @@ import { Box } from "./terminal/Box";
 import { BracketButton } from "./terminal/BracketButton";
 import { Stopwatch } from "./Stopwatch";
 
-export function CodingSandbox({ item }: { item: CodingItem }) {
+export function CodingSandbox({
+  item,
+  onAnswered,
+}: {
+  item: CodingItem;
+  onAnswered?: (correct: boolean) => void;
+}) {
   const [code, setCode] = useState(item.starter);
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<CodingGradeResult | null>(null);
@@ -53,6 +59,7 @@ export function CodingSandbox({ item }: { item: CodingItem }) {
       });
       registerAttempt(item.id, r.ok);
       ping();
+      onAnswered?.(r.ok);
       if (r.ok && !item.complexityCheck) setEditorialUnlocked(true);
     } finally {
       setRunning(false);
@@ -76,6 +83,7 @@ export function CodingSandbox({ item }: { item: CodingItem }) {
     registerAttempt(item.id, false);
     setGaveUp(true);
     setEditorialUnlocked(true);
+    onAnswered?.(false);
   };
 
   const showEditorial = editorialUnlocked || gaveUp;

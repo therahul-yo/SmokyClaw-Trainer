@@ -28,7 +28,7 @@ type Props =
     };
 
 export function HumanCompilerPanel(props: Props) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(props.mode !== "lesson");
   const targetId =
     props.mode === "lesson"
       ? traceTargetForLesson(props.lessonId)
