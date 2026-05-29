@@ -29,6 +29,12 @@ explain complexity, and repeat weak areas until they become fast.
 - **Adaptive study plans.** Pick a 1-week / 2-week / 1-month deadline and a daily-minutes budget; the planner lays out lessons + drills + Leitner-due items every day, biased toward the topics you score weakest on.
 - **Pattern playlists.** Curated DSA patterns (two-pointer, sliding window, hashing, DP, graphs, ...) and SQL patterns (joins, window functions, CTEs) with per-pattern progress.
 - **Editorial flow.** Every coding/SQL drill ships with progressive hints, brute-force-first reveal, optimal solution + complexity, a "what's the time complexity?" post-pass check, and a "give up & show solution" path that demotes the item back into Leitner.
+- **smokey — a local coach.** A `/coach` page (and a compact strip on Home) that reads your own attempt history and writes plain-English advisories: cold-start nudges, streak-risk/streak-win callouts, "you're slipping on sliding-window," retention reminders for things you got right but haven't seen in a week, avoidance flags (lessons read but never drilled), mastery wins, your best study window, and per-mock readiness with an ETA. It's NLG (generation from templates over detectors), **not** an LLM — deterministic, and nothing leaves the browser.
+- **Daily challenge + interview stopwatch.** A date-seeded daily drill on Home, and a stopwatch in the coding/SQL sandbox so you can feel the clock the way a real round does.
+- **ASCII attempt heatmap.** A terminal-style contribution grid of your practice history on Home and the Progress page.
+- **Installable PWA + mobile nav.** Add it to your home screen (an install button appears when the browser supports it) and it runs offline as a standalone app, with a thumb-reachable bottom tab bar on phones. Pyodide / sql.js still stream from their CDNs on first use.
+- **Keyboard-first.** `⌘K` / `Ctrl K` opens a command palette (`/` for search mode), `?` shows the keymap, and vim-style `g g / g p / g r / g s / g c / g b` jump between Home, Plan, Review, Progress, smokey, and Bookmarks. `j` / `k` scroll.
+- **Reading UX.** Lessons have a scroll-progress bar, an auto-highlighting table of contents, adjustable font size, and dark-grey code blocks for readability.
 - **100% local.** All progress persists in `localStorage` via Zustand. No backend, no telemetry, no account.
 
 ## Stack
@@ -40,16 +46,17 @@ explain complexity, and repeat weak areas until they become fast.
 - **sql.js** for in-browser SQLite
 - **CodeMirror 6** (`@uiw/react-codemirror`) for the editor
 - **react-markdown** + **rehype-highlight** for lessons
+- **vite-plugin-pwa** (Workbox service worker + web manifest) for offline/installable PWA
 - Hosted on **Vercel**
 
 ## Project structure
 
 ```
 src/
-  routes/         # Page components (Home, Track, Lesson, Quiz, Sandbox, Review, Bookmarks, Progress, MockTest)
+  routes/         # Page components (Home, Track, Lesson, Quiz, Sandbox, Review, Bookmarks, Progress, MockTest, Coach, Plan, Patterns)
   components/     # Layout, sidebar, McqCard, CodingSandbox, SqlSandbox, ProgressBar, etc.
   store/          # Zustand stores: progress, streak, review queue, bookmarks
-  lib/            # contentLoader, leitner, grader, pyodide, sqljs, mockTestFormats
+  lib/            # contentLoader, leitner, grader, pyodide, sqljs, mockTestFormats, smokey (local coach), planner
   content/        # Lessons as Markdown with frontmatter (python/, dsa/, sql/, aptitude/)
   data/
     tracks.json
