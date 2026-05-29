@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import {
   getTrack,
@@ -14,15 +15,26 @@ import { Prompt } from "../components/terminal/Prompt";
 export function TrackPage() {
   const { trackId } = useParams<{ trackId: string }>();
   const track = getTrack(trackId as TrackId);
+
+  // Hooks must run unconditionally — keep them above the early return.
+  // Subscribe to `attempts` (not just completedLessons) so the mastery bar
+  // re-renders the moment a quiz answer is recorded, not only on lesson reads.
+  const completedLessons = useProgressStore((s) => s.completedLessons);
+  const attempts = useProgressStore((s) => s.attempts);
+
+  const items = track ? getQuizItemsByTrack(track.id) : [];
+  const itemIds = items.map((q) => q.id);
+  const pct = useMemo(() => {
+    if (!track) return 0;
+    return useProgressStore.getState().trackMasteryPct(track.id, itemIds);
+    // `attempts` drives recompute though it's read via getState() above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [track, attempts, itemIds]);
+
   if (!track) return <Navigate to="/" replace />;
 
   const lessons = getLessonsByTrack(track.id);
-  const items = getQuizItemsByTrack(track.id);
   const patterns = getPatternsByTrack(track.id);
-  const completedLessons = useProgressStore((s) => s.completedLessons);
-
-  const itemIds = items.map((q) => q.id);
-  const pct = useProgressStore.getState().trackMasteryPct(track.id, itemIds);
 
   const byTopic = new Map<string, typeof items>();
   for (const it of items) {

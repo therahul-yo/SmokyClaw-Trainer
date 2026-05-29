@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { BracketButton } from "./terminal/BracketButton";
 
@@ -46,16 +47,19 @@ export function OnboardingModal() {
     setOpen(false);
   }
 
-  return (
+  // Portal to <body> so the overlay is fixed to the viewport, not trapped by
+  // the .boot-in transform on the page wrapper (which would make `fixed`
+  // anchor to that scrolling container instead).
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[70] flex items-center justify-center p-4 overflow-y-auto"
       style={{
         background: "rgba(0, 0, 0, 0.85)",
         backdropFilter: "blur(4px)",
       }}
     >
       <div
-        className="max-w-md w-full p-5 space-y-4 font-mono boot-in"
+        className="max-w-md w-full p-5 space-y-4 font-mono boot-in my-auto max-h-[90vh] overflow-y-auto"
         style={{
           background: "var(--color-bg-alt)",
           border: "1px solid var(--color-accent)",
@@ -122,6 +126,7 @@ export function OnboardingModal() {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
