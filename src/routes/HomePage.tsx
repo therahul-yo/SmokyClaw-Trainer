@@ -11,6 +11,7 @@ import { dueRecords } from "../lib/leitner";
 import { OnboardingModal } from "../components/OnboardingModal";
 import { DailyTargetCard } from "../components/DailyTargetCard";
 import { DailyChallengeCard } from "../components/DailyChallengeCard";
+import { SmokeyStrip } from "../components/SmokeyStrip";
 import { Box } from "../components/terminal/Box";
 import { Prompt } from "../components/terminal/Prompt";
 import { AsciiProgress } from "../components/terminal/AsciiProgress";
@@ -63,6 +64,8 @@ export function HomePage() {
           ▌
         </span>
       </Prompt>
+
+      <SmokeyStrip />
 
       <div className="grid md:grid-cols-2 gap-3">
         <DailyChallengeCard />
