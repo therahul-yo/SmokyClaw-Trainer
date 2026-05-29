@@ -2,12 +2,24 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Attempt, LessonProgress, TrackId } from "../types";
 
+export type RecognitionAttempt = {
+  itemId: string;
+  pattern: string;
+  correct: boolean;
+  timeMs: number;
+  attemptedAt: number;
+};
+
 type ProgressState = {
   completedLessons: Record<string, LessonProgress>; // keyed by lessonId
   attempts: Attempt[];
+  recognitionAttempts: RecognitionAttempt[];
+  speedChallengeHighScores: Record<string, number>; // keyed by challengeId
   // Public actions
   markLessonCompleted: (lessonId: string) => void;
   recordAttempt: (a: Omit<Attempt, "attemptedAt">) => void;
+  recordRecognitionAttempt: (a: Omit<RecognitionAttempt, "attemptedAt">) => void;
+  recordSpeedChallengeScore: (challengeId: string, score: number) => void;
   resetAll: () => void;
   // Selectors
   isLessonCompleted: (lessonId: string) => boolean;
@@ -19,6 +31,8 @@ export const useProgressStore = create<ProgressState>()(
     (set, get) => ({
       completedLessons: {},
       attempts: [],
+      recognitionAttempts: [],
+      speedChallengeHighScores: {},
 
       markLessonCompleted: (lessonId) => {
         if (get().completedLessons[lessonId]) return;
@@ -36,7 +50,31 @@ export const useProgressStore = create<ProgressState>()(
         }));
       },
 
-      resetAll: () => set({ completedLessons: {}, attempts: [] }),
+      recordRecognitionAttempt: (a) => {
+        set((s) => ({
+          recognitionAttempts: [...s.recognitionAttempts, { ...a, attemptedAt: Date.now() }],
+        }));
+      },
+
+      recordSpeedChallengeScore: (challengeId, score) => {
+        const current = get().speedChallengeHighScores[challengeId] ?? 0;
+        if (score > current) {
+          set((s) => ({
+            speedChallengeHighScores: {
+              ...s.speedChallengeHighScores,
+              [challengeId]: score,
+            },
+          }));
+        }
+      },
+
+      resetAll: () =>
+        set({
+          completedLessons: {},
+          attempts: [],
+          recognitionAttempts: [],
+          speedChallengeHighScores: {},
+        }),
 
       isLessonCompleted: (lessonId) => Boolean(get().completedLessons[lessonId]),
 

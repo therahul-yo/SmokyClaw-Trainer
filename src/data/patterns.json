@@ -5,7 +5,7 @@
     "title": "DSA foundations",
     "blurb": "Big-O, constraints, edge cases, brute force, and the LeetCode pattern-recognition loop.",
     "prerequisites": [],
-    "lessonIds": ["dsa-00-foundations", "dsa-04-big-o"],
+    "lessonIds": ["dsa-00-absolute-zero", "dsa-00-foundations", "dsa-04-big-o"],
     "itemIds": []
   },
   {
@@ -123,7 +123,7 @@
     "blurb": "Adjacency lists, BFS shortest unweighted, DFS components, topo sort.",
     "prerequisites": ["recursion", "stack-queue"],
     "lessonIds": ["dsa-15-graphs"],
-    "itemIds": ["dsa-q-038", "dsa-q-039", "dsa-q-040", "dsa-q-049", "dsa-c-num-islands", "dsa-c-course-schedule"]
+    "itemIds": ["dsa-q-038", "dsa-q-039", "dsa-q-040", "dsa-q-049", "dsa-c-num-islands", "dsa-c-course-schedule", "dsa-c-graph-bfs"]
   },
   {
     "id": "greedy",
@@ -153,6 +153,15 @@
     "itemIds": ["dsa-c-unique-paths", "dsa-c-lcs"]
   },
   {
+    "id": "dsa-advanced",
+    "track": "dsa",
+    "title": "Advanced structures & algorithms",
+    "blurb": "Segment trees, Fenwick trees, strongly connected components, and bitmask/digit/tree DP.",
+    "prerequisites": ["dp-1d", "graphs"],
+    "lessonIds": ["dsa-19-advanced-range-queries", "dsa-20-advanced-graph-algorithms", "dsa-21-heavyweight-dp"],
+    "itemIds": ["dsa-c-range-sum-query-mutable", "dsa-c-strongly-connected-components", "dsa-c-bitmask-tsp"]
+  },
+  {
     "id": "bit-manipulation",
     "track": "dsa",
     "title": "Bit manipulation",
@@ -176,8 +185,8 @@
     "title": "Python foundations",
     "blurb": "Variables, loops, functions, containers, and coding-test input/output before advanced Python.",
     "prerequisites": [],
-    "lessonIds": ["python-00-foundations", "python-syntax", "python-control-flow"],
-    "itemIds": []
+    "lessonIds": ["python-00-absolute-zero", "python-00-foundations", "python-syntax", "python-control-flow"],
+    "itemIds": ["py-c-001", "py-c-002", "py-c-003", "py-c-fizzbuzz"]
   },
   {
     "id": "python-data-model",
@@ -186,7 +195,7 @@
     "blurb": "Mutability, identity vs equality, references, copy vs deepcopy.",
     "prerequisites": ["python-foundations"],
     "lessonIds": ["python-data-types", "python-03-mutability"],
-    "itemIds": []
+    "itemIds": ["py-q-020", "py-q-021", "py-q-022", "py-q-023", "py-q-024", "py-c-merge-dicts"]
   },
   {
     "id": "python-iter",
@@ -195,7 +204,7 @@
     "blurb": "Lazy iteration, yield, generator expressions, itertools.",
     "prerequisites": ["python-data-model"],
     "lessonIds": ["python-10-generators"],
-    "itemIds": []
+    "itemIds": ["py-q-025", "py-q-026", "py-q-030", "py-q-031", "py-q-032", "py-c-flatten"]
   },
   {
     "id": "python-decorators",
@@ -204,7 +213,7 @@
     "blurb": "First-class functions, decorator pattern, functools.wraps.",
     "prerequisites": ["python-iter"],
     "lessonIds": ["python-12-decorators"],
-    "itemIds": []
+    "itemIds": ["py-q-028", "py-q-036", "py-q-037", "py-q-038", "py-c-fibonacci", "py-c-decorator-timer"]
   },
   {
     "id": "python-oop",
@@ -213,7 +222,7 @@
     "blurb": "Classes, dunder methods, dataclasses, inheritance vs composition.",
     "prerequisites": ["python-data-model"],
     "lessonIds": ["python-15-oop"],
-    "itemIds": []
+    "itemIds": ["py-q-039", "py-q-040", "py-q-041"]
   },
   {
     "id": "python-stdlib",
@@ -222,7 +231,16 @@
     "blurb": "collections, itertools, functools — the interview cheats.",
     "prerequisites": ["python-foundations"],
     "lessonIds": ["python-20-stdlib"],
-    "itemIds": []
+    "itemIds": ["py-q-042", "py-q-043", "py-q-044", "py-q-045"]
+  },
+  {
+    "id": "python-advanced",
+    "track": "python",
+    "title": "Advanced Python & Internals",
+    "blurb": "CPython allocation sizing, garbage collection, event loops, and Global Interpreter Lock (GIL).",
+    "prerequisites": ["python-oop", "python-decorators"],
+    "lessonIds": ["python-35-cpython-internals-gc", "python-40-concurrency-gil"],
+    "itemIds": ["py-q-050", "py-q-051", "py-q-052", "py-q-053", "py-c-custom-range"]
   },
   {
     "id": "sql-foundations",
@@ -230,8 +248,8 @@
     "title": "SQL foundations",
     "blurb": "Tables, rows, SELECT, WHERE, GROUP BY, HAVING, ORDER BY, and the result-table mental model.",
     "prerequisites": [],
-    "lessonIds": ["sql-00-foundations", "sql-select"],
-    "itemIds": []
+    "lessonIds": ["sql-00-absolute-zero", "sql-00-foundations", "sql-select"],
+    "itemIds": ["sql-q-001", "sql-q-002", "sql-001", "sql-c-basic-filter-order", "sql-c-count-all-employees"]
   },
   {
     "id": "sql-joins",
@@ -240,7 +258,7 @@
     "blurb": "INNER, LEFT, RIGHT, FULL, CROSS — when and why.",
     "prerequisites": ["sql-foundations"],
     "lessonIds": ["sql-02-joins"],
-    "itemIds": []
+    "itemIds": ["sql-c-eng-employees", "sql-c-employee-dept-join", "sql-c-no-dept", "sql-c-departments-without-employees"]
   },
   {
     "id": "sql-aggregation",
@@ -249,7 +267,7 @@
     "blurb": "Aggregates, grouping sets, HAVING vs WHERE.",
     "prerequisites": ["sql-foundations"],
     "lessonIds": ["sql-03-group-by"],
-    "itemIds": []
+    "itemIds": ["sql-c-dept-headcount", "sql-c-avg-salary-per-dept", "sql-c-location-headcount", "sql-c-customer-spend"]
   },
   {
     "id": "sql-subqueries",
@@ -258,7 +276,7 @@
     "blurb": "Correlated subqueries, WITH clauses, recursive CTEs.",
     "prerequisites": ["sql-joins"],
     "lessonIds": ["sql-04-subqueries", "sql-05-cte"],
-    "itemIds": []
+    "itemIds": ["sql-c-above-dept-avg", "sql-c-products-never-delivered", "sql-c-employees-hired-2024"]
   },
   {
     "id": "sql-window",
@@ -267,7 +285,7 @@
     "blurb": "ROW_NUMBER, RANK, LAG/LEAD, running totals — the senior round filter.",
     "prerequisites": ["sql-aggregation"],
     "lessonIds": ["sql-06-window-functions"],
-    "itemIds": ["sql-c-running-total", "sql-c-top-per-group"]
+    "itemIds": ["sql-c-running-total", "sql-c-top-per-group", "sql-c-top-3-salaries", "sql-c-highest-paid-per-dept"]
   },
   {
     "id": "sql-indexes",
@@ -276,7 +294,7 @@
     "blurb": "B-tree intuition, composite indexes, when not to index.",
     "prerequisites": ["sql-foundations"],
     "lessonIds": ["sql-08-indexes"],
-    "itemIds": []
+    "itemIds": ["sql-q-index-composite-001"]
   },
   {
     "id": "sql-normalization",
@@ -285,7 +303,16 @@
     "blurb": "1NF–BCNF, transactions, isolation levels.",
     "prerequisites": ["sql-foundations"],
     "lessonIds": ["sql-09-normalization"],
-    "itemIds": []
+    "itemIds": ["sql-q-normalization-001", "sql-q-transaction-001"]
+  },
+  {
+    "id": "sql-advanced",
+    "track": "sql",
+    "title": "Advanced engine internals & transactions",
+    "blurb": "Execution plans, B-Tree vs Hash index scans, transaction isolation anomalies, locks, and MVCC.",
+    "prerequisites": ["sql-indexes", "sql-normalization", "sql-subqueries"],
+    "lessonIds": ["sql-11-engine-optimization-explain", "sql-12-transactions-isolation-mvcc"],
+    "itemIds": ["sql-q-035", "sql-q-036", "sql-q-037", "sql-c-degrees-separation"]
   },
   {
     "id": "aptitude-foundations",
@@ -293,7 +320,7 @@
     "title": "Aptitude foundations",
     "blurb": "Arithmetic speed, formulas, classification, and timed accuracy before company-style sections.",
     "prerequisites": [],
-    "lessonIds": ["aptitude-00-foundations"],
-    "itemIds": []
+    "lessonIds": ["aptitude-00-absolute-zero", "aptitude-00-foundations", "aptitude-13-advanced-probability-combinatorics", "aptitude-14-logical-deductions-syllogisms"],
+    "itemIds": ["apt-q-001", "apt-q-002", "apt-q-003", "apt-q-004", "apt-q-005", "apt-q-006", "apt-q-010", "apt-q-011", "apt-q-012", "apt-q-013", "apt-q-014", "apt-q-015", "apt-q-016", "apt-q-017", "apt-q-018", "apt-q-019", "apt-q-020", "apt-q-021", "apt-q-022", "apt-q-023", "apt-q-024", "apt-q-025", "apt-q-026", "apt-q-027", "apt-q-028", "apt-q-029", "apt-q-030", "apt-q-031", "apt-q-032", "apt-q-033", "apt-q-034", "apt-q-035", "apt-q-036", "apt-q-037", "apt-q-038", "apt-q-039", "apt-q-040", "apt-q-041", "apt-q-042", "apt-q-043", "apt-q-044", "apt-q-045", "apt-q-046", "apt-q-047", "apt-q-048", "apt-q-049", "apt-q-050", "apt-q-051", "apt-q-052", "apt-q-053", "apt-q-054", "apt-q-055", "apt-q-056", "apt-q-057", "apt-q-058", "apt-q-059", "apt-q-060", "apt-q-061", "apt-q-062", "apt-q-063", "apt-q-064"]
   }
 ]

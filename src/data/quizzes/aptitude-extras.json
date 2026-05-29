@@ -623,5 +623,66 @@
     "answerIndex": 0,
     "explanation": "Let B = 100, A = 125. B less than A = 25/125 × 100 = 20%. Asymmetry between 'more than' and 'less than'.",
     "tags": ["percentages", "interview-classic"]
+  },
+  {
+    "id": "apt-q-060",
+    "track": "aptitude",
+    "topic": "quant",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "If a person walks at 14 km/h instead of 10 km/h, he would have walked 20 km more in the same time. The actual distance travelled by him is:",
+    "options": ["50 km", "56 km", "70 km", "80 km"],
+    "answerIndex": 0,
+    "explanation": "Let actual distance be x. Time = x/10. At 14 km/h, time = (x+20)/14. Since times are equal: x/10 = (x+20)/14 -> 14x = 10x + 200 -> 4x = 200 -> x = 50 km.",
+    "tags": ["tsd", "ratios", "tcs-nqt"]
+  },
+  {
+    "id": "apt-q-061",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "question": "In a certain code, 'COMPUTER' is written as 'RFUVQNPC'. How is 'MEDICINE' written in that code?",
+    "options": ["EOJDJEFM", "EOJDEJFM", "MFEJDJOE", "DJEFMEOJ"],
+    "answerIndex": 0,
+    "explanation": "First and last letters are swapped. The intermediate letters are shifted +1 and written in reverse order. Apply to MEDICINE: Swap M/E -> E...M. Intermediate letters E-D-I-C-I-N shifted +1 is F-E-J-D-J-O. Reversed is O-J-D-J-E-F. Combine -> EOJDJEFM.",
+    "tags": ["coding-decoding", "logic", "capgemini"]
+  },
+  {
+    "id": "apt-q-062",
+    "track": "aptitude",
+    "topic": "quant",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "A medical test for a disease has 99% accuracy (true positive rate of 99%, true negative rate of 99%). The disease affects 1% of the population. If a randomly selected person tests positive, what is the probability (closest to) that they actually have the disease?",
+    "options": ["99%", "90%", "50%", "1%"],
+    "answerIndex": 2,
+    "explanation": "By Bayes' Theorem: P(Sick | +) = [P(+ | Sick) * P(Sick)] / P(+). P(Sick) = 0.01, P(+ | Sick) = 0.99. Total positive probability P(+) = 0.99 * 0.01 + 0.01 * 0.99 = 0.0198. P(Sick | +) = 0.0099 / 0.0198 = 0.50 (50%).",
+    "tags": ["probability", "bayes-theorem", "tcs-nqt"]
+  },
+  {
+    "id": "apt-q-063",
+    "track": "aptitude",
+    "topic": "quant",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "How many distinct ways can we distribute 10 identical chocolates among 3 children such that every child receives at least one chocolate?",
+    "options": ["36", "66", "28", "120"],
+    "answerIndex": 0,
+    "explanation": "Using the Stars and Bars positive integer formula: C(n-1, k-1) where n=10 identical items and k=3 distinct children. C(10-1, 3-1) = C(9, 2) = (9 * 8) / 2 = 36.",
+    "tags": ["permutations-combinations", "stars-and-bars"]
+  },
+  {
+    "id": "apt-q-064",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "In the crypto-arithmetic sum SEND + MORE = MONEY, what single-digit integer must represent the letter O?",
+    "options": ["0", "1", "9", "8"],
+    "answerIndex": 0,
+    "explanation": "Since M must be the carry-over digit 1, the thousands column is S + 1 = O (or S + 1 + 1 = O with carry). Since O is a single-digit integer and M=1, and S can be at most 9: if S=9, 9+1=10, which forces O=0 and a carry of 1. If S=8 with carry, 8+1+1=10, which again forces O=0. Thus, O is uniquely 0.",
+    "tags": ["crypto-arithmetic", "logic"]
   }
 ]
+

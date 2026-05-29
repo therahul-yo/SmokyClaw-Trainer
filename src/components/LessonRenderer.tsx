@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import { useState } from "react";
+import { MemoryTraceVisualizer } from "./MemoryTraceVisualizer";
 
 function slugify(text: string): string {
   return text
@@ -71,6 +72,14 @@ export function LessonRenderer({ body, withHeadingIds = false }: Props) {
                 {children}
               </h3>
             );
+          },
+          code: ({ className, children, ...props }) => {
+            const match = /language-(\w+)/.exec(className || "");
+            if (match && match[1] === "memory-trace") {
+              const content = String(children).trim();
+              return <MemoryTraceVisualizer json={content} />;
+            }
+            return <code className={className} {...props}>{children}</code>;
           },
           pre: ({ children }) => {
             // Find the inner code text for the copy button.

@@ -398,5 +398,57 @@
     "answerIndex": 1,
     "explanation": "Denormalize after profiling shows joins or aggregates dominate. Common: pre-aggregated counters (post.like_count), star-schema dimensions in analytics. Cost: write-side logic to keep duplicates consistent.",
     "tags": ["normalization", "tradeoffs"]
+  },
+  {
+    "id": "sql-q-035",
+    "track": "sql",
+    "topic": "advanced-sql",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "Under which transaction isolation level are dirty reads, non-repeatable reads, and phantom reads all prevented?",
+    "options": [
+      "Read Committed",
+      "Repeatable Read",
+      "Read Uncommitted",
+      "Serializable"
+    ],
+    "answerIndex": 3,
+    "explanation": "Serializable is the highest isolation level. It guarantees that transactions execute in a way that is equivalent to running them sequentially, preventing all three concurrency anomalies.",
+    "tags": ["transactions", "acid"]
+  },
+  {
+    "id": "sql-q-036",
+    "track": "sql",
+    "topic": "advanced-sql",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "How does Multi-Version Concurrency Control (MVCC) improve performance over traditional Two-Phase Locking (2PL)?",
+    "options": [
+      "By removing the need for a transaction log entirely.",
+      "By writing all updates directly to a memory-only cache.",
+      "By keeping multiple versions of rows so that readers do not block writers, and writers do not block readers.",
+      "By executing all queries in a single-threaded queue."
+    ],
+    "answerIndex": 2,
+    "explanation": "MVCC creates a new version of a row on updates/deletes rather than overwriting in-place. Transactions read a consistent snapshot of the data from a specific point in time, meaning reads and writes do not lock each other.",
+    "tags": ["transactions", "mvcc", "locks"]
+  },
+  {
+    "id": "sql-q-037",
+    "track": "sql",
+    "topic": "advanced-sql",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "What is the primary performance advantage of an Index-Only Scan (Covering Index) over a standard Index Scan?",
+    "options": [
+      "It scans the table sequentially rather than navigating a B-tree.",
+      "It reads data directly from the B-tree leaf nodes and completely avoids fetching pages from the table data heap.",
+      "It runs only on memory-cached tables.",
+      "It automatically partitions the output."
+    ],
+    "answerIndex": 1,
+    "explanation": "If all requested columns in a SELECT and WHERE are indexed, the engine can answer the query using only the index tree leaves, avoiding the need to perform random I/O reads on the actual table heap pages.",
+    "tags": ["indexes", "performance"]
   }
 ]
+

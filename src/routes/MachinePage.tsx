@@ -3,17 +3,19 @@ import { Link } from "react-router-dom";
 import { getAllQuizItems } from "../lib/contentLoader";
 import { nowMs } from "../lib/daily";
 import { buildMachinePlan } from "../lib/trainingMachine";
-import { useProgressStore, useReviewQueueStore } from "../store";
+import { useProgressStore, useReviewQueueStore, useMachineSessionStore } from "../store";
 import { AsciiProgress } from "../components/terminal/AsciiProgress";
 import { Box } from "../components/terminal/Box";
 import { BracketButton } from "../components/terminal/BracketButton";
 import { Prompt } from "../components/terminal/Prompt";
+import { MachineSession } from "../components/MachineSession";
 
 export function MachinePage() {
   const [now] = useState(() => nowMs());
   const items = getAllQuizItems();
   const attempts = useProgressStore((s) => s.attempts);
   const reviewRecords = useReviewQueueStore((s) => s.records);
+  const { isActive, isCompleted, startSession } = useMachineSessionStore();
 
   const plan = useMemo(
     () =>
@@ -29,20 +31,66 @@ export function MachinePage() {
   const itemById = useMemo(() => new Map(items.map((item) => [item.id, item])), [items]);
   const nextGate = plan.nextGate;
 
+  const hasItems = useMemo(() => plan.blocks.some((b) => b.itemIds.length > 0), [plan.blocks]);
+
+  const handleStartSession = () => {
+    if (!hasItems) {
+      alert("No training items queued for today! Keep mocking and reviewing.");
+      return;
+    }
+    startSession(plan.blocks);
+  };
+
+  const handleStartSessionFromBlock = (blockId: string) => {
+    const blockIndex = plan.blocks.findIndex((b) => b.id === blockId);
+    if (blockIndex === -1 || plan.blocks[blockIndex].itemIds.length === 0) {
+      alert("No items in this block!");
+      return;
+    }
+    startSession(plan.blocks);
+    useMachineSessionStore.setState({
+      currentBlockIndex: blockIndex,
+      currentItemIndex: 0,
+      itemStartedAt: nowMs(),
+    });
+  };
+
+  if (isActive || isCompleted) {
+    return <MachineSession />;
+  }
+
   return (
     <div className="space-y-4">
       <Prompt path="~/machine">
         <span>train --mode=machine --loop=daily --repair=weakest</span>
       </Prompt>
 
-      <div
-        className="text-2xl font-bold crt-glow"
-        style={{ color: "var(--color-accent)" }}
-      >
-        machine loop
-        <span className="text-sm ml-2" style={{ color: "var(--color-text-muted)" }}>
-          // zero → interview execution
-        </span>
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div
+          className="text-2xl font-bold crt-glow"
+          style={{ color: "var(--color-accent)" }}
+        >
+          machine loop
+          <span className="text-sm ml-2" style={{ color: "var(--color-text-muted)" }}>
+            // zero → interview execution
+          </span>
+        </div>
+        <div className="flex gap-3">
+          <Link
+            to="/recognition"
+            className="font-mono text-xs underline"
+            style={{ color: "var(--color-cyan)" }}
+          >
+            [ train pattern recognition ]
+          </Link>
+          <Link
+            to="/speedrun"
+            className="font-mono text-xs underline"
+            style={{ color: "var(--color-amber)" }}
+          >
+            [ speed challenge runs ]
+          </Link>
+        </div>
       </div>
 
       <Box
@@ -109,7 +157,18 @@ export function MachinePage() {
         </div>
       </Box>
 
-      <Box title="$ today --machine-loop" trailing="5 blocks">
+      <Box
+        title="$ today --machine-loop"
+        trailing={
+          <BracketButton
+            variant="primary"
+            onClick={handleStartSession}
+            disabled={!hasItems}
+          >
+            start session
+          </BracketButton>
+        }
+      >
         <div className="grid lg:grid-cols-5 gap-3">
           {plan.blocks.map((block) => (
             <div
@@ -136,15 +195,14 @@ export function MachinePage() {
                   const item = itemById.get(id);
                   if (!item) return null;
                   return (
-                    <Link
+                    <div
                       key={id}
-                      to={`/quiz/${item.track}/${item.topic}`}
-                      className="block truncate text-xs underline"
+                      className="block truncate text-xs"
                       style={{ color: "var(--color-cyan)" }}
                       title={id}
                     >
                       {item.track}/{item.topic}
-                    </Link>
+                    </div>
                   );
                 })}
                 {block.itemIds.length === 0 && (
@@ -153,13 +211,12 @@ export function MachinePage() {
                   </div>
                 )}
               </div>
-              {block.itemIds[0] && itemById.get(block.itemIds[0]) && (
-                <Link
-                  to={`/quiz/${itemById.get(block.itemIds[0])!.track}/${itemById.get(block.itemIds[0])!.topic}`}
-                  className="mt-3"
-                >
-                  <BracketButton>start</BracketButton>
-                </Link>
+              {block.itemIds.length > 0 && (
+                <div className="mt-3">
+                  <BracketButton onClick={() => handleStartSessionFromBlock(block.id)}>
+                    start
+                  </BracketButton>
+                </div>
               )}
             </div>
           ))}

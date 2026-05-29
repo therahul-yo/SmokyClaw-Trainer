@@ -404,5 +404,89 @@
       "explanation": "Standard top-K pattern. Engines may use a heap of size K instead of full sort."
     },
     "tags": ["select", "order-by", "limit", "tcs-nqt"]
+  },
+  {
+    "id": "sql-c-dept-salary-rank",
+    "track": "sql",
+    "topic": "window-functions",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-window",
+    "estMinutes": 10,
+    "companies": ["tcs", "infosys", "amazon-india"],
+    "schema": "employees",
+    "prompt": "Assign a rank to each employee within their department based on their salary in descending order. Return the department name as `dept_name`, employee name as `employee_name`, `salary`, and the rank as `salary_rank`. Exclude employees with no department. Order by `dept_name` ASC, `salary_rank` ASC.",
+    "constraints": "Use RANK() or DENSE_RANK() as a window function.",
+    "expected": {
+      "columns": ["dept_name", "employee_name", "salary", "salary_rank"],
+      "rows": [
+        ["Engineering", "Carol", 92000, 1],
+        ["Engineering", "Alice", 75000, 2],
+        ["Engineering", "Hugo", 50000, 3],
+        ["Finance", "Grace", 65000, 1],
+        ["Marketing", "Eve", 38000, 1],
+        ["Sales", "Dave", 48000, 1],
+        ["Sales", "Bob", 45000, 2]
+      ]
+    },
+    "starter": "SELECT d.name AS dept_name, e.name AS employee_name, e.salary,\n       DENSE_RANK() OVER (PARTITION BY ... ORDER BY ...) AS salary_rank\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nORDER BY dept_name, salary_rank;\n",
+    "hints": [
+      "Join employees to departments to get `dept_name`.",
+      "Partition by `d.id` or `d.name` and order by `salary DESC` inside the window function.",
+      "Order the final output by `dept_name` ASC and `salary_rank` ASC."
+    ],
+    "bruteForce": {
+      "code": "SELECT d.name AS dept_name, e.name AS employee_name, e.salary,\n       (SELECT COUNT(*) FROM employees e2 WHERE e2.department_id = e.department_id AND e2.salary >= e.salary) AS salary_rank\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nORDER BY dept_name, salary_rank;",
+      "complexity": "O(n^2)",
+      "explanation": "Correlated count of employees with higher salary. Easy to write but slow."
+    },
+    "optimal": {
+      "code": "SELECT d.name AS dept_name, e.name AS employee_name, e.salary,\n       DENSE_RANK() OVER (PARTITION BY d.id ORDER BY e.salary DESC) AS salary_rank\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nORDER BY dept_name, salary_rank;",
+      "complexity": "O(n log n)",
+      "explanation": "DENSE_RANK() OVER partition ranks employees by salary descending within department. The join retrieves department names."
+    },
+    "tags": ["window-functions", "rank", "joins"]
+  },
+  {
+    "id": "sql-c-degrees-separation",
+    "track": "sql",
+    "topic": "cte",
+    "type": "sql",
+    "difficulty": "hard",
+    "pattern": "sql-cte",
+    "estMinutes": 20,
+    "companies": ["amazon-india"],
+    "schema": "social",
+    "prompt": "Find all users reachable from user 'farhan' (id = 6) by recursively following followee links. Return the user's `username` and their minimum `degree` of separation (1 for direct followee, 2 for followee's followee, etc.). Exclude 'farhan' himself. Order by `degree` ASC, then `username` ASC.",
+    "constraints": "Use a RECURSIVE CTE.",
+    "expected": {
+      "columns": ["username", "degree"],
+      "rows": [
+        ["divya", 1],
+        ["aarav", 2],
+        ["esha", 2],
+        ["bhavna", 3],
+        ["chetan", 3]
+      ]
+    },
+    "starter": "WITH RECURSIVE reach AS (\n  -- Anchor member: direct followees of farhan (id=6)\n  SELECT followee_id, 1 AS degree\n  FROM follows\n  WHERE follower_id = 6\n  \n  UNION\n  \n  -- Recursive member: followees of reachable users\n  SELECT f.followee_id, r.degree + 1\n  FROM follows f\n  JOIN reach r ON f.follower_id = r.followee_id\n  WHERE r.degree < 5\n)\nSELECT u.username, MIN(r.degree) AS degree\nFROM reach r\nJOIN users u ON r.followee_id = u.id\nGROUP BY u.username\nORDER BY degree, u.username;\n",
+    "hints": [
+      "The anchor query selects followees from the `follows` table where `follower_id = 6`.",
+      "The recursive query joins the recursive table `reach r` back to `follows f` on `r.followee_id = f.follower_id`.",
+      "Add a `WHERE r.degree < 5` check to prevent infinite cycles if there are loops in the social graph.",
+      "Finally, join with the `users` table to get the username, group by username, and select `MIN(degree)` to get the shortest path."
+    ],
+    "bruteForce": {
+      "code": "SELECT u.username, 1 AS degree FROM follows f JOIN users u ON f.followee_id = u.id WHERE f.follower_id = 6;",
+      "complexity": "Only finds direct connections",
+      "explanation": "A simple join cannot traverse recursively past a single level of separation."
+    },
+    "optimal": {
+      "code": "WITH RECURSIVE reach AS (\n  SELECT followee_id, 1 AS degree\n  FROM follows\n  WHERE follower_id = 6\n  UNION\n  SELECT f.followee_id, r.degree + 1\n  FROM follows f\n  JOIN reach r ON f.follower_id = r.followee_id\n  WHERE r.degree < 5\n)\nSELECT u.username, MIN(r.degree) AS degree\nFROM reach r\nJOIN users u ON r.followee_id = u.id\nGROUP BY u.username\nORDER BY degree, u.username;",
+      "complexity": "O(V + E) database graph traversal",
+      "explanation": "Computes transitively reachable nodes using breadth-first traversal in database. Aggregating by MIN(degree) resolves duplicate paths with different lengths."
+    },
+    "tags": ["cte", "recursive", "graph-traversal"]
   }
 ]
+

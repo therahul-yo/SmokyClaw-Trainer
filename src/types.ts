@@ -202,7 +202,11 @@ export type MockTestBlueprint = {
     | "infosys-pseudocode-sprint"
     | "accenture-cognitive-technical"
     | "accenture-coding"
-    | "accenture-full-flow";
+    | "accenture-full-flow"
+    | "wipro-elite"
+    | "capgemini"
+    | "generic-dsa"
+    | "sql-only";
   title: string;
   subtitle: string;
   sections: MockSection[];

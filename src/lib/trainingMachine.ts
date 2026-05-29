@@ -204,7 +204,7 @@ function itemStageRank(item: QuizItem): number {
   return STAGE_ORDER.indexOf(inferTrainingStage(item));
 }
 
-function defaultSpeedTargetSec(item: QuizItem): number {
+export function defaultSpeedTargetSec(item: QuizItem): number {
   if (item.speedTargetSec) return item.speedTargetSec;
   if (item.type === "mcq") return item.difficulty === "easy" ? 60 : item.difficulty === "medium" ? 90 : 120;
   if (item.type === "sql") return item.difficulty === "easy" ? 360 : item.difficulty === "medium" ? 600 : 900;

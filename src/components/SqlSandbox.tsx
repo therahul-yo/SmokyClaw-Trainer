@@ -15,7 +15,13 @@ import { Box } from "./terminal/Box";
 import { BracketButton } from "./terminal/BracketButton";
 import { Stopwatch } from "./Stopwatch";
 
-export function SqlSandbox({ item }: { item: SqlItem }) {
+export function SqlSandbox({
+  item,
+  onAnswered,
+}: {
+  item: SqlItem;
+  onAnswered?: (correct: boolean, gaveUp?: boolean) => void;
+}) {
   const [query, setQuery] = useState(item.starter ?? "");
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<SqlGradeResult | null>(null);
@@ -56,6 +62,7 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
       });
       registerAttempt(item.id, r.ok);
       ping();
+      onAnswered?.(r.ok);
       if (r.ok && !item.complexityCheck) setEditorialUnlocked(true);
     } finally {
       setRunning(false);
@@ -79,6 +86,7 @@ export function SqlSandbox({ item }: { item: SqlItem }) {
     registerAttempt(item.id, false);
     setGaveUp(true);
     setEditorialUnlocked(true);
+    onAnswered?.(false, true);
   };
 
   const showEditorial = editorialUnlocked || gaveUp;

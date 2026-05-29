@@ -463,5 +463,74 @@
     "answerIndex": 1,
     "explanation": "Iterating a file object reads line-by-line, never loading the whole file into memory.",
     "tags": ["file-io", "memory"]
+  },
+  {
+    "id": "py-q-050",
+    "track": "python",
+    "topic": "advanced-python",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "What is the output of running `a = 256; b = 256; x = 257; y = 257; print(a is b, x is y)` in CPython?",
+    "options": [
+      "True True",
+      "True False",
+      "False True",
+      "False False"
+    ],
+    "answerIndex": 1,
+    "explanation": "CPython caches small integers in the range [-5, 256] during initialization. Re-assigning values in this range reuses the cached object. Values outside this range allocate fresh objects.",
+    "tags": ["cpython", "memory-optimization"]
+  },
+  {
+    "id": "py-q-051",
+    "track": "python",
+    "topic": "advanced-python",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "Which garbage collection mechanism in CPython is responsible for resolving reference cycles?",
+    "options": [
+      "Reference counting",
+      "Generational cyclic garbage collector",
+      "Mark-sweep-compact collector",
+      "Manual memory malloc/free calls"
+    ],
+    "answerIndex": 1,
+    "explanation": "CPython uses reference counting as its main garbage collection strategy, which immediately destroys objects when count hits 0. However, to resolve reference cycles (objects pointing to each other), it runs a generational cyclic garbage collector.",
+    "tags": ["cpython", "garbage-collection"]
+  },
+  {
+    "id": "py-q-052",
+    "track": "python",
+    "topic": "advanced-python",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "Why does multithreading using Python's `threading` module fail to speed up CPU-bound operations in CPython?",
+    "options": [
+      "CPython does not support operating system threads.",
+      "The Global Interpreter Lock (GIL) limits execution to one OS thread at a time.",
+      "Threading is only supported on single-core processors.",
+      "Python threads run in separate processes and cannot communicate."
+    ],
+    "answerIndex": 1,
+    "explanation": "Due to CPython's Global Interpreter Lock (GIL), only one thread can execute Python bytecode at a time. For CPU-bound tasks, this means threads constantly fight over the lock, adding context-switching overhead without gaining true parallelism. Multiprocessing should be used instead.",
+    "tags": ["concurrency", "gil"]
+  },
+  {
+    "id": "py-q-053",
+    "track": "python",
+    "topic": "advanced-python",
+    "type": "mcq",
+    "difficulty": "hard",
+    "question": "What happens if a coroutine in an `asyncio` script executes a blocking synchronous call, such as a long-running CPU computation or a synchronous file write, without yielding?",
+    "options": [
+      "The event loop automatically schedules the block onto a worker thread.",
+      "The blocking call yields control and allows other tasks to run.",
+      "The entire single-threaded event loop is blocked, freezing all other concurrent tasks.",
+      "A RuntimeError is raised immediately by the asyncio framework."
+    ],
+    "answerIndex": 2,
+    "explanation": "Because `asyncio` is single-threaded and relies on cooperative multitasking, any task that runs synchronous, non-yielding blocking code will halt the event loop completely, stopping all other scheduled coroutines.",
+    "tags": ["asyncio", "concurrency"]
   }
 ]
+

@@ -444,6 +444,90 @@ export function runSmokey(input: SmokeyInput, now: number): SmokeyReport {
     }
   }
 
+  // 6.5 — speed regression
+  {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const recentThreshold = now - 7 * oneDay;
+    const historicalThreshold = now - 28 * oneDay;
+
+    // Group correct attempts by topic/pattern
+    const topicCorrectAttempts = new Map<string, { recent: Attempt[]; historical: Attempt[]; rep: QuizItem }>();
+    for (const a of attempts) {
+      if (!a.correct || a.timeMs <= 0) continue;
+      const item = itemById.get(a.itemId);
+      if (!item) continue;
+      const key = item.pattern ?? item.topic;
+      const grp = topicCorrectAttempts.get(key) ?? { recent: [], historical: [], rep: item };
+      if (a.attemptedAt >= recentThreshold) {
+        grp.recent.push(a);
+      } else if (a.attemptedAt >= historicalThreshold) {
+        grp.historical.push(a);
+      }
+      topicCorrectAttempts.set(key, grp);
+    }
+
+    let speedRegressedTopic: string | null = null;
+    let recentAvgSec = 0;
+    let histAvgSec = 0;
+    let regressedRep: QuizItem | null = null;
+
+    for (const [topic, grp] of topicCorrectAttempts.entries()) {
+      if (grp.recent.length >= 2 && grp.historical.length >= 3) {
+        const recentAvg = grp.recent.reduce((sum, a) => sum + a.timeMs, 0) / grp.recent.length;
+        const histAvg = grp.historical.reduce((sum, a) => sum + a.timeMs, 0) / grp.historical.length;
+        
+        // Speed regressed if recent average is 1.5x slower than historical average
+        // and both are non-trivial (> 2 seconds)
+        if (recentAvg > 1.5 * histAvg && recentAvg > 2000) {
+          speedRegressedTopic = topic;
+          recentAvgSec = Math.round(recentAvg / 1000);
+          histAvgSec = Math.round(histAvg / 1000);
+          regressedRep = grp.rep;
+          break; // Report the first one we find
+        }
+      }
+    }
+
+    if (speedRegressedTopic && regressedRep) {
+      advisories.push({
+        id: "speed-regression",
+        severity: "warn",
+        icon: "◷",
+        text: `speed regression on ${speedRegressedTopic}: taking ${recentAvgSec}s lately vs ${histAvgSec}s previously. focus on typing and classification speed.`,
+        cta: { label: "drill it", to: quizTopicLink(regressedRep) },
+      });
+    }
+  }
+
+  // 6.6 — difficulty avoidance
+  {
+    const recentAttempts = attempts.filter((a) => now - a.attemptedAt <= 14 * DAY_MS);
+    const easyCount = recentAttempts.filter((a) => {
+      const item = itemById.get(a.itemId);
+      return item?.difficulty === "easy";
+    }).length;
+    const easyCorrect = recentAttempts.filter((a) => {
+      const item = itemById.get(a.itemId);
+      return item?.difficulty === "easy" && a.correct;
+    }).length;
+    const mediumHardCount = recentAttempts.filter((a) => {
+      const item = itemById.get(a.itemId);
+      return item?.difficulty === "medium" || item?.difficulty === "hard";
+    }).length;
+
+    const easyAccuracy = easyCount > 0 ? easyCorrect / easyCount : 0;
+
+    if (easyCount >= 6 && easyAccuracy >= 0.8 && mediumHardCount <= 1) {
+      advisories.push({
+        id: "difficulty-avoidance",
+        severity: "info",
+        icon: "↗",
+        text: `you're mastering easy items (${Math.round(easyAccuracy * 100)}% accuracy) but avoiding medium and hard challenges. time to push your limits!`,
+        cta: { label: "start machine loop", to: "/machine" },
+      });
+    }
+  }
+
   // 7 — best study window.
   if (window) {
     advisories.push({
