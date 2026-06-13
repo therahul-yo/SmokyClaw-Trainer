@@ -3,7 +3,7 @@ id: aptitude-13-worked-speed-math
 title: Worked examples: aptitude speed math
 track: aptitude
 topic: worked-examples
-order: 13
+order: 18
 estMinutes: 35
 prerequisites: [aptitude-00-foundations, aptitude-12-speed-machine]
 pattern: aptitude-worked-speed

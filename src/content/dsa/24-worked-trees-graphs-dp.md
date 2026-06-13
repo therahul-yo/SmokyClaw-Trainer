@@ -3,7 +3,7 @@ id: dsa-21-worked-trees-graphs-dp
 title: Worked examples: trees, graphs, and DP
 track: dsa
 topic: worked-examples
-order: 21
+order: 24
 estMinutes: 42
 prerequisites: [dsa-18-pattern-recognition-machine]
 pattern: advanced-patterns

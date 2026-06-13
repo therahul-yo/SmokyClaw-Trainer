@@ -13,26 +13,26 @@ export function McqCard({
   onAnswered?: (correct: boolean) => void;
 }) {
   const [selected, setSelected] = useState<number | null>(null);
-  const [submittedAt, setSubmittedAt] = useState<number | null>(null);
+  const [submitted, setSubmitted] = useState(false);
   const startedAt = useState(() => Date.now())[0];
 
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
   const registerAttempt = useReviewQueueStore((s) => s.registerAttempt);
   const ping = useStreakStore((s) => s.ping);
 
-  const submit = (idx: number) => {
-    if (submittedAt !== null) return;
+  const handleSubmit = (idx: number, clickedAt: number) => {
+    if (submitted) return;
     setSelected(idx);
+    setSubmitted(true);
     const correct = idx === item.answerIndex;
-    const now = Date.now();
-    setSubmittedAt(now);
-    recordAttempt({ itemId: item.id, correct, timeMs: now - startedAt });
+    // clickedAt is sampled in the onClick handler (an event-handler context),
+    // so no impure Date.now() runs in this render-scope function.
+    recordAttempt({ itemId: item.id, correct, timeMs: clickedAt - startedAt });
     registerAttempt(item.id, correct);
     ping();
     onAnswered?.(correct);
   };
 
-  const submitted = submittedAt !== null;
   const correct = submitted && selected === item.answerIndex;
 
   return (
@@ -74,7 +74,7 @@ export function McqCard({
             return (
               <li key={i}>
                 <button
-                  onClick={() => submit(i)}
+                  onClick={() => handleSubmit(i, Date.now())}
                   disabled={submitted}
                   className="w-full text-left px-3 py-2 font-mono text-sm transition-colors hover:brightness-110 disabled:cursor-not-allowed"
                   style={{

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { useState, useEffect, useMemo, useRef, useLayoutEffect } from "react";
 
 type Variable = {
   name: string;
@@ -27,23 +27,26 @@ type TraceData = {
 
 export function MemoryTraceVisualizer({ json }: { json: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [data, setData] = useState<TraceData | null>(null);
   const [stepIndex, setStepIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [connections, setConnections] = useState<{ x1: number; y1: number; x2: number; y2: number; label: string }[]>([]);
-  const [parseError, setParseError] = useState<string | null>(null);
 
   // Parse JSON data safely
-  useEffect(() => {
+  const { data, parseError } = useMemo<{
+    data: TraceData | null;
+    parseError: string | null;
+  }>(() => {
     try {
       const parsed = JSON.parse(json) as TraceData;
       if (!parsed.code || !parsed.steps) {
         throw new Error("Missing 'code' or 'steps' array in trace schema");
       }
-      setData(parsed);
-      setParseError(null);
+      return { data: parsed, parseError: null };
     } catch (e) {
-      setParseError(e instanceof Error ? e.message : "Invalid JSON schema");
+      return {
+        data: null,
+        parseError: e instanceof Error ? e.message : "Invalid JSON schema",
+      };
     }
   }, [json]);
 

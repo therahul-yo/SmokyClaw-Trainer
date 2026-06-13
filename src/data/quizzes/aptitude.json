@@ -33,7 +33,7 @@
     "options": ["20%", "25%", "30%", "75%"],
     "answerIndex": 0,
     "explanation": "Let B = 100, then A = 125. B is less than A by 25/125 × 100 = 20%. The asymmetry is the trap.",
-    "tags": ["percentages", "ratio", "interview-classic"]
+    "tags": ["percentages", "ratios", "interview-classic"]
   },
   {
     "id": "apt-q-004",

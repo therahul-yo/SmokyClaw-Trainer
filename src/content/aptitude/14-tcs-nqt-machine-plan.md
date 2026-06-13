@@ -3,7 +3,7 @@ id: aptitude-14-tcs-nqt-machine-plan
 title: TCS NQT machine preparation plan
 track: aptitude
 topic: company-prep
-order: 14
+order: 19
 estMinutes: 40
 prerequisites: [aptitude-00-foundations, dsa-18-pattern-recognition-machine, python-30-interview-machine]
 pattern: company-tcs-nqt

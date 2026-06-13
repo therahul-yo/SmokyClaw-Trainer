@@ -402,7 +402,7 @@
   {
     "id": "sql-q-035",
     "track": "sql",
-    "topic": "advanced-sql",
+    "topic": "transactions",
     "type": "mcq",
     "difficulty": "hard",
     "question": "Under which transaction isolation level are dirty reads, non-repeatable reads, and phantom reads all prevented?",
@@ -419,7 +419,7 @@
   {
     "id": "sql-q-036",
     "track": "sql",
-    "topic": "advanced-sql",
+    "topic": "transactions",
     "type": "mcq",
     "difficulty": "hard",
     "question": "How does Multi-Version Concurrency Control (MVCC) improve performance over traditional Two-Phase Locking (2PL)?",
@@ -436,7 +436,7 @@
   {
     "id": "sql-q-037",
     "track": "sql",
-    "topic": "advanced-sql",
+    "topic": "indexes",
     "type": "mcq",
     "difficulty": "hard",
     "question": "What is the primary performance advantage of an Index-Only Scan (Covering Index) over a standard Index Scan?",
