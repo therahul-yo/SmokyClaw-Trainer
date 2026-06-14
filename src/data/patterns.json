@@ -5,62 +5,154 @@
     "title": "DSA foundations",
     "blurb": "Big-O, constraints, edge cases, brute force, and the LeetCode pattern-recognition loop.",
     "prerequisites": [],
-    "lessonIds": ["dsa-00-absolute-zero", "dsa-00-foundations", "dsa-04-big-o"],
-    "itemIds": []
+    "lessonIds": [
+      "dsa-00-absolute-zero",
+      "dsa-00-foundations",
+      "dsa-04-big-o"
+    ],
+    "itemIds": [
+      "dsa-q-010",
+      "dsa-q-011",
+      "dsa-q-012",
+      "dsa-q-013",
+      "dsa-q-014",
+      "dsa-q-048"
+    ]
   },
   {
     "id": "arrays-basics",
     "track": "dsa",
     "title": "Array fundamentals",
     "blurb": "Indexing, traversal, in-place updates, complexity of common operations.",
-    "prerequisites": ["dsa-foundations"],
-    "lessonIds": ["dsa-arrays"],
-    "itemIds": ["dsa-c-array-sum", "dsa-c-second-largest", "dsa-c-move-zeroes", "dsa-c-rotate-array", "dsa-c-kadane-max-subarray", "dsa-c-merge-sorted-arrays"]
+    "prerequisites": [
+      "dsa-foundations"
+    ],
+    "lessonIds": [
+      "dsa-arrays"
+    ],
+    "itemIds": [
+      "dsa-q-001",
+      "dsa-q-002",
+      "dsa-c-array-sum",
+      "dsa-c-second-largest",
+      "dsa-c-move-zeroes",
+      "dsa-c-rotate-array",
+      "dsa-c-kadane-max-subarray",
+      "dsa-c-merge-sorted-arrays"
+    ]
   },
   {
     "id": "two-pointer",
     "track": "dsa",
     "title": "Two pointers",
     "blurb": "Opposite-end or fast/slow pointers to collapse O(n²) into O(n).",
-    "prerequisites": ["arrays-basics"],
-    "lessonIds": ["dsa-02-two-pointer"],
-    "itemIds": ["dsa-c-pair-sum-sorted", "dsa-c-remove-duplicates", "dsa-c-valid-palindrome", "dsa-c-container-most-water", "dsa-c-three-sum", "dsa-c-trap-rain-water"]
+    "prerequisites": [
+      "arrays-basics"
+    ],
+    "lessonIds": [
+      "dsa-02-two-pointer"
+    ],
+    "itemIds": [
+      "dsa-c-pair-sum-sorted",
+      "dsa-c-remove-duplicates",
+      "dsa-c-valid-palindrome",
+      "dsa-c-container-most-water",
+      "dsa-c-three-sum",
+      "dsa-c-trap-rain-water",
+      "dsa-q-050",
+      "dsa-q-051"
+    ]
   },
   {
     "id": "sliding-window",
     "track": "dsa",
     "title": "Sliding window",
     "blurb": "Maintain a running aggregate over a moving window — fixed or variable size.",
-    "prerequisites": ["two-pointer"],
-    "lessonIds": ["dsa-03-sliding-window"],
-    "itemIds": ["dsa-c-max-sum-k", "dsa-c-longest-unique-substr", "dsa-c-min-size-subarray-sum", "dsa-c-max-vowels", "dsa-c-longest-ones", "dsa-c-permutation-in-string"]
+    "prerequisites": [
+      "two-pointer"
+    ],
+    "lessonIds": [
+      "dsa-03-sliding-window"
+    ],
+    "itemIds": [
+      "dsa-c-max-sum-k",
+      "dsa-c-longest-unique-substr",
+      "dsa-c-min-size-subarray-sum",
+      "dsa-c-max-vowels",
+      "dsa-c-longest-ones",
+      "dsa-c-permutation-in-string",
+      "dsa-q-052",
+      "dsa-q-053"
+    ]
   },
   {
     "id": "prefix-sums",
     "track": "dsa",
     "title": "Prefix sums",
     "blurb": "Pre-compute cumulative sums for O(1) range queries.",
-    "prerequisites": ["arrays-basics"],
-    "lessonIds": ["dsa-06-prefix-sums"],
-    "itemIds": ["dsa-c-subarray-sum-k", "dsa-c-running-sum", "dsa-c-range-sum-query", "dsa-c-pivot-index", "dsa-c-product-except-self", "dsa-c-odd-sum-subarrays"]
+    "prerequisites": [
+      "arrays-basics"
+    ],
+    "lessonIds": [
+      "dsa-06-prefix-sums"
+    ],
+    "itemIds": [
+      "dsa-q-018",
+      "dsa-q-019",
+      "dsa-c-subarray-sum-k",
+      "dsa-c-running-sum",
+      "dsa-c-range-sum-query",
+      "dsa-c-pivot-index",
+      "dsa-c-product-except-self",
+      "dsa-c-odd-sum-subarrays"
+    ]
   },
   {
     "id": "hashing",
     "track": "dsa",
     "title": "Hashing",
     "blurb": "Dicts / sets for O(1) lookups — frequency counts, complement search, dedup.",
-    "prerequisites": ["arrays-basics"],
-    "lessonIds": ["dsa-05-hashing"],
-    "itemIds": ["dsa-c-two-sum-unsorted", "dsa-c-contains-duplicate", "dsa-c-group-anagrams", "dsa-c-first-unique-char", "dsa-c-top-k-frequent", "dsa-c-longest-consecutive"]
+    "prerequisites": [
+      "arrays-basics"
+    ],
+    "lessonIds": [
+      "dsa-05-hashing"
+    ],
+    "itemIds": [
+      "dsa-q-004",
+      "dsa-q-015",
+      "dsa-q-016",
+      "dsa-q-017",
+      "dsa-c-two-sum-unsorted",
+      "dsa-c-contains-duplicate",
+      "dsa-c-group-anagrams",
+      "dsa-c-first-unique-char",
+      "dsa-c-top-k-frequent",
+      "dsa-c-longest-consecutive"
+    ]
   },
   {
     "id": "binary-search",
     "track": "dsa",
     "title": "Binary search",
     "blurb": "Classic + on-answer-space. Find the boundary you can decide in O(1).",
-    "prerequisites": ["arrays-basics"],
-    "lessonIds": ["dsa-07-binary-search"],
-    "itemIds": ["dsa-c-binary-search", "dsa-c-search-insert", "dsa-c-first-last-position", "dsa-c-search-rotated", "dsa-c-sqrt", "dsa-c-find-peak"]
+    "prerequisites": [
+      "arrays-basics"
+    ],
+    "lessonIds": [
+      "dsa-07-binary-search"
+    ],
+    "itemIds": [
+      "dsa-q-020",
+      "dsa-q-021",
+      "dsa-q-022",
+      "dsa-c-binary-search",
+      "dsa-c-search-insert",
+      "dsa-c-first-last-position",
+      "dsa-c-search-rotated",
+      "dsa-c-sqrt",
+      "dsa-c-find-peak"
+    ]
   },
   {
     "id": "recursion",
@@ -68,8 +160,20 @@
     "title": "Recursion & backtracking",
     "blurb": "Base case + recursive case, choice/decision trees, pruning.",
     "prerequisites": [],
-    "lessonIds": ["dsa-08-recursion", "dsa-16-backtracking"],
-    "itemIds": ["dsa-q-023", "dsa-q-024", "dsa-c-factorial-recursive", "dsa-c-subsets", "dsa-c-permutations"]
+    "lessonIds": [
+      "dsa-08-recursion",
+      "dsa-16-backtracking"
+    ],
+    "itemIds": [
+      "dsa-q-023",
+      "dsa-q-024",
+      "dsa-q-041",
+      "dsa-q-042",
+      "dsa-q-043",
+      "dsa-c-factorial-recursive",
+      "dsa-c-subsets",
+      "dsa-c-permutations"
+    ]
   },
   {
     "id": "sorting",
@@ -77,8 +181,16 @@
     "title": "Sorting",
     "blurb": "Timsort, mergesort, quicksort. Stable vs not. When to sort.",
     "prerequisites": [],
-    "lessonIds": ["dsa-09-sorting"],
-    "itemIds": ["dsa-q-003", "dsa-q-025", "dsa-q-026", "dsa-q-027", "dsa-c-merge-intervals"]
+    "lessonIds": [
+      "dsa-09-sorting"
+    ],
+    "itemIds": [
+      "dsa-q-003",
+      "dsa-q-025",
+      "dsa-q-026",
+      "dsa-q-027",
+      "dsa-c-merge-intervals"
+    ]
   },
   {
     "id": "linked-list",
@@ -86,8 +198,15 @@
     "title": "Linked lists",
     "blurb": "Pointer manipulation, dummy heads, reverse / detect cycle / merge.",
     "prerequisites": [],
-    "lessonIds": ["dsa-10-linked-lists"],
-    "itemIds": ["dsa-q-028", "dsa-q-029", "dsa-c-reverse-linked-list", "dsa-c-detect-cycle-array"]
+    "lessonIds": [
+      "dsa-10-linked-lists"
+    ],
+    "itemIds": [
+      "dsa-q-028",
+      "dsa-q-029",
+      "dsa-c-reverse-linked-list",
+      "dsa-c-detect-cycle-array"
+    ]
   },
   {
     "id": "stack-queue",
@@ -95,71 +214,149 @@
     "title": "Stacks & queues",
     "blurb": "Monotonic stack, balanced parens, BFS queues, deque tricks.",
     "prerequisites": [],
-    "lessonIds": ["dsa-11-stacks-queues"],
-    "itemIds": ["dsa-q-030", "dsa-q-031", "dsa-q-032", "dsa-c-valid-parens", "dsa-c-daily-temperatures", "dsa-c-next-greater"]
+    "lessonIds": [
+      "dsa-11-stacks-queues"
+    ],
+    "itemIds": [
+      "dsa-q-030",
+      "dsa-q-031",
+      "dsa-q-032",
+      "dsa-c-valid-parens",
+      "dsa-c-daily-temperatures",
+      "dsa-c-next-greater"
+    ]
   },
   {
     "id": "trees",
     "track": "dsa",
     "title": "Trees & BSTs",
     "blurb": "Traversals, recursion patterns, BST invariants.",
-    "prerequisites": ["recursion"],
-    "lessonIds": ["dsa-12-trees", "dsa-13-tree-traversals"],
-    "itemIds": ["dsa-q-033", "dsa-q-034", "dsa-q-035", "dsa-c-tree-height-array", "dsa-c-level-order-array"]
+    "prerequisites": [
+      "recursion"
+    ],
+    "lessonIds": [
+      "dsa-12-trees",
+      "dsa-13-tree-traversals"
+    ],
+    "itemIds": [
+      "dsa-q-033",
+      "dsa-q-034",
+      "dsa-q-035",
+      "dsa-c-tree-height-array",
+      "dsa-c-level-order-array"
+    ]
   },
   {
     "id": "heaps",
     "track": "dsa",
     "title": "Heaps / priority queues",
     "blurb": "Top-K, k-way merge, scheduling. Python's heapq is min-heap only.",
-    "prerequisites": ["sorting"],
-    "lessonIds": ["dsa-14-heaps"],
-    "itemIds": ["dsa-q-036", "dsa-q-037", "dsa-c-kth-largest"]
+    "prerequisites": [
+      "sorting"
+    ],
+    "lessonIds": [
+      "dsa-14-heaps"
+    ],
+    "itemIds": [
+      "dsa-q-036",
+      "dsa-q-037",
+      "dsa-c-kth-largest"
+    ]
   },
   {
     "id": "graphs",
     "track": "dsa",
     "title": "Graphs (BFS / DFS / topo)",
     "blurb": "Adjacency lists, BFS shortest unweighted, DFS components, topo sort.",
-    "prerequisites": ["recursion", "stack-queue"],
-    "lessonIds": ["dsa-15-graphs"],
-    "itemIds": ["dsa-q-038", "dsa-q-039", "dsa-q-040", "dsa-q-049", "dsa-c-num-islands", "dsa-c-course-schedule", "dsa-c-graph-bfs"]
+    "prerequisites": [
+      "recursion",
+      "stack-queue"
+    ],
+    "lessonIds": [
+      "dsa-15-graphs"
+    ],
+    "itemIds": [
+      "dsa-q-038",
+      "dsa-q-039",
+      "dsa-q-040",
+      "dsa-q-049",
+      "dsa-c-num-islands",
+      "dsa-c-course-schedule",
+      "dsa-c-graph-bfs"
+    ]
   },
   {
     "id": "greedy",
     "track": "dsa",
     "title": "Greedy",
     "blurb": "Locally-optimal choices that prove globally optimal. Sort + sweep.",
-    "prerequisites": ["sorting"],
-    "lessonIds": ["dsa-09-sorting"],
-    "itemIds": ["dsa-c-activity-selection", "dsa-c-jump-game"]
+    "prerequisites": [
+      "sorting"
+    ],
+    "lessonIds": [
+      "dsa-09-sorting"
+    ],
+    "itemIds": [
+      "dsa-c-activity-selection",
+      "dsa-c-jump-game"
+    ]
   },
   {
     "id": "dp-1d",
     "track": "dsa",
     "title": "Dynamic programming — 1D",
     "blurb": "Climb stairs, house robber, coin change. State = current index.",
-    "prerequisites": ["recursion"],
-    "lessonIds": ["dsa-17-dp-1d"],
-    "itemIds": ["dsa-q-044", "dsa-q-045", "dsa-q-046", "dsa-q-047", "dsa-c-climb-stairs", "dsa-c-house-robber", "dsa-c-coin-change"]
+    "prerequisites": [
+      "recursion"
+    ],
+    "lessonIds": [
+      "dsa-17-dp-1d"
+    ],
+    "itemIds": [
+      "dsa-q-044",
+      "dsa-q-045",
+      "dsa-q-046",
+      "dsa-q-047",
+      "dsa-c-climb-stairs",
+      "dsa-c-house-robber",
+      "dsa-c-coin-change"
+    ]
   },
   {
     "id": "dp-2d",
     "track": "dsa",
     "title": "Dynamic programming — 2D",
     "blurb": "Grid paths, LCS, edit distance, knapsack.",
-    "prerequisites": ["dp-1d"],
-    "lessonIds": ["dsa-17-dp-1d"],
-    "itemIds": ["dsa-c-unique-paths", "dsa-c-lcs"]
+    "prerequisites": [
+      "dp-1d"
+    ],
+    "lessonIds": [
+      "dsa-17-dp-1d"
+    ],
+    "itemIds": [
+      "dsa-c-unique-paths",
+      "dsa-c-lcs"
+    ]
   },
   {
     "id": "dsa-advanced",
     "track": "dsa",
     "title": "Advanced structures & algorithms",
     "blurb": "Segment trees, Fenwick trees, strongly connected components, and bitmask/digit/tree DP.",
-    "prerequisites": ["dp-1d", "graphs"],
-    "lessonIds": ["dsa-19-advanced-range-queries", "dsa-20-advanced-graph-algorithms", "dsa-21-heavyweight-dp"],
-    "itemIds": ["dsa-c-range-sum-query-mutable", "dsa-c-strongly-connected-components", "dsa-c-bitmask-tsp"]
+    "prerequisites": [
+      "dp-1d",
+      "graphs"
+    ],
+    "lessonIds": [
+      "dsa-19-advanced-range-queries",
+      "dsa-20-advanced-graph-algorithms",
+      "dsa-21-heavyweight-dp"
+    ],
+    "itemIds": [
+      "dsa-c-range-sum-query-mutable",
+      "dsa-c-strongly-connected-components",
+      "dsa-c-bitmask-tsp"
+    ]
   },
   {
     "id": "bit-manipulation",
@@ -168,7 +365,10 @@
     "blurb": "XOR tricks, masks, single-number, power-of-two checks.",
     "prerequisites": [],
     "lessonIds": [],
-    "itemIds": ["dsa-c-single-number", "dsa-c-count-bits"]
+    "itemIds": [
+      "dsa-c-single-number",
+      "dsa-c-count-bits"
+    ]
   },
   {
     "id": "math",
@@ -177,7 +377,10 @@
     "blurb": "GCD/LCM, primes (sieve), modular arithmetic.",
     "prerequisites": [],
     "lessonIds": [],
-    "itemIds": ["dsa-c-gcd", "dsa-c-sieve"]
+    "itemIds": [
+      "dsa-c-gcd",
+      "dsa-c-sieve"
+    ]
   },
   {
     "id": "python-foundations",
@@ -185,62 +388,135 @@
     "title": "Python foundations",
     "blurb": "Variables, loops, functions, containers, and coding-test input/output before advanced Python.",
     "prerequisites": [],
-    "lessonIds": ["python-00-absolute-zero", "python-00-foundations", "python-syntax", "python-control-flow"],
-    "itemIds": ["py-c-001", "py-c-002", "py-c-003", "py-c-fizzbuzz"]
+    "lessonIds": [
+      "python-00-absolute-zero",
+      "python-00-foundations",
+      "python-syntax",
+      "python-control-flow"
+    ],
+    "itemIds": [
+      "py-c-001",
+      "py-c-002",
+      "py-c-003",
+      "py-c-fizzbuzz"
+    ]
   },
   {
     "id": "python-data-model",
     "track": "python",
     "title": "Python data model",
     "blurb": "Mutability, identity vs equality, references, copy vs deepcopy.",
-    "prerequisites": ["python-foundations"],
-    "lessonIds": ["python-data-types", "python-03-mutability"],
-    "itemIds": ["py-q-020", "py-q-021", "py-q-022", "py-q-023", "py-q-024", "py-c-merge-dicts"]
+    "prerequisites": [
+      "python-foundations"
+    ],
+    "lessonIds": [
+      "python-data-types",
+      "python-03-mutability"
+    ],
+    "itemIds": [
+      "py-q-020",
+      "py-q-021",
+      "py-q-022",
+      "py-q-023",
+      "py-q-024",
+      "py-c-merge-dicts"
+    ]
   },
   {
     "id": "python-iter",
     "track": "python",
     "title": "Iterators & generators",
     "blurb": "Lazy iteration, yield, generator expressions, itertools.",
-    "prerequisites": ["python-data-model"],
-    "lessonIds": ["python-10-generators"],
-    "itemIds": ["py-q-025", "py-q-026", "py-q-030", "py-q-031", "py-q-032", "py-c-flatten"]
+    "prerequisites": [
+      "python-data-model"
+    ],
+    "lessonIds": [
+      "python-10-generators"
+    ],
+    "itemIds": [
+      "py-q-025",
+      "py-q-026",
+      "py-q-030",
+      "py-q-031",
+      "py-q-032",
+      "py-c-flatten"
+    ]
   },
   {
     "id": "python-decorators",
     "track": "python",
     "title": "Decorators & closures",
     "blurb": "First-class functions, decorator pattern, functools.wraps.",
-    "prerequisites": ["python-iter"],
-    "lessonIds": ["python-12-decorators"],
-    "itemIds": ["py-q-028", "py-q-036", "py-q-037", "py-q-038", "py-c-fibonacci", "py-c-decorator-timer"]
+    "prerequisites": [
+      "python-iter"
+    ],
+    "lessonIds": [
+      "python-12-decorators"
+    ],
+    "itemIds": [
+      "py-q-028",
+      "py-q-036",
+      "py-q-037",
+      "py-q-038",
+      "py-c-fibonacci",
+      "py-c-decorator-timer"
+    ]
   },
   {
     "id": "python-oop",
     "track": "python",
     "title": "OOP in Python",
     "blurb": "Classes, dunder methods, dataclasses, inheritance vs composition.",
-    "prerequisites": ["python-data-model"],
-    "lessonIds": ["python-15-oop"],
-    "itemIds": ["py-q-039", "py-q-040", "py-q-041"]
+    "prerequisites": [
+      "python-data-model"
+    ],
+    "lessonIds": [
+      "python-15-oop"
+    ],
+    "itemIds": [
+      "py-q-039",
+      "py-q-040",
+      "py-q-041"
+    ]
   },
   {
     "id": "python-stdlib",
     "track": "python",
     "title": "Standard library essentials",
     "blurb": "collections, itertools, functools — the interview cheats.",
-    "prerequisites": ["python-foundations"],
-    "lessonIds": ["python-20-stdlib"],
-    "itemIds": ["py-q-042", "py-q-043", "py-q-044", "py-q-045"]
+    "prerequisites": [
+      "python-foundations"
+    ],
+    "lessonIds": [
+      "python-20-stdlib"
+    ],
+    "itemIds": [
+      "py-q-042",
+      "py-q-043",
+      "py-q-044",
+      "py-q-045"
+    ]
   },
   {
     "id": "python-advanced",
     "track": "python",
     "title": "Advanced Python & Internals",
     "blurb": "CPython allocation sizing, garbage collection, event loops, and Global Interpreter Lock (GIL).",
-    "prerequisites": ["python-oop", "python-decorators"],
-    "lessonIds": ["python-35-cpython-internals-gc", "python-40-concurrency-gil"],
-    "itemIds": ["py-q-050", "py-q-051", "py-q-052", "py-q-053", "py-c-custom-range"]
+    "prerequisites": [
+      "python-oop",
+      "python-decorators"
+    ],
+    "lessonIds": [
+      "python-35-cpython-internals-gc",
+      "python-40-concurrency-gil"
+    ],
+    "itemIds": [
+      "py-q-050",
+      "py-q-051",
+      "py-q-052",
+      "py-q-053",
+      "py-c-custom-range"
+    ]
   },
   {
     "id": "sql-foundations",
@@ -248,71 +524,144 @@
     "title": "SQL foundations",
     "blurb": "Tables, rows, SELECT, WHERE, GROUP BY, HAVING, ORDER BY, and the result-table mental model.",
     "prerequisites": [],
-    "lessonIds": ["sql-00-absolute-zero", "sql-00-foundations", "sql-select"],
-    "itemIds": ["sql-q-001", "sql-q-002", "sql-001", "sql-c-basic-filter-order", "sql-c-count-all-employees"]
+    "lessonIds": [
+      "sql-00-absolute-zero",
+      "sql-00-foundations",
+      "sql-select"
+    ],
+    "itemIds": [
+      "sql-q-001",
+      "sql-q-002",
+      "sql-001",
+      "sql-c-basic-filter-order",
+      "sql-c-count-all-employees"
+    ]
   },
   {
     "id": "sql-joins",
     "track": "sql",
     "title": "Joins",
     "blurb": "INNER, LEFT, RIGHT, FULL, CROSS — when and why.",
-    "prerequisites": ["sql-foundations"],
-    "lessonIds": ["sql-02-joins"],
-    "itemIds": ["sql-c-eng-employees", "sql-c-employee-dept-join", "sql-c-no-dept", "sql-c-departments-without-employees"]
+    "prerequisites": [
+      "sql-foundations"
+    ],
+    "lessonIds": [
+      "sql-02-joins"
+    ],
+    "itemIds": [
+      "sql-c-eng-employees",
+      "sql-c-employee-dept-join",
+      "sql-c-no-dept",
+      "sql-c-departments-without-employees"
+    ]
   },
   {
     "id": "sql-aggregation",
     "track": "sql",
     "title": "GROUP BY & HAVING",
     "blurb": "Aggregates, grouping sets, HAVING vs WHERE.",
-    "prerequisites": ["sql-foundations"],
-    "lessonIds": ["sql-03-group-by"],
-    "itemIds": ["sql-c-dept-headcount", "sql-c-avg-salary-per-dept", "sql-c-location-headcount", "sql-c-customer-spend"]
+    "prerequisites": [
+      "sql-foundations"
+    ],
+    "lessonIds": [
+      "sql-03-group-by"
+    ],
+    "itemIds": [
+      "sql-c-dept-headcount",
+      "sql-c-avg-salary-per-dept",
+      "sql-c-location-headcount",
+      "sql-c-customer-spend"
+    ]
   },
   {
     "id": "sql-subqueries",
     "track": "sql",
     "title": "Subqueries & CTEs",
     "blurb": "Correlated subqueries, WITH clauses, recursive CTEs.",
-    "prerequisites": ["sql-joins"],
-    "lessonIds": ["sql-04-subqueries", "sql-05-cte"],
-    "itemIds": ["sql-c-above-dept-avg", "sql-c-products-never-delivered", "sql-c-employees-hired-2024", "sql-c-salary-tiers", "sql-c-degrees-separation"]
+    "prerequisites": [
+      "sql-joins"
+    ],
+    "lessonIds": [
+      "sql-04-subqueries",
+      "sql-05-cte"
+    ],
+    "itemIds": [
+      "sql-c-above-dept-avg",
+      "sql-c-products-never-delivered",
+      "sql-c-employees-hired-2024",
+      "sql-c-salary-tiers",
+      "sql-c-degrees-separation"
+    ]
   },
   {
     "id": "sql-window",
     "track": "sql",
     "title": "Window functions",
     "blurb": "ROW_NUMBER, RANK, LAG/LEAD, running totals — the senior round filter.",
-    "prerequisites": ["sql-aggregation"],
-    "lessonIds": ["sql-06-window-functions"],
-    "itemIds": ["sql-c-running-total", "sql-c-top-per-group", "sql-c-top-3-salaries", "sql-c-highest-paid-per-dept"]
+    "prerequisites": [
+      "sql-aggregation"
+    ],
+    "lessonIds": [
+      "sql-06-window-functions"
+    ],
+    "itemIds": [
+      "sql-c-running-total",
+      "sql-c-top-per-group",
+      "sql-c-top-3-salaries",
+      "sql-c-highest-paid-per-dept"
+    ]
   },
   {
     "id": "sql-indexes",
     "track": "sql",
     "title": "Indexes & query plans",
     "blurb": "B-tree intuition, composite indexes, when not to index.",
-    "prerequisites": ["sql-foundations"],
-    "lessonIds": ["sql-08-indexes"],
-    "itemIds": ["sql-q-index-composite-001"]
+    "prerequisites": [
+      "sql-foundations"
+    ],
+    "lessonIds": [
+      "sql-08-indexes"
+    ],
+    "itemIds": [
+      "sql-q-index-composite-001"
+    ]
   },
   {
     "id": "sql-normalization",
     "track": "sql",
     "title": "Normalization & ACID",
     "blurb": "1NF–BCNF, transactions, isolation levels.",
-    "prerequisites": ["sql-foundations"],
-    "lessonIds": ["sql-09-normalization"],
-    "itemIds": ["sql-q-normalization-001", "sql-q-transaction-001"]
+    "prerequisites": [
+      "sql-foundations"
+    ],
+    "lessonIds": [
+      "sql-09-normalization"
+    ],
+    "itemIds": [
+      "sql-q-normalization-001",
+      "sql-q-transaction-001"
+    ]
   },
   {
     "id": "sql-advanced",
     "track": "sql",
     "title": "Advanced engine internals & transactions",
     "blurb": "Execution plans, B-Tree vs Hash index scans, transaction isolation anomalies, locks, and MVCC.",
-    "prerequisites": ["sql-indexes", "sql-normalization", "sql-subqueries"],
-    "lessonIds": ["sql-11-engine-optimization-explain", "sql-12-transactions-isolation-mvcc"],
-    "itemIds": ["sql-q-035", "sql-q-036", "sql-q-037", "sql-c-degrees-separation"]
+    "prerequisites": [
+      "sql-indexes",
+      "sql-normalization",
+      "sql-subqueries"
+    ],
+    "lessonIds": [
+      "sql-11-engine-optimization-explain",
+      "sql-12-transactions-isolation-mvcc"
+    ],
+    "itemIds": [
+      "sql-q-035",
+      "sql-q-036",
+      "sql-q-037",
+      "sql-c-degrees-separation"
+    ]
   },
   {
     "id": "aptitude-foundations",
@@ -320,7 +669,73 @@
     "title": "Aptitude foundations",
     "blurb": "Arithmetic speed, formulas, classification, and timed accuracy before company-style sections.",
     "prerequisites": [],
-    "lessonIds": ["aptitude-00-absolute-zero", "aptitude-00-foundations", "aptitude-13-advanced-probability-combinatorics", "aptitude-14-logical-deductions-syllogisms"],
-    "itemIds": ["apt-q-001", "apt-q-002", "apt-q-003", "apt-q-004", "apt-q-005", "apt-q-006", "apt-q-010", "apt-q-011", "apt-q-012", "apt-q-013", "apt-q-014", "apt-q-015", "apt-q-016", "apt-q-017", "apt-q-018", "apt-q-019", "apt-q-020", "apt-q-021", "apt-q-022", "apt-q-023", "apt-q-024", "apt-q-025", "apt-q-026", "apt-q-027", "apt-q-028", "apt-q-029", "apt-q-030", "apt-q-031", "apt-q-032", "apt-q-033", "apt-q-034", "apt-q-035", "apt-q-036", "apt-q-037", "apt-q-038", "apt-q-039", "apt-q-040", "apt-q-041", "apt-q-042", "apt-q-043", "apt-q-044", "apt-q-045", "apt-q-046", "apt-q-047", "apt-q-048", "apt-q-049", "apt-q-050", "apt-q-051", "apt-q-052", "apt-q-053", "apt-q-054", "apt-q-055", "apt-q-056", "apt-q-057", "apt-q-058", "apt-q-060", "apt-q-061", "apt-q-062", "apt-q-063", "apt-q-064"]
+    "lessonIds": [
+      "aptitude-00-absolute-zero",
+      "aptitude-00-foundations",
+      "aptitude-13-advanced-probability-combinatorics",
+      "aptitude-14-logical-deductions-syllogisms"
+    ],
+    "itemIds": [
+      "apt-q-001",
+      "apt-q-002",
+      "apt-q-003",
+      "apt-q-004",
+      "apt-q-005",
+      "apt-q-006",
+      "apt-q-010",
+      "apt-q-011",
+      "apt-q-012",
+      "apt-q-013",
+      "apt-q-014",
+      "apt-q-015",
+      "apt-q-016",
+      "apt-q-017",
+      "apt-q-018",
+      "apt-q-019",
+      "apt-q-020",
+      "apt-q-021",
+      "apt-q-022",
+      "apt-q-023",
+      "apt-q-024",
+      "apt-q-025",
+      "apt-q-026",
+      "apt-q-027",
+      "apt-q-028",
+      "apt-q-029",
+      "apt-q-030",
+      "apt-q-031",
+      "apt-q-032",
+      "apt-q-033",
+      "apt-q-034",
+      "apt-q-035",
+      "apt-q-036",
+      "apt-q-037",
+      "apt-q-038",
+      "apt-q-039",
+      "apt-q-040",
+      "apt-q-041",
+      "apt-q-042",
+      "apt-q-043",
+      "apt-q-044",
+      "apt-q-045",
+      "apt-q-046",
+      "apt-q-047",
+      "apt-q-048",
+      "apt-q-049",
+      "apt-q-050",
+      "apt-q-051",
+      "apt-q-052",
+      "apt-q-053",
+      "apt-q-054",
+      "apt-q-055",
+      "apt-q-056",
+      "apt-q-057",
+      "apt-q-058",
+      "apt-q-060",
+      "apt-q-061",
+      "apt-q-062",
+      "apt-q-063",
+      "apt-q-064"
+    ]
   }
 ]

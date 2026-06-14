@@ -127,21 +127,25 @@ Each pattern in `src/data/patterns.json` should reach this bar before being decl
 
 > **This table is the single source of truth for content targets.** `CURRICULUM.md`
 > defers to it. The *current* column is whatever `pnpm validate` reports — run it
-> for live numbers; the snapshot below was taken 2026-06-13 (314 items + 82 lessons).
+> for live numbers; the snapshot below was taken 2026-06-14 after Phase 1
+> (411 items + 82 lessons).
 
 | Track | Lessons (cur → target) | MCQs (cur → target) | Coding/SQL (cur → target) |
 |---|---|---|---|
 | Python | 20 → 25 | 46 → 80 | 23 → 40 |
-| DSA | 26 → 20¹ | 44 → 60 | 65 → 120² |
+| DSA | 26 → 20¹ | 48 → 60 | 65 → 120² |
 | SQL | 15 → 15 | 33 → 60 | 21 → 50³ |
-| Aptitude | 21 → n/a | 82 → 120 | n/a |
-| **Total** | **82** | **205** | **109** → **314 items** |
+| Aptitude | 21 → n/a | 175 → 120⁴ | n/a |
+| **Total** | **82** | **302** | **109** → **411 items** |
 
 ¹ DSA already exceeds the "one lesson per pattern" floor — the extra lessons are
   worked-examples and company machine-plans; the bar is ≥1 teaching lesson per pattern.
 ² ≥ 6 coding drills per pattern × 20 patterns (2 easy / 3 medium / 1 hard).
 ³ Split across `employees`, `ecommerce`, `social` — weight new drills toward the
   under-used `social` and `ecommerce` schemas.
+⁴ Phase 1 expanded aptitude past the original 120 target (verbal 12→52, reasoning
+  20→47, plus a new 26-item pseudocode pack) to unblock every TCS NQT / Infosys
+  mock section; the pools are now demand-satisfying with margin.
 
 The catalog in `src/data/patterns.json` is intentionally aspirational — it may list
 item ids that don't yet exist. The loader filters those out, so the UI shows you

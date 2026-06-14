@@ -86,4 +86,4 @@ The asymmetry trips up 70% of candidates. **Increase by x% ≠ decrease by x%** 
 
 ## Practice
 
-The aptitude quiz for percentages has 20 questions ranging from "find 35% of 280" to "successive markup-then-discount with profit margin". Work them in batches of 5 — once you can do all 20 in under 12 minutes, you're TCS-NQT-ready for this topic.
+The percentages drills in the aptitude bank range from "find 35% of 280" to "successive markup-then-discount with profit margin". Work them in batches of five — once you can clear a batch averaging well under a minute per question, you're TCS-NQT-ready for this topic.

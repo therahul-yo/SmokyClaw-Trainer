@@ -5,6 +5,7 @@
     "topic": "joins",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "An INNER JOIN returns:",
     "options": [
       "All rows from the left table, NULLs where no match on right",
@@ -22,6 +23,7 @@
     "topic": "joins",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Which query finds employees with no department assigned (dept_id is NULL)?",
     "options": [
       "SELECT * FROM employees e LEFT JOIN departments d ON e.dept_id = d.id WHERE d.id IS NULL",
@@ -39,6 +41,7 @@
     "topic": "joins",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "You write `A LEFT JOIN B ON A.id = B.a_id WHERE B.flag = 1`. What's the effective behavior?",
     "options": [
       "Same as INNER JOIN — NULL flag rows get filtered out",
@@ -56,6 +59,7 @@
     "topic": "aggregation",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "Difference between COUNT(*) and COUNT(col)?",
     "options": [
       "No difference — both count rows",
@@ -73,6 +77,7 @@
     "topic": "aggregation",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "WHERE vs HAVING?",
     "options": [
       "Synonyms — interchangeable",
@@ -90,6 +95,7 @@
     "topic": "aggregation",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "SELECT dept_id, name, COUNT(*) FROM employees GROUP BY dept_id. What's the issue?",
     "options": [
       "Nothing — runs fine",
@@ -107,6 +113,7 @@
     "topic": "subqueries",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "What's wrong with `SELECT * FROM emp WHERE dept_id NOT IN (SELECT id FROM dept)` if dept.id can be NULL?",
     "options": [
       "Nothing — handles NULL correctly",
@@ -124,6 +131,7 @@
     "topic": "subqueries",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Correlated subquery means:",
     "options": [
       "A subquery whose result correlates statistically with the outer query",
@@ -141,6 +149,7 @@
     "topic": "cte",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "A CTE (WITH clause) is best described as:",
     "options": [
       "A permanent view stored in the database",
@@ -158,6 +167,7 @@
     "topic": "cte",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Recursive CTEs are typically used for:",
     "options": [
       "Pagination",
@@ -175,6 +185,7 @@
     "topic": "nulls",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "What does `NULL = NULL` evaluate to?",
     "options": ["TRUE", "FALSE", "NULL (UNKNOWN)", "Error"],
     "answerIndex": 2,
@@ -187,6 +198,7 @@
     "topic": "nulls",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "SELECT AVG(salary) FROM employees where 5 of 10 rows have NULL salary and the others sum to 500000. The result is:",
     "options": ["50000", "100000", "NULL", "Error"],
     "answerIndex": 1,
@@ -199,6 +211,7 @@
     "topic": "nulls",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Which expression returns the first non-NULL of its arguments?",
     "options": ["NULLIF(a, b)", "COALESCE(a, b, c)", "IS NULL(a, b)", "DEFAULT(a, b)"],
     "answerIndex": 1,
@@ -211,6 +224,7 @@
     "topic": "indexes",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "Trade-off of adding an index?",
     "options": [
       "Reads slower, writes faster",
@@ -228,6 +242,7 @@
     "topic": "indexes",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "You have a composite index on (dept_id, salary). Which query CAN'T use it efficiently?",
     "options": [
       "WHERE dept_id = 5",
@@ -245,6 +260,7 @@
     "topic": "indexes",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Why doesn't `WHERE LOWER(email) = 'x'` use a regular B-tree index on `email`?",
     "options": [
       "B-trees can't index strings",
@@ -262,6 +278,7 @@
     "topic": "normalization",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "1NF requires:",
     "options": [
       "No NULL values anywhere",
@@ -279,6 +296,7 @@
     "topic": "normalization",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "employees(id, name, dept_id, dept_name) — what normal form is violated?",
     "options": [
       "1NF — repeating values",
@@ -296,6 +314,7 @@
     "topic": "joins",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "CROSS JOIN of a 100-row table and a 50-row table produces how many rows?",
     "options": ["100", "50", "150", "5000"],
     "answerIndex": 3,
@@ -308,6 +327,7 @@
     "topic": "subqueries",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Style: when do EXISTS and IN behave differently?",
     "options": [
       "Never — they're synonyms",
@@ -325,6 +345,7 @@
     "topic": "aggregation",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "SUM(CASE WHEN salary > 100000 THEN 1 ELSE 0 END) — what's this expressing?",
     "options": [
       "Total salary of high earners",
@@ -342,6 +363,7 @@
     "topic": "joins",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "After joining a 1-row order to a 5-row line-items table, how many rows in the result?",
     "options": ["1", "5", "6", "Depends on the join condition matches"],
     "answerIndex": 3,
@@ -354,6 +376,7 @@
     "topic": "aggregation",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Which clause are SELECT aliases visible in?",
     "options": [
       "WHERE only",
@@ -371,6 +394,7 @@
     "topic": "indexes",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Pattern `WHERE name LIKE '%smith'` (leading wildcard) — can a B-tree index on `name` help?",
     "options": [
       "Yes — index seeks work for any pattern",
@@ -388,6 +412,7 @@
     "topic": "normalization",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "When is denormalization a defensible choice?",
     "options": [
       "When the schema designer is lazy",
@@ -405,6 +430,7 @@
     "topic": "transactions",
     "type": "mcq",
     "difficulty": "hard",
+    "estMinutes": 3,
     "question": "Under which transaction isolation level are dirty reads, non-repeatable reads, and phantom reads all prevented?",
     "options": [
       "Read Committed",
@@ -422,6 +448,7 @@
     "topic": "transactions",
     "type": "mcq",
     "difficulty": "hard",
+    "estMinutes": 3,
     "question": "How does Multi-Version Concurrency Control (MVCC) improve performance over traditional Two-Phase Locking (2PL)?",
     "options": [
       "By removing the need for a transaction log entirely.",
@@ -439,6 +466,7 @@
     "topic": "indexes",
     "type": "mcq",
     "difficulty": "hard",
+    "estMinutes": 3,
     "question": "What is the primary performance advantage of an Index-Only Scan (Covering Index) over a standard Index Scan?",
     "options": [
       "It scans the table sequentially rather than navigating a B-tree.",
