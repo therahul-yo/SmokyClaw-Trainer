@@ -1,0 +1,589 @@
+[
+  {
+    "id": "dsa-q-054",
+    "track": "dsa",
+    "topic": "greedy",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "pattern": "greedy",
+    "question": "To select the maximum number of mutually non-overlapping intervals from a set of intervals, the optimal greedy strategy is to repeatedly pick the remaining interval with the:",
+    "options": [
+      "earliest start time",
+      "earliest finish time",
+      "shortest duration",
+      "fewest overlaps with others"
+    ],
+    "answerIndex": 1,
+    "explanation": "Sorting by finish time and always taking the interval that ends earliest (among those compatible with what you've chosen) is the classic activity-selection greedy: finishing as early as possible leaves the most room for future picks. Earliest-start, shortest-duration, and fewest-overlaps all have well-known counterexamples.",
+    "tags": [
+      "greedy",
+      "interval-scheduling",
+      "activity-selection"
+    ],
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "dsa-q-055",
+    "track": "dsa",
+    "topic": "greedy",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "greedy",
+    "question": "The greedy 'take the largest coin that fits' makes optimal (fewest-coin) change for the US set {1,5,10,25}. For which coin set does that same greedy strategy give a SUBOPTIMAL number of coins for some amount?",
+    "options": [
+      "{1, 2, 4, 8}",
+      "{1, 5, 10, 25}",
+      "{1, 3, 4}",
+      "{1, 2, 5, 10}"
+    ],
+    "answerIndex": 2,
+    "explanation": "With coins {1,3,4} and amount 6, greedy takes 4 then 1+1 = 3 coins, but the optimal is 3+3 = 2 coins. The other sets are 'canonical' \u2014 greedy is provably optimal for them. This is why coin-change in general needs DP, not greedy.",
+    "tags": [
+      "greedy",
+      "coin-change",
+      "counterexample"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "dsa-q-056",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "pattern": "dp-2d",
+    "question": "In the longest-common-subsequence DP over prefixes X[1..i] and Y[1..j], when the current characters match (X[i] == Y[j]), the recurrence sets dp[i][j] to:",
+    "options": [
+      "max(dp[i-1][j], dp[i][j-1])",
+      "dp[i-1][j-1] + 1",
+      "dp[i-1][j-1]",
+      "1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])"
+    ],
+    "answerIndex": 1,
+    "explanation": "A matching pair extends the best LCS of the strictly smaller prefixes by one, so dp[i][j] = dp[i-1][j-1] + 1. The max(...) form is used only on a MISMATCH; the min(...) form is the edit-distance recurrence.",
+    "tags": [
+      "dp",
+      "dp-2d",
+      "lcs",
+      "subsequence"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "dsa-q-057",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "dp-2d",
+    "question": "When you compress the 0/1-knapsack DP table into a single 1D array indexed by capacity, the inner loop over capacity must iterate in DECREASING order. Iterating in increasing order instead would:",
+    "options": [
+      "overflow the capacity index",
+      "let a single item be picked more than once, turning it into the UNBOUNDED-knapsack answer",
+      "produce the same result, just slower",
+      "skip the base case dp[0] = 0"
+    ],
+    "answerIndex": 1,
+    "explanation": "Reading dp[w - weight] before it is overwritten requires the smaller index to still hold the PREVIOUS row (item not yet used). A forward loop overwrites dp[w-weight] first, so dp[w] would read an already-updated value that has item i included \u2014 exactly the unbounded-knapsack semantics where each item can repeat.",
+    "tags": [
+      "dp",
+      "dp-2d",
+      "knapsack",
+      "space-optimization"
+    ],
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "dsa-q-058",
+    "track": "dsa",
+    "topic": "advanced-dsa",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "pattern": "dsa-advanced",
+    "question": "Using a prefix-sum array where prefix[0] = 0 and prefix[i] = nums[0] + ... + nums[i-1], the sum of the inclusive subarray nums[l..r] equals:",
+    "options": [
+      "prefix[r] - prefix[l]",
+      "prefix[r] - prefix[l-1]",
+      "prefix[r+1] - prefix[l]",
+      "prefix[r+1] - prefix[l-1]"
+    ],
+    "answerIndex": 2,
+    "explanation": "With the 1-offset convention (prefix has length n+1, prefix[i] sums the first i elements), the inclusive range [l, r] is prefix[r+1] - prefix[l]. This avoids any l-1 special case when l = 0.",
+    "tags": [
+      "advanced-dsa",
+      "prefix-sums",
+      "range-query"
+    ],
+    "companies": [
+      "amazon",
+      "tcs",
+      "infosys"
+    ]
+  },
+  {
+    "id": "dsa-q-059",
+    "track": "dsa",
+    "topic": "advanced-dsa",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "pattern": "dsa-advanced",
+    "question": "With BOTH path compression and union by rank (or size), the amortized time per Union-Find operation over a sequence of m operations is:",
+    "options": [
+      "O(log n)",
+      "O(1) in the worst case for every single operation",
+      "O(alpha(n)) \u2014 inverse Ackermann, effectively constant",
+      "O(n)"
+    ],
+    "answerIndex": 2,
+    "explanation": "Together the two heuristics give an amortized bound of O(alpha(n)) per operation, where alpha is the inverse Ackermann function (<= 4 for any realistic n) \u2014 effectively but not literally constant. With only one of the two heuristics the bound is O(log n).",
+    "tags": [
+      "advanced-dsa",
+      "union-find",
+      "complexity"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "dsa-q-060",
+    "track": "dsa",
+    "topic": "advanced-dsa",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "dsa-advanced",
+    "question": "A Fenwick (binary indexed) tree uses the expression `i & (-i)` while walking the tree. On a two's-complement integer, what does `i & (-i)` evaluate to?",
+    "options": [
+      "the lowest set bit of i (the size of the range that node covers)",
+      "i with its lowest set bit cleared",
+      "the highest set bit of i",
+      "i divided by two"
+    ],
+    "answerIndex": 0,
+    "explanation": "`-i` is two's complement (~i + 1), so `i & (-i)` isolates the least-significant set bit. In a Fenwick tree that value is exactly the length of the range a node is responsible for, which is why adding it walks to parents (updates) and subtracting it walks to predecessors (prefix queries). Clearing the lowest set bit is `i & (i-1)`.",
+    "tags": [
+      "advanced-dsa",
+      "fenwick-tree",
+      "bit-manipulation"
+    ],
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "dsa-q-061",
+    "track": "dsa",
+    "topic": "bit-manipulation",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "pattern": "bit-manipulation",
+    "question": "Which expression correctly tests whether a positive integer x is an exact power of two?",
+    "options": [
+      "(x % 2) == 0",
+      "(x & (x - 1)) == 0",
+      "(x | (x - 1)) == 0",
+      "(x ^ (x - 1)) == 0"
+    ],
+    "answerIndex": 1,
+    "explanation": "A power of two has exactly one set bit; subtracting 1 flips that bit to 0 and all lower bits to 1, so x & (x-1) clears the only set bit and yields 0. (Note the parentheses: in Python & binds looser than ==, so they are required.)",
+    "tags": [
+      "bit-manipulation",
+      "power-of-two"
+    ],
+    "companies": [
+      "amazon",
+      "tcs",
+      "infosys"
+    ]
+  },
+  {
+    "id": "dsa-q-062",
+    "track": "dsa",
+    "topic": "bit-manipulation",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "pattern": "bit-manipulation",
+    "question": "An array contains every value exactly twice except one value that appears once. XOR-ing all elements returns that unique value because:",
+    "options": [
+      "XOR sorts the values and returns the median",
+      "a ^ a == 0 and a ^ 0 == a, so the duplicated pairs cancel and only the unique value remains",
+      "XOR sums the values without carry, and the duplicates average out",
+      "the unique value is always the maximum"
+    ],
+    "answerIndex": 1,
+    "explanation": "XOR is associative and commutative, every value is its own inverse (a^a=0), and 0 is the identity (a^0=a). So all paired values cancel to 0 regardless of order, leaving exactly the element that appears an odd number of times. O(n) time, O(1) space.",
+    "tags": [
+      "bit-manipulation",
+      "xor",
+      "single-number"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "dsa-q-063",
+    "track": "dsa",
+    "topic": "bit-manipulation",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "bit-manipulation",
+    "question": "To enumerate every SUBMASK of a bitmask `mask`, the idiom is `sub = (sub - 1) & mask`, starting from sub = mask and ending after processing 0. For a mask with k set bits, how many submasks does this enumerate (including mask itself and 0)?",
+    "options": [
+      "k",
+      "2^k",
+      "k^2",
+      "2^32"
+    ],
+    "answerIndex": 1,
+    "explanation": "Each of the k set bits can independently be present or absent in a submask, giving 2^k submasks. The `(sub-1) & mask` trick visits them all in strictly decreasing order. Summed over all masks this gives the classic 3^n bound for subset-of-subset DP.",
+    "tags": [
+      "bit-manipulation",
+      "submask",
+      "bitmask-dp"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "dsa-q-064",
+    "track": "dsa",
+    "topic": "math",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "pattern": "math",
+    "question": "The Euclidean algorithm for the greatest common divisor repeatedly applies which identity?",
+    "options": [
+      "gcd(a, b) = gcd(a, b - a)",
+      "gcd(a, b) = a * b / lcm(a, b)",
+      "gcd(a, b) = gcd(b, a mod b)",
+      "gcd(a, b) = gcd(a / 2, b / 2)"
+    ],
+    "answerIndex": 2,
+    "explanation": "gcd(a, b) = gcd(b, a mod b), terminating when b becomes 0 (then a is the gcd). It runs in O(log min(a,b)). The subtractive form gcd(a, a-b) is also valid but far slower, and halving only works when both are even.",
+    "tags": [
+      "math",
+      "gcd",
+      "number-theory"
+    ],
+    "companies": [
+      "amazon",
+      "tcs",
+      "infosys"
+    ]
+  },
+  {
+    "id": "dsa-q-065",
+    "track": "dsa",
+    "topic": "math",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "pattern": "math",
+    "question": "The Sieve of Eratosthenes lists all primes up to n in time:",
+    "options": [
+      "O(n)",
+      "O(n log log n)",
+      "O(n log n)",
+      "O(n * sqrt(n))"
+    ],
+    "answerIndex": 1,
+    "explanation": "Crossing out multiples of each prime p costs n/p work; summing n/p over primes p <= n gives O(n log log n) by Mertens' theorem \u2014 essentially linear. Trial-dividing each number to sqrt(n) would instead be O(n*sqrt(n)).",
+    "tags": [
+      "math",
+      "sieve",
+      "primes",
+      "complexity"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "dsa-q-066",
+    "track": "dsa",
+    "topic": "math",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "math",
+    "question": "To compute (a / b) mod p where p is prime and b is not divisible by p, you multiply a by the modular inverse of b. By Fermat's little theorem, that inverse equals:",
+    "options": [
+      "b^(p-1) mod p",
+      "b^(p-2) mod p",
+      "(p - b) mod p",
+      "b mod p"
+    ],
+    "answerIndex": 1,
+    "explanation": "Fermat's little theorem gives b^(p-1) \u2261 1 (mod p) for gcd(b,p)=1, so b^(p-2) \u2261 b^(-1) (mod p) is the modular inverse. Computed via fast exponentiation, pow(b, p-2, p), in O(log p). b^(p-1) mod p is just 1.",
+    "tags": [
+      "math",
+      "modular-arithmetic",
+      "fermat",
+      "modular-inverse"
+    ],
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "dsa-q-067",
+    "track": "dsa",
+    "topic": "two-pointer",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "two-pointer",
+    "question": "In the O(n) two-pointer solution to 'trapping rain water', when left_max < right_max you process and advance the LEFT pointer. Why is it safe to finalize the water above the left bar without yet knowing the bars further right?",
+    "options": [
+      "because the right side will be processed later anyway",
+      "because water above the left bar is bounded by min(left_max, right_max), and since left_max is the smaller, it is already the true limit regardless of bars in between",
+      "because the array is sorted",
+      "because the left bar is always taller"
+    ],
+    "answerIndex": 1,
+    "explanation": "Trapped water at a position is min(maxLeft, maxRight) - height. When left_max < right_max, the binding constraint is left_max no matter what lies between the pointers (any taller bar only raises right_max further), so the amount is final. That monotonic guarantee is what makes the single pass correct.",
+    "tags": [
+      "two-pointer",
+      "trapping-rain-water",
+      "arrays"
+    ],
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "dsa-q-068",
+    "track": "dsa",
+    "topic": "binary-search",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "binary-search",
+    "question": "Problems like 'minimum eating speed' or 'capacity to ship packages within D days' are solved by binary-searching on the ANSWER value rather than an array index. This technique requires that the feasibility predicate f(x) be:",
+    "options": [
+      "computable in O(1)",
+      "convex in x",
+      "monotonic \u2014 if x is feasible then every larger x is feasible (or every smaller, for the symmetric case)",
+      "linear in the array size"
+    ],
+    "answerIndex": 2,
+    "explanation": "Binary search on the answer works precisely when feasibility is monotonic: the set of feasible values forms a contiguous half-line, so you can discard half the candidate range each step. f need not be O(1) (it's often O(n) per check); monotonicity is the essential property.",
+    "tags": [
+      "binary-search",
+      "binary-search-on-answer",
+      "monotonic"
+    ],
+    "companies": [
+      "amazon",
+      "google",
+      "uber"
+    ]
+  },
+  {
+    "id": "dsa-q-069",
+    "track": "dsa",
+    "topic": "trees",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "trees",
+    "question": "The O(n) algorithm for the diameter of a binary tree uses a post-order DFS where each call RETURNS the node's height but RECORDS the best (left_height + right_height) into a separate variable. Why can't the diameter simply be the recursion's return value?",
+    "options": [
+      "because recursion cannot return more than one number",
+      "because the longest path may bend at a node and pass through both its children, which cannot be extended up to the parent \u2014 so the value passed upward (a one-sided height) differs from the value recorded (the through-path)",
+      "because the tree might be unbalanced",
+      "because heights are always larger than diameters"
+    ],
+    "answerIndex": 1,
+    "explanation": "A path that turns at node v (going down its left subtree and its right subtree) cannot continue up to v's parent \u2014 a parent can use at most one branch through v. So each node must return only its height (one branch) for its parent to use, while the bending path length is captured globally. Conflating the two breaks the recurrence.",
+    "tags": [
+      "trees",
+      "diameter",
+      "dfs",
+      "post-order"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "dsa-q-070",
+    "track": "dsa",
+    "topic": "graphs",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "graphs",
+    "question": "Dijkstra's shortest-path algorithm can produce wrong answers on a graph containing negative-weight edges (even without negative cycles) because:",
+    "options": [
+      "the priority queue cannot store negative keys",
+      "once a vertex is popped from the priority queue its distance is treated as final, but a later-discovered negative edge could still relax it to a smaller value",
+      "it always enters an infinite loop",
+      "negative weights make every path length zero"
+    ],
+    "answerIndex": 1,
+    "explanation": "Dijkstra's correctness rests on the greedy invariant that the minimum-distance unfinalized vertex is truly settled. A negative edge can offer a cheaper route to an already-finalized vertex, violating that invariant. Bellman-Ford (which relaxes all edges V-1 times) handles negative edges instead.",
+    "tags": [
+      "graphs",
+      "dijkstra",
+      "shortest-path",
+      "negative-weights"
+    ],
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "dsa-q-071",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "dp-1d",
+    "question": "House Robber II places the houses in a CIRCLE (the first and last are adjacent, so they can't both be robbed). The standard way to reuse the linear House-Robber DP is to:",
+    "options": [
+      "subtract nums[0] from the final answer",
+      "run the linear solver twice \u2014 once on houses[0..n-2] and once on houses[1..n-1] \u2014 and take the maximum",
+      "use a 2D DP indexed by (house, robbed-first?)",
+      "rob every other house starting at index 0"
+    ],
+    "answerIndex": 1,
+    "explanation": "The circular constraint reduces to two linear cases: either the first house is excluded (consider 1..n-1) or the last is excluded (consider 0..n-2); these two windows each break the circle, and the optimum is their max. (The 2D approach also works but is unnecessary; option 4 ignores values.)",
+    "tags": [
+      "dp",
+      "dp-1d",
+      "house-robber"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "dsa-q-072",
+    "track": "dsa",
+    "topic": "heap",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "heaps",
+    "question": "To return the k-th largest element from a stream of numbers, you keep a MIN-heap of size k. Why a min-heap rather than a max-heap?",
+    "options": [
+      "a max-heap cannot be limited to size k",
+      "the min-heap's root is the smallest of the k largest values seen so far \u2014 i.e. exactly the k-th largest \u2014 and each new element is compared against (and may evict) that root in O(log k)",
+      "min-heaps use less memory than max-heaps",
+      "it keeps the stream sorted in ascending order"
+    ],
+    "answerIndex": 1,
+    "explanation": "Holding the k largest elements in a min-heap puts the k-th largest at the root. A new value bigger than the root replaces it (pop + push, O(log k)); a smaller one is ignored. A max-heap of all elements would need O(n) space and O(k log n) to extract the answer.",
+    "tags": [
+      "heap",
+      "kth-largest",
+      "streaming",
+      "top-k"
+    ],
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "dsa-q-073",
+    "track": "dsa",
+    "topic": "sorting",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "sorting",
+    "question": "Counting sort and radix sort can sort in O(n) / O(nk) time, beating O(n log n). This does NOT contradict the comparison-sort lower bound because:",
+    "options": [
+      "the lower bound only applies to recursive sorts",
+      "comparison-based sorts have an Omega(n log n) worst-case lower bound, but counting/radix sort are NON-comparison sorts that exploit the keys' bounded integer range instead of comparing elements",
+      "counting sort is actually O(n log n) in disguise",
+      "the lower bound was disproven"
+    ],
+    "answerIndex": 1,
+    "explanation": "Any sort that decides order purely via pairwise comparisons needs Omega(n log n) comparisons (the decision tree has n! leaves). Counting/radix sort sidestep this by indexing on key values directly \u2014 they require a bounded key universe and extra space, so they aren't general-purpose comparison sorts.",
+    "tags": [
+      "sorting",
+      "counting-sort",
+      "radix-sort",
+      "lower-bound"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "dsa-q-074",
+    "track": "dsa",
+    "topic": "linked-list",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "pattern": "linked-list",
+    "question": "Floyd's tortoise-and-hare detects a cycle when the fast and slow pointers meet. To then find the cycle's ENTRY node, you:",
+    "options": [
+      "return the meeting point \u2014 it is always the entry",
+      "reset one pointer to the head and advance both pointers one step at a time; they meet at the cycle's entry node",
+      "count the cycle length L and return the node at index L",
+      "it is impossible without O(n) extra space"
+    ],
+    "answerIndex": 1,
+    "explanation": "Let the entry be at distance a from the head and the meeting point be b into the cycle. The math shows a \u2261 (cycle_length - b) (mod cycle_length): moving one pointer from the head and one from the meeting point, both at speed 1, makes them collide exactly at the entry. O(1) space.",
+    "tags": [
+      "linked-list",
+      "floyd",
+      "cycle-detection",
+      "fast-slow"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft",
+      "google"
+    ]
+  }
+]

@@ -38,14 +38,15 @@
       "dsa-c-move-zeroes",
       "dsa-c-rotate-array",
       "dsa-c-kadane-max-subarray",
-      "dsa-c-merge-sorted-arrays"
+      "dsa-c-merge-sorted-arrays",
+      "dsa-c-equilibrium-index"
     ]
   },
   {
     "id": "two-pointer",
     "track": "dsa",
     "title": "Two pointers",
-    "blurb": "Opposite-end or fast/slow pointers to collapse O(n²) into O(n).",
+    "blurb": "Opposite-end or fast/slow pointers to collapse O(n\u00b2) into O(n).",
     "prerequisites": [
       "arrays-basics"
     ],
@@ -60,14 +61,16 @@
       "dsa-c-three-sum",
       "dsa-c-trap-rain-water",
       "dsa-q-050",
-      "dsa-q-051"
+      "dsa-q-051",
+      "dsa-c-interval-list-intersections",
+      "dsa-q-067"
     ]
   },
   {
     "id": "sliding-window",
     "track": "dsa",
     "title": "Sliding window",
-    "blurb": "Maintain a running aggregate over a moving window — fixed or variable size.",
+    "blurb": "Maintain a running aggregate over a moving window \u2014 fixed or variable size.",
     "prerequisites": [
       "two-pointer"
     ],
@@ -111,7 +114,7 @@
     "id": "hashing",
     "track": "dsa",
     "title": "Hashing",
-    "blurb": "Dicts / sets for O(1) lookups — frequency counts, complement search, dedup.",
+    "blurb": "Dicts / sets for O(1) lookups \u2014 frequency counts, complement search, dedup.",
     "prerequisites": [
       "arrays-basics"
     ],
@@ -128,7 +131,8 @@
       "dsa-c-group-anagrams",
       "dsa-c-first-unique-char",
       "dsa-c-top-k-frequent",
-      "dsa-c-longest-consecutive"
+      "dsa-c-longest-consecutive",
+      "dsa-c-count-subarrays-with-sum-k"
     ]
   },
   {
@@ -151,7 +155,9 @@
       "dsa-c-first-last-position",
       "dsa-c-search-rotated",
       "dsa-c-sqrt",
-      "dsa-c-find-peak"
+      "dsa-c-find-peak",
+      "dsa-c-min-days-to-make-m-bouquets",
+      "dsa-q-068"
     ]
   },
   {
@@ -172,7 +178,10 @@
       "dsa-q-043",
       "dsa-c-factorial-recursive",
       "dsa-c-subsets",
-      "dsa-c-permutations"
+      "dsa-c-permutations",
+      "dsa-c-recursive-digit-sum",
+      "dsa-c-nested-list-depth-weighted-sum",
+      "dsa-c-distinct-results-of-parenthesizing-expression"
     ]
   },
   {
@@ -189,7 +198,13 @@
       "dsa-q-025",
       "dsa-q-026",
       "dsa-q-027",
-      "dsa-c-merge-intervals"
+      "dsa-c-merge-intervals",
+      "dsa-c-largest-concatenated-number",
+      "dsa-c-max-weight-limited-pairs",
+      "dsa-c-sort-by-frequency-then-value",
+      "dsa-c-sort-array-by-decreasing-frequency",
+      "dsa-c-largest-concatenated-number-2",
+      "dsa-q-073"
     ]
   },
   {
@@ -205,7 +220,12 @@
       "dsa-q-028",
       "dsa-q-029",
       "dsa-c-reverse-linked-list",
-      "dsa-c-detect-cycle-array"
+      "dsa-c-detect-cycle-array",
+      "dsa-c-reverse-nodes-in-k-group",
+      "dsa-c-reorder-linked-list-fold",
+      "dsa-c-reverse-nodes-in-k-group-2",
+      "dsa-c-remove-linked-list-elements",
+      "dsa-q-074"
     ]
   },
   {
@@ -223,7 +243,10 @@
       "dsa-q-032",
       "dsa-c-valid-parens",
       "dsa-c-daily-temperatures",
-      "dsa-c-next-greater"
+      "dsa-c-next-greater",
+      "dsa-c-detect-redundant-brackets",
+      "dsa-c-asteroid-collision-survivors",
+      "dsa-c-largest-rectangle-in-histogram"
     ]
   },
   {
@@ -243,7 +266,12 @@
       "dsa-q-034",
       "dsa-q-035",
       "dsa-c-tree-height-array",
-      "dsa-c-level-order-array"
+      "dsa-c-level-order-array",
+      "dsa-c-maximum-level-sum-binary-tree",
+      "dsa-c-sum-of-left-leaves",
+      "dsa-c-max-path-sum-between-two-leaves",
+      "dsa-c-max-level-sum-binary-tree",
+      "dsa-q-069"
     ]
   },
   {
@@ -260,7 +288,13 @@
     "itemIds": [
       "dsa-q-036",
       "dsa-q-037",
-      "dsa-c-kth-largest"
+      "dsa-c-kth-largest",
+      "dsa-c-k-smallest-elements-sorted",
+      "dsa-c-k-smallest-elements-sorted-2",
+      "dsa-c-minimum-cost-to-connect-sticks",
+      "dsa-c-smallest-range-covering-k-lists",
+      "dsa-c-k-closest-points-to-origin",
+      "dsa-q-072"
     ]
   },
   {
@@ -282,7 +316,11 @@
       "dsa-q-049",
       "dsa-c-num-islands",
       "dsa-c-course-schedule",
-      "dsa-c-graph-bfs"
+      "dsa-c-graph-bfs",
+      "dsa-c-count-connected-components",
+      "dsa-c-graph-valid-path",
+      "dsa-c-course-schedule-can-finish",
+      "dsa-q-070"
     ]
   },
   {
@@ -294,17 +332,23 @@
       "sorting"
     ],
     "lessonIds": [
-      "dsa-09-sorting"
+      "dsa-25-greedy"
     ],
     "itemIds": [
       "dsa-c-activity-selection",
-      "dsa-c-jump-game"
+      "dsa-c-jump-game",
+      "dsa-c-assign-cookies",
+      "dsa-c-lemonade-change",
+      "dsa-c-jump-game-min-jumps",
+      "dsa-c-candy-distribution",
+      "dsa-q-054",
+      "dsa-q-055"
     ]
   },
   {
     "id": "dp-1d",
     "track": "dsa",
-    "title": "Dynamic programming — 1D",
+    "title": "Dynamic programming \u2014 1D",
     "blurb": "Climb stairs, house robber, coin change. State = current index.",
     "prerequisites": [
       "recursion"
@@ -319,23 +363,33 @@
       "dsa-q-047",
       "dsa-c-climb-stairs",
       "dsa-c-house-robber",
-      "dsa-c-coin-change"
+      "dsa-c-coin-change",
+      "dsa-c-min-cost-climbing-stairs",
+      "dsa-c-decode-ways",
+      "dsa-c-longest-valid-parentheses",
+      "dsa-q-071"
     ]
   },
   {
     "id": "dp-2d",
     "track": "dsa",
-    "title": "Dynamic programming — 2D",
+    "title": "Dynamic programming \u2014 2D",
     "blurb": "Grid paths, LCS, edit distance, knapsack.",
     "prerequisites": [
       "dp-1d"
     ],
     "lessonIds": [
-      "dsa-17-dp-1d"
+      "dsa-26-dp-2d"
     ],
     "itemIds": [
       "dsa-c-unique-paths",
-      "dsa-c-lcs"
+      "dsa-c-lcs",
+      "dsa-c-minimum-path-sum",
+      "dsa-c-unique-paths-with-obstacles",
+      "dsa-c-edit-distance",
+      "dsa-c-coin-change-combinations",
+      "dsa-q-056",
+      "dsa-q-057"
     ]
   },
   {
@@ -355,7 +409,15 @@
     "itemIds": [
       "dsa-c-range-sum-query-mutable",
       "dsa-c-strongly-connected-components",
-      "dsa-c-bitmask-tsp"
+      "dsa-c-bitmask-tsp",
+      "dsa-c-range-sum-immutable",
+      "dsa-c-matrix-region-sum",
+      "dsa-c-fenwick-range-sum-mutable",
+      "dsa-c-redundant-connection",
+      "dsa-c-lexicographically-smallest-topo-order",
+      "dsa-q-058",
+      "dsa-q-059",
+      "dsa-q-060"
     ]
   },
   {
@@ -364,10 +426,19 @@
     "title": "Bit manipulation",
     "blurb": "XOR tricks, masks, single-number, power-of-two checks.",
     "prerequisites": [],
-    "lessonIds": [],
+    "lessonIds": [
+      "dsa-27-bit-manipulation"
+    ],
     "itemIds": [
       "dsa-c-single-number",
-      "dsa-c-count-bits"
+      "dsa-c-count-bits",
+      "dsa-c-hamming-distance",
+      "dsa-c-single-number-ii",
+      "dsa-c-missing-number-xor",
+      "dsa-c-single-number-iii",
+      "dsa-q-061",
+      "dsa-q-062",
+      "dsa-q-063"
     ]
   },
   {
@@ -376,10 +447,19 @@
     "title": "Math & number theory",
     "blurb": "GCD/LCM, primes (sieve), modular arithmetic.",
     "prerequisites": [],
-    "lessonIds": [],
+    "lessonIds": [
+      "dsa-28-math"
+    ],
     "itemIds": [
       "dsa-c-gcd",
-      "dsa-c-sieve"
+      "dsa-c-sieve",
+      "dsa-c-perfect-number",
+      "dsa-c-trailing-zeros-factorial",
+      "dsa-c-modular-power",
+      "dsa-c-nth-ugly-number",
+      "dsa-q-064",
+      "dsa-q-065",
+      "dsa-q-066"
     ]
   },
   {
@@ -483,7 +563,7 @@
     "id": "python-stdlib",
     "track": "python",
     "title": "Standard library essentials",
-    "blurb": "collections, itertools, functools — the interview cheats.",
+    "blurb": "collections, itertools, functools \u2014 the interview cheats.",
     "prerequisites": [
       "python-foundations"
     ],
@@ -541,7 +621,7 @@
     "id": "sql-joins",
     "track": "sql",
     "title": "Joins",
-    "blurb": "INNER, LEFT, RIGHT, FULL, CROSS — when and why.",
+    "blurb": "INNER, LEFT, RIGHT, FULL, CROSS \u2014 when and why.",
     "prerequisites": [
       "sql-foundations"
     ],
@@ -597,7 +677,7 @@
     "id": "sql-window",
     "track": "sql",
     "title": "Window functions",
-    "blurb": "ROW_NUMBER, RANK, LAG/LEAD, running totals — the senior round filter.",
+    "blurb": "ROW_NUMBER, RANK, LAG/LEAD, running totals \u2014 the senior round filter.",
     "prerequisites": [
       "sql-aggregation"
     ],
@@ -630,7 +710,7 @@
     "id": "sql-normalization",
     "track": "sql",
     "title": "Normalization & ACID",
-    "blurb": "1NF–BCNF, transactions, isolation levels.",
+    "blurb": "1NF\u2013BCNF, transactions, isolation levels.",
     "prerequisites": [
       "sql-foundations"
     ],
