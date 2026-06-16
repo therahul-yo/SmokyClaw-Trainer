@@ -10,14 +10,122 @@
     "starter": "def second_largest(nums):\n    # your code here\n    pass\n",
     "entry": "second_largest",
     "tests": [
-      { "args": [[1, 2, 3, 4]], "expect": 3 },
-      { "args": [[5, 5, 4, 4]], "expect": 4 },
-      { "args": [[1]], "expect": null },
-      { "args": [[7, 7, 7]], "expect": null },
-      { "args": [[-1, -2, -3]], "expect": -2 }
+      {
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "expect": 3
+      },
+      {
+        "args": [
+          [
+            5,
+            5,
+            4,
+            4
+          ]
+        ],
+        "expect": 4
+      },
+      {
+        "args": [
+          [
+            1
+          ]
+        ],
+        "expect": null
+      },
+      {
+        "args": [
+          [
+            7,
+            7,
+            7
+          ]
+        ],
+        "expect": null
+      },
+      {
+        "args": [
+          [
+            -1,
+            -2,
+            -3
+          ]
+        ],
+        "expect": -2
+      }
     ],
     "explanation": "One clean solution: take `set(nums)`, sort descending, return index 1 if it exists. O(n log n) but trivially correct.",
-    "tags": ["dsa-warmup", "tcs-nqt"]
+    "tags": [
+      "dsa-warmup",
+      "tcs-nqt"
+    ],
+    "estMinutes": 8,
+    "companies": [
+      "tcs",
+      "infosys",
+      "accenture"
+    ],
+    "examples": [
+      {
+        "input": "[1, 2, 3, 4]",
+        "output": "3",
+        "explanation": "4 is largest, 3 is the second-largest distinct value."
+      },
+      {
+        "input": "[5, 5, 4, 4]",
+        "output": "4",
+        "explanation": "After deduping to {4,5}, the second-largest is 4."
+      },
+      {
+        "input": "[1]",
+        "output": "None",
+        "explanation": "Only one distinct value, so there is no second-largest."
+      }
+    ],
+    "constraints": "- `0 <= len(nums) <= 10^4`\n- values fit in a Python int; duplicates are allowed.",
+    "hints": [
+      "Duplicates shouldn't count twice \u2014 what data structure removes them?",
+      "Reduce to the distinct values, then you need the 2nd biggest.",
+      "set(nums) then sort descending; return index 1 if it exists, else None. A single O(n) pass tracking the top two also works."
+    ],
+    "bruteForce": {
+      "code": "def second_largest(nums):\n    distinct = sorted(set(nums), reverse=True)\n    return distinct[1] if len(distinct) > 1 else None\n",
+      "complexity": "O(n log n) time, O(n) space",
+      "explanation": "Dedupe to a set, sort descending, pick the second. Simple and clearly correct; the sort dominates."
+    },
+    "optimal": {
+      "code": "def second_largest(nums):\n    first = second = None\n    for x in set(nums):\n        if first is None or x > first:\n            first, second = x, first\n        elif second is None or x > second:\n            second = x\n    return second\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "A single pass over the distinct values tracks the largest and second-largest, avoiding the sort. O(n) overall."
+    },
+    "complexityCheck": {
+      "question": "What is the optimal time complexity?",
+      "choices": [
+        {
+          "label": "O(n)",
+          "correct": true
+        },
+        {
+          "label": "O(n log n)",
+          "correct": false
+        },
+        {
+          "label": "O(n^2)",
+          "correct": false
+        },
+        {
+          "label": "O(1)",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "py-c-002",
@@ -30,13 +138,102 @@
     "starter": "def is_palindrome(s):\n    # your code here\n    pass\n",
     "entry": "is_palindrome",
     "tests": [
-      { "args": ["racecar"], "expect": true },
-      { "args": ["Race Car"], "expect": true },
-      { "args": ["hello"], "expect": false },
-      { "args": [""], "expect": true },
-      { "args": ["A man, a plan, a canal: Panama"], "expect": true }
+      {
+        "args": [
+          "racecar"
+        ],
+        "expect": true
+      },
+      {
+        "args": [
+          "Race Car"
+        ],
+        "expect": true
+      },
+      {
+        "args": [
+          "hello"
+        ],
+        "expect": false
+      },
+      {
+        "args": [
+          ""
+        ],
+        "expect": true
+      },
+      {
+        "args": [
+          "A man, a plan, a canal: Panama"
+        ],
+        "expect": true
+      }
     ],
-    "tags": ["strings", "tcs-nqt", "leetcode-easy"]
+    "tags": [
+      "strings",
+      "tcs-nqt",
+      "leetcode-easy"
+    ],
+    "estMinutes": 9,
+    "companies": [
+      "amazon",
+      "tcs",
+      "infosys"
+    ],
+    "examples": [
+      {
+        "input": "\"Race Car\"",
+        "output": "True",
+        "explanation": "Ignoring case and spaces, 'racecar' reads the same both ways."
+      },
+      {
+        "input": "\"A man, a plan, a canal: Panama\"",
+        "output": "True",
+        "explanation": "Stripping non-alphanumerics and lowercasing yields a palindrome."
+      },
+      {
+        "input": "\"hello\"",
+        "output": "False",
+        "explanation": "'hello' reversed is 'olleh' \u2014 not equal."
+      }
+    ],
+    "constraints": "- `0 <= len(s) <= 2*10^5`\n- `s` may contain letters, digits, spaces and punctuation.",
+    "hints": [
+      "First normalize: keep only alphanumeric characters and lowercase them.",
+      "A palindrome equals its own reverse \u2014 or use two pointers from both ends.",
+      "filtered = [c for c in s.lower() if c.isalnum()]; return filtered == filtered[::-1]."
+    ],
+    "bruteForce": {
+      "code": "def is_palindrome(s):\n    cleaned = [c for c in s.lower() if c.isalnum()]\n    return cleaned == cleaned[::-1]\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Build the cleaned list and compare to its reverse. Clear and correct; allocates a reversed copy."
+    },
+    "optimal": {
+      "code": "def is_palindrome(s):\n    i, j = 0, len(s) - 1\n    while i < j:\n        while i < j and not s[i].isalnum():\n            i += 1\n        while i < j and not s[j].isalnum():\n            j -= 1\n        if s[i].lower() != s[j].lower():\n            return False\n        i += 1\n        j -= 1\n    return True\n",
+      "complexity": "O(n) time, O(1) extra space",
+      "explanation": "Two pointers walk inward, skipping non-alphanumerics, comparing lowercased characters in place \u2014 no extra string allocated."
+    },
+    "complexityCheck": {
+      "question": "Extra space used by the two-pointer solution?",
+      "choices": [
+        {
+          "label": "O(1)",
+          "correct": true
+        },
+        {
+          "label": "O(n)",
+          "correct": false
+        },
+        {
+          "label": "O(log n)",
+          "correct": false
+        },
+        {
+          "label": "O(n^2)",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "py-c-003",
@@ -49,12 +246,100 @@
     "starter": "def count_vowels(s):\n    # your code here\n    pass\n",
     "entry": "count_vowels",
     "tests": [
-      { "args": ["hello"], "expect": 2 },
-      { "args": ["AEIOU"], "expect": 5 },
-      { "args": [""], "expect": 0 },
-      { "args": ["xyz"], "expect": 0 },
-      { "args": ["Programming"], "expect": 3 }
+      {
+        "args": [
+          "hello"
+        ],
+        "expect": 2
+      },
+      {
+        "args": [
+          "AEIOU"
+        ],
+        "expect": 5
+      },
+      {
+        "args": [
+          ""
+        ],
+        "expect": 0
+      },
+      {
+        "args": [
+          "xyz"
+        ],
+        "expect": 0
+      },
+      {
+        "args": [
+          "Programming"
+        ],
+        "expect": 3
+      }
     ],
-    "tags": ["strings", "warmup"]
+    "tags": [
+      "strings",
+      "warmup"
+    ],
+    "estMinutes": 6,
+    "companies": [
+      "tcs",
+      "wipro",
+      "cognizant"
+    ],
+    "examples": [
+      {
+        "input": "\"hello\"",
+        "output": "2",
+        "explanation": "'e' and 'o' are vowels."
+      },
+      {
+        "input": "\"AEIOU\"",
+        "output": "5",
+        "explanation": "All five vowels, case-insensitive."
+      },
+      {
+        "input": "\"xyz\"",
+        "output": "0",
+        "explanation": "No vowels present."
+      }
+    ],
+    "constraints": "- `0 <= len(s) <= 10^5`\n- count a, e, i, o, u (case-insensitive); y is not a vowel here.",
+    "hints": [
+      "Lowercase the string so you only check five characters.",
+      "A membership test against a vowel set is O(1) per character.",
+      "return sum(1 for c in s.lower() if c in 'aeiou')."
+    ],
+    "bruteForce": {
+      "code": "def count_vowels(s):\n    count = 0\n    for c in s.lower():\n        if c in ('a', 'e', 'i', 'o', 'u'):\n            count += 1\n    return count\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "Explicit loop incrementing on each vowel. Linear and obvious."
+    },
+    "optimal": {
+      "code": "def count_vowels(s):\n    vowels = set('aeiou')\n    return sum(1 for c in s.lower() if c in vowels)\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "A generator expression with an O(1) set membership test \u2014 one linear pass, constant extra space."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of counting the vowels?",
+      "choices": [
+        {
+          "label": "O(n)",
+          "correct": true
+        },
+        {
+          "label": "O(n log n)",
+          "correct": false
+        },
+        {
+          "label": "O(n^2)",
+          "correct": false
+        },
+        {
+          "label": "O(1)",
+          "correct": false
+        }
+      ]
+    }
   }
 ]

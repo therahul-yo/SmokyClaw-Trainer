@@ -2,7 +2,7 @@
 id: python-04-comprehensions
 title: List, dict & set comprehensions
 track: python
-topic: syntax
+topic: comprehensions
 order: 5
 estMinutes: 8
 prerequisites: [python-02-data-types]

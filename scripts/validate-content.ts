@@ -170,8 +170,11 @@ for (const { item, pack } of allItems) {
     if (!ok) err(`${where}: pattern "${item.pattern}" not in patterns.json for ${item.track}`);
   }
   for (const tag of item.tags ?? []) {
-    const canonical = BANNED_TAGS[tag];
-    if (canonical) err(`${where}: tag "${tag}" is a banned alias — use "${canonical}"`);
+    // Object.hasOwn guards against prototype keys ("constructor", "toString")
+    // being treated as banned aliases.
+    if (Object.hasOwn(BANNED_TAGS, tag)) {
+      err(`${where}: tag "${tag}" is a banned alias — use "${BANNED_TAGS[tag]}"`);
+    }
   }
 
   if (item.type === "mcq") {

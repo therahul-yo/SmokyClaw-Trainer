@@ -7,38 +7,86 @@
     "difficulty": "easy",
     "pattern": "sql-foundations",
     "estMinutes": 5,
-    "companies": ["tcs", "infosys"],
+    "companies": [
+      "tcs",
+      "infosys"
+    ],
     "schema": "employees",
     "prompt": "List the name and salary of all Engineering employees, ordered by salary DESC. The Engineering department has `department_id = 1`.",
     "constraints": "Use department_id, not the text `department` column.",
     "examples": [
-      { "input": "employees seed data", "output": "Carol 92000, Alice 75000, Hugo 50000" }
+      {
+        "input": "employees seed data",
+        "output": "Carol 92000, Alice 75000, Hugo 50000"
+      },
+      {
+        "input": "employees seed data",
+        "output": "Carol, 92000; Alice, 75000; Hugo, 50000"
+      }
     ],
     "starter": "SELECT name, salary\nFROM employees\nWHERE department_id = 1\nORDER BY ...;\n",
     "expected": {
-      "columns": ["name", "salary"],
+      "columns": [
+        "name",
+        "salary"
+      ],
       "rows": [
-        ["Carol", 92000],
-        ["Alice", 75000],
-        ["Hugo", 50000]
+        [
+          "Carol",
+          92000
+        ],
+        [
+          "Alice",
+          75000
+        ],
+        [
+          "Hugo",
+          50000
+        ]
       ]
     },
     "hints": [
       "Filter with WHERE department_id = 1.",
       "Order by salary DESC.",
-      "The text column `department` and the id column `department_id` both exist — prefer the id for joins/filters."
+      "The text column `department` and the id column `department_id` both exist \u2014 prefer the id for joins/filters."
     ],
     "bruteForce": {
       "code": "SELECT name, salary FROM employees WHERE department = 'Engineering' ORDER BY salary DESC;",
       "complexity": "O(n)",
-      "explanation": "Works for this seed but couples to a text label — brittle if a department renames. Always prefer the FK id."
+      "explanation": "Works for this seed but couples to a text label \u2014 brittle if a department renames. Always prefer the FK id."
     },
     "optimal": {
       "code": "SELECT name, salary\nFROM employees\nWHERE department_id = 1\nORDER BY salary DESC;",
       "complexity": "O(n)",
       "explanation": "Filter by FK, sort by salary descending. With an index on department_id this is an O(matches) seek."
     },
-    "tags": ["select", "where", "order-by", "tcs-nqt"]
+    "tags": [
+      "select",
+      "where",
+      "order-by",
+      "tcs-nqt"
+    ],
+    "complexityCheck": {
+      "question": "What does ORDER BY ... DESC do to the result?",
+      "choices": [
+        {
+          "label": "Sorts rows by that column in descending order",
+          "correct": true
+        },
+        {
+          "label": "Filters rows",
+          "correct": false
+        },
+        {
+          "label": "Groups rows",
+          "correct": false
+        },
+        {
+          "label": "Removes duplicates",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-employee-dept-join",
@@ -48,28 +96,63 @@
     "difficulty": "easy",
     "pattern": "sql-joins",
     "estMinutes": 6,
-    "companies": ["tcs", "infosys", "wipro"],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ],
     "schema": "employees",
     "prompt": "List each employee's name alongside their department's name, ordered alphabetically by employee name. Exclude employees whose department is NULL.",
-    "constraints": "Use an INNER JOIN — don't filter NULLs after the fact.",
+    "constraints": "Use an INNER JOIN \u2014 don't filter NULLs after the fact.",
     "examples": [
-      { "input": "employees + departments", "output": "Alice/Engineering, Bob/Sales, ..., Hugo/Engineering (Frank excluded)" }
+      {
+        "input": "employees + departments",
+        "output": "Alice/Engineering, Bob/Sales, ..., Hugo/Engineering (Frank excluded)"
+      },
+      {
+        "input": "employees seed data",
+        "output": "Alice, Engineering; Bob, Sales; Carol, Engineering ..."
+      }
     ],
     "starter": "SELECT e.name, d.name AS dept_name\nFROM employees e\n...\nORDER BY e.name;\n",
     "expected": {
-      "columns": ["name", "dept_name"],
+      "columns": [
+        "name",
+        "dept_name"
+      ],
       "rows": [
-        ["Alice", "Engineering"],
-        ["Bob", "Sales"],
-        ["Carol", "Engineering"],
-        ["Dave", "Sales"],
-        ["Eve", "Marketing"],
-        ["Grace", "Finance"],
-        ["Hugo", "Engineering"]
+        [
+          "Alice",
+          "Engineering"
+        ],
+        [
+          "Bob",
+          "Sales"
+        ],
+        [
+          "Carol",
+          "Engineering"
+        ],
+        [
+          "Dave",
+          "Sales"
+        ],
+        [
+          "Eve",
+          "Marketing"
+        ],
+        [
+          "Grace",
+          "Finance"
+        ],
+        [
+          "Hugo",
+          "Engineering"
+        ]
       ]
     },
     "hints": [
-      "INNER JOIN excludes rows where the ON match fails — which neatly excludes Frank's NULL department.",
+      "INNER JOIN excludes rows where the ON match fails \u2014 which neatly excludes Frank's NULL department.",
       "Both tables have a `name` column. Disambiguate with aliases or AS.",
       "Order by employee name alphabetically."
     ],
@@ -83,7 +166,32 @@
       "complexity": "O(n + m) with hash join",
       "explanation": "INNER JOIN naturally drops rows where e.department_id is NULL (NULL never matches via =)."
     },
-    "tags": ["joins", "inner-join", "tcs-nqt"]
+    "tags": [
+      "joins",
+      "inner-join",
+      "tcs-nqt"
+    ],
+    "complexityCheck": {
+      "question": "An INNER JOIN returns:",
+      "choices": [
+        {
+          "label": "Only rows where the join condition matches in both tables",
+          "correct": true
+        },
+        {
+          "label": "All rows from the left table",
+          "correct": false
+        },
+        {
+          "label": "All rows from both tables",
+          "correct": false
+        },
+        {
+          "label": "Rows from neither table",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-no-dept",
@@ -93,20 +201,36 @@
     "difficulty": "easy",
     "pattern": "sql-joins",
     "estMinutes": 5,
-    "companies": ["tcs", "infosys"],
+    "companies": [
+      "tcs",
+      "infosys"
+    ],
     "schema": "employees",
     "prompt": "Find the names of employees who are not assigned to any department (department_id IS NULL).",
     "constraints": "One row in the seed: Frank.",
     "examples": [
-      { "input": "employees seed", "output": "Frank" }
+      {
+        "input": "employees seed",
+        "output": "Frank"
+      },
+      {
+        "input": "employees seed data",
+        "output": "Frank"
+      }
     ],
     "starter": "SELECT name\nFROM employees\nWHERE ...;\n",
     "expected": {
-      "columns": ["name"],
-      "rows": [["Frank"]]
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "Frank"
+        ]
+      ]
     },
     "hints": [
-      "Equality against NULL never matches — use IS NULL.",
+      "Equality against NULL never matches \u2014 use IS NULL.",
       "Direct filter is simpler than LEFT JOIN here, but the LEFT JOIN ... IS NULL pattern is the general anti-join template.",
       "`WHERE department_id = NULL` will return zero rows. Always use `IS NULL`."
     ],
@@ -118,9 +242,34 @@
     "optimal": {
       "code": "SELECT name\nFROM employees\nWHERE department_id IS NULL;",
       "complexity": "O(n)",
-      "explanation": "Direct NULL filter — simplest when the column itself can be NULL. The bruteForce anti-join is the general technique when you want 'in A but not in B' across different tables."
+      "explanation": "Direct NULL filter \u2014 simplest when the column itself can be NULL. The bruteForce anti-join is the general technique when you want 'in A but not in B' across different tables."
     },
-    "tags": ["nulls", "anti-join", "joins"]
+    "tags": [
+      "nulls",
+      "anti-join",
+      "joins"
+    ],
+    "complexityCheck": {
+      "question": "An INNER JOIN returns:",
+      "choices": [
+        {
+          "label": "Only rows where the join condition matches in both tables",
+          "correct": true
+        },
+        {
+          "label": "All rows from the left table",
+          "correct": false
+        },
+        {
+          "label": "All rows from both tables",
+          "correct": false
+        },
+        {
+          "label": "Rows from neither table",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-dept-headcount",
@@ -130,37 +279,83 @@
     "difficulty": "medium",
     "pattern": "sql-aggregation",
     "estMinutes": 8,
-    "companies": ["tcs", "infosys", "wipro"],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ],
     "schema": "employees",
     "prompt": "For each department, output `dept_name` and `headcount` (number of employees). Include only departments with more than 1 employee. Order by headcount DESC, then dept_name ASC.",
     "constraints": "Use GROUP BY + HAVING. Skip Frank (NULL department).",
     "examples": [
-      { "input": "employees + departments", "output": "Engineering 3, Sales 2" }
+      {
+        "input": "employees + departments",
+        "output": "Engineering 3, Sales 2"
+      },
+      {
+        "input": "employees seed data",
+        "output": "Engineering, 3; Sales, 2"
+      }
     ],
     "starter": "SELECT d.name AS dept_name, COUNT(*) AS headcount\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nGROUP BY d.id, d.name\nHAVING ...\nORDER BY ...;\n",
     "expected": {
-      "columns": ["dept_name", "headcount"],
+      "columns": [
+        "dept_name",
+        "headcount"
+      ],
       "rows": [
-        ["Engineering", 3],
-        ["Sales", 2]
+        [
+          "Engineering",
+          3
+        ],
+        [
+          "Sales",
+          2
+        ]
       ]
     },
     "hints": [
       "INNER JOIN naturally excludes Frank (NULL department_id won't match).",
       "GROUP BY the department, then COUNT(*) per group.",
-      "Filter groups with HAVING — not WHERE — because HAVING runs after grouping. Use `COUNT(*) > 1`."
+      "Filter groups with HAVING \u2014 not WHERE \u2014 because HAVING runs after grouping. Use `COUNT(*) > 1`."
     ],
     "bruteForce": {
       "code": "SELECT d.name, (SELECT COUNT(*) FROM employees e WHERE e.department_id = d.id) AS headcount\nFROM departments d\nWHERE (SELECT COUNT(*) FROM employees e WHERE e.department_id = d.id) > 1\nORDER BY headcount DESC, d.name;",
-      "complexity": "O(d * n) — correlated subquery twice per department",
+      "complexity": "O(d * n) \u2014 correlated subquery twice per department",
       "explanation": "Functional but does the same count twice. GROUP BY + HAVING is the standard one-pass solution."
     },
     "optimal": {
       "code": "SELECT d.name AS dept_name, COUNT(*) AS headcount\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nGROUP BY d.id, d.name\nHAVING COUNT(*) > 1\nORDER BY headcount DESC, dept_name ASC;",
-      "complexity": "O(n) — single grouped scan",
+      "complexity": "O(n) \u2014 single grouped scan",
       "explanation": "Group, count, filter. HAVING is for post-aggregation filtering (you can't put COUNT(*) > 1 in WHERE because aggregates don't exist yet at WHERE-time)."
     },
-    "tags": ["aggregation", "group-by", "having", "tcs-nqt"]
+    "tags": [
+      "aggregation",
+      "group-by",
+      "having",
+      "tcs-nqt"
+    ],
+    "complexityCheck": {
+      "question": "GROUP BY produces:",
+      "choices": [
+        {
+          "label": "One row per distinct group, collapsing the members",
+          "correct": true
+        },
+        {
+          "label": "One row per input row",
+          "correct": false
+        },
+        {
+          "label": "A sorted result",
+          "correct": false
+        },
+        {
+          "label": "Only the first group",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-avg-salary-per-dept",
@@ -170,27 +365,52 @@
     "difficulty": "medium",
     "pattern": "sql-aggregation",
     "estMinutes": 8,
-    "companies": ["tcs", "infosys"],
+    "companies": [
+      "tcs",
+      "infosys"
+    ],
     "schema": "employees",
     "prompt": "For each department, output `dept_name` and `avg_salary` (integer-cast average), ordered alphabetically by dept_name. Skip employees with NULL department.",
     "constraints": "Use CAST(AVG(salary) AS INTEGER) to dodge floating-point representation issues.",
     "examples": [
-      { "input": "employees + departments", "output": "Engineering 72333, Finance 65000, Marketing 38000, Sales 46500" }
+      {
+        "input": "employees + departments",
+        "output": "Engineering 72333, Finance 65000, Marketing 38000, Sales 46500"
+      },
+      {
+        "input": "employees seed data",
+        "output": "Engineering, 72333; Finance, 65000; Marketing, 38000 ..."
+      }
     ],
     "starter": "SELECT d.name AS dept_name, CAST(AVG(e.salary) AS INTEGER) AS avg_salary\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nGROUP BY ...\nORDER BY ...;\n",
     "expected": {
-      "columns": ["dept_name", "avg_salary"],
+      "columns": [
+        "dept_name",
+        "avg_salary"
+      ],
       "rows": [
-        ["Engineering", 72333],
-        ["Finance", 65000],
-        ["Marketing", 38000],
-        ["Sales", 46500]
+        [
+          "Engineering",
+          72333
+        ],
+        [
+          "Finance",
+          65000
+        ],
+        [
+          "Marketing",
+          38000
+        ],
+        [
+          "Sales",
+          46500
+        ]
       ]
     },
     "hints": [
       "Average of integers in SQLite returns a REAL. CAST to INTEGER (truncates) for predictable output.",
       "GROUP BY the department.",
-      "INNER JOIN excludes Frank (NULL department) — AVG would skip his NULL anyway, but the join also drops the row entirely."
+      "INNER JOIN excludes Frank (NULL department) \u2014 AVG would skip his NULL anyway, but the join also drops the row entirely."
     ],
     "bruteForce": {
       "code": "SELECT (SELECT name FROM departments WHERE id = e.department_id) AS dept_name,\n       CAST(AVG(salary) AS INTEGER) AS avg_salary\nFROM employees e\nWHERE department_id IS NOT NULL\nGROUP BY department_id\nORDER BY dept_name;",
@@ -199,10 +419,35 @@
     },
     "optimal": {
       "code": "SELECT d.name AS dept_name, CAST(AVG(e.salary) AS INTEGER) AS avg_salary\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nGROUP BY d.id, d.name\nORDER BY d.name;",
-      "complexity": "O(n) — one grouped scan + sort",
+      "complexity": "O(n) \u2014 one grouped scan + sort",
       "explanation": "JOIN + GROUP BY. CAST forces integer truncation so the test result is deterministic."
     },
-    "tags": ["aggregation", "avg", "joins"]
+    "tags": [
+      "aggregation",
+      "avg",
+      "joins"
+    ],
+    "complexityCheck": {
+      "question": "GROUP BY produces:",
+      "choices": [
+        {
+          "label": "One row per distinct group, collapsing the members",
+          "correct": true
+        },
+        {
+          "label": "One row per input row",
+          "correct": false
+        },
+        {
+          "label": "A sorted result",
+          "correct": false
+        },
+        {
+          "label": "Only the first group",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-above-dept-avg",
@@ -212,20 +457,42 @@
     "difficulty": "hard",
     "pattern": "sql-subqueries",
     "estMinutes": 14,
-    "companies": ["amazon-india", "infosys"],
+    "companies": [
+      "amazon-india",
+      "infosys"
+    ],
     "schema": "employees",
     "prompt": "Find employees whose salary is STRICTLY greater than the average salary of their own department. Output `name`, `salary`. Order by name ASC. Skip employees with NULL department.",
     "constraints": "Use a correlated subquery (or a window function) for the per-dept average.",
     "examples": [
-      { "input": "employees seed", "output": "Alice 75000 (Eng avg 72333), Carol 92000, Dave 48000 (Sales avg 46500)" }
+      {
+        "input": "employees seed",
+        "output": "Alice 75000 (Eng avg 72333), Carol 92000, Dave 48000 (Sales avg 46500)"
+      },
+      {
+        "input": "employees seed data",
+        "output": "Alice, 75000; Carol, 92000; Dave, 48000"
+      }
     ],
     "starter": "SELECT name, salary\nFROM employees e\nWHERE department_id IS NOT NULL\n  AND salary > (SELECT AVG(salary) FROM employees e2 WHERE e2.department_id = e.department_id)\nORDER BY name;\n",
     "expected": {
-      "columns": ["name", "salary"],
+      "columns": [
+        "name",
+        "salary"
+      ],
       "rows": [
-        ["Alice", 75000],
-        ["Carol", 92000],
-        ["Dave", 48000]
+        [
+          "Alice",
+          75000
+        ],
+        [
+          "Carol",
+          92000
+        ],
+        [
+          "Dave",
+          48000
+        ]
       ]
     },
     "hints": [
@@ -235,15 +502,41 @@
     ],
     "bruteForce": {
       "code": "SELECT e.name, e.salary\nFROM employees e\nWHERE e.department_id IS NOT NULL\n  AND e.salary > (SELECT AVG(salary) FROM employees e2 WHERE e2.department_id = e.department_id)\nORDER BY e.name;",
-      "complexity": "O(n^2) worst-case — per-row subquery",
+      "complexity": "O(n^2) worst-case \u2014 per-row subquery",
       "explanation": "Logically clean. Modern planners often rewrite this as a join + window function, but pessimistically it's quadratic."
     },
     "optimal": {
       "code": "WITH dept_avg AS (\n  SELECT department_id, AVG(salary) AS avg_sal FROM employees\n  WHERE department_id IS NOT NULL\n  GROUP BY department_id\n)\nSELECT e.name, e.salary\nFROM employees e\nJOIN dept_avg da ON e.department_id = da.department_id\nWHERE e.salary > da.avg_sal\nORDER BY e.name;",
-      "complexity": "O(n) — two scans",
+      "complexity": "O(n) \u2014 two scans",
       "explanation": "Pre-aggregate once, then a single join. Window-function form (AVG ... OVER (PARTITION BY department_id)) is also clean."
     },
-    "tags": ["subqueries", "correlated", "cte", "interview-classic"]
+    "tags": [
+      "subqueries",
+      "correlated",
+      "cte",
+      "interview-classic"
+    ],
+    "complexityCheck": {
+      "question": "A scalar subquery (e.g. (SELECT AVG(x) FROM t)) returns:",
+      "choices": [
+        {
+          "label": "A single value usable in a comparison",
+          "correct": true
+        },
+        {
+          "label": "A whole table",
+          "correct": false
+        },
+        {
+          "label": "One row per group",
+          "correct": false
+        },
+        {
+          "label": "Nothing",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-salary-tiers",
@@ -253,24 +546,45 @@
     "difficulty": "medium",
     "pattern": "sql-subqueries",
     "estMinutes": 10,
-    "companies": ["infosys"],
+    "companies": [
+      "infosys"
+    ],
     "schema": "employees",
-    "prompt": "Bucket employees into salary tiers and count each tier. Tiers: `low` (salary < 40000), `mid` (40000 ≤ salary ≤ 70000), `high` (salary > 70000). Output `tier`, `n` ordered tier-alphabetically. Include all employees including Frank.",
+    "prompt": "Bucket employees into salary tiers and count each tier. Tiers: `low` (salary < 40000), `mid` (40000 \u2264 salary \u2264 70000), `high` (salary > 70000). Output `tier`, `n` ordered tier-alphabetically. Include all employees including Frank.",
     "constraints": "Use CASE WHEN inside a CTE.",
     "examples": [
-      { "input": "8 employees", "output": "high 2 (Alice, Carol), low 2 (Eve, Frank), mid 4 (Bob, Dave, Grace, Hugo)" }
+      {
+        "input": "8 employees",
+        "output": "high 2 (Alice, Carol), low 2 (Eve, Frank), mid 4 (Bob, Dave, Grace, Hugo)"
+      },
+      {
+        "input": "employees seed data",
+        "output": "high, 2; low, 2; mid, 4"
+      }
     ],
     "starter": "WITH tiered AS (\n  SELECT name,\n         CASE WHEN salary < 40000 THEN 'low'\n              WHEN salary <= 70000 THEN 'mid'\n              ELSE 'high'\n         END AS tier\n  FROM employees\n)\nSELECT tier, COUNT(*) AS n\nFROM tiered\nGROUP BY tier\nORDER BY tier;\n",
     "expected": {
-      "columns": ["tier", "n"],
+      "columns": [
+        "tier",
+        "n"
+      ],
       "rows": [
-        ["high", 2],
-        ["low", 2],
-        ["mid", 4]
+        [
+          "high",
+          2
+        ],
+        [
+          "low",
+          2
+        ],
+        [
+          "mid",
+          4
+        ]
       ]
     },
     "hints": [
-      "CASE WHEN ... THEN ... ELSE ... END returns a value per row — that becomes the bucket label.",
+      "CASE WHEN ... THEN ... ELSE ... END returns a value per row \u2014 that becomes the bucket label.",
       "Wrap the CASE in a CTE, then GROUP BY the alias.",
       "Order: CASE conditions are evaluated top-to-bottom; first match wins. Put the most specific first."
     ],
@@ -281,10 +595,35 @@
     },
     "optimal": {
       "code": "WITH tiered AS (\n  SELECT CASE WHEN salary < 40000 THEN 'low'\n              WHEN salary <= 70000 THEN 'mid'\n              ELSE 'high'\n         END AS tier\n  FROM employees\n)\nSELECT tier, COUNT(*) AS n\nFROM tiered\nGROUP BY tier\nORDER BY tier;",
-      "complexity": "O(n) — single pass",
-      "explanation": "CASE assigns a tier in one scan; GROUP BY tier aggregates. CTE is for readability — could inline the CASE in the GROUP BY column too."
+      "complexity": "O(n) \u2014 single pass",
+      "explanation": "CASE assigns a tier in one scan; GROUP BY tier aggregates. CTE is for readability \u2014 could inline the CASE in the GROUP BY column too."
     },
-    "tags": ["cte", "case", "aggregation"]
+    "tags": [
+      "cte",
+      "case",
+      "aggregation"
+    ],
+    "complexityCheck": {
+      "question": "A CTE (the WITH clause) is:",
+      "choices": [
+        {
+          "label": "A named temporary result set scoped to the query",
+          "correct": true
+        },
+        {
+          "label": "A permanent table",
+          "correct": false
+        },
+        {
+          "label": "An index",
+          "correct": false
+        },
+        {
+          "label": "A trigger",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-customer-spend",
@@ -294,24 +633,46 @@
     "difficulty": "medium",
     "pattern": "sql-joins",
     "estMinutes": 12,
-    "companies": ["amazon-india", "infosys"],
+    "companies": [
+      "amazon-india",
+      "infosys"
+    ],
     "schema": "ecommerce",
-    "prompt": "For each customer who has placed at least one DELIVERED order, output `customer_name` and `total_spend` (sum over order_items of qty × price). Order by total_spend DESC. Exclude cancelled and shipped orders.",
+    "prompt": "For each customer who has placed at least one DELIVERED order, output `customer_name` and `total_spend` (sum over order_items of qty \u00d7 price). Order by total_spend DESC. Exclude cancelled and shipped orders.",
     "constraints": "Three-table join: customers + orders + order_items + products.",
     "examples": [
-      { "input": "ecommerce seed (only orders 1, 2, 5 are delivered)", "output": "Sahil 120000, Riya 66000, Arjun 25000" }
+      {
+        "input": "ecommerce seed (only orders 1, 2, 5 are delivered)",
+        "output": "Sahil 120000, Riya 66000, Arjun 25000"
+      },
+      {
+        "input": "ecommerce seed data",
+        "output": "Sahil, 120000; Riya, 66000; Arjun, 25000"
+      }
     ],
     "starter": "SELECT c.name AS customer_name, SUM(oi.quantity * p.price) AS total_spend\nFROM customers c\nJOIN orders o ON c.id = o.customer_id\nJOIN order_items oi ON oi.order_id = o.id\nJOIN products p ON oi.product_id = p.id\nWHERE o.status = 'delivered'\nGROUP BY c.id, c.name\nORDER BY total_spend DESC;\n",
     "expected": {
-      "columns": ["customer_name", "total_spend"],
+      "columns": [
+        "customer_name",
+        "total_spend"
+      ],
       "rows": [
-        ["Sahil", 120000],
-        ["Riya", 66000],
-        ["Arjun", 25000]
+        [
+          "Sahil",
+          120000
+        ],
+        [
+          "Riya",
+          66000
+        ],
+        [
+          "Arjun",
+          25000
+        ]
       ]
     },
     "hints": [
-      "You need price (from products) and quantity (from order_items) per line item — that's a 4-table join.",
+      "You need price (from products) and quantity (from order_items) per line item \u2014 that's a 4-table join.",
       "Filter status = 'delivered' BEFORE aggregating.",
       "GROUP BY customer; SUM(qty * price) per group."
     ],
@@ -325,7 +686,33 @@
       "complexity": "O(n) joined-row count + group",
       "explanation": "Single grouped query; the join produces one row per line-item then SUM collapses to one per customer. Inner joins naturally exclude customers with no delivered orders."
     },
-    "tags": ["joins", "aggregation", "multi-table", "interview-classic"]
+    "tags": [
+      "joins",
+      "aggregation",
+      "multi-table",
+      "interview-classic"
+    ],
+    "complexityCheck": {
+      "question": "An INNER JOIN returns:",
+      "choices": [
+        {
+          "label": "Only rows where the join condition matches in both tables",
+          "correct": true
+        },
+        {
+          "label": "All rows from the left table",
+          "correct": false
+        },
+        {
+          "label": "All rows from both tables",
+          "correct": false
+        },
+        {
+          "label": "Rows from neither table",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-products-never-delivered",
@@ -335,22 +722,40 @@
     "difficulty": "medium",
     "pattern": "sql-joins",
     "estMinutes": 10,
-    "companies": ["amazon-india"],
+    "companies": [
+      "amazon-india"
+    ],
     "schema": "ecommerce",
     "prompt": "List products that have never appeared in a DELIVERED order. Output `name` (alphabetical).",
     "constraints": "Use NOT EXISTS (handles NULLs safely; NOT IN can trip on NULL subqueries).",
     "examples": [
-      { "input": "ecommerce: deliveries cover Laptop, Phone, Headphones", "output": "Book, Notebook" }
+      {
+        "input": "ecommerce: deliveries cover Laptop, Phone, Headphones",
+        "output": "Book, Notebook"
+      },
+      {
+        "input": "ecommerce seed data",
+        "output": "Book; Notebook"
+      }
     ],
     "starter": "SELECT name\nFROM products p\nWHERE NOT EXISTS (\n  SELECT 1\n  FROM order_items oi\n  JOIN orders o ON oi.order_id = o.id\n  WHERE oi.product_id = p.id AND o.status = 'delivered'\n)\nORDER BY name;\n",
     "expected": {
-      "columns": ["name"],
-      "rows": [["Book"], ["Notebook"]]
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "Book"
+        ],
+        [
+          "Notebook"
+        ]
+      ]
     },
     "hints": [
       "Anti-join pattern: 'products NOT in (products with a delivered order)'.",
       "NOT EXISTS is safer than NOT IN because of NULL semantics; here either works since product_id is NOT NULL.",
-      "Inside NOT EXISTS, SELECT 1 is idiomatic — we don't care about the columns, just whether a row exists."
+      "Inside NOT EXISTS, SELECT 1 is idiomatic \u2014 we don't care about the columns, just whether a row exists."
     ],
     "bruteForce": {
       "code": "SELECT name\nFROM products\nWHERE id NOT IN (\n  SELECT DISTINCT oi.product_id\n  FROM order_items oi\n  JOIN orders o ON oi.order_id = o.id\n  WHERE o.status = 'delivered'\n)\nORDER BY name;",
@@ -360,9 +765,34 @@
     "optimal": {
       "code": "SELECT name\nFROM products p\nWHERE NOT EXISTS (\n  SELECT 1 FROM order_items oi\n  JOIN orders o ON oi.order_id = o.id\n  WHERE oi.product_id = p.id AND o.status = 'delivered'\n)\nORDER BY name;",
       "complexity": "O(p * lookup_cost)",
-      "explanation": "Correlated NOT EXISTS — for each product, check if any delivered-order line item references it. Robust to NULLs. Engines optimize this to an anti-semi-join."
+      "explanation": "Correlated NOT EXISTS \u2014 for each product, check if any delivered-order line item references it. Robust to NULLs. Engines optimize this to an anti-semi-join."
     },
-    "tags": ["subqueries", "not-exists", "anti-join"]
+    "tags": [
+      "subqueries",
+      "not-exists",
+      "anti-join"
+    ],
+    "complexityCheck": {
+      "question": "A scalar subquery (e.g. (SELECT AVG(x) FROM t)) returns:",
+      "choices": [
+        {
+          "label": "A single value usable in a comparison",
+          "correct": true
+        },
+        {
+          "label": "A whole table",
+          "correct": false
+        },
+        {
+          "label": "One row per group",
+          "correct": false
+        },
+        {
+          "label": "Nothing",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-top-3-salaries",
@@ -372,20 +802,42 @@
     "difficulty": "easy",
     "pattern": "sql-foundations",
     "estMinutes": 5,
-    "companies": ["tcs", "infosys"],
+    "companies": [
+      "tcs",
+      "infosys"
+    ],
     "schema": "employees",
     "prompt": "Find the top 3 highest-paid employees. Output `name` and `salary`, ordered by salary DESC.",
     "constraints": "Use LIMIT.",
     "examples": [
-      { "input": "employees seed", "output": "Carol 92000, Alice 75000, Grace 65000" }
+      {
+        "input": "employees seed",
+        "output": "Carol 92000, Alice 75000, Grace 65000"
+      },
+      {
+        "input": "employees seed data",
+        "output": "Carol, 92000; Alice, 75000; Grace, 65000"
+      }
     ],
     "starter": "SELECT name, salary\nFROM employees\nORDER BY salary DESC\nLIMIT 3;\n",
     "expected": {
-      "columns": ["name", "salary"],
+      "columns": [
+        "name",
+        "salary"
+      ],
       "rows": [
-        ["Carol", 92000],
-        ["Alice", 75000],
-        ["Grace", 65000]
+        [
+          "Carol",
+          92000
+        ],
+        [
+          "Alice",
+          75000
+        ],
+        [
+          "Grace",
+          65000
+        ]
       ]
     },
     "hints": [
@@ -403,7 +855,33 @@
       "complexity": "O(n) scan + sort, or O(n log k) with a heap if the engine optimizes",
       "explanation": "Standard top-K pattern. Engines may use a heap of size K instead of full sort."
     },
-    "tags": ["select", "order-by", "limit", "tcs-nqt"]
+    "tags": [
+      "select",
+      "order-by",
+      "limit",
+      "tcs-nqt"
+    ],
+    "complexityCheck": {
+      "question": "What does ORDER BY ... DESC do to the result?",
+      "choices": [
+        {
+          "label": "Sorts rows by that column in descending order",
+          "correct": true
+        },
+        {
+          "label": "Filters rows",
+          "correct": false
+        },
+        {
+          "label": "Groups rows",
+          "correct": false
+        },
+        {
+          "label": "Removes duplicates",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-dept-salary-rank",
@@ -413,20 +891,64 @@
     "difficulty": "medium",
     "pattern": "sql-window",
     "estMinutes": 10,
-    "companies": ["tcs", "infosys", "amazon-india"],
+    "companies": [
+      "tcs",
+      "infosys",
+      "amazon-india"
+    ],
     "schema": "employees",
     "prompt": "Assign a rank to each employee within their department based on their salary in descending order. Return the department name as `dept_name`, employee name as `employee_name`, `salary`, and the rank as `salary_rank`. Exclude employees with no department. Order by `dept_name` ASC, `salary_rank` ASC.",
     "constraints": "Use RANK() or DENSE_RANK() as a window function.",
     "expected": {
-      "columns": ["dept_name", "employee_name", "salary", "salary_rank"],
+      "columns": [
+        "dept_name",
+        "employee_name",
+        "salary",
+        "salary_rank"
+      ],
       "rows": [
-        ["Engineering", "Carol", 92000, 1],
-        ["Engineering", "Alice", 75000, 2],
-        ["Engineering", "Hugo", 50000, 3],
-        ["Finance", "Grace", 65000, 1],
-        ["Marketing", "Eve", 38000, 1],
-        ["Sales", "Dave", 48000, 1],
-        ["Sales", "Bob", 45000, 2]
+        [
+          "Engineering",
+          "Carol",
+          92000,
+          1
+        ],
+        [
+          "Engineering",
+          "Alice",
+          75000,
+          2
+        ],
+        [
+          "Engineering",
+          "Hugo",
+          50000,
+          3
+        ],
+        [
+          "Finance",
+          "Grace",
+          65000,
+          1
+        ],
+        [
+          "Marketing",
+          "Eve",
+          38000,
+          1
+        ],
+        [
+          "Sales",
+          "Dave",
+          48000,
+          1
+        ],
+        [
+          "Sales",
+          "Bob",
+          45000,
+          2
+        ]
       ]
     },
     "starter": "SELECT d.name AS dept_name, e.name AS employee_name, e.salary,\n       DENSE_RANK() OVER (PARTITION BY ... ORDER BY ...) AS salary_rank\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nORDER BY dept_name, salary_rank;\n",
@@ -445,7 +967,42 @@
       "complexity": "O(n log n)",
       "explanation": "DENSE_RANK() OVER partition ranks employees by salary descending within department. The join retrieves department names."
     },
-    "tags": ["window-functions", "rank", "joins"]
+    "tags": [
+      "window-functions",
+      "rank",
+      "joins"
+    ],
+    "complexityCheck": {
+      "question": "How does a window function differ from GROUP BY?",
+      "choices": [
+        {
+          "label": "It adds a computed column while keeping the individual rows (no collapsing)",
+          "correct": true
+        },
+        {
+          "label": "It always sorts the table",
+          "correct": false
+        },
+        {
+          "label": "It removes duplicate rows",
+          "correct": false
+        },
+        {
+          "label": "It is identical to GROUP BY",
+          "correct": false
+        }
+      ]
+    },
+    "examples": [
+      {
+        "input": "employees seed data",
+        "output": "Engineering, Carol, 92000, 1; Engineering, Alice, 75000, 2; Engineering, Hugo, 50000, 3 ..."
+      },
+      {
+        "input": "employees seed data",
+        "output": "7 row(s), columns: dept_name, employee_name, salary, salary_rank"
+      }
+    ]
   },
   {
     "id": "sql-c-degrees-separation",
@@ -455,18 +1012,38 @@
     "difficulty": "hard",
     "pattern": "sql-subqueries",
     "estMinutes": 20,
-    "companies": ["amazon-india"],
+    "companies": [
+      "amazon-india"
+    ],
     "schema": "social",
     "prompt": "Find all users reachable from user 'farhan' (id = 6) by recursively following followee links. Return the user's `username` and their minimum `degree` of separation (1 for direct followee, 2 for followee's followee, etc.). Exclude 'farhan' himself. Order by `degree` ASC, then `username` ASC.",
     "constraints": "Use a RECURSIVE CTE.",
     "expected": {
-      "columns": ["username", "degree"],
+      "columns": [
+        "username",
+        "degree"
+      ],
       "rows": [
-        ["divya", 1],
-        ["aarav", 2],
-        ["esha", 2],
-        ["bhavna", 3],
-        ["chetan", 3]
+        [
+          "divya",
+          1
+        ],
+        [
+          "aarav",
+          2
+        ],
+        [
+          "esha",
+          2
+        ],
+        [
+          "bhavna",
+          3
+        ],
+        [
+          "chetan",
+          3
+        ]
       ]
     },
     "starter": "WITH RECURSIVE reach AS (\n  -- Anchor member: direct followees of farhan (id=6)\n  SELECT followee_id, 1 AS degree\n  FROM follows\n  WHERE follower_id = 6\n  \n  UNION\n  \n  -- Recursive member: followees of reachable users\n  SELECT f.followee_id, r.degree + 1\n  FROM follows f\n  JOIN reach r ON f.follower_id = r.followee_id\n  WHERE r.degree < 5\n)\nSELECT u.username, MIN(r.degree) AS degree\nFROM reach r\nJOIN users u ON r.followee_id = u.id\nGROUP BY u.username\nORDER BY degree, u.username;\n",
@@ -486,7 +1063,41 @@
       "complexity": "O(V + E) database graph traversal",
       "explanation": "Computes transitively reachable nodes using breadth-first traversal in database. Aggregating by MIN(degree) resolves duplicate paths with different lengths."
     },
-    "tags": ["cte", "recursive", "graph-traversal"]
+    "tags": [
+      "cte",
+      "recursive",
+      "graph-traversal"
+    ],
+    "complexityCheck": {
+      "question": "A CTE (the WITH clause) is:",
+      "choices": [
+        {
+          "label": "A named temporary result set scoped to the query",
+          "correct": true
+        },
+        {
+          "label": "A permanent table",
+          "correct": false
+        },
+        {
+          "label": "An index",
+          "correct": false
+        },
+        {
+          "label": "A trigger",
+          "correct": false
+        }
+      ]
+    },
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "divya, 1; aarav, 2; esha, 2 ..."
+      },
+      {
+        "input": "social seed data",
+        "output": "5 row(s), columns: username, degree"
+      }
+    ]
   }
 ]
-

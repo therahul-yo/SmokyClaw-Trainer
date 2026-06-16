@@ -10,16 +10,87 @@
     "schema": "employees",
     "prompt": "Return the highest-paid employee in each department. Output `dept_name`, `employee_name`, `salary`, ordered by dept_name.",
     "constraints": "Use a window function or grouped max joined back.",
-    "examples": [{ "input": "employees seed", "output": "Engineering Carol 92000, Finance Grace 65000, Marketing Eve 38000, Sales Dave 48000" }],
+    "examples": [
+      {
+        "input": "employees seed",
+        "output": "Engineering Carol 92000, Finance Grace 65000, Marketing Eve 38000, Sales Dave 48000"
+      },
+      {
+        "input": "employees seed data",
+        "output": "Engineering, Carol, 92000; Finance, Grace, 65000; Marketing, Eve, 38000 ..."
+      }
+    ],
     "starter": "WITH ranked AS (\n  SELECT ...\n)\nSELECT ...\nFROM ranked\nWHERE rn = 1\nORDER BY dept_name;\n",
     "expected": {
-      "columns": ["dept_name", "employee_name", "salary"],
-      "rows": [["Engineering", "Carol", 92000], ["Finance", "Grace", 65000], ["Marketing", "Eve", 38000], ["Sales", "Dave", 48000]]
+      "columns": [
+        "dept_name",
+        "employee_name",
+        "salary"
+      ],
+      "rows": [
+        [
+          "Engineering",
+          "Carol",
+          92000
+        ],
+        [
+          "Finance",
+          "Grace",
+          65000
+        ],
+        [
+          "Marketing",
+          "Eve",
+          38000
+        ],
+        [
+          "Sales",
+          "Dave",
+          48000
+        ]
+      ]
     },
-    "hints": ["Join employees to departments.", "Use ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC).", "Filter rn = 1."],
-    "bruteForce": { "code": "SELECT d.name AS dept_name, e.name AS employee_name, e.salary\nFROM employees e JOIN departments d ON e.department_id = d.id\nWHERE e.salary = (SELECT MAX(salary) FROM employees x WHERE x.department_id = e.department_id)\nORDER BY dept_name;", "complexity": "Correlated subquery per row", "explanation": "Works here but can be more expensive and returns ties unless handled." },
-    "optimal": { "code": "WITH ranked AS (\n  SELECT d.name AS dept_name, e.name AS employee_name, e.salary,\n         ROW_NUMBER() OVER (PARTITION BY d.id ORDER BY e.salary DESC, e.name) AS rn\n  FROM employees e\n  JOIN departments d ON e.department_id = d.id\n)\nSELECT dept_name, employee_name, salary\nFROM ranked\nWHERE rn = 1\nORDER BY dept_name;", "complexity": "O(n log n) due to partition ordering", "explanation": "Window ranking cleanly selects one top employee per department." },
-    "tags": ["sql", "window-functions", "row-number"]
+    "hints": [
+      "Join employees to departments.",
+      "Use ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC).",
+      "Filter rn = 1."
+    ],
+    "bruteForce": {
+      "code": "SELECT d.name AS dept_name, e.name AS employee_name, e.salary\nFROM employees e JOIN departments d ON e.department_id = d.id\nWHERE e.salary = (SELECT MAX(salary) FROM employees x WHERE x.department_id = e.department_id)\nORDER BY dept_name;",
+      "complexity": "Correlated subquery per row",
+      "explanation": "Works here but can be more expensive and returns ties unless handled."
+    },
+    "optimal": {
+      "code": "WITH ranked AS (\n  SELECT d.name AS dept_name, e.name AS employee_name, e.salary,\n         ROW_NUMBER() OVER (PARTITION BY d.id ORDER BY e.salary DESC, e.name) AS rn\n  FROM employees e\n  JOIN departments d ON e.department_id = d.id\n)\nSELECT dept_name, employee_name, salary\nFROM ranked\nWHERE rn = 1\nORDER BY dept_name;",
+      "complexity": "O(n log n) due to partition ordering",
+      "explanation": "Window ranking cleanly selects one top employee per department."
+    },
+    "tags": [
+      "sql",
+      "window-functions",
+      "row-number"
+    ],
+    "complexityCheck": {
+      "question": "How does a window function differ from GROUP BY?",
+      "choices": [
+        {
+          "label": "It adds a computed column while keeping the individual rows (no collapsing)",
+          "correct": true
+        },
+        {
+          "label": "It always sorts the table",
+          "correct": false
+        },
+        {
+          "label": "It removes duplicate rows",
+          "correct": false
+        },
+        {
+          "label": "It is identical to GROUP BY",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-departments-without-employees",
@@ -32,13 +103,68 @@
     "schema": "employees",
     "prompt": "Return department names that have no employees.",
     "constraints": "Use LEFT JOIN anti-join.",
-    "examples": [{ "input": "employees seed", "output": "HR" }],
+    "examples": [
+      {
+        "input": "employees seed",
+        "output": "HR"
+      },
+      {
+        "input": "employees seed data",
+        "output": "HR"
+      }
+    ],
     "starter": "SELECT d.name\nFROM departments d\nLEFT JOIN employees e ON ...\nWHERE ...;\n",
-    "expected": { "columns": ["name"], "rows": [["HR"]] },
-    "hints": ["Start from departments.", "LEFT JOIN employees.", "Keep rows where e.id IS NULL."],
-    "bruteForce": { "code": "SELECT name FROM departments WHERE id NOT IN (SELECT department_id FROM employees);", "complexity": "Can fail with NULL semantics", "explanation": "NOT IN with NULLs can surprise you because employees.department_id contains NULL." },
-    "optimal": { "code": "SELECT d.name\nFROM departments d\nLEFT JOIN employees e ON e.department_id = d.id\nWHERE e.id IS NULL\nORDER BY d.name;", "complexity": "O(d+n)", "explanation": "LEFT JOIN + IS NULL is the standard anti-join." },
-    "tags": ["sql", "anti-join", "nulls"]
+    "expected": {
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "HR"
+        ]
+      ]
+    },
+    "hints": [
+      "Start from departments.",
+      "LEFT JOIN employees.",
+      "Keep rows where e.id IS NULL."
+    ],
+    "bruteForce": {
+      "code": "SELECT name FROM departments WHERE id NOT IN (SELECT department_id FROM employees);",
+      "complexity": "Can fail with NULL semantics",
+      "explanation": "NOT IN with NULLs can surprise you because employees.department_id contains NULL."
+    },
+    "optimal": {
+      "code": "SELECT d.name\nFROM departments d\nLEFT JOIN employees e ON e.department_id = d.id\nWHERE e.id IS NULL\nORDER BY d.name;",
+      "complexity": "O(d+n)",
+      "explanation": "LEFT JOIN + IS NULL is the standard anti-join."
+    },
+    "tags": [
+      "sql",
+      "anti-join",
+      "nulls"
+    ],
+    "complexityCheck": {
+      "question": "An INNER JOIN returns:",
+      "choices": [
+        {
+          "label": "Only rows where the join condition matches in both tables",
+          "correct": true
+        },
+        {
+          "label": "All rows from the left table",
+          "correct": false
+        },
+        {
+          "label": "All rows from both tables",
+          "correct": false
+        },
+        {
+          "label": "Rows from neither table",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-location-headcount",
@@ -51,13 +177,82 @@
     "schema": "employees",
     "prompt": "Return each department location and employee count, ordered by location.",
     "constraints": "Include only employees assigned to departments.",
-    "examples": [{ "input": "employees seed", "output": "Bangalore 3, Chennai 2, Delhi 1, Mumbai 1" }],
+    "examples": [
+      {
+        "input": "employees seed",
+        "output": "Bangalore 3, Chennai 2, Delhi 1, Mumbai 1"
+      },
+      {
+        "input": "employees seed data",
+        "output": "Bangalore, 3; Chennai, 2; Delhi, 1 ..."
+      }
+    ],
     "starter": "SELECT d.location, COUNT(*) AS employee_count\nFROM ...\nGROUP BY ...\nORDER BY ...;\n",
-    "expected": { "columns": ["location", "employee_count"], "rows": [["Bangalore", 3], ["Chennai", 2], ["Delhi", 1], ["Mumbai", 1]] },
-    "hints": ["Join employees to departments.", "Group by d.location.", "COUNT(*) counts joined employee rows."],
-    "bruteForce": { "code": "SELECT location, 0 AS employee_count FROM departments;", "complexity": "Wrong answer", "explanation": "Does not count employees." },
-    "optimal": { "code": "SELECT d.location, COUNT(*) AS employee_count\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nGROUP BY d.location\nORDER BY d.location;", "complexity": "O(n)", "explanation": "Join, group, count." },
-    "tags": ["sql", "group-by", "joins"]
+    "expected": {
+      "columns": [
+        "location",
+        "employee_count"
+      ],
+      "rows": [
+        [
+          "Bangalore",
+          3
+        ],
+        [
+          "Chennai",
+          2
+        ],
+        [
+          "Delhi",
+          1
+        ],
+        [
+          "Mumbai",
+          1
+        ]
+      ]
+    },
+    "hints": [
+      "Join employees to departments.",
+      "Group by d.location.",
+      "COUNT(*) counts joined employee rows."
+    ],
+    "bruteForce": {
+      "code": "SELECT location, 0 AS employee_count FROM departments;",
+      "complexity": "Wrong answer",
+      "explanation": "Does not count employees."
+    },
+    "optimal": {
+      "code": "SELECT d.location, COUNT(*) AS employee_count\nFROM employees e\nJOIN departments d ON e.department_id = d.id\nGROUP BY d.location\nORDER BY d.location;",
+      "complexity": "O(n)",
+      "explanation": "Join, group, count."
+    },
+    "tags": [
+      "sql",
+      "group-by",
+      "joins"
+    ],
+    "complexityCheck": {
+      "question": "GROUP BY produces:",
+      "choices": [
+        {
+          "label": "One row per distinct group, collapsing the members",
+          "correct": true
+        },
+        {
+          "label": "One row per input row",
+          "correct": false
+        },
+        {
+          "label": "A sorted result",
+          "correct": false
+        },
+        {
+          "label": "Only the first group",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-employees-hired-2024",
@@ -70,13 +265,74 @@
     "schema": "employees",
     "prompt": "Return names of employees hired in 2024, ordered by hired_at.",
     "constraints": "Use a date range instead of string contains.",
-    "examples": [{ "input": "employees seed", "output": "Bob, Dave, Hugo" }],
+    "examples": [
+      {
+        "input": "employees seed",
+        "output": "Bob, Dave, Hugo"
+      },
+      {
+        "input": "employees seed data",
+        "output": "Bob; Dave; Hugo"
+      }
+    ],
     "starter": "SELECT name\nFROM employees\nWHERE hired_at >= ... AND hired_at < ...\nORDER BY hired_at;\n",
-    "expected": { "columns": ["name"], "rows": [["Bob"], ["Dave"], ["Hugo"]] },
-    "hints": ["ISO date strings sort lexicographically.", "Use >= '2024-01-01' and < '2025-01-01'.", "Order by hired_at."],
-    "bruteForce": { "code": "SELECT name FROM employees WHERE hired_at LIKE '2024%';", "complexity": "O(n)", "explanation": "Works for text dates but is less index-friendly than a range." },
-    "optimal": { "code": "SELECT name\nFROM employees\nWHERE hired_at >= '2024-01-01' AND hired_at < '2025-01-01'\nORDER BY hired_at;", "complexity": "O(n) without index; index-friendly with date index", "explanation": "Date range predicates are the normal database pattern." },
-    "tags": ["sql", "where", "dates"]
+    "expected": {
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "Bob"
+        ],
+        [
+          "Dave"
+        ],
+        [
+          "Hugo"
+        ]
+      ]
+    },
+    "hints": [
+      "ISO date strings sort lexicographically.",
+      "Use >= '2024-01-01' and < '2025-01-01'.",
+      "Order by hired_at."
+    ],
+    "bruteForce": {
+      "code": "SELECT name FROM employees WHERE hired_at LIKE '2024%';",
+      "complexity": "O(n)",
+      "explanation": "Works for text dates but is less index-friendly than a range."
+    },
+    "optimal": {
+      "code": "SELECT name\nFROM employees\nWHERE hired_at >= '2024-01-01' AND hired_at < '2025-01-01'\nORDER BY hired_at;",
+      "complexity": "O(n) without index; index-friendly with date index",
+      "explanation": "Date range predicates are the normal database pattern."
+    },
+    "tags": [
+      "sql",
+      "where",
+      "dates"
+    ],
+    "complexityCheck": {
+      "question": "What does ORDER BY ... DESC do to the result?",
+      "choices": [
+        {
+          "label": "Sorts rows by that column in descending order",
+          "correct": true
+        },
+        {
+          "label": "Filters rows",
+          "correct": false
+        },
+        {
+          "label": "Groups rows",
+          "correct": false
+        },
+        {
+          "label": "Removes duplicates",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-q-index-composite-001",
@@ -86,10 +342,18 @@
     "difficulty": "medium",
     "estMinutes": 2,
     "question": "For query `WHERE department_id = ? ORDER BY salary DESC`, which index is usually most useful?",
-    "options": ["(department_id, salary)", "(salary, department_id)", "(name)", "(hired_at)"],
+    "options": [
+      "(department_id, salary)",
+      "(salary, department_id)",
+      "(name)",
+      "(hired_at)"
+    ],
     "answerIndex": 0,
     "explanation": "The equality column first, then the ordering/range column, is usually the useful composite index shape.",
-    "tags": ["indexes", "composite-index"]
+    "tags": [
+      "indexes",
+      "composite-index"
+    ]
   },
   {
     "id": "sql-q-normalization-001",
@@ -99,10 +363,18 @@
     "difficulty": "easy",
     "estMinutes": 1,
     "question": "Which design best avoids repeating department location for every employee?",
-    "options": ["Separate departments table referenced by department_id", "Store location text in every employee row", "Store all employees in one comma-separated column", "Use no primary keys"],
+    "options": [
+      "Separate departments table referenced by department_id",
+      "Store location text in every employee row",
+      "Store all employees in one comma-separated column",
+      "Use no primary keys"
+    ],
     "answerIndex": 0,
     "explanation": "A separate departments table removes repeated department facts and prevents update anomalies.",
-    "tags": ["normalization", "foreign-key"]
+    "tags": [
+      "normalization",
+      "foreign-key"
+    ]
   },
   {
     "id": "sql-q-transaction-001",
@@ -112,9 +384,17 @@
     "difficulty": "medium",
     "estMinutes": 2,
     "question": "Which ACID property guarantees that a money transfer does not leave only the debit applied if the credit fails?",
-    "options": ["Atomicity", "Consistency", "Isolation", "Durability"],
+    "options": [
+      "Atomicity",
+      "Consistency",
+      "Isolation",
+      "Durability"
+    ],
     "answerIndex": 0,
     "explanation": "Atomicity means all operations in the transaction happen or none happen.",
-    "tags": ["acid", "transactions"]
+    "tags": [
+      "acid",
+      "transactions"
+    ]
   }
 ]

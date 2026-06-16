@@ -1,0 +1,888 @@
+[
+  {
+    "id": "py-q-054",
+    "track": "python",
+    "topic": "comprehensions",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "What does `[x * 2 for x in range(3)]` evaluate to?",
+    "options": [
+      "[2, 4, 6]",
+      "[0, 2, 4]",
+      "[0, 1, 2]",
+      "[0, 2, 4, 6]"
+    ],
+    "answerIndex": 1,
+    "explanation": "range(3) yields 0, 1, 2; doubling each gives [0, 2, 4]. range(3) does not include 3, so there is no 6.",
+    "tags": [
+      "comprehensions",
+      "list-comprehension"
+    ],
+    "companies": [
+      "tcs",
+      "infosys"
+    ]
+  },
+  {
+    "id": "py-q-055",
+    "track": "python",
+    "topic": "comprehensions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "What does `{c: i for i, c in enumerate('abc')}` produce?",
+    "options": [
+      "{'a': 0, 'b': 1, 'c': 2}",
+      "{0: 'a', 1: 'b', 2: 'c'}",
+      "{'a': 1, 'b': 2, 'c': 3}",
+      "['a', 'b', 'c']"
+    ],
+    "answerIndex": 0,
+    "explanation": "enumerate yields (index, char) pairs; unpacked as (i, c), the dict comprehension maps each character to its index: a->0, b->1, c->2.",
+    "tags": [
+      "comprehensions",
+      "dict-comprehension",
+      "enumerate"
+    ],
+    "companies": [
+      "amazon",
+      "wipro"
+    ]
+  },
+  {
+    "id": "py-q-056",
+    "track": "python",
+    "topic": "comprehensions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "What is the result of `{x % 3 for x in range(10)}`?",
+    "options": [
+      "{0, 1, 2}",
+      "{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}",
+      "[0, 1, 2, 0, 1, 2, 0, 1, 2, 0]",
+      "{1, 2, 3}"
+    ],
+    "answerIndex": 0,
+    "explanation": "A set comprehension keeps only distinct results. x % 3 ranges over {0, 1, 2}, and the set deduplicates the repeats into {0, 1, 2}.",
+    "tags": [
+      "comprehensions",
+      "set-comprehension",
+      "modulo"
+    ],
+    "companies": [
+      "infosys",
+      "accenture"
+    ]
+  },
+  {
+    "id": "py-q-057",
+    "track": "python",
+    "topic": "comprehensions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "What does `[x for row in [[1, 2], [3, 4]] for x in row]` produce?",
+    "options": [
+      "[1, 2, 3, 4]",
+      "[1, 3, 2, 4]",
+      "[[1, 2], [3, 4]]",
+      "raises a SyntaxError"
+    ],
+    "answerIndex": 0,
+    "explanation": "In a nested comprehension the clauses read left-to-right like nested for-loops: outer over rows, inner over each row's elements, flattening to [1, 2, 3, 4].",
+    "tags": [
+      "comprehensions",
+      "nested",
+      "flatten"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "py-q-058",
+    "track": "python",
+    "topic": "comprehensions",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "Compared with the list comprehension `[x for x in range(1_000_000)]`, the generator expression `(x for x in range(1_000_000))`:",
+    "options": [
+      "produces items lazily and uses O(1) memory until consumed",
+      "is identical in memory usage",
+      "is always faster to fully consume",
+      "cannot be iterated with a for-loop"
+    ],
+    "answerIndex": 0,
+    "explanation": "A generator expression yields one value at a time on demand, holding only the current state \u2014 O(1) memory \u2014 whereas the list comprehension materializes all million elements eagerly.",
+    "tags": [
+      "comprehensions",
+      "generator-expression",
+      "memory"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "py-q-059",
+    "track": "python",
+    "topic": "comprehensions",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "How do `[x if x > 0 else 0 for x in nums]` and `[x for x in nums if x > 0]` differ?",
+    "options": [
+      "They are identical",
+      "The first maps every element (replacing non-positives with 0, preserving length); the second filters non-positives out (shorter result)",
+      "The first is a syntax error",
+      "The second preserves the original length"
+    ],
+    "answerIndex": 1,
+    "explanation": "A conditional expression before `for` transforms each element but keeps all of them; an `if` clause after the iterable filters elements out. So the first keeps length and zeroes negatives; the second drops them.",
+    "tags": [
+      "comprehensions",
+      "conditional",
+      "filter-vs-map"
+    ],
+    "companies": [
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "py-q-060",
+    "track": "python",
+    "topic": "typing",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "At runtime, the annotations in `def f(x: int) -> str: ...`:",
+    "options": [
+      "enforce that x is an int, raising TypeError otherwise",
+      "are not enforced by the interpreter \u2014 they aid tooling and readability",
+      "automatically convert x to an int",
+      "prevent the function from returning a non-str value"
+    ],
+    "answerIndex": 1,
+    "explanation": "Python's type hints are not checked at runtime by the interpreter; they're consumed by static checkers (mypy, IDEs) and available via __annotations__. Passing a wrong type does not raise on its own.",
+    "tags": [
+      "typing",
+      "annotations",
+      "runtime"
+    ],
+    "companies": [
+      "tcs",
+      "infosys"
+    ]
+  },
+  {
+    "id": "py-q-061",
+    "track": "python",
+    "topic": "typing",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "`typing.Optional[int]` is equivalent to:",
+    "options": [
+      "int with a default value of 0",
+      "Union[int, None]",
+      "a non-nullable int",
+      "List[int]"
+    ],
+    "answerIndex": 1,
+    "explanation": "Optional[X] is shorthand for Union[X, None] \u2014 a value that may be of type X or None. It says nothing about default values.",
+    "tags": [
+      "typing",
+      "optional",
+      "union"
+    ],
+    "companies": [
+      "amazon",
+      "wipro"
+    ]
+  },
+  {
+    "id": "py-q-062",
+    "track": "python",
+    "topic": "typing",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "In Python 3.9+, using `list[int]` (lowercase builtin generic) instead of `typing.List[int]`:",
+    "options": [
+      "only typing.List works for hints",
+      "both are valid; PEP 585 builtin generics remove the need to import List",
+      "list[int] raises at runtime",
+      "they denote different types"
+    ],
+    "answerIndex": 1,
+    "explanation": "Since PEP 585 (Python 3.9) the builtin collections support subscripting in annotations, so list[int], dict[str, int], etc. work without importing from typing.",
+    "tags": [
+      "typing",
+      "generics",
+      "pep585"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "py-q-063",
+    "track": "python",
+    "topic": "typing",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "`from __future__ import annotations` (PEP 563) makes annotations:",
+    "options": [
+      "evaluated eagerly at definition time",
+      "stored as strings and evaluated lazily, easing forward references and import cost",
+      "type-checked at runtime",
+      "stripped from the function entirely"
+    ],
+    "answerIndex": 1,
+    "explanation": "With this import all annotations become strings (postponed evaluation), so you can reference names not yet defined and avoid paying evaluation cost at import time; tools resolve them on demand via typing.get_type_hints.",
+    "tags": [
+      "typing",
+      "annotations",
+      "pep563"
+    ],
+    "companies": [
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "py-q-064",
+    "track": "python",
+    "topic": "typing",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "How do `Any` and `object` differ as type hints?",
+    "options": [
+      "they are identical",
+      "object accepts any value but permits few operations without narrowing; Any opts out of type checking (assignable both to and from anything)",
+      "Any is stricter than object",
+      "object disables type checking"
+    ],
+    "answerIndex": 1,
+    "explanation": "Everything is an object, but a value typed `object` allows almost no operations until you narrow it. `Any` is the escape hatch: it is compatible with every type in both directions, effectively turning off checking for that value.",
+    "tags": [
+      "typing",
+      "any",
+      "object"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "py-q-065",
+    "track": "python",
+    "topic": "typing",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "What does `TypeVar('T')` enable in `def first(items: list[T]) -> T: ...`?",
+    "options": [
+      "a runtime cast to type T",
+      "generics \u2014 the checker ties the return type to the input's element type",
+      "faster execution",
+      "accepting only lists of strings"
+    ],
+    "answerIndex": 1,
+    "explanation": "A TypeVar makes the function generic: the checker infers T from the argument and guarantees the return has that same type, so first([1,2]) is typed int and first(['a']) is typed str.",
+    "tags": [
+      "typing",
+      "generics",
+      "typevar"
+    ],
+    "companies": [
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "py-q-066",
+    "track": "python",
+    "topic": "oop",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "Which special method initializes a newly created instance's attributes?",
+    "options": [
+      "__init__",
+      "__main__",
+      "__call__",
+      "__create__"
+    ],
+    "answerIndex": 0,
+    "explanation": "__init__ runs right after an instance is created to set up its attributes. (__new__ actually allocates the object, but the initializer you normally define is __init__.)",
+    "tags": [
+      "oop",
+      "dunder",
+      "constructor"
+    ],
+    "companies": [
+      "tcs",
+      "infosys"
+    ]
+  },
+  {
+    "id": "py-q-067",
+    "track": "python",
+    "topic": "oop",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "How does `@classmethod` differ from `@staticmethod`?",
+    "options": [
+      "classmethod receives the class (cls) as its first argument; staticmethod receives neither self nor cls",
+      "they are identical",
+      "staticmethod receives self; classmethod receives nothing",
+      "both require an instance to be called"
+    ],
+    "answerIndex": 0,
+    "explanation": "A classmethod is passed the class as cls (useful for alternative constructors); a staticmethod is just a plain function namespaced on the class, receiving no implicit first argument.",
+    "tags": [
+      "oop",
+      "classmethod",
+      "staticmethod"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "py-q-068",
+    "track": "python",
+    "topic": "oop",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "`__repr__` is intended to provide:",
+    "options": [
+      "a user-facing pretty string",
+      "an unambiguous developer/debugging representation (used by repr() and the REPL)",
+      "a value always equal to __str__",
+      "a private method never called directly"
+    ],
+    "answerIndex": 1,
+    "explanation": "__repr__ should be unambiguous and ideally reconstructable, and is what the REPL and repr() show. __str__ is the friendlier display; if __str__ is absent, __str__ falls back to __repr__.",
+    "tags": [
+      "oop",
+      "repr",
+      "str",
+      "dunder"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "py-q-069",
+    "track": "python",
+    "topic": "oop",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Under multiple inheritance, Python resolves method lookup using:",
+    "options": [
+      "left-to-right depth-first only",
+      "C3 linearization (the deterministic MRO, visible via Class.__mro__)",
+      "a random order",
+      "the order the classes were imported"
+    ],
+    "answerIndex": 1,
+    "explanation": "Python uses the C3 linearization algorithm to compute a single consistent method resolution order, which you can inspect with ClassName.__mro__ or mro().",
+    "tags": [
+      "oop",
+      "mro",
+      "inheritance",
+      "c3"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "py-q-070",
+    "track": "python",
+    "topic": "oop",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "Defining `__slots__` in a class:",
+    "options": [
+      "makes all attributes class-level constants",
+      "removes the per-instance __dict__, saving memory and restricting attributes to the declared names",
+      "makes the class immutable",
+      "speeds up inheritance"
+    ],
+    "answerIndex": 1,
+    "explanation": "__slots__ tells Python to store the listed attributes in a fixed layout instead of a per-instance __dict__, cutting memory per instance and disallowing new (undeclared) attribute names.",
+    "tags": [
+      "oop",
+      "slots",
+      "memory"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "py-q-071",
+    "track": "python",
+    "topic": "oop",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "A `@property` decorator lets you:",
+    "options": [
+      "define a class-level constant",
+      "expose a computed/managed value accessed like an attribute (no parentheses), with optional setter and deleter",
+      "make a method static",
+      "create a metaclass"
+    ],
+    "answerIndex": 1,
+    "explanation": "@property turns a method into a managed attribute: callers read obj.x (no parens), and you can add @x.setter / @x.deleter to control assignment and deletion while keeping attribute syntax.",
+    "tags": [
+      "oop",
+      "property",
+      "descriptor"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "py-q-072",
+    "track": "python",
+    "topic": "iterators",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "Calling `next()` on an iterator that has no more items:",
+    "options": [
+      "returns None",
+      "raises StopIteration",
+      "restarts the iterator",
+      "raises IndexError"
+    ],
+    "answerIndex": 1,
+    "explanation": "An exhausted iterator raises StopIteration on the next next() call. (next(it, default) lets you supply a fallback instead of raising.)",
+    "tags": [
+      "iterators",
+      "next",
+      "stopiteration"
+    ],
+    "companies": [
+      "tcs",
+      "amazon"
+    ]
+  },
+  {
+    "id": "py-q-073",
+    "track": "python",
+    "topic": "iterators",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "To be usable directly in a `for` loop via the iterator protocol, an object should implement:",
+    "options": [
+      "__len__",
+      "__iter__ returning an iterator (whose __next__ yields items)",
+      "__contains__ only",
+      "__add__"
+    ],
+    "answerIndex": 1,
+    "explanation": "The iterator protocol calls __iter__ to get an iterator, then __next__ repeatedly until StopIteration. (Objects with only __getitem__ are iterable via the older sequence protocol, but __iter__ is the canonical mechanism.)",
+    "tags": [
+      "iterators",
+      "protocol",
+      "iter"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "py-q-074",
+    "track": "python",
+    "topic": "iterators",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Iterating a generator again after it has been fully consumed:",
+    "options": [
+      "replays it from the beginning",
+      "yields nothing \u2014 generators are single-use and must be recreated",
+      "raises StopIteration when created",
+      "is a syntax error"
+    ],
+    "answerIndex": 1,
+    "explanation": "A generator is itself an iterator; once exhausted it stays exhausted and produces no further values. To iterate again you must call the generator function once more to build a fresh one.",
+    "tags": [
+      "iterators",
+      "generator",
+      "single-use"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "py-q-075",
+    "track": "python",
+    "topic": "iterators",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "The two-argument form `iter(callable, sentinel)`:",
+    "options": [
+      "calls callable() repeatedly until it returns the sentinel, then stops",
+      "iterates the same list twice",
+      "raises TypeError",
+      "applies callable to the sentinel once"
+    ],
+    "answerIndex": 0,
+    "explanation": "iter(f, sentinel) builds an iterator that calls f() on each step and terminates when a call returns the sentinel \u2014 handy for reading until an end marker (e.g. iter(lambda: f.read(1), '')).",
+    "tags": [
+      "iterators",
+      "iter",
+      "sentinel"
+    ],
+    "companies": [
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "py-q-076",
+    "track": "python",
+    "topic": "iterators",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "For joining many lists, `itertools.chain(*lists)` versus `sum(lists, [])`:",
+    "options": [
+      "they perform identically",
+      "chain is lazy and O(total); sum(lists, []) is O(n^2) because it builds a new list on each addition",
+      "sum is the lazy, faster option",
+      "chain eagerly copies all elements first"
+    ],
+    "answerIndex": 1,
+    "explanation": "chain streams elements from each iterable without building an intermediate, so it's O(total). sum(lists, []) creates a new concatenated list at every step, giving quadratic time and extra allocations.",
+    "tags": [
+      "iterators",
+      "itertools",
+      "chain",
+      "complexity"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "py-q-077",
+    "track": "python",
+    "topic": "exceptions",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "Which clause of a `try` statement runs whether or not an exception was raised?",
+    "options": [
+      "except",
+      "finally",
+      "else",
+      "raise"
+    ],
+    "answerIndex": 1,
+    "explanation": "finally always executes \u2014 on normal completion, on a caught exception, even on an uncaught one propagating out \u2014 making it ideal for cleanup.",
+    "tags": [
+      "exceptions",
+      "finally",
+      "try"
+    ],
+    "companies": [
+      "tcs",
+      "infosys"
+    ]
+  },
+  {
+    "id": "py-q-078",
+    "track": "python",
+    "topic": "exceptions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "The `else` clause in `try / except / else / finally` runs:",
+    "options": [
+      "always",
+      "only if the try block raised",
+      "only if the try block did NOT raise an exception",
+      "instead of finally"
+    ],
+    "answerIndex": 2,
+    "explanation": "The else block runs exactly when the try body completed without raising, keeping the 'success path' code out of the try (so it isn't accidentally guarded by the except).",
+    "tags": [
+      "exceptions",
+      "else",
+      "try"
+    ],
+    "companies": [
+      "amazon",
+      "wipro"
+    ]
+  },
+  {
+    "id": "py-q-079",
+    "track": "python",
+    "topic": "exceptions",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "`raise NewError(...) from original_err` is used to:",
+    "options": [
+      "suppress the original error silently",
+      "chain exceptions \u2014 record the original as __cause__ for a clearer 'during handling ... the above caused' traceback",
+      "is invalid syntax",
+      "re-raise the original unchanged"
+    ],
+    "answerIndex": 1,
+    "explanation": "Explicit exception chaining links the new exception to its cause via __cause__, so the traceback shows both and the relationship between them. (raise ... from None suppresses the context instead.)",
+    "tags": [
+      "exceptions",
+      "chaining",
+      "raise-from"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "py-q-080",
+    "track": "python",
+    "topic": "decorators",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "`functools.wraps` is applied inside a decorator to:",
+    "options": [
+      "make the wrapped function run faster",
+      "copy the wrapped function's metadata (__name__, __doc__, __wrapped__, ...) onto the wrapper",
+      "cache the function's results",
+      "validate the function's arguments"
+    ],
+    "answerIndex": 1,
+    "explanation": "Without @functools.wraps, the wrapper replaces the original's __name__/__doc__ etc. wraps copies that metadata over so introspection and help() still report the original function.",
+    "tags": [
+      "decorators",
+      "functools",
+      "wraps"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "py-q-081",
+    "track": "python",
+    "topic": "decorators",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "A decorator that accepts arguments, e.g. `@retry(3)`, is implemented as:",
+    "options": [
+      "a single function",
+      "a factory: a function that takes the arguments and returns the actual decorator (three nested levels in total)",
+      "a class attribute",
+      "not possible in Python"
+    ],
+    "answerIndex": 1,
+    "explanation": "@retry(3) first calls retry(3), which must RETURN a decorator; that decorator then wraps the target function. So you need three layers: retry -> decorator -> wrapper.",
+    "tags": [
+      "decorators",
+      "parameterized",
+      "closure"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "py-q-082",
+    "track": "python",
+    "topic": "decorators",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "`functools.lru_cache` requires the decorated function's arguments to be:",
+    "options": [
+      "strings only",
+      "hashable, since they form the cache key \u2014 passing a list or dict raises TypeError",
+      "immutable integers only",
+      "positional only"
+    ],
+    "answerIndex": 1,
+    "explanation": "lru_cache stores results keyed by the call arguments, so each argument must be hashable. Calling a cached function with an unhashable argument (list, dict, set) raises TypeError.",
+    "tags": [
+      "decorators",
+      "lru-cache",
+      "hashable"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "py-q-083",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "After `a = [1, 2]; b = a; b.append(3)`, what is `a`?",
+    "options": [
+      "[1, 2]",
+      "[1, 2, 3]",
+      "[3]",
+      "it raises an error"
+    ],
+    "answerIndex": 1,
+    "explanation": "b = a binds b to the SAME list object (no copy). Mutating through b is visible through a, so a is [1, 2, 3]. Use a.copy() or list(a) for an independent copy.",
+    "tags": [
+      "data-types",
+      "aliasing",
+      "mutability"
+    ],
+    "companies": [
+      "tcs",
+      "infosys"
+    ]
+  },
+  {
+    "id": "py-q-084",
+    "track": "python",
+    "topic": "data-types",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Given `x = (1, 2, [3, 4])`, the statement `x[2].append(5)`:",
+    "options": [
+      "raises TypeError because tuples are immutable",
+      "succeeds \u2014 the tuple is immutable but its inner list is mutable, so x becomes (1, 2, [3, 4, 5])",
+      "replaces the whole tuple",
+      "does nothing"
+    ],
+    "answerIndex": 1,
+    "explanation": "A tuple's immutability means you cannot rebind its slots, but it can hold mutable objects. Appending to the contained list mutates that object in place; the tuple still references the same (now longer) list.",
+    "tags": [
+      "data-types",
+      "tuple",
+      "mutability"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "py-q-085",
+    "track": "python",
+    "topic": "stdlib",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Accessing a missing key on a `collections.defaultdict(int)`:",
+    "options": [
+      "raises KeyError",
+      "returns 0 and inserts the key, via the int() default factory",
+      "returns None",
+      "returns an empty string"
+    ],
+    "answerIndex": 1,
+    "explanation": "defaultdict calls its factory (here int(), which is 0) for any missing key on access, stores it, and returns it \u2014 so d[missing] yields 0 and the key now exists.",
+    "tags": [
+      "stdlib",
+      "defaultdict",
+      "collections"
+    ],
+    "companies": [
+      "amazon",
+      "wipro"
+    ]
+  },
+  {
+    "id": "py-q-086",
+    "track": "python",
+    "topic": "strings",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "`'a,b,,c'.split(',')` returns:",
+    "options": [
+      "['a', 'b', 'c']",
+      "['a', 'b', '', 'c']",
+      "['a,b,,c']",
+      "['a', 'b', 'c', '']"
+    ],
+    "answerIndex": 1,
+    "explanation": "Splitting on a given separator preserves empty fields between consecutive separators, so the gap between the two commas yields an empty string: ['a', 'b', '', 'c']. (str.split() with no argument is what collapses runs of whitespace.)",
+    "tags": [
+      "strings",
+      "split",
+      "edge-case"
+    ],
+    "companies": [
+      "tcs",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "py-q-087",
+    "track": "python",
+    "topic": "functions",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "The classic bug in `def f(x, acc=[]): acc.append(x); return acc` is:",
+    "options": [
+      "acc is recreated on every call",
+      "the same default list is created once at definition time and shared across all calls that omit acc, so state leaks between calls",
+      "it raises a SyntaxError",
+      "x is ignored"
+    ],
+    "answerIndex": 1,
+    "explanation": "Default argument values are evaluated once when the function is defined, not per call. The single shared list accumulates across calls. The fix is acc=None then acc = acc or [] (or `if acc is None: acc = []`) inside.",
+    "tags": [
+      "functions",
+      "default-arguments",
+      "mutable-default"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  }
+]
