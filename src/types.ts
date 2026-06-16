@@ -83,7 +83,6 @@ export type QuizItemCommon = {
   stage?: TrainingStage;
   recognitionPrompt?: RecognitionPrompt;
   speedTargetSec?: number;
-  unlockPrerequisites?: string[];
 };
 
 export type McqItem = QuizItemCommon & {

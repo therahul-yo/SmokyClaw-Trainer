@@ -5,6 +5,7 @@ import {
   pickItemsForSection,
   sectionPool,
 } from "../mockPicker";
+import { hashSeed, seededRng } from "../rng";
 
 function mcq(
   id: string,
@@ -166,6 +167,41 @@ describe("sectionPool company filter", () => {
       pickFrom: { track: "aptitude", topics: ["quant"] },
     };
     expect(sectionPool(section, taggedPool)).toHaveLength(4);
+  });
+});
+
+describe("seeded run pipeline (reproducible + no cross-section repeats)", () => {
+  // A larger pool with overlapping section criteria so dedupe actually bites.
+  const bigPool: QuizItem[] = Array.from({ length: 30 }, (_, i) =>
+    mcq(`q-${i}`, "aptitude", i % 2 === 0 ? "quant" : "reasoning"),
+  );
+  const sections: MockSection[] = [
+    { id: "s1", title: "S1", durationMinutes: 10, questionCount: 6, pickFrom: { track: "aptitude" } },
+    { id: "s2", title: "S2", durationMinutes: 10, questionCount: 6, pickFrom: { track: "aptitude" } },
+    { id: "s3", title: "S3", durationMinutes: 10, questionCount: 6, pickFrom: { track: "aptitude" } },
+  ];
+
+  function runOnce(runId: string): string[][] {
+    const rng = seededRng(hashSeed("blueprint-x" + runId));
+    const used = new Set<string>();
+    return sections.map((sec) => {
+      const picked = pickItemsForSection(sec, bigPool, rng, used);
+      picked.forEach((p) => used.add(p.id));
+      return picked.map((p) => p.id);
+    });
+  }
+
+  it("is reproducible: same runId → identical picks", () => {
+    expect(runOnce("run-A")).toEqual(runOnce("run-A"));
+  });
+
+  it("differs across runIds", () => {
+    expect(runOnce("run-A")).not.toEqual(runOnce("run-B"));
+  });
+
+  it("never repeats an item across sections", () => {
+    const picks = runOnce("run-A").flat();
+    expect(new Set(picks).size).toBe(picks.length);
   });
 });
 
