@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import type { CodingItem } from "../../types";
 import {
   buildCodingHarness,
+  buildStdioHarness,
   compareSqlResult,
   deepEqual,
   evaluateCodingRun,
+  evaluateStdioRun,
 } from "../graderCore";
 
 const item: CodingItem = {
@@ -35,6 +37,16 @@ describe("deepEqual", () => {
     expect(deepEqual({ a: 1 }, { a: 1, b: 2 })).toBe(false);
     expect(deepEqual(null, null)).toBe(true);
     expect(deepEqual(null, 0)).toBe(false);
+  });
+
+  it("compares arrays as multisets when orderInsensitive is set", () => {
+    expect(deepEqual([1, 2, 3], [3, 1, 2], true)).toBe(true);
+    expect(deepEqual([1, 2, 2], [2, 1, 2], true)).toBe(true);
+    expect(deepEqual([1, 2, 2], [1, 1, 2], true)).toBe(false); // multiset, not set
+    // nested order-insensitivity threads recursively
+    expect(deepEqual([[2, 1], [3]], [[3], [1, 2]], true)).toBe(true);
+    // still length-strict and value-strict
+    expect(deepEqual([1, 2], [1, 2, 3], true)).toBe(false);
   });
 });
 
@@ -139,6 +151,65 @@ describe("evaluateCodingRun", () => {
   });
 });
 
+describe("stdin/stdout grading", () => {
+  const stdioItem: CodingItem = {
+    ...item,
+    entry: "main",
+    tests: [],
+    stdioTests: [
+      { stdin: "3\n1 2 3\n", expectedStdout: "6" },
+      { stdin: "2\n5 5\n", expectedStdout: "10\n" },
+    ],
+  };
+
+  const stdoutFor = (results: { i: number; out: string; err: string | null }[]) =>
+    `__RESULT__${JSON.stringify(results)}`;
+
+  it("embeds the program source and cases via json.loads", () => {
+    const harness = buildStdioHarness(stdioItem, "print(sum(...))");
+    expect(harness).toContain("contextlib.redirect_stdout");
+    expect(harness).toContain("json.loads(");
+    expect(harness).toContain("exec(__src");
+  });
+
+  it("passes when output matches, ignoring trailing whitespace/newlines", () => {
+    const res = evaluateStdioRun(stdioItem, {
+      stdout: stdoutFor([
+        { i: 0, out: "6\n", err: null }, // expected "6"
+        { i: 1, out: "10", err: null }, // expected "10\n"
+      ]),
+      stderr: "",
+    });
+    expect(res.ok).toBe(true);
+    expect(res.passed).toBe(2);
+  });
+
+  it("fails mismatched output and surfaces the actual", () => {
+    const res = evaluateStdioRun(stdioItem, {
+      stdout: stdoutFor([
+        { i: 0, out: "7", err: null },
+        { i: 1, out: "10", err: null },
+      ]),
+      stderr: "",
+    });
+    expect(res.ok).toBe(false);
+    expect(res.passed).toBe(1);
+    expect(res.tests[0].actual).toBe("7");
+  });
+
+  it("treats per-case python errors as failures", () => {
+    const res = evaluateStdioRun(stdioItem, {
+      stdout: stdoutFor([
+        { i: 0, out: "", err: "ValueError: bad" },
+        { i: 1, out: "10", err: null },
+      ]),
+      stderr: "",
+    });
+    expect(res.ok).toBe(false);
+    expect(res.tests[0].error).toContain("ValueError");
+  });
+});
+
 describe("compareSqlResult", () => {
   const expected = { columns: ["name"], rows: [["Carol"], ["Alice"]] };
 
@@ -171,5 +242,48 @@ describe("compareSqlResult", () => {
         { columns: ["x"], rows: [[null], ["1"]] },
       ),
     ).toBe(true);
+  });
+
+  it("compares numeric cells by value (1.0 === 1, '01' === 1)", () => {
+    expect(
+      compareSqlResult(
+        { columns: ["avg"], rows: [[1.0]] },
+        { columns: ["avg"], rows: [["1"]] },
+      ),
+    ).toBe(true);
+    expect(
+      compareSqlResult(
+        { columns: ["n"], rows: [[1]] },
+        { columns: ["n"], rows: [["01"]] },
+      ),
+    ).toBe(true);
+    // genuinely different numbers still fail
+    expect(
+      compareSqlResult(
+        { columns: ["n"], rows: [[1]] },
+        { columns: ["n"], rows: [[2]] },
+      ),
+    ).toBe(false);
+    // text that isn't numeric is not coerced
+    expect(
+      compareSqlResult(
+        { columns: ["s"], rows: [["alice"]] },
+        { columns: ["s"], rows: [["Alice"]] },
+      ),
+    ).toBe(false);
+  });
+
+  it("matches unordered rows when orderInsensitive is set", () => {
+    expect(
+      compareSqlResult(expected, { columns: ["name"], rows: [["Alice"], ["Carol"]] }, {
+        orderInsensitive: true,
+      }),
+    ).toBe(true);
+    // still rejects a genuinely different set
+    expect(
+      compareSqlResult(expected, { columns: ["name"], rows: [["Alice"], ["Bob"]] }, {
+        orderInsensitive: true,
+      }),
+    ).toBe(false);
   });
 });

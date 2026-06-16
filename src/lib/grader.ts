@@ -3,8 +3,10 @@ import { runPython } from "./pyodide";
 import { runSql } from "./sqljs";
 import {
   buildCodingHarness,
+  buildStdioHarness,
   compareSqlResult,
   evaluateCodingRun,
+  evaluateStdioRun,
   type CodingGradeResult,
   type PythonRunResult,
   type SqlRunResult,
@@ -32,6 +34,12 @@ export async function gradeCoding(
   userCode: string,
   runner: PythonRunner = runPython,
 ): Promise<CodingGradeResult> {
+  // stdin/stdout (online-judge) mode when the item ships stdioTests; otherwise
+  // the classic function-return harness.
+  if (item.stdioTests && item.stdioTests.length > 0) {
+    const exec = await runner(buildStdioHarness(item, userCode));
+    return evaluateStdioRun(item, exec);
+  }
   const exec = await runner(buildCodingHarness(item, userCode));
   return evaluateCodingRun(item, exec);
 }
@@ -55,7 +63,9 @@ export async function gradeSql(
     if (!actual) {
       return { ok: false, expected: item.expected, actual: null, error: "Query returned no result" };
     }
-    const ok = compareSqlResult(item.expected, actual);
+    const ok = compareSqlResult(item.expected, actual, {
+      orderInsensitive: item.orderInsensitive ?? false,
+    });
     return { ok, expected: item.expected, actual };
   } catch (e) {
     return { ok: false, expected: item.expected, actual: null, error: String(e) };

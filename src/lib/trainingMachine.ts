@@ -102,32 +102,55 @@ export type MachinePlan = {
   nextGate: StageSummary | null;
 };
 
+// Stage-inference topic sets. Keyed off the CANONICAL topic taxonomy
+// (scripts/validate-content.ts TOPICS) so every item's validated topic resolves
+// to a stage; legacy pattern/tag aliases are kept alongside so free-form
+// pattern/tag strings still classify.
 const CORE_PATTERNS = new Set([
+  // DSA core patterns (canonical + aliases)
   "arrays",
   "array",
   "strings",
   "two-pointer",
   "two-pointers",
   "sliding-window",
+  "hashmap",
   "hashing",
   "hash-map",
   "prefix-sums",
   "prefix-sum",
   "binary-search",
+  // SQL entry
+  "select",
 ]);
 
 const INTERMEDIATE_TOPICS = new Set([
-  "recursion",
+  // DSA
   "sorting",
-  "linked-lists",
+  "recursion",
   "linked-list",
-  "stacks-queues",
+  "linked-lists",
   "stack",
+  "stacks-queues",
   "queue",
+  // Python intermediate
+  "oop",
+  "exceptions",
+  "iterators",
+  "decorators",
+  "file-io",
+  "comprehensions",
+  "stack-queue",
+  "typing",
+  "stdlib",
+  // SQL intermediate
   "joins",
+  "aggregation",
   "group-by",
   "subqueries",
   "cte",
+  "nulls",
+  // legacy aptitude-ish aliases retained so older tags still classify
   "ratios",
   "averages",
   "profit-loss",
@@ -136,16 +159,31 @@ const INTERMEDIATE_TOPICS = new Set([
 ]);
 
 const ADVANCED_TOPICS = new Set([
+  // DSA advanced (canonical + aliases)
   "trees",
   "tree-traversals",
+  "heap",
   "heaps",
   "graphs",
   "backtracking",
   "dp",
   "dp-1d",
+  "dp-2d",
+  "greedy",
+  "bit-manipulation",
+  "math",
+  "advanced-dsa",
+  "monotonic-stack",
+  // SQL advanced
   "window-functions",
   "indexes",
   "normalization",
+  "transactions",
+  "set-operations",
+  "advanced-sql",
+  // Python advanced
+  "advanced-python",
+  // legacy aliases
   "probability",
   "perm-comb",
   "number-system",
@@ -181,6 +219,13 @@ export function inferTrainingStage(item: QuizItem): TrainingStage {
 
   if (signals.some((s) => s.includes("mock") || s.includes("interview"))) {
     return "interview-simulation";
+  }
+  // Aptitude topics (basics/quant/reasoning/verbal/pseudocode) aren't pattern-
+  // shaped, so grade them by difficulty instead of topic.
+  if (item.track === "aptitude") {
+    if (item.difficulty === "hard") return "advanced-patterns";
+    if (item.difficulty === "medium") return "intermediate-patterns";
+    return "foundation";
   }
   if (
     item.difficulty === "hard" ||

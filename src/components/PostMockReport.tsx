@@ -1,5 +1,11 @@
 import { Link } from "react-router-dom";
-import type { MockTestBlueprint, McqItem, MockSection } from "../types";
+import type {
+  CodingItem,
+  McqItem,
+  MockCodingResult,
+  MockSection,
+  MockTestBlueprint,
+} from "../types";
 import { Box } from "./terminal/Box";
 import { BracketButton } from "./terminal/BracketButton";
 import { Prompt } from "./terminal/Prompt";
@@ -19,9 +25,25 @@ type PostMockReportProps = {
   blueprint: MockTestBlueprint;
   sections: PickedSection[];
   answers: Record<string, number>;
+  codingItems?: CodingItem[];
+  codingResults?: MockCodingResult[];
+  onRestart?: () => void;
 };
 
-export function PostMockReport({ blueprint, sections, answers }: PostMockReportProps) {
+export function PostMockReport({
+  blueprint,
+  sections,
+  answers,
+  codingItems = [],
+  codingResults = [],
+  onRestart,
+}: PostMockReportProps) {
+  const codingById = new Map(codingItems.map((c) => [c.id, c]));
+  const codingSolved = codingResults.filter((r) => r.solved).length;
+  const failedCoding = codingResults
+    .filter((r) => !r.solved)
+    .map((r) => codingById.get(r.itemId))
+    .filter((c): c is CodingItem => !!c);
   const sectionResults = sections.map((sec) => {
     let correct = 0;
     const wrongItems: McqItem[] = [];
@@ -112,6 +134,55 @@ export function PostMockReport({ blueprint, sections, answers }: PostMockReportP
         </div>
       </Box>
 
+      {codingResults.length > 0 && (
+        <Box title="$ coding-round --result">
+          <div className="flex justify-between text-sm mb-2">
+            <span style={{ color: "var(--color-text)" }}>problems solved</span>
+            <span
+              style={{
+                color:
+                  codingSolved === codingResults.length
+                    ? "var(--color-accent)"
+                    : "var(--color-danger)",
+              }}
+            >
+              {codingSolved}/{codingResults.length}
+            </span>
+          </div>
+          <div className="space-y-1 text-xs">
+            {codingResults.map((r) => {
+              const item = codingById.get(r.itemId);
+              return (
+                <div key={r.itemId} className="flex justify-between">
+                  <span style={{ color: "var(--color-text-dim)" }}>
+                    {item ? `${item.topic} · ${item.id}` : r.itemId}
+                  </span>
+                  <span
+                    style={{
+                      color: r.solved ? "var(--color-success)" : "var(--color-danger)",
+                    }}
+                  >
+                    {r.solved ? "✓ solved" : r.gaveUp ? "gave up" : "✗ failed"}
+                    <span className="ml-2" style={{ color: "var(--color-text-muted)" }}>
+                      {Math.round(r.timeMs / 1000)}s
+                    </span>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          {failedCoding.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {Array.from(new Set(failedCoding.map((c) => c.track))).map((track) => (
+                <Link key={track} to={`/track/${track}`}>
+                  <BracketButton variant="primary">drill {track}</BracketButton>
+                </Link>
+              ))}
+            </div>
+          )}
+        </Box>
+      )}
+
       {sectionsToRepair.length > 0 && (
         <Box title="$ repair --suggest-plan" variant="amber">
           <div className="text-xs mb-3" style={{ color: "var(--color-text-dim)" }}>
@@ -167,7 +238,10 @@ export function PostMockReport({ blueprint, sections, answers }: PostMockReportP
       </div>
 
       <div className="flex gap-2">
-        <BracketButton variant="danger" onClick={() => window.location.reload()}>
+        <BracketButton
+          variant="danger"
+          onClick={() => (onRestart ? onRestart() : window.location.reload())}
+        >
           ↻ restart simulation
         </BracketButton>
         <Link to="/">

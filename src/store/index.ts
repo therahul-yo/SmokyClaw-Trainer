@@ -7,6 +7,7 @@ import { usePlanStore } from "./planStore";
 import { useDailyStore } from "./dailyStore";
 import { useThinkingStore } from "./thinkingStore";
 import { useMachineSessionStore } from "./machineSessionStore";
+import { useMockTestRunStore } from "./useMockTestRunStore";
 
 export { useProgressStore } from "./progressStore";
 export { useStreakStore } from "./streakStore";
@@ -16,6 +17,7 @@ export { usePlanStore } from "./planStore";
 export { useDailyStore } from "./dailyStore";
 export { useThinkingStore } from "./thinkingStore";
 export { useMachineSessionStore } from "./machineSessionStore";
+export { useMockTestRunStore } from "./useMockTestRunStore";
 
 type ExportShape = {
   version: 1;
@@ -82,4 +84,5 @@ export function resetAllStores(): void {
   useDailyStore.getState().resetAll();
   useThinkingStore.setState({ traces: {} });
   useMachineSessionStore.getState().resetAll();
+  useMockTestRunStore.getState().resetAll();
 }

@@ -60,6 +60,122 @@ print("${RESULT_MARKER}" + json.dumps(__results, default=str))
 `;
 }
 
+// Harness for stdin/stdout (online-judge style) items: run the whole program
+// once per test case with that case's stdin piped in, capturing everything it
+// prints. input() and sys.stdin are redirected to the case's input; stdout is
+// captured via contextlib.redirect_stdout so it never collides with the
+// result marker.
+export function buildStdioHarness(item: CodingItem, userCode: string): string {
+  const cases = (item.stdioTests ?? []).map((t) => ({
+    stdin: t.stdin,
+    expected: t.expectedStdout,
+  }));
+  return `
+import json, io, sys, builtins, contextlib, traceback
+__src = json.loads(${JSON.stringify(JSON.stringify(userCode))})
+__cases = json.loads(${JSON.stringify(JSON.stringify(cases))})
+__results = []
+for __i, __c in enumerate(__cases):
+    __buf = io.StringIO()
+    __sin = io.StringIO(__c["stdin"])
+    __old_input = builtins.input
+    __old_stdin = sys.stdin
+    def __inp(prompt="", __sin=__sin):
+        line = __sin.readline()
+        if line == "":
+            raise EOFError("EOF when reading a line")
+        return line.rstrip("\\n")
+    builtins.input = __inp
+    sys.stdin = __sin
+    __err = None
+    try:
+        with contextlib.redirect_stdout(__buf):
+            exec(__src, {"__name__": "__main__"})
+    except Exception:
+        __err = traceback.format_exc().splitlines()[-1]
+    finally:
+        builtins.input = __old_input
+        sys.stdin = __old_stdin
+    __results.append({"i": __i, "out": __buf.getvalue(), "err": __err})
+print("${RESULT_MARKER}" + json.dumps(__results, default=str))
+`;
+}
+
+// Judges ignore trailing whitespace per line and trailing blank lines; mirror
+// that so a correct program isn't failed by a stray newline.
+function normalizeStdout(s: string): string {
+  return s
+    .replace(/\r\n/g, "\n")
+    .split("\n")
+    .map((line) => line.replace(/\s+$/, ""))
+    .join("\n")
+    .replace(/\n+$/, "");
+}
+
+export function evaluateStdioRun(
+  item: CodingItem,
+  exec: PythonRunResult,
+): CodingGradeResult {
+  const cases = item.stdioTests ?? [];
+  const failAll = (error: string): CodingGradeResult => ({
+    ok: false,
+    passed: 0,
+    total: cases.length,
+    tests: cases.map((t, i) => ({
+      index: i,
+      args: [t.stdin],
+      expected: t.expectedStdout,
+      actual: null,
+      pass: false,
+      error,
+    })),
+    stderr: exec.stderr,
+  });
+
+  if (exec.error) return failAll(exec.error);
+  const marker = exec.stdout.indexOf(RESULT_MARKER);
+  if (marker === -1) return failAll("Harness did not return results");
+
+  let parsed: { i: number; out: string; err: string | null }[];
+  try {
+    parsed = JSON.parse(exec.stdout.slice(marker + RESULT_MARKER.length));
+  } catch (e) {
+    return {
+      ok: false,
+      passed: 0,
+      total: cases.length,
+      tests: [],
+      stderr: `Failed to parse harness result: ${String(e)}`,
+    };
+  }
+
+  const tests: CodingTestResult[] = [];
+  let passed = 0;
+  for (let i = 0; i < cases.length; i += 1) {
+    const t = cases[i];
+    const r = parsed.find((p) => p.i === i);
+    const out = r?.out ?? "";
+    const err = r?.err ?? undefined;
+    const pass = !err && normalizeStdout(out) === normalizeStdout(t.expectedStdout);
+    if (pass) passed += 1;
+    tests.push({
+      index: i,
+      args: [t.stdin],
+      expected: t.expectedStdout,
+      actual: out,
+      pass,
+      error: err,
+    });
+  }
+  return {
+    ok: passed === cases.length && cases.length > 0,
+    passed,
+    total: cases.length,
+    tests,
+    stderr: exec.stderr,
+  };
+}
+
 export function evaluateCodingRun(
   item: CodingItem,
   exec: PythonRunResult,
@@ -104,7 +220,7 @@ export function evaluateCodingRun(
     const r = parsed.find((p) => p.i === i);
     const got = r?.got ?? null;
     const err = r?.err ?? undefined;
-    const ok = !err && deepEqual(got, t.expect);
+    const ok = !err && deepEqual(got, t.expect, t.orderInsensitive ?? false);
     if (ok) passed += 1;
     tests.push({
       index: i,
@@ -125,13 +241,29 @@ export function evaluateCodingRun(
   };
 }
 
-export function deepEqual(a: unknown, b: unknown): boolean {
+// Structural deep-equality. When `orderInsensitive` is true, arrays compare as
+// multisets (element order ignored) — for drills like "return the subsets" or
+// "group the anagrams" where any ordering of the result is correct. The flag
+// threads recursively, so nested arrays are also compared order-insensitively.
+export function deepEqual(
+  a: unknown,
+  b: unknown,
+  orderInsensitive = false,
+): boolean {
   if (a === b) return true;
   if (typeof a !== typeof b) return false;
   if (a == null || b == null) return false;
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
-    return a.every((v, i) => deepEqual(v, b[i]));
+    if (orderInsensitive) {
+      // Sort both by a stable serialization, then compare pairwise. Equal
+      // multisets sort to the same sequence, so a positional compare suffices.
+      const key = (x: unknown) => JSON.stringify(x);
+      const sa = [...a].sort((x, y) => (key(x) < key(y) ? -1 : key(x) > key(y) ? 1 : 0));
+      const sb = [...b].sort((x, y) => (key(x) < key(y) ? -1 : key(x) > key(y) ? 1 : 0));
+      return sa.every((v, i) => deepEqual(v, sb[i], orderInsensitive));
+    }
+    return a.every((v, i) => deepEqual(v, b[i], orderInsensitive));
   }
   if (typeof a === "object" && typeof b === "object") {
     const ka = Object.keys(a as object);
@@ -141,6 +273,7 @@ export function deepEqual(a: unknown, b: unknown): boolean {
       deepEqual(
         (a as Record<string, unknown>)[k],
         (b as Record<string, unknown>)[k],
+        orderInsensitive,
       ),
     );
   }
@@ -150,22 +283,58 @@ export function deepEqual(a: unknown, b: unknown): boolean {
 export function compareSqlResult(
   expected: { columns: string[]; rows: unknown[][] },
   actual: { columns: string[]; rows: unknown[][] },
+  opts: { orderInsensitive?: boolean } = {},
 ): boolean {
-  return (
-    actual.columns.length === expected.columns.length &&
-    actual.columns.every(
+  if (actual.columns.length !== expected.columns.length) return false;
+  if (
+    !actual.columns.every(
       (c, i) => c.toLowerCase() === expected.columns[i].toLowerCase(),
-    ) &&
-    actual.rows.length === expected.rows.length &&
-    actual.rows.every(
-      (row, i) =>
-        row.length === expected.rows[i].length &&
-        row.every((v, j) => normalizeSqlValue(v) === normalizeSqlValue(expected.rows[i][j])),
     )
+  ) {
+    return false;
+  }
+  if (actual.rows.length !== expected.rows.length) return false;
+
+  // When the reference query has no deterministic ORDER BY, compare row sets
+  // independent of order: sort both by a stable serialization, then line up.
+  let expRows = expected.rows;
+  let actRows = actual.rows;
+  if (opts.orderInsensitive) {
+    const rowKey = (row: unknown[]) =>
+      JSON.stringify(row.map(normalizeSqlValue));
+    const byKey = (x: unknown[], y: unknown[]) => {
+      const kx = rowKey(x);
+      const ky = rowKey(y);
+      return kx < ky ? -1 : kx > ky ? 1 : 0;
+    };
+    expRows = [...expected.rows].sort(byKey);
+    actRows = [...actual.rows].sort(byKey);
+  }
+
+  return actRows.every(
+    (row, i) =>
+      row.length === expRows[i].length &&
+      row.every((v, j) => cellsEqual(v, expRows[i][j])),
   );
 }
 
 function normalizeSqlValue(v: unknown): string {
   if (v === null || v === undefined) return "NULL";
   return String(v);
+}
+
+// Numeric-aware cell comparison: if BOTH cells parse as finite numbers, compare
+// numerically so `1.0 === 1` and `'01' === 1` (sql.js may return a numeric
+// literal where the reference produced a string, or vice versa). Otherwise fall
+// back to the NULL-normalized string compare (keeps text/NULL semantics exact).
+function cellsEqual(a: unknown, b: unknown): boolean {
+  const sa = normalizeSqlValue(a);
+  const sb = normalizeSqlValue(b);
+  if (sa === sb) return true;
+  const na = Number(sa);
+  const nb = Number(sb);
+  if (sa.trim() !== "" && sb.trim() !== "" && Number.isFinite(na) && Number.isFinite(nb)) {
+    return na === nb;
+  }
+  return false;
 }
