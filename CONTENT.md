@@ -114,6 +114,25 @@ All quiz items live under `src/data/quizzes/<track>.json` (or split into `<track
 }
 ```
 
+## Debugging drills
+
+A **debugging drill** is an ordinary coding item used in reverse: the `starter`
+holds complete-but-buggy code (a realistic single bug — off-by-one, wrong
+condition order, mutable default, truncating division, …) and the learner must
+*fix* it rather than write from scratch. It needs **no engine change**:
+
+- `starter` = the buggy program the editor opens with (prompt says "DEBUG: …").
+- `optimal.code` = the corrected reference; `pnpm validate` executes it against
+  `tests`, exactly as for any coding item.
+- `tests` must be chosen so the **buggy starter fails at least one** and the fix
+  passes all — author the failing example into `examples`. The content validator
+  only checks `optimal.code`, so run `python3 scripts/verify_debug_drills.py` to
+  confirm the bug is real (it runs both `starter` and `optimal.code` through the
+  same single-namespace harness the grader uses and asserts optimal passes all /
+  buggy fails ≥1). Tag with `"debugging"` plus the bug category.
+
+See `src/data/quizzes/debugging-drills.json` for the authored pack.
+
 ## Definition of done for a pattern
 
 Each pattern in `src/data/patterns.json` should reach this bar before being declared "complete":
