@@ -133,6 +133,44 @@ condition order, mutable default, truncating division, …) and the learner must
 
 See `src/data/quizzes/debugging-drills.json` for the authored pack.
 
+### Deferred: flashcard / free-recall items
+
+Free-recall **flashcards** (formula sheets, the Big-O table, SQL-syntax prompts —
+front shown, learner recalls, self-grades easy/hard into Leitner) are intentionally
+**not yet implemented**. Unlike debugging drills, a flashcard is a genuinely new
+member of the `QuizItem` union with no `prompt`/`question`/`options`, so it touches
+every `item.type` routing site (~30, including the `type === "mcq" ? question : prompt`
+ternaries in QuizPage/ReviewPage/SpeedChallengePage/MachineSession/Bookmarks) and
+needs a new flip-and-self-grade UI surface — interactive behaviour that can't be
+verified here without a browser. Ship it as its own focused, browser-tested phase.
+
+Ready-to-build design when picked up:
+- `FlashcardItem = QuizItemCommon & { type: "flashcard"; front: string; back: string }`
+  added to the `QuizItem` union in `src/types.ts` (the compiler will flag every
+  routing site that needs a new branch — work through them).
+- A `FlashcardCard` component: show `front`, reveal `back` on tap/Space, then two
+  buttons "Got it" / "Missed it" → `registerAttempt(id, gotIt)` so wrong recalls
+  flow into the existing Leitner queue exactly like a failed MCQ.
+- Validator: add a `flashcard` arm requiring non-empty `front`/`back`; no reference
+  execution needed.
+- Route it through QuizPage / ReviewPage like the other three types.
+
+## Answer-key verification (aptitude MCQs)
+
+`pnpm validate` gates *structure* (unique ids, answerIndex in range, options length,
+canonical topic/tags) but not whether the marked answer is actually *correct*. The
+full 175-item aptitude MCQ pool (quant, reasoning, verbal, pseudocode, basics) was
+audited once for answer-key correctness with an **anchor-free** method: solvers were
+given only the question + options (the marked answer was withheld) and asked to
+solve from scratch; any disagreement with the key was then adjudicated by three
+independent voters before being treated as an error. Result: **0 disagreements / 0
+errors**, corroborated by a hand-computed sample (LCM remainder, recursion
+call-count, array-mutation traces, a seating puzzle). The keys are trusted correct.
+
+When you add new aptitude MCQs, re-run that solve-and-adjudicate audit (or at least
+hand-solve them) before relying on the keys — and keep options distinct (the
+validator catches duplicate options, e.g. the old `apt-q-027` `["843","843",…]` bug).
+
 ## Definition of done for a pattern
 
 Each pattern in `src/data/patterns.json` should reach this bar before being declared "complete":
