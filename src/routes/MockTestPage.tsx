@@ -67,6 +67,7 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
 
   const [now, setNow] = useState(0);
   const [codingIdx, setCodingIdx] = useState(0);
+  const [extendedTime, setExtendedTime] = useState(false);
   const codingShownRef = useRef(0);
 
   // Resolve persisted item-ids back into full items (deterministic lookup).
@@ -129,11 +130,13 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
       for (const p of picked) used.add(p.id);
       itemIdsBySection.push(picked.map((p) => p.id));
     }
+    // Extended-time accommodation: 1.5× the clock on every section + coding round.
+    const mult = extendedTime ? 1.5 : 1;
     const sectionDeadlines = blueprint.sections.map((_s, i) => {
       const prior = blueprint.sections
         .slice(0, i + 1)
         .reduce((acc, x) => acc + x.durationMinutes, 0);
-      return startTs + prior * 60_000;
+      return startTs + prior * 60_000 * mult;
     });
     let codingItemIds: string[] = [];
     let codingDeadline: number | null = null;
@@ -141,7 +144,7 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
       const cpick = pickCodingItemsForSection(blueprint.codingSection, pool, rng, used);
       codingItemIds = cpick.map((c) => c.id);
       const lastDeadline = sectionDeadlines[sectionDeadlines.length - 1] ?? startTs;
-      codingDeadline = lastDeadline + blueprint.codingSection.durationMinutes * 60_000;
+      codingDeadline = lastDeadline + blueprint.codingSection.durationMinutes * 60_000 * mult;
     }
     run.startRun({
       blueprintId: blueprint.id,
@@ -227,6 +230,8 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
         onStart={start}
         canResume={run.blueprintId === blueprint.id && run.startedAt != null && run.phase !== "done"}
         onResume={() => setScreen("running")}
+        extendedTime={extendedTime}
+        onToggleExtendedTime={() => setExtendedTime((v) => !v)}
       />
     );
 
@@ -499,11 +504,15 @@ function Intro({
   onStart,
   canResume,
   onResume,
+  extendedTime,
+  onToggleExtendedTime,
 }: {
   blueprint: MockTestBlueprint;
   onStart: () => void;
   canResume: boolean;
   onResume: () => void;
+  extendedTime: boolean;
+  onToggleExtendedTime: () => void;
 }) {
   const totalMin = blueprint.sections.reduce((a, s) => a + s.durationMinutes, 0);
   return (
@@ -576,6 +585,21 @@ function Intro({
           it. submit early with "next section" if you finish before time.
         </div>
       </Box>
+
+      <label
+        className="flex items-center gap-2 text-sm font-mono cursor-pointer"
+        style={{ color: "var(--color-text-dim)" }}
+      >
+        <input
+          type="checkbox"
+          checked={extendedTime}
+          onChange={onToggleExtendedTime}
+          className="accent-[var(--color-accent)]"
+        />
+        <span>
+          extended time (1.5×) — accessibility accommodation
+        </span>
+      </label>
 
       <div className="flex gap-2">
         <BracketButton variant="danger" onClick={onStart}>

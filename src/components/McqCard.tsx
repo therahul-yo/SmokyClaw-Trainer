@@ -61,10 +61,25 @@ export function McqCard({
           <LessonRenderer body={item.question} />
         </div>
 
-        <ul className="space-y-2">
+        <ul className="space-y-2" role="group" aria-label="Answer options">
           {shuffled.options.map((opt, i) => {
             const chosen = i === selected;
             const isAnswer = i === shuffled.answerIndex;
+            // Non-color state cue (don't rely on border color alone).
+            const mark = submitted
+              ? isAnswer
+                ? "✓"
+                : chosen
+                  ? "✗"
+                  : ""
+              : "";
+            const srState = submitted
+              ? isAnswer
+                ? " (correct answer)"
+                : chosen
+                  ? " (your answer, incorrect)"
+                  : ""
+              : "";
             let borderColor = "var(--color-border-bright)";
             let bgColor = "transparent";
             let opacity = 1;
@@ -84,6 +99,7 @@ export function McqCard({
                 <button
                   onClick={() => handleSubmit(i, Date.now())}
                   disabled={submitted}
+                  aria-label={`Option ${String.fromCharCode(65 + i)}${srState}`}
                   className="w-full text-left px-3 py-2 font-mono text-sm transition-colors hover:brightness-110 disabled:cursor-not-allowed"
                   style={{
                     border: `1px solid ${borderColor}`,
@@ -91,6 +107,17 @@ export function McqCard({
                     opacity,
                   }}
                 >
+                  {mark && (
+                    <span
+                      aria-hidden="true"
+                      className="mr-1 font-bold"
+                      style={{
+                        color: isAnswer ? "var(--color-success)" : "var(--color-danger)",
+                      }}
+                    >
+                      {mark}
+                    </span>
+                  )}
                   <span
                     className="mr-2"
                     style={{ color: "var(--color-text-muted)" }}
@@ -108,6 +135,8 @@ export function McqCard({
 
         {submitted && (
           <div
+            role="status"
+            aria-live="polite"
             className="p-3 text-sm"
             style={{
               borderLeft: `3px solid ${correct ? "var(--color-success)" : "var(--color-danger)"}`,
