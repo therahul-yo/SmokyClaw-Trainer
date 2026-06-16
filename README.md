@@ -18,13 +18,13 @@ explain complexity, and repeat weak areas until they become fast.
 
 - **Four tracks from basics upward.** Python, DSA & LeetCode patterns, SQL & DBMS, Aptitude & Reasoning. Each track has lessons (Markdown), MCQs, and hands-on problems.
 - **Machine-style training loop.** Each serious topic is designed around basics → mental model → recognition triggers → brute force → optimal template → edge cases → timed recall.
-- **Run code in the browser.** Python problems run on Pyodide (CPython compiled to WebAssembly) — no server, no signup. Test cases are graded against your function's return value.
-- **Run SQL in the browser.** SQL problems run on sql.js (SQLite in WASM) against bundled `employees` and `ecommerce` schemas. Your result set is diffed against the expected output.
+- **Run code in the browser, safely.** Python runs on Pyodide (CPython compiled to WebAssembly) in a **Web Worker** with a hard timeout — no server, no signup, and a runaway/infinite loop is killed instead of freezing the tab. Tests grade against your function's return value (with an optional order-insensitive mode), or in online-judge **stdin/stdout** mode.
+- **Run SQL in the browser.** SQL problems run on sql.js (SQLite in WASM) against bundled `employees`, `ecommerce`, and `social` schemas. Your result set is diffed against the expected output (numeric-aware, with an order-insensitive mode for queries without a deterministic `ORDER BY`).
 - **Spaced repetition (Leitner).** Anything you get wrong is added to a 5-bucket Leitner queue (1d / 3d / 7d / 14d / 30d). The Review page surfaces only what's due.
-- **Mock tests.** Exact-format simulations:
+- **Mock tests — 14 company blueprints.** TCS NQT (×3), Infosys (×3), Accenture (×3), Wipro Elite, Capgemini, **Cognizant GenC**, generic DSA, SQL-only:
   - **TCS NQT** — Numerical (25/25min), Verbal (24/25min), Reasoning (30/50min), Programming Logic (10/15min), Coding (2 problems / 30min).
   - **Infosys SP** — Math (10/35min), Logical (15/25min), Verbal (20/20min), Pseudocode (5/10min), Coding (1 problem / 45min).
-  - Per-section timers, auto-submit, scoring per section.
+  - Per-section timers and auto-submit; **live coding rounds** in-exam (CodeMirror + real grading), reproducible seeded question selection with cross-section dedupe, a refresh-safe run that resumes where you left off, an extended-time (1.5×) accessibility accommodation, and a post-mock report with per-section + coding repair pathways.
 - **Bookmarks, streaks, progress.** Per-track mastery %, daily streak, bookmark anything for targeted review.
 - **Adaptive study plans.** Pick a 1-week / 2-week / 1-month deadline and a daily-minutes budget; the planner lays out lessons + drills + Leitner-due items every day, biased toward the topics you score weakest on.
 - **Pattern playlists.** Curated DSA patterns (two-pointer, sliding window, hashing, DP, graphs, ...) and SQL patterns (joins, window functions, CTEs) with per-pattern progress.
@@ -32,7 +32,7 @@ explain complexity, and repeat weak areas until they become fast.
 - **smokey — a local coach.** A `/coach` page (and a compact strip on Home) that reads your own attempt history and writes plain-English advisories: cold-start nudges, streak-risk/streak-win callouts, "you're slipping on sliding-window," retention reminders for things you got right but haven't seen in a week, avoidance flags (lessons read but never drilled), mastery wins, your best study window, and per-mock readiness with an ETA. It's NLG (generation from templates over detectors), **not** an LLM — deterministic, and nothing leaves the browser.
 - **Daily challenge + interview stopwatch.** A date-seeded daily drill on Home, and a stopwatch in the coding/SQL sandbox so you can feel the clock the way a real round does.
 - **ASCII attempt heatmap.** A terminal-style contribution grid of your practice history on Home and the Progress page.
-- **Installable PWA + mobile nav.** Add it to your home screen (an install button appears when the browser supports it) and it runs offline as a standalone app, with a thumb-reachable bottom tab bar on phones. Pyodide / sql.js still stream from their CDNs on first use.
+- **Installable PWA + mobile nav.** Add it to your home screen (an install button appears when the browser supports it) and it runs offline as a standalone app, with a thumb-reachable bottom tab bar on phones. Pyodide / sql.js stream from their CDNs on first use, then are cache-first so the Python/SQL sandboxes keep working offline on return visits.
 - **Keyboard-first.** `⌘K` / `Ctrl K` opens a command palette (`/` for search mode), `?` shows the keymap, and vim-style `g g / g p / g r / g s / g c / g b` jump between Home, Plan, Review, Progress, smokey, and Bookmarks. `j` / `k` scroll.
 - **Reading UX.** Lessons have a scroll-progress bar, an auto-highlighting table of contents, adjustable font size, and dark-grey code blocks for readability.
 - **100% local.** All progress persists in `localStorage` via Zustand. No backend, no telemetry, no account.
@@ -42,8 +42,9 @@ explain complexity, and repeat weak areas until they become fast.
 - **React 19** + **TypeScript** + **Vite 8** + **Tailwind v4**
 - **Zustand** (with `persist`) for state — progress, attempts, bookmarks, streaks, Leitner records
 - **React Router v7** for SPA routing
-- **Pyodide** for in-browser Python (CDN-loaded on first use, ~10MB cached)
+- **Pyodide** for in-browser Python, run in a Web Worker with a timeout (CDN-loaded on first use, ~10MB cached; main-thread fallback if workers are unavailable)
 - **sql.js** for in-browser SQLite
+- **Vitest** for unit tests + a `scripts/validate-content.ts` gate that executes every coding/SQL reference solution through the real grader
 - **CodeMirror 6** (`@uiw/react-codemirror`) for the editor
 - **react-markdown** + **rehype-highlight** for lessons
 - **vite-plugin-pwa** (Workbox service worker + web manifest) for offline/installable PWA

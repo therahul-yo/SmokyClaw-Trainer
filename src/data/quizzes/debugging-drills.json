@@ -1,0 +1,525 @@
+[
+  {
+    "id": "py-dbg-mutable-default",
+    "track": "python",
+    "topic": "functions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 7,
+    "prompt": "DEBUG: `square_all(nums)` should return a brand-new list of each number squared, starting empty on every call. It works the first time but \"remembers\" results from previous calls. Find and fix the single-line bug.",
+    "constraints": "- `0 <= len(nums) <= 10^4`\n- numbers are integers.\n- Each call must be independent — no state should leak between calls.",
+    "examples": [
+      {
+        "input": "nums = [1, 2]",
+        "output": "[1, 4]",
+        "explanation": "1²=1, 2²=4."
+      },
+      {
+        "input": "(a later call) nums = [3]",
+        "output": "[9]",
+        "explanation": "A fresh call must NOT include 1 and 4 from the earlier call."
+      }
+    ],
+    "starter": "def square_all(nums, acc=[]):\n    for n in nums:\n        acc.append(n * n)\n    return acc\n",
+    "entry": "square_all",
+    "tests": [
+      { "args": [[1, 2]], "expect": [1, 4] },
+      { "args": [[3]], "expect": [9] },
+      { "args": [[]], "expect": [] },
+      { "args": [[5]], "expect": [25] },
+      { "args": [[2, 3, 4]], "expect": [4, 9, 16] }
+    ],
+    "hints": [
+      "Call the function twice in a row with different inputs — the second result is wrong. What survived between calls?",
+      "A default argument value is evaluated once, when the function is defined — not on every call.",
+      "Never use a mutable object (`[]`, `{}`) as a default. Default it to `None` and create a fresh list inside the body."
+    ],
+    "optimal": {
+      "code": "def square_all(nums, acc=None):\n    if acc is None:\n        acc = []\n    for n in nums:\n        acc.append(n * n)\n    return acc\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "The bug is the classic mutable default argument: `acc=[]` creates ONE list at definition time that every call shares and keeps appending to. Defaulting to `None` and building a fresh list per call isolates each call."
+    },
+    "complexityCheck": {
+      "question": "What is the time complexity of the corrected `square_all`?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(log n)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n²)", "correct": false }
+      ]
+    },
+    "tags": ["debugging", "mutable-default", "functions"]
+  },
+  {
+    "id": "py-dbg-fizzbuzz-order",
+    "track": "python",
+    "topic": "control-flow",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 6,
+    "prompt": "DEBUG: `fizzbuzz(n)` should return a list for 1..n where multiples of 15 are \"FizzBuzz\", multiples of 3 are \"Fizz\", multiples of 5 are \"Buzz\", and everything else is the number as a string. It never produces \"FizzBuzz\". Fix the bug.",
+    "constraints": "- `1 <= n <= 10^4`",
+    "examples": [
+      {
+        "input": "n = 5",
+        "output": "[\"1\", \"2\", \"Fizz\", \"4\", \"Buzz\"]",
+        "explanation": "3 → Fizz, 5 → Buzz."
+      },
+      {
+        "input": "n = 15",
+        "output": "[..., \"FizzBuzz\"]",
+        "explanation": "15 is divisible by both 3 and 5, so it must be \"FizzBuzz\" — but the buggy code prints \"Fizz\"."
+      }
+    ],
+    "starter": "def fizzbuzz(n):\n    out = []\n    for i in range(1, n + 1):\n        if i % 3 == 0:\n            out.append(\"Fizz\")\n        elif i % 5 == 0:\n            out.append(\"Buzz\")\n        elif i % 15 == 0:\n            out.append(\"FizzBuzz\")\n        else:\n            out.append(str(i))\n    return out\n",
+    "entry": "fizzbuzz",
+    "tests": [
+      { "args": [5], "expect": ["1", "2", "Fizz", "4", "Buzz"] },
+      { "args": [3], "expect": ["1", "2", "Fizz"] },
+      { "args": [15], "expect": ["1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz"] },
+      { "args": [1], "expect": ["1"] },
+      { "args": [30], "expect": ["1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8", "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz", "16", "17", "Fizz", "19", "Buzz", "Fizz", "22", "23", "Fizz", "Buzz", "26", "Fizz", "28", "29", "FizzBuzz"] }
+    ],
+    "hints": [
+      "Trace i = 15. Which branch does it enter first?",
+      "An `if/elif` chain stops at the FIRST true condition. 15 satisfies `i % 3 == 0` before it ever reaches the FizzBuzz check.",
+      "Test the most specific condition first: check `i % 15 == 0` (or `i % 3 == 0 and i % 5 == 0`) at the top of the chain."
+    ],
+    "optimal": {
+      "code": "def fizzbuzz(n):\n    out = []\n    for i in range(1, n + 1):\n        if i % 15 == 0:\n            out.append(\"FizzBuzz\")\n        elif i % 3 == 0:\n            out.append(\"Fizz\")\n        elif i % 5 == 0:\n            out.append(\"Buzz\")\n        else:\n            out.append(str(i))\n    return out\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "The branches were ordered general-to-specific. Because `if/elif` short-circuits on the first match, multiples of 15 matched `% 3` first and the `% 15` branch was unreachable. Ordering specific-first fixes it."
+    },
+    "complexityCheck": {
+      "question": "What is the time complexity of producing the FizzBuzz list for n items?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n²)", "correct": false }
+      ]
+    },
+    "tags": ["debugging", "control-flow", "ordering"]
+  },
+  {
+    "id": "py-dbg-average-intdiv",
+    "track": "python",
+    "topic": "data-types",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 5,
+    "prompt": "DEBUG: `average(nums)` should return the arithmetic mean of a non-empty list as a real number. It silently truncates the decimal part. Fix it.",
+    "constraints": "- `1 <= len(nums) <= 10^5`\n- numbers are integers.",
+    "examples": [
+      {
+        "input": "nums = [1, 2]",
+        "output": "1.5",
+        "explanation": "Mean of 1 and 2 is 1.5, not 1."
+      },
+      {
+        "input": "nums = [10, 3]",
+        "output": "6.5",
+        "explanation": "13 / 2 = 6.5."
+      }
+    ],
+    "starter": "def average(nums):\n    return sum(nums) // len(nums)\n",
+    "entry": "average",
+    "tests": [
+      { "args": [[1, 2]], "expect": 1.5 },
+      { "args": [[10, 3]], "expect": 6.5 },
+      { "args": [[1, 2, 4]], "expect": 2.3333333333333335 },
+      { "args": [[7]], "expect": 7.0 },
+      { "args": [[2, 2, 5]], "expect": 3.0 }
+    ],
+    "hints": [
+      "Compare `5 // 2` and `5 / 2` in a REPL — what's different?",
+      "`//` is floor division: it throws away the fractional part and returns an int.",
+      "Use true division `/`, which always returns a float in Python 3."
+    ],
+    "optimal": {
+      "code": "def average(nums):\n    return sum(nums) / len(nums)\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "`//` is floor division and discards the fraction (and returns an int). True division `/` returns the exact float mean."
+    },
+    "complexityCheck": {
+      "question": "What is the time complexity of `average`, dominated by `sum`?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n²)", "correct": false }
+      ]
+    },
+    "tags": ["debugging", "data-types", "integer-division"]
+  },
+  {
+    "id": "py-dbg-count-vowels-case",
+    "track": "python",
+    "topic": "strings",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 5,
+    "prompt": "DEBUG: `count_vowels(s)` should count vowels case-insensitively (a, e, i, o, u in either case). It misses every uppercase vowel. Fix it.",
+    "constraints": "- `0 <= len(s) <= 10^5`\n- `s` contains letters, digits, spaces, and punctuation.",
+    "examples": [
+      {
+        "input": "s = \"Apple\"",
+        "output": "2",
+        "explanation": "'A' and 'e' are both vowels."
+      },
+      {
+        "input": "s = \"AEIOU\"",
+        "output": "5",
+        "explanation": "All five are vowels; the buggy code counts 0."
+      }
+    ],
+    "starter": "def count_vowels(s):\n    count = 0\n    for c in s:\n        if c in \"aeiou\":\n            count += 1\n    return count\n",
+    "entry": "count_vowels",
+    "tests": [
+      { "args": ["Apple"], "expect": 2 },
+      { "args": ["AEIOU"], "expect": 5 },
+      { "args": ["xyz"], "expect": 0 },
+      { "args": [""], "expect": 0 },
+      { "args": ["Hello World"], "expect": 3 }
+    ],
+    "hints": [
+      "Run it on \"AEIOU\". Why is the answer 0?",
+      "`'A' in \"aeiou\"` is False — the membership set only has lowercase letters.",
+      "Normalize each character with `c.lower()` before the membership test (or include both cases in the set)."
+    ],
+    "optimal": {
+      "code": "def count_vowels(s):\n    count = 0\n    for c in s:\n        if c.lower() in \"aeiou\":\n            count += 1\n    return count\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "The membership string held only lowercase vowels, so uppercase vowels never matched. Lowercasing each character before the test makes it case-insensitive."
+    },
+    "complexityCheck": {
+      "question": "What is the time complexity of `count_vowels` for a string of length n?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n²)", "correct": false }
+      ]
+    },
+    "tags": ["debugging", "strings", "case-sensitivity"]
+  },
+  {
+    "id": "py-dbg-factorial-base",
+    "track": "python",
+    "topic": "recursion",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 6,
+    "prompt": "DEBUG: `factorial(n)` computes n! recursively. It works for positive n but blows up (infinite recursion) when n is 0. Fix the base case.",
+    "constraints": "- `0 <= n <= 170`",
+    "examples": [
+      {
+        "input": "n = 5",
+        "output": "120",
+        "explanation": "5! = 120."
+      },
+      {
+        "input": "n = 0",
+        "output": "1",
+        "explanation": "0! is defined as 1 — but the buggy base case never stops at 0."
+      }
+    ],
+    "starter": "def factorial(n):\n    if n == 1:\n        return 1\n    return n * factorial(n - 1)\n",
+    "entry": "factorial",
+    "tests": [
+      { "args": [0], "expect": 1 },
+      { "args": [1], "expect": 1 },
+      { "args": [5], "expect": 120 },
+      { "args": [3], "expect": 6 },
+      { "args": [6], "expect": 720 }
+    ],
+    "hints": [
+      "Trace factorial(0). Which condition stops the recursion?",
+      "The base case only catches n == 1, so factorial(0) recurses to factorial(-1), factorial(-2)... forever.",
+      "Use `if n <= 1: return 1` so both 0 and 1 terminate the recursion."
+    ],
+    "optimal": {
+      "code": "def factorial(n):\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n",
+      "complexity": "O(n) time, O(n) recursion-stack space",
+      "explanation": "The base case `n == 1` skipped n == 0, so factorial(0) recursed into negative numbers indefinitely. `n <= 1` covers both terminating values."
+    },
+    "complexityCheck": {
+      "question": "How many multiplications does the corrected recursive `factorial(n)` perform?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(log n)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n²)", "correct": false }
+      ]
+    },
+    "tags": ["debugging", "recursion", "base-case"]
+  },
+  {
+    "id": "py-dbg-even-squares",
+    "track": "python",
+    "topic": "comprehensions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 5,
+    "prompt": "DEBUG: `even_squares(nums)` should return the squares of only the EVEN numbers, in order. It returns the squares of the odd numbers instead. Fix the comprehension filter.",
+    "constraints": "- `0 <= len(nums) <= 10^4`\n- numbers are non-negative integers.",
+    "examples": [
+      {
+        "input": "nums = [1, 2, 3, 4]",
+        "output": "[4, 16]",
+        "explanation": "Even numbers 2 and 4 → 4 and 16."
+      },
+      {
+        "input": "nums = [5, 6, 7]",
+        "output": "[36]",
+        "explanation": "Only 6 is even."
+      }
+    ],
+    "starter": "def even_squares(nums):\n    return [n * n for n in nums if n % 2]\n",
+    "entry": "even_squares",
+    "tests": [
+      { "args": [[1, 2, 3, 4]], "expect": [4, 16] },
+      { "args": [[5, 6, 7]], "expect": [36] },
+      { "args": [[1, 3, 5]], "expect": [] },
+      { "args": [[2, 4, 6]], "expect": [4, 16, 36] },
+      { "args": [[]], "expect": [] }
+    ],
+    "hints": [
+      "What does `if n % 2` keep — the numbers where the remainder is truthy (nonzero) or zero?",
+      "`n % 2` is 1 (truthy) for odd numbers and 0 (falsy) for even ones, so the filter keeps odds.",
+      "Compare explicitly against zero: `if n % 2 == 0` keeps the even numbers."
+    ],
+    "optimal": {
+      "code": "def even_squares(nums):\n    return [n * n for n in nums if n % 2 == 0]\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "`if n % 2` is truthy for odd numbers (remainder 1), so the comprehension kept odds. Comparing `n % 2 == 0` selects the even numbers as intended."
+    },
+    "complexityCheck": {
+      "question": "What is the time complexity of `even_squares` over n numbers?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n²)", "correct": false }
+      ]
+    },
+    "tags": ["debugging", "comprehensions", "truthiness"]
+  },
+  {
+    "id": "dsa-dbg-binary-search-bound",
+    "track": "dsa",
+    "topic": "binary-search",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 9,
+    "prompt": "DEBUG: `search(arr, target)` does binary search on a sorted ascending array and returns the index of `target`, or -1 if absent. It fails to find elements that sit at the very end of the search. Fix the off-by-one in the loop condition.",
+    "constraints": "- `0 <= len(arr) <= 10^5`\n- `arr` is sorted in ascending order with distinct values.",
+    "examples": [
+      {
+        "input": "arr = [1, 3, 5, 7, 9], target = 9",
+        "output": "4",
+        "explanation": "9 is the last element; the buggy loop exits before checking it and returns -1."
+      },
+      {
+        "input": "arr = [1, 3, 5, 7, 9], target = 4",
+        "output": "-1",
+        "explanation": "4 is not present."
+      }
+    ],
+    "starter": "def search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        if arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1\n",
+    "entry": "search",
+    "tests": [
+      { "args": [[1, 3, 5, 7, 9], 9], "expect": 4 },
+      { "args": [[1, 3, 5, 7, 9], 1], "expect": 0 },
+      { "args": [[1, 3, 5, 7, 9], 5], "expect": 2 },
+      { "args": [[1, 3, 5, 7, 9], 4], "expect": -1 },
+      { "args": [[42], 42], "expect": 0 },
+      { "args": [[], 7], "expect": -1 },
+      { "args": [[2, 4], 4], "expect": 1 }
+    ],
+    "hints": [
+      "Trace target = 9. Watch lo and hi converge — does the loop ever test the final index?",
+      "With `while lo < hi`, when lo == hi the single remaining candidate is never checked.",
+      "The window [lo, hi] is inclusive on both ends, so the loop must run while `lo <= hi`."
+    ],
+    "optimal": {
+      "code": "def search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        if arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1\n",
+      "complexity": "O(log n) time, O(1) space",
+      "explanation": "`hi` is an inclusive bound, so when `lo == hi` there is still one element to inspect. `while lo < hi` skipped it, missing targets that land on the last collapsed position. `while lo <= hi` checks it."
+    },
+    "complexityCheck": {
+      "question": "What is the time complexity of the corrected binary search?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(log n)", "correct": true },
+        { "label": "O(n)", "correct": false },
+        { "label": "O(n log n)", "correct": false }
+      ]
+    },
+    "tags": ["debugging", "binary-search", "off-by-one"]
+  },
+  {
+    "id": "dsa-dbg-two-sum-order",
+    "track": "dsa",
+    "topic": "hashmap",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 9,
+    "prompt": "DEBUG: `two_sum(nums, target)` returns the indices of the two distinct elements that sum to `target` (exactly one solution exists). It sometimes returns the same index twice because it stores the current number before checking for its complement. Fix the ordering.",
+    "constraints": "- `2 <= len(nums) <= 10^4`\n- exactly one valid pair exists; you may not reuse the same element.",
+    "examples": [
+      {
+        "input": "nums = [3, 2, 4], target = 6",
+        "output": "[1, 2]",
+        "explanation": "2 + 4 = 6. The buggy version returns [0, 0] — it matches 3 with itself."
+      },
+      {
+        "input": "nums = [3, 3], target = 6",
+        "output": "[0, 1]",
+        "explanation": "Two different 3s."
+      }
+    ],
+    "starter": "def two_sum(nums, target):\n    seen = {}\n    for i, n in enumerate(nums):\n        seen[n] = i\n        need = target - n\n        if need in seen:\n            return [seen[need], i]\n    return []\n",
+    "entry": "two_sum",
+    "tests": [
+      { "args": [[3, 2, 4], 6], "expect": [1, 2] },
+      { "args": [[3, 3], 6], "expect": [0, 1] },
+      { "args": [[2, 7, 11, 15], 9], "expect": [0, 1] },
+      { "args": [[1, 5, 3, 4], 8], "expect": [1, 2] },
+      { "args": [[0, 4, 3, 0], 0], "expect": [0, 3] }
+    ],
+    "hints": [
+      "Trace nums = [3, 2, 4]. At i = 0, what is already in `seen` when you look for the complement?",
+      "Inserting the current number BEFORE checking lets it pair with itself when `2 * n == target`.",
+      "Check whether the complement is already in `seen` FIRST, and only then store the current number."
+    ],
+    "optimal": {
+      "code": "def two_sum(nums, target):\n    seen = {}\n    for i, n in enumerate(nums):\n        need = target - n\n        if need in seen:\n            return [seen[need], i]\n        seen[n] = i\n    return []\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Storing `n` before the complement check let an element match itself (e.g. 3 + 3 from one 3 when target is 6). Checking the complement first, then inserting, guarantees the two indices are distinct."
+    },
+    "complexityCheck": {
+      "question": "What is the time complexity of the hashmap two-sum?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(n²)", "correct": false }
+      ]
+    },
+    "tags": ["debugging", "hashmap", "two-sum"]
+  },
+  {
+    "id": "dsa-dbg-reverse-inplace",
+    "track": "dsa",
+    "topic": "two-pointer",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 7,
+    "prompt": "DEBUG: `reverse(nums)` should reverse the list in place and return it. It returns the list unchanged because it swaps every pair twice. Fix the loop range.",
+    "constraints": "- `0 <= len(nums) <= 10^5`",
+    "examples": [
+      {
+        "input": "nums = [1, 2, 3, 4]",
+        "output": "[4, 3, 2, 1]",
+        "explanation": "The buggy loop swaps (0,3) then later (3,0), undoing itself."
+      },
+      {
+        "input": "nums = [1, 2, 3]",
+        "output": "[3, 2, 1]",
+        "explanation": "Middle element stays; ends swap once."
+      }
+    ],
+    "starter": "def reverse(nums):\n    n = len(nums)\n    for i in range(n):\n        nums[i], nums[n - 1 - i] = nums[n - 1 - i], nums[i]\n    return nums\n",
+    "entry": "reverse",
+    "tests": [
+      { "args": [[1, 2, 3, 4]], "expect": [4, 3, 2, 1] },
+      { "args": [[1, 2, 3]], "expect": [3, 2, 1] },
+      { "args": [[1]], "expect": [1] },
+      { "args": [[]], "expect": [] },
+      { "args": [[9, 8, 7, 6, 5]], "expect": [5, 6, 7, 8, 9] }
+    ],
+    "hints": [
+      "Count how many times the pair (0, n-1) gets swapped over the full loop.",
+      "Iterating over the whole range swaps each pair twice — once from the left, once from the right — returning to the start.",
+      "Only iterate over the first half: `range(n // 2)`."
+    ],
+    "optimal": {
+      "code": "def reverse(nums):\n    n = len(nums)\n    for i in range(n // 2):\n        nums[i], nums[n - 1 - i] = nums[n - 1 - i], nums[i]\n    return nums\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "Looping over the full length swaps each symmetric pair twice, cancelling out. Iterating only the first half (`n // 2`) swaps each pair exactly once."
+    },
+    "complexityCheck": {
+      "question": "What is the time complexity of the in-place reverse?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(log n)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n²)", "correct": false }
+      ]
+    },
+    "tags": ["debugging", "two-pointer", "off-by-one"]
+  },
+  {
+    "id": "dsa-dbg-climb-stairs-loop",
+    "track": "dsa",
+    "topic": "dp",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 9,
+    "prompt": "DEBUG: `climb_stairs(n)` should return the number of distinct ways to climb `n` stairs taking 1 or 2 steps at a time. It is off by one — it undercounts because the loop runs one iteration short. Fix the range.",
+    "constraints": "- `1 <= n <= 40`",
+    "examples": [
+      {
+        "input": "n = 2",
+        "output": "2",
+        "explanation": "1+1 or 2. The buggy code returns 1."
+      },
+      {
+        "input": "n = 5",
+        "output": "8",
+        "explanation": "The counts follow the Fibonacci sequence."
+      }
+    ],
+    "starter": "def climb_stairs(n):\n    a, b = 1, 1\n    for _ in range(n - 1):\n        a, b = b, a + b\n    return a\n",
+    "entry": "climb_stairs",
+    "tests": [
+      { "args": [1], "expect": 1 },
+      { "args": [2], "expect": 2 },
+      { "args": [3], "expect": 3 },
+      { "args": [4], "expect": 5 },
+      { "args": [5], "expect": 8 },
+      { "args": [10], "expect": 89 }
+    ],
+    "hints": [
+      "Work out n = 2 by hand: there are 2 ways, but the function returns 1.",
+      "Each loop step advances the Fibonacci pair once; `range(n - 1)` advances one time too few.",
+      "The number of ways equals the (n+1)-th Fibonacci number — loop `range(n)` times."
+    ],
+    "optimal": {
+      "code": "def climb_stairs(n):\n    a, b = 1, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "Ways(n) = Fib(n+1). The pair (a, b) must advance n times; `range(n - 1)` stopped one short, so every answer was the previous Fibonacci number. Looping `range(n)` produces the correct count."
+    },
+    "complexityCheck": {
+      "question": "What is the time complexity of the iterative climb_stairs?",
+      "choices": [
+        { "label": "O(1)", "correct": false },
+        { "label": "O(n)", "correct": true },
+        { "label": "O(n log n)", "correct": false },
+        { "label": "O(2ⁿ)", "correct": false }
+      ]
+    },
+    "tags": ["debugging", "dp", "off-by-one"]
+  }
+]

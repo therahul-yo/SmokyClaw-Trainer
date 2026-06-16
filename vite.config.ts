@@ -19,7 +19,6 @@ export default defineConfig({
         theme_color: '#000000',
         background_color: '#000000',
         display: 'standalone',
-        orientation: 'portrait',
         scope: '/',
         start_url: '/',
         categories: ['education', 'productivity'],
@@ -35,11 +34,28 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // App shell + bundled content (JS/CSS/HTML/JSON/MD/fonts). Pyodide &
-        // sql.js load from a CDN at runtime and are intentionally not precached.
+        // App shell + bundled content (JS/CSS/HTML/JSON/MD/fonts).
         globPatterns: ['**/*.{js,css,html,svg,png,woff,woff2,json,md}'],
         navigateFallback: '/index.html',
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        // Pyodide + sql.js are too large to precache, but cache-first
+        // runtimeCaching keeps them available offline after the first load —
+        // so the Python/SQL sandboxes work on a return visit without network.
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/(pyodide\/|npm\/sql\.js).*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'wasm-runtimes',
+              expiration: {
+                maxEntries: 120,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+              // status 0 allows opaque cross-origin responses to be cached.
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
       },
       devOptions: { enabled: false },
     }),

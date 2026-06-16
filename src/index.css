@@ -111,6 +111,41 @@ body {
 .boot-in { animation: boot-in 0.4s ease-out both; }
 
 /* ──────────────────────────────────────────────
+   Accessibility
+   ────────────────────────────────────────────── */
+
+/* Honor the OS "reduce motion" setting — kill the caret blink, boot fade,
+   CRT glow shadows, and any transition for users who get motion sick. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .crt-glow, .crt-glow-amber { text-shadow: none; }
+}
+
+/* Visible keyboard-focus ring (the terminal theme otherwise hides focus). */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+/* Screen-reader-only text helper for non-visual state cues. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ──────────────────────────────────────────────
    Markdown lesson content — terminal-styled prose
    ────────────────────────────────────────────── */
 .prose-lesson { font-family: var(--font-mono); }

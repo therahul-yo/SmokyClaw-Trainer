@@ -114,6 +114,63 @@ All quiz items live under `src/data/quizzes/<track>.json` (or split into `<track
 }
 ```
 
+## Debugging drills
+
+A **debugging drill** is an ordinary coding item used in reverse: the `starter`
+holds complete-but-buggy code (a realistic single bug — off-by-one, wrong
+condition order, mutable default, truncating division, …) and the learner must
+*fix* it rather than write from scratch. It needs **no engine change**:
+
+- `starter` = the buggy program the editor opens with (prompt says "DEBUG: …").
+- `optimal.code` = the corrected reference; `pnpm validate` executes it against
+  `tests`, exactly as for any coding item.
+- `tests` must be chosen so the **buggy starter fails at least one** and the fix
+  passes all — author the failing example into `examples`. The content validator
+  only checks `optimal.code`, so run `python3 scripts/verify_debug_drills.py` to
+  confirm the bug is real (it runs both `starter` and `optimal.code` through the
+  same single-namespace harness the grader uses and asserts optimal passes all /
+  buggy fails ≥1). Tag with `"debugging"` plus the bug category.
+
+See `src/data/quizzes/debugging-drills.json` for the authored pack.
+
+### Deferred: flashcard / free-recall items
+
+Free-recall **flashcards** (formula sheets, the Big-O table, SQL-syntax prompts —
+front shown, learner recalls, self-grades easy/hard into Leitner) are intentionally
+**not yet implemented**. Unlike debugging drills, a flashcard is a genuinely new
+member of the `QuizItem` union with no `prompt`/`question`/`options`, so it touches
+every `item.type` routing site (~30, including the `type === "mcq" ? question : prompt`
+ternaries in QuizPage/ReviewPage/SpeedChallengePage/MachineSession/Bookmarks) and
+needs a new flip-and-self-grade UI surface — interactive behaviour that can't be
+verified here without a browser. Ship it as its own focused, browser-tested phase.
+
+Ready-to-build design when picked up:
+- `FlashcardItem = QuizItemCommon & { type: "flashcard"; front: string; back: string }`
+  added to the `QuizItem` union in `src/types.ts` (the compiler will flag every
+  routing site that needs a new branch — work through them).
+- A `FlashcardCard` component: show `front`, reveal `back` on tap/Space, then two
+  buttons "Got it" / "Missed it" → `registerAttempt(id, gotIt)` so wrong recalls
+  flow into the existing Leitner queue exactly like a failed MCQ.
+- Validator: add a `flashcard` arm requiring non-empty `front`/`back`; no reference
+  execution needed.
+- Route it through QuizPage / ReviewPage like the other three types.
+
+## Answer-key verification (aptitude MCQs)
+
+`pnpm validate` gates *structure* (unique ids, answerIndex in range, options length,
+canonical topic/tags) but not whether the marked answer is actually *correct*. The
+full 175-item aptitude MCQ pool (quant, reasoning, verbal, pseudocode, basics) was
+audited once for answer-key correctness with an **anchor-free** method: solvers were
+given only the question + options (the marked answer was withheld) and asked to
+solve from scratch; any disagreement with the key was then adjudicated by three
+independent voters before being treated as an error. Result: **0 disagreements / 0
+errors**, corroborated by a hand-computed sample (LCM remainder, recursion
+call-count, array-mutation traces, a seating puzzle). The keys are trusted correct.
+
+When you add new aptitude MCQs, re-run that solve-and-adjudicate audit (or at least
+hand-solve them) before relying on the keys — and keep options distinct (the
+validator catches duplicate options, e.g. the old `apt-q-027` `["843","843",…]` bug).
+
 ## Definition of done for a pattern
 
 Each pattern in `src/data/patterns.json` should reach this bar before being declared "complete":
@@ -127,16 +184,16 @@ Each pattern in `src/data/patterns.json` should reach this bar before being decl
 
 > **This table is the single source of truth for content targets.** `CURRICULUM.md`
 > defers to it. The *current* column is whatever `pnpm validate` reports — run it
-> for live numbers; the snapshot below was taken 2026-06-14 after Phase 1
-> (411 items + 82 lessons).
+> for live numbers; the snapshot below was taken 2026-06-16 after Phase 3
+> (597 items + 92 lessons). All track targets are now met.
 
 | Track | Lessons (cur → target) | MCQs (cur → target) | Coding/SQL (cur → target) |
 |---|---|---|---|
-| Python | 20 → 25 | 46 → 80 | 23 → 40 |
-| DSA | 26 → 20¹ | 48 → 60 | 65 → 120² |
-| SQL | 15 → 15 | 33 → 60 | 21 → 50³ |
+| Python | 25 → 25 ✓ | 80 → 80 ✓ | 44 → 40 ✓ |
+| DSA | 30 → 20¹ | 69 → 60 ✓ | 120 → 120 ✓² |
+| SQL | 16 → 15 ✓ | 60 → 60 ✓ | 49 → 50³ |
 | Aptitude | 21 → n/a | 175 → 120⁴ | n/a |
-| **Total** | **82** | **302** | **109** → **411 items** |
+| **Total** | **92** | **384** | **213** → **597 items** |
 
 ¹ DSA already exceeds the "one lesson per pattern" floor — the extra lessons are
   worked-examples and company machine-plans; the bar is ≥1 teaching lesson per pattern.
@@ -154,7 +211,24 @@ reference, so the gap is always visible.
 
 ## Mock-test wiring
 
-When you add new MCQ items tagged with the right `topic`, the existing TCS NQT / Infosys SP blueprints in `src/lib/mockTestFormats.ts` will auto-pick them — no change to the blueprint needed.
+When you add new MCQ items tagged with the right `topic`, the 14 blueprints in
+`src/lib/mockTestFormats.ts` (TCS NQT ×3, Infosys ×3, Accenture ×3, Wipro,
+Capgemini, Cognizant GenC, generic DSA, SQL-only) auto-pick them — no blueprint
+change needed. The picker is seeded per run (reproducible, resumable), dedupes
+across sections, and warns on shortfall (`pnpm validate` fails the build if a
+section's pool can't be filled).
+
+A blueprint's optional `codingSection` now runs as a **live coding round** inside
+the mock (CodeMirror + real grading), not just an MCQ shell — author enough
+coding drills in the pool's `track`/`topics` to satisfy `problemCount`. Runs
+persist to `smokyclaw/mock-test-run`, so a 100-minute exam survives a refresh.
+
+Coding items support two grading modes: the default function-return harness
+(`entry` + `tests` of `{args, expect}`, with optional `orderInsensitive` for
+set-style answers) and an online-judge **stdin/stdout** mode (set `stdioTests`
+of `{stdin, expectedStdout}` — output is compared ignoring trailing whitespace).
+SQL items take an optional `orderInsensitive` for queries without a deterministic
+`ORDER BY`.
 
 ## SQL schemas
 

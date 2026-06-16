@@ -28,6 +28,8 @@ type ExportShape = {
   bookmarks: ReturnType<typeof useBookmarksStore.getState>;
   plan?: ReturnType<typeof usePlanStore.getState>;
   thinking?: ReturnType<typeof useThinkingStore.getState>;
+  daily?: ReturnType<typeof useDailyStore.getState>;
+  machineSession?: ReturnType<typeof useMachineSessionStore.getState>;
 };
 
 export function exportAllStores(): string {
@@ -40,6 +42,8 @@ export function exportAllStores(): string {
     bookmarks: useBookmarksStore.getState(),
     plan: usePlanStore.getState(),
     thinking: useThinkingStore.getState(),
+    daily: useDailyStore.getState(),
+    machineSession: useMachineSessionStore.getState(),
   };
   return JSON.stringify(data, null, 2);
 }
@@ -71,6 +75,26 @@ export function importAllStores(json: string): void {
   if (data.thinking) {
     useThinkingStore.setState({
       traces: data.thinking.traces ?? {},
+    });
+  }
+  if (data.daily) {
+    useDailyStore.setState({
+      completedDates: data.daily.completedDates ?? {},
+      currentStreak: data.daily.currentStreak ?? 0,
+      longestStreak: data.daily.longestStreak ?? 0,
+      lastCompletedDate: data.daily.lastCompletedDate ?? null,
+    });
+  }
+  if (data.machineSession) {
+    useMachineSessionStore.setState({
+      isActive: data.machineSession.isActive ?? false,
+      isCompleted: data.machineSession.isCompleted ?? false,
+      currentBlockIndex: data.machineSession.currentBlockIndex ?? 0,
+      currentItemIndex: data.machineSession.currentItemIndex ?? 0,
+      blocks: data.machineSession.blocks ?? [],
+      results: data.machineSession.results ?? {},
+      sessionStartedAt: data.machineSession.sessionStartedAt ?? null,
+      itemStartedAt: data.machineSession.itemStartedAt ?? null,
     });
   }
 }
