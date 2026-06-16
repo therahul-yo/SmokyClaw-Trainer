@@ -1,0 +1,116 @@
+[
+  {
+    "id": "dsa-q-050",
+    "track": "dsa",
+    "topic": "two-pointer",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "You must determine whether **any pair** in an array sums to a target `T`. You are choosing between (a) the classic two-pointer technique on a **sorted** array and (b) a hash-set single pass on the **unsorted** array. Which statement is correct?\n\n- Both find a valid pair when one exists.\n- The two-pointer approach requires the array to be sorted; the hash-set approach does not.",
+    "options": [
+      "The two-pointer approach works on an unsorted array because the pointers only move inward",
+      "Sorting is what lets the two-pointer approach decide which pointer to move; without sorted order, moving a pointer based on the sum comparison is not guaranteed to find the pair",
+      "The hash-set approach also requires sorting to achieve O(n) time",
+      "Two pointers cannot solve the pair-sum problem at all; only hashing can"
+    ],
+    "answerIndex": 1,
+    "explanation": "On a sorted array, if the current sum is too small you move the left pointer right (to increase it) and if too large you move the right pointer left; this monotonic ordering is exactly what justifies discarding a candidate without missing a valid pair. On an unsorted array that reasoning breaks, so two pointers need sorting; the hash-set method is O(n) without any sorting, which is why option 1 and 2's contrast matters.",
+    "tags": [
+      "two-pointer",
+      "sorting",
+      "array",
+      "hashing",
+      "time-complexity"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "accenture"
+    ]
+  },
+  {
+    "id": "dsa-q-051",
+    "track": "dsa",
+    "topic": "two-pointer",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "A function removes duplicates **in place** from a **sorted** array using a slow pointer `i` and a fast pointer `j`, where `j` scans every element and `i` marks the end of the unique prefix. Ignoring the cost of any sorting that was already done, what is the time and space complexity of just this two-pointer pass over `n` elements?",
+    "options": [
+      "O(n^2) time, O(1) space",
+      "O(n log n) time, O(n) space",
+      "O(n) time, O(1) space",
+      "O(n) time, O(n) space"
+    ],
+    "answerIndex": 2,
+    "explanation": "Each pointer advances forward at most n times and never resets, so the fast pointer touches each element once for O(n) total work, and only a few index variables are used, giving O(1) extra space. O(n log n)/O(n) describes a separate sort-then-copy approach, not the in-place two-pointer scan itself.",
+    "tags": [
+      "two-pointer",
+      "time-complexity",
+      "space-complexity",
+      "in-place",
+      "array"
+    ],
+    "companies": [
+      "tcs",
+      "wipro",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "dsa-q-052",
+    "track": "dsa",
+    "topic": "sliding-window",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "You must find the **maximum sum of any contiguous subarray of exactly size k** in an array of n positive integers. The brute-force approach recomputes the sum of every window of size k from scratch. What does the sliding-window optimization change, and what is the resulting time complexity?",
+    "options": [
+      "It keeps a running window sum, subtracting the element leaving the window and adding the one entering, giving O(n) instead of O(n*k)",
+      "It sorts the array first and picks the top k elements, giving O(n log n)",
+      "It uses a variable-size window that grows and shrinks based on the sum, giving O(n^2)",
+      "It precomputes all subarray sums in a 2D table, giving O(n) time and O(n^2) space"
+    ],
+    "answerIndex": 0,
+    "explanation": "For a fixed window, you slide it by one position each step: subtract the outgoing element and add the incoming one, so each of the n positions costs O(1), giving O(n) versus the brute-force O(n*k). Sorting is wrong because it destroys contiguity, which the problem requires.",
+    "tags": [
+      "sliding-window",
+      "arrays",
+      "time-complexity",
+      "fixed-window"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "dsa-q-053",
+    "track": "dsa",
+    "topic": "sliding-window",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "You are finding the length of the **longest substring with at most K distinct characters** using a variable-size sliding window with two pointers (left and right). The right pointer expands the window to include new characters. When should the **left** pointer move to shrink the window?",
+    "options": [
+      "While the window contains more than K distinct characters, advance left until the constraint is satisfied again",
+      "Exactly once after every expansion of the right pointer, to keep the window size fixed",
+      "Only after the right pointer reaches the end of the string, then shrink from the left",
+      "Whenever the current character equals the previous character, regardless of distinct count"
+    ],
+    "answerIndex": 0,
+    "explanation": "In a variable-size window the invariant (at most K distinct characters) is restored by shrinking from the left only while it is violated, so left advances in a while loop until the count drops back to K or fewer. Shrinking exactly once per expansion would force a fixed-size window, which fails because valid windows here vary in length.",
+    "tags": [
+      "sliding-window",
+      "strings",
+      "variable-window",
+      "two-pointers"
+    ],
+    "companies": [
+      "infosys",
+      "wipro",
+      "cognizant"
+    ]
+  }
+]

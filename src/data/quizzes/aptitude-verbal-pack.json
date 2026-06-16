@@ -1,0 +1,1053 @@
+[
+  {
+    "id": "apt-q-vrb-001",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Read the passage and answer the question.\n\n**Passage:** Lithium-ion batteries power most modern electronics, yet they degrade over time. Each charge cycle causes microscopic structural changes in the electrodes, gradually reducing the battery's capacity to hold charge. Heat accelerates this decay, which is why devices left in hot cars lose capacity faster. Researchers are now exploring solid-state batteries, which replace the flammable liquid electrolyte with a stable solid. These promise greater energy density and improved safety, but manufacturing them at scale remains costly and technically difficult. Until such alternatives mature, engineers recommend keeping devices cool and avoiding both full charges and complete discharges to prolong battery life.\n\n**Question (factual detail):** According to the passage, what physically changes inside the battery during each charge cycle?",
+    "options": [
+      "The liquid electrolyte evaporates",
+      "The electrodes undergo microscopic structural changes",
+      "The solid casing expands and cracks",
+      "The voltage permanently increases"
+    ],
+    "answerIndex": 1,
+    "explanation": "The passage states each charge cycle causes \"microscopic structural changes in the electrodes,\" reducing capacity. Electrolyte evaporation is not mentioned; the flammable liquid electrolyte is only referenced in the context of solid-state replacements, not as something that evaporates per cycle.",
+    "tags": [
+      "reading-comprehension",
+      "factual-detail",
+      "science-technology"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-002",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Read the passage and answer the question.\n\n**Passage:** Lithium-ion batteries power most modern electronics, yet they degrade over time. Each charge cycle causes microscopic structural changes in the electrodes, gradually reducing the battery's capacity to hold charge. Heat accelerates this decay, which is why devices left in hot cars lose capacity faster. Researchers are now exploring solid-state batteries, which replace the flammable liquid electrolyte with a stable solid. These promise greater energy density and improved safety, but manufacturing them at scale remains costly and technically difficult. Until such alternatives mature, engineers recommend keeping devices cool and avoiding both full charges and complete discharges to prolong battery life.\n\n**Question (inference):** Which conclusion is best supported by the passage?",
+    "options": [
+      "Solid-state batteries have already replaced lithium-ion batteries in most phones",
+      "A device kept in a cool place will likely retain its capacity longer than an identical one kept in heat",
+      "Lithium-ion batteries never lose capacity if charged correctly",
+      "Solid-state batteries are cheaper to manufacture than lithium-ion ones"
+    ],
+    "answerIndex": 1,
+    "explanation": "Since heat accelerates decay and engineers recommend keeping devices cool, a cooler device should retain capacity longer than an identical hot one. Solid-state batteries are described as still costly and not yet mature, so they have not replaced lithium-ion batteries nor are they cheaper.",
+    "tags": [
+      "reading-comprehension",
+      "inference",
+      "science-technology"
+    ],
+    "companies": [
+      "infosys",
+      "wipro",
+      "accenture"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-003",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Read the passage and answer the question.\n\n**Passage:** Lithium-ion batteries power most modern electronics, yet they degrade over time. Each charge cycle causes microscopic structural changes in the electrodes, gradually reducing the battery's capacity to hold charge. Heat accelerates this decay, which is why devices left in hot cars lose capacity faster. Researchers are now exploring solid-state batteries, which replace the flammable liquid electrolyte with a stable solid. These promise greater energy density and improved safety, but manufacturing them at scale remains costly and technically difficult. Until such alternatives mature, engineers recommend keeping devices cool and avoiding both full charges and complete discharges to prolong battery life.\n\n**Question (vocabulary-in-context):** In the passage, the word \"mature\" most nearly means:",
+    "options": [
+      "Become fully developed and ready for widespread use",
+      "Grow older in age",
+      "Become emotionally responsible",
+      "Ripen like fruit"
+    ],
+    "answerIndex": 0,
+    "explanation": "\"Until such alternatives mature\" refers to the technology becoming fully developed and ready for large-scale use. The other meanings of \"mature\" (aging, emotional growth, ripening) do not fit a technology being made viable at scale.",
+    "tags": [
+      "reading-comprehension",
+      "vocabulary-in-context",
+      "science-technology"
+    ],
+    "companies": [
+      "tcs",
+      "accenture",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-004",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Read the passage and answer the question.\n\n**Passage:** Lithium-ion batteries power most modern electronics, yet they degrade over time. Each charge cycle causes microscopic structural changes in the electrodes, gradually reducing the battery's capacity to hold charge. Heat accelerates this decay, which is why devices left in hot cars lose capacity faster. Researchers are now exploring solid-state batteries, which replace the flammable liquid electrolyte with a stable solid. These promise greater energy density and improved safety, but manufacturing them at scale remains costly and technically difficult. Until such alternatives mature, engineers recommend keeping devices cool and avoiding both full charges and complete discharges to prolong battery life.\n\n**Question (main idea):** Which statement best captures the main idea of the passage?",
+    "options": [
+      "Solid-state batteries are dangerous and should be avoided",
+      "Battery degradation is unavoidable and nothing can slow it",
+      "Lithium-ion batteries degrade over time, and while solid-state alternatives are promising but not yet practical, users can take steps to extend current battery life",
+      "Hot cars are the leading cause of all electronic failures"
+    ],
+    "answerIndex": 2,
+    "explanation": "The passage explains why lithium-ion batteries degrade, notes solid-state batteries as a promising-but-immature alternative, and gives practical care tips. The claim that nothing can slow degradation contradicts the closing advice to keep devices cool and avoid extreme charge levels.",
+    "tags": [
+      "reading-comprehension",
+      "main-idea",
+      "science-technology"
+    ],
+    "companies": [
+      "tcs",
+      "infosys"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-005",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Read the passage and answer the question.\n\n**Passage:** When a popular streaming service raised its monthly subscription by twenty percent, analysts expected a sharp loss of customers. Instead, the company gained subscribers. Its leaders had spent the previous year expanding their library of original shows and improving recommendation algorithms, so most viewers perceived the higher price as fair value. A smaller rival, which raised prices without adding content, lost a quarter of its users within months. The contrast illustrates a principle long known to economists: consumers tolerate price increases when they believe the underlying value has risen, but resist them sharply when nothing seems to justify the extra cost.\n\n**Question (factual detail):** According to the passage, what happened to the smaller rival that raised prices?",
+    "options": [
+      "It gained more subscribers than the popular service",
+      "It lost a quarter of its users within months",
+      "It doubled its library of original shows",
+      "It lowered its prices again immediately"
+    ],
+    "answerIndex": 1,
+    "explanation": "The passage states the smaller rival \"lost a quarter of its users within months\" after raising prices without adding content. It did not gain subscribers or expand its library; that was the larger, popular service.",
+    "tags": [
+      "reading-comprehension",
+      "factual-detail",
+      "business-economy"
+    ],
+    "companies": [
+      "accenture",
+      "capgemini",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-006",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Read the passage and answer the question.\n\n**Passage:** When a popular streaming service raised its monthly subscription by twenty percent, analysts expected a sharp loss of customers. Instead, the company gained subscribers. Its leaders had spent the previous year expanding their library of original shows and improving recommendation algorithms, so most viewers perceived the higher price as fair value. A smaller rival, which raised prices without adding content, lost a quarter of its users within months. The contrast illustrates a principle long known to economists: consumers tolerate price increases when they believe the underlying value has risen, but resist them sharply when nothing seems to justify the extra cost.\n\n**Question (inference):** What can be inferred about why the popular service retained customers despite the price hike?",
+    "options": [
+      "Customers did not notice the price had changed",
+      "Customers felt the added content justified paying more",
+      "The service secretly reversed the price increase",
+      "Analysts had forced customers to stay"
+    ],
+    "answerIndex": 1,
+    "explanation": "The passage says viewers perceived the higher price as fair value because the library and recommendations had improved, implying the added content justified the cost. There is no suggestion customers failed to notice the change or that the increase was reversed.",
+    "tags": [
+      "reading-comprehension",
+      "inference",
+      "business-economy"
+    ],
+    "companies": [
+      "infosys",
+      "wipro",
+      "accenture"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-007",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Read the passage and answer the question.\n\n**Passage:** When a popular streaming service raised its monthly subscription by twenty percent, analysts expected a sharp loss of customers. Instead, the company gained subscribers. Its leaders had spent the previous year expanding their library of original shows and improving recommendation algorithms, so most viewers perceived the higher price as fair value. A smaller rival, which raised prices without adding content, lost a quarter of its users within months. The contrast illustrates a principle long known to economists: consumers tolerate price increases when they believe the underlying value has risen, but resist them sharply when nothing seems to justify the extra cost.\n\n**Question (vocabulary-in-context):** In the passage, the word \"tolerate\" most nearly means:",
+    "options": [
+      "Strongly demand",
+      "Accept without much resistance",
+      "Completely ignore",
+      "Loudly celebrate"
+    ],
+    "answerIndex": 1,
+    "explanation": "\"Consumers tolerate price increases\" means they accept the increases without much resistance when value has risen, contrasted with resisting sharply otherwise. They neither demand nor celebrate the increases, so those options misread the tone.",
+    "tags": [
+      "reading-comprehension",
+      "vocabulary-in-context",
+      "business-economy"
+    ],
+    "companies": [
+      "tcs",
+      "capgemini",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-008",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Read the passage and answer the question.\n\n**Passage:** When a popular streaming service raised its monthly subscription by twenty percent, analysts expected a sharp loss of customers. Instead, the company gained subscribers. Its leaders had spent the previous year expanding their library of original shows and improving recommendation algorithms, so most viewers perceived the higher price as fair value. A smaller rival, which raised prices without adding content, lost a quarter of its users within months. The contrast illustrates a principle long known to economists: consumers tolerate price increases when they believe the underlying value has risen, but resist them sharply when nothing seems to justify the extra cost.\n\n**Question (main idea):** Which statement best expresses the main idea of the passage?",
+    "options": [
+      "Raising prices always increases the number of subscribers",
+      "Streaming services should never raise their prices",
+      "Customers accept price increases when they perceive matching value, but reject them when the increase seems unjustified",
+      "Recommendation algorithms are the only reason companies succeed"
+    ],
+    "answerIndex": 2,
+    "explanation": "The contrast between the two companies illustrates that perceived value determines whether customers accept a price increase. The claim that raising prices always wins subscribers is contradicted by the rival that lost a quarter of its users.",
+    "tags": [
+      "reading-comprehension",
+      "main-idea",
+      "business-economy"
+    ],
+    "companies": [
+      "accenture",
+      "infosys"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-009",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Read the passage and answer the question.\n\n**Passage:** In many small towns, the public library has quietly become more than a place to borrow books. Faced with shrinking community spaces, libraries now host job-search workshops, lend free internet hotspots to families without home access, and offer warm rooms during harsh weather. Some critics argue that these services stray from a library's true purpose. Supporters respond that a library has always served whatever its community needs most, and that information today means far more than printed pages. Librarians themselves often welcome the shift, noting that a building full of people, whatever their reason for coming, keeps the institution alive and valued.\n\n**Question (factual detail):** According to the passage, which of the following is one service that libraries now provide?",
+    "options": [
+      "Free home delivery of groceries",
+      "Lending free internet hotspots to families without home access",
+      "Operating overnight homeless shelters",
+      "Selling discounted printed books"
+    ],
+    "answerIndex": 1,
+    "explanation": "The passage explicitly lists lending \"free internet hotspots to families without home access\" as one of the new services. Grocery delivery, overnight shelters, and book sales are not mentioned.",
+    "tags": [
+      "reading-comprehension",
+      "factual-detail",
+      "social-general"
+    ],
+    "companies": [
+      "tcs",
+      "wipro",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-010",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Read the passage and answer the question.\n\n**Passage:** In many small towns, the public library has quietly become more than a place to borrow books. Faced with shrinking community spaces, libraries now host job-search workshops, lend free internet hotspots to families without home access, and offer warm rooms during harsh weather. Some critics argue that these services stray from a library's true purpose. Supporters respond that a library has always served whatever its community needs most, and that information today means far more than printed pages. Librarians themselves often welcome the shift, noting that a building full of people, whatever their reason for coming, keeps the institution alive and valued.\n\n**Question (inference):** What can be inferred about the librarians' attitude toward the library's expanded role?",
+    "options": [
+      "They resent the additional responsibilities",
+      "They view increased visitor numbers as evidence the library remains relevant",
+      "They believe printed books should be removed entirely",
+      "They want to charge fees for the new services"
+    ],
+    "answerIndex": 1,
+    "explanation": "The passage says librarians welcome the shift and note that a building full of people keeps the institution \"alive and valued,\" implying visitors signal continued relevance. Nothing suggests resentment, removing books, or charging fees.",
+    "tags": [
+      "reading-comprehension",
+      "inference",
+      "social-general"
+    ],
+    "companies": [
+      "infosys",
+      "accenture"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-011",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Read the passage and answer the question.\n\n**Passage:** In many small towns, the public library has quietly become more than a place to borrow books. Faced with shrinking community spaces, libraries now host job-search workshops, lend free internet hotspots to families without home access, and offer warm rooms during harsh weather. Some critics argue that these services stray from a library's true purpose. Supporters respond that a library has always served whatever its community needs most, and that information today means far more than printed pages. Librarians themselves often welcome the shift, noting that a building full of people, whatever their reason for coming, keeps the institution alive and valued.\n\n**Question (vocabulary-in-context):** In the passage, the word \"stray\" most nearly means:",
+    "options": [
+      "Wander away from",
+      "Carefully follow",
+      "Strongly support",
+      "Permanently destroy"
+    ],
+    "answerIndex": 0,
+    "explanation": "Critics argue the new services \"stray from a library's true purpose,\" meaning they wander away from or depart from that purpose. \"Carefully follow\" and \"strongly support\" are opposites of the intended meaning.",
+    "tags": [
+      "reading-comprehension",
+      "vocabulary-in-context",
+      "social-general"
+    ],
+    "companies": [
+      "tcs",
+      "capgemini",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-012",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Read the passage and answer the question.\n\n**Passage:** In many small towns, the public library has quietly become more than a place to borrow books. Faced with shrinking community spaces, libraries now host job-search workshops, lend free internet hotspots to families without home access, and offer warm rooms during harsh weather. Some critics argue that these services stray from a library's true purpose. Supporters respond that a library has always served whatever its community needs most, and that information today means far more than printed pages. Librarians themselves often welcome the shift, noting that a building full of people, whatever their reason for coming, keeps the institution alive and valued.\n\n**Question (author's tone):** Which best describes the author's overall tone toward the library's expanded role?",
+    "options": [
+      "Sharply critical and dismissive",
+      "Sympathetic and approving",
+      "Indifferent and detached",
+      "Alarmed and fearful"
+    ],
+    "answerIndex": 1,
+    "explanation": "The author presents the expanded services positively, gives more weight to supporters and welcoming librarians, and frames the change as keeping libraries \"alive and valued,\" signaling a sympathetic, approving tone. The critics' view is mentioned only briefly and is rebutted, so the tone is not critical or alarmed.",
+    "tags": [
+      "reading-comprehension",
+      "authors-tone",
+      "social-general"
+    ],
+    "companies": [
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-013",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "Spot the segment containing the grammatical error:\n\n**(A)** Each of the students **(B)** in the senior class **(C)** have submitted **(D)** their project on time.",
+    "options": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerIndex": 2,
+    "explanation": "'Each' is singular, so the verb must be 'has submitted', not 'have submitted'; segment C carries the error. Segment D ('their') is acceptable in modern usage as a singular gender-neutral pronoun, so it is not the targeted error.",
+    "tags": [
+      "error-spotting",
+      "subject-verb-agreement"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-014",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Spot the segment containing the grammatical error:\n\n**(A)** By the time we reached the stadium, **(B)** the match has already started **(C)** and the home team **(D)** had scored twice.",
+    "options": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerIndex": 1,
+    "explanation": "An action completed before a past point requires the past perfect, so 'has already started' should be 'had already started'; the error is in segment B. Segment D correctly uses 'had scored', confirming the past-perfect context.",
+    "tags": [
+      "error-spotting",
+      "tense"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "accenture"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-015",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Spot the segment containing the grammatical error:\n\n**(A)** The manager congratulated the team **(B)** on their success **(C)** and insisted **(D)** in giving everyone a bonus.",
+    "options": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerIndex": 3,
+    "explanation": "'Insist' is followed by the preposition 'on', so it should be 'insisted on giving', not 'insisted in giving'; segment D has the error. 'Congratulated ... on' in segments A and B uses the correct preposition.",
+    "tags": [
+      "error-spotting",
+      "prepositions"
+    ],
+    "companies": [
+      "infosys",
+      "wipro",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-016",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Spot the segment containing the grammatical error:\n\n**(A)** Neither the principal **(B)** nor the teachers **(C)** was aware **(D)** of the sudden change in schedule.",
+    "options": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerIndex": 2,
+    "explanation": "With 'neither...nor', the verb agrees with the nearer subject 'teachers' (plural), so it must be 'were aware', not 'was aware'; the error is in segment C. Segment B correctly pairs 'nor' with 'neither'.",
+    "tags": [
+      "error-spotting",
+      "subject-verb-agreement"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "accenture"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-017",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Spot the segment containing the grammatical error:\n\n**(A)** Every boy and every girl **(B)** in the colony **(C)** were given **(D)** a free vaccination card.",
+    "options": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerIndex": 2,
+    "explanation": "When subjects are joined by 'and' but preceded by 'every', the subject is treated as singular, so it should be 'was given', not 'were given'; segment C has the error. Segment A is correct because 'every' distributes to each noun individually.",
+    "tags": [
+      "error-spotting",
+      "subject-verb-agreement"
+    ],
+    "companies": [
+      "tcs",
+      "wipro",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-018",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 3,
+    "question": "Spot the segment containing the grammatical error:\n\n**(A)** Walking along the beach, **(B)** the broken seashells **(C)** were noticed by Riya **(D)** scattered across the sand.",
+    "options": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerIndex": 1,
+    "explanation": "The introductory participle 'Walking along the beach' must modify the person doing the walking, but segment B makes 'the broken seashells' the subject, creating a dangling modifier; it should read 'Riya noticed...'. Thus segment B carries the error rather than the otherwise grammatical phrasing in A.",
+    "tags": [
+      "error-spotting",
+      "misplaced-modifiers"
+    ],
+    "companies": [
+      "infosys",
+      "accenture",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-019",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "Spot the segment containing the grammatical error:\n\n**(A)** My brother and me **(B)** went to the market **(C)** to buy some vegetables **(D)** for the dinner party.",
+    "options": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerIndex": 0,
+    "explanation": "As part of the compound subject, the subjective pronoun 'I' is required, so segment A should read 'My brother and I', not 'My brother and me'. The rest of the sentence, including the prepositional phrase in D, is grammatically correct.",
+    "tags": [
+      "error-spotting",
+      "pronoun-agreement"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-020",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 3,
+    "question": "Spot the segment containing the grammatical error:\n\n**(A)** The committee, along with its advisers, **(B)** are reviewing the proposal **(C)** that the directors **(D)** submitted last week.",
+    "options": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answerIndex": 1,
+    "explanation": "A phrase introduced by 'along with' does not change the number of the subject, so the singular 'committee' takes 'is reviewing', not 'are reviewing'; segment B has the error. Segment D correctly uses the plural 'submitted' for 'the directors'.",
+    "tags": [
+      "error-spotting",
+      "subject-verb-agreement"
+    ],
+    "companies": [
+      "infosys",
+      "accenture",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-021",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1.5,
+    "question": "Choose the option that best replaces the underlined phrase.\n\nNeither the manager nor the employees **was willing to accept** the revised policy without a discussion.",
+    "options": [
+      "was willing to accept",
+      "were willing to accept",
+      "was willing in accepting",
+      "were willing for accepting"
+    ],
+    "answerIndex": 1,
+    "explanation": "With 'neither...nor', the verb agrees with the nearer subject, here the plural 'employees', so 'were willing to accept' is correct. 'Was willing to accept' wrongly agrees with the singular 'manager' instead of the closer plural noun.",
+    "tags": [
+      "sentence-correction",
+      "subject-verb-agreement"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-022",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1.5,
+    "question": "Choose the option that best replaces the underlined phrase.\n\nThe committee has not yet decided **whether it will approve or rejecting** the new proposal.",
+    "options": [
+      "whether it will approve or rejecting",
+      "whether to approve or rejecting",
+      "whether to approve or reject",
+      "either to approve or to rejecting"
+    ],
+    "answerIndex": 2,
+    "explanation": "Parallel structure requires both verbs to share the same form, so 'whether to approve or reject' is correct. 'Whether it will approve or rejecting' breaks parallelism by mixing a finite verb with a gerund.",
+    "tags": [
+      "sentence-correction",
+      "parallelism"
+    ],
+    "companies": [
+      "infosys",
+      "accenture",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-023",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "Choose the option that best replaces the underlined phrase.\n\nIf I **would have known** about the traffic, I would have left home earlier.",
+    "options": [
+      "would have known",
+      "had known",
+      "have known",
+      "would knew"
+    ],
+    "answerIndex": 1,
+    "explanation": "A third-conditional sentence uses the past perfect ('had known') in the if-clause and 'would have' in the main clause, so 'had known' is correct. 'Would have known' wrongly puts 'would have' in the if-clause.",
+    "tags": [
+      "sentence-correction",
+      "conditionals"
+    ],
+    "companies": [
+      "tcs",
+      "wipro",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-024",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1.5,
+    "question": "Choose the option that best replaces the underlined phrase.\n\nThe number of students enrolling in online courses **have increased** significantly over the past year.",
+    "options": [
+      "have increased",
+      "has increased",
+      "have been increasing",
+      "are increasing"
+    ],
+    "answerIndex": 1,
+    "explanation": "'The number of' takes a singular verb, so 'has increased' is correct. 'Have increased' wrongly treats the plural 'students' as the subject instead of the singular head 'number'.",
+    "tags": [
+      "sentence-correction",
+      "subject-verb-agreement"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-025",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "Choose the option that best replaces the underlined phrase.\n\n**Walking into the room,** the broken window was immediately noticed by the inspector.",
+    "options": [
+      "Walking into the room, the broken window was immediately noticed by the inspector",
+      "Walking into the room, the inspector immediately noticed the broken window",
+      "Walked into the room, the broken window was immediately noticed by the inspector",
+      "While the room was walked into, the broken window was immediately noticed by the inspector"
+    ],
+    "answerIndex": 1,
+    "explanation": "The introductory participle 'Walking into the room' must modify the person doing the walking, so 'the inspector' must follow it, making option 2 correct. The original is a dangling modifier because it implies the window walked into the room.",
+    "tags": [
+      "sentence-correction",
+      "misplaced-modifier"
+    ],
+    "companies": [
+      "infosys",
+      "accenture"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-026",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Choose the option that best replaces the underlined phrase.\n\nShe is one of those employees who **always completes** their tasks ahead of schedule.",
+    "options": [
+      "always completes",
+      "always complete",
+      "is always completing",
+      "always completing"
+    ],
+    "answerIndex": 1,
+    "explanation": "In the 'one of those who' construction, the relative pronoun 'who' refers to the plural 'employees', so the verb is plural: 'always complete'. 'Always completes' wrongly makes the verb agree with 'one' instead of 'those employees'.",
+    "tags": [
+      "sentence-correction",
+      "subject-verb-agreement"
+    ],
+    "companies": [
+      "tcs",
+      "wipro",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-027",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "Choose the option that best replaces the underlined phrase.\n\nThe team has been working on the project **since three months** and is close to finishing.",
+    "options": [
+      "since three months",
+      "for three months",
+      "since last three months",
+      "from three months"
+    ],
+    "answerIndex": 1,
+    "explanation": "A duration of time takes 'for' ('for three months'), while 'since' is used with a point in time. 'Since three months' is incorrect because three months is a span, not a starting point.",
+    "tags": [
+      "sentence-correction",
+      "prepositions"
+    ],
+    "companies": [
+      "tcs",
+      "accenture",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-028",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1.5,
+    "question": "Choose the option that best replaces the underlined phrase.\n\nHardly **had I reached** the station when the train started moving away from the platform.",
+    "options": [
+      "had I reached",
+      "I had reached",
+      "did I reached",
+      "I have reached"
+    ],
+    "answerIndex": 0,
+    "explanation": "After the negative adverb 'Hardly' at the start of a clause, the subject and auxiliary are inverted, giving 'had I reached'. 'I had reached' fails to invert and so is incorrect with this 'Hardly...when' structure.",
+    "tags": [
+      "sentence-correction",
+      "inversion"
+    ],
+    "companies": [
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-029",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Choose the option that best fills the blank:\n\n\"The new policy was well intentioned; ______, its hurried implementation caused widespread confusion among employees.\"",
+    "options": [
+      "nevertheless",
+      "therefore",
+      "likewise",
+      "moreover"
+    ],
+    "answerIndex": 0,
+    "explanation": "The sentence sets up a contrast between good intentions and a bad outcome, so the contrastive connector 'nevertheless' fits. 'Therefore' is wrong because it signals a logical consequence, not a contrast.",
+    "tags": [
+      "cloze",
+      "connectors",
+      "contrast"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "accenture"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-030",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Choose the option that best fills the blank:\n\n\"Despite repeated warnings, the manager remained ______ to the team's concerns and refused to revisit the schedule.\"",
+    "options": [
+      "indifferent",
+      "sensitive",
+      "receptive",
+      "attentive"
+    ],
+    "answerIndex": 0,
+    "explanation": "'Indifferent' (showing no interest or concern) matches the manager's refusal to act on the concerns. 'Receptive' is the tempting opposite, but it would contradict 'refused to revisit the schedule.'",
+    "tags": [
+      "cloze",
+      "vocabulary",
+      "context"
+    ],
+    "companies": [
+      "infosys",
+      "wipro",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-031",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "Choose the option that best fills the blank:\n\n\"The auditor went through the report line by line in order to ______ any discrepancies before submission.\"",
+    "options": [
+      "detect",
+      "invent",
+      "conceal",
+      "ignore"
+    ],
+    "answerIndex": 0,
+    "explanation": "A careful line-by-line check aims to 'detect' (discover) discrepancies. 'Conceal' is tempting because audits relate to hidden errors, but hiding discrepancies contradicts the purpose of a careful review.",
+    "tags": [
+      "cloze",
+      "collocation",
+      "verb-choice"
+    ],
+    "companies": [
+      "tcs",
+      "wipro",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-032",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "Choose the option that best fills the blank:\n\n\"The startup grew rapidly in its first year; ______, it had outgrown its original office and signed a lease for a larger space.\"",
+    "options": [
+      "consequently",
+      "conversely",
+      "nonetheless",
+      "meanwhile"
+    ],
+    "answerIndex": 0,
+    "explanation": "Rapid growth logically causes the company to outgrow its office, so the cause-effect connector 'consequently' fits. 'Conversely' is the trap, but it signals an opposite relationship rather than a result.",
+    "tags": [
+      "cloze",
+      "connectors",
+      "cause-effect"
+    ],
+    "companies": [
+      "accenture",
+      "cognizant",
+      "infosys"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-033",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Choose the option that best fills the blank:\n\n\"The professor's lecture was so ______ that several students struggled to follow the central argument.\"",
+    "options": [
+      "convoluted",
+      "lucid",
+      "concise",
+      "coherent"
+    ],
+    "answerIndex": 0,
+    "explanation": "'Convoluted' (excessively complicated) explains why students struggled to follow the argument. 'Lucid' is the tempting opposite, but a clear lecture would not cause students to struggle.",
+    "tags": [
+      "cloze",
+      "vocabulary",
+      "context"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-034",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Choose the option that best fills the blank:\n\n\"She not only completed the assignment ahead of schedule ______ also volunteered to mentor two new interns.\"",
+    "options": [
+      "but",
+      "and",
+      "or",
+      "yet"
+    ],
+    "answerIndex": 0,
+    "explanation": "The correlative pair 'not only ... but also' is fixed, so 'but' is required. 'And' is tempting as a general connector, but it breaks the standard 'not only ... but also' construction.",
+    "tags": [
+      "cloze",
+      "correlative-conjunctions",
+      "collocation"
+    ],
+    "companies": [
+      "wipro",
+      "accenture",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-035",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "Choose the word that is most nearly the SYNONYM of **ABATE**.",
+    "options": [
+      "Intensify",
+      "Subside",
+      "Provoke",
+      "Sustain"
+    ],
+    "answerIndex": 1,
+    "explanation": "To 'abate' means to lessen or diminish in intensity, which matches 'subside'. 'Intensify' is the opposite, so it is the tempting trap rather than the answer.",
+    "tags": [
+      "vocabulary",
+      "synonyms"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-036",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Choose the word that is most nearly the ANTONYM of **CANDID**.",
+    "options": [
+      "Honest",
+      "Frank",
+      "Evasive",
+      "Sincere"
+    ],
+    "answerIndex": 2,
+    "explanation": "'Candid' means open and truthful, so its antonym is 'evasive' (avoiding straight answers). 'Honest', 'frank' and 'sincere' are synonyms of candid, so they are distractors, not opposites.",
+    "tags": [
+      "vocabulary",
+      "antonyms"
+    ],
+    "companies": [
+      "infosys",
+      "accenture",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-037",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Select the option that best gives the meaning of the underlined word in the sentence:\n\n*The auditor's __meticulous__ review uncovered errors that everyone else had overlooked.*",
+    "options": [
+      "Hasty and careless",
+      "Extremely careful and precise",
+      "Brief and superficial",
+      "Reluctant and unwilling"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Meticulous' means showing great attention to detail, i.e., extremely careful and precise, which is why such errors were caught. 'Hasty and careless' is the opposite and is the tempting wrong choice for those who misread the context.",
+    "tags": [
+      "vocabulary",
+      "word-meaning-in-context"
+    ],
+    "companies": [
+      "tcs",
+      "wipro",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-038",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Choose the word that is most nearly the SYNONYM of **PRUDENT**.",
+    "options": [
+      "Reckless",
+      "Judicious",
+      "Lavish",
+      "Naive"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Prudent' means acting with care and good judgement, which matches 'judicious'. 'Reckless' is the antonym and serves as the main trap; 'naive' implies a lack of judgement rather than its presence.",
+    "tags": [
+      "vocabulary",
+      "synonyms"
+    ],
+    "companies": [
+      "infosys",
+      "tcs",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-039",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "Select the option that best gives the meaning of the underlined word in the sentence:\n\n*Despite the harsh criticism, the senator remained __unflappable__ throughout the debate.*",
+    "options": [
+      "Easily angered and flustered",
+      "Calm and not easily upset",
+      "Confused and indecisive",
+      "Openly aggressive"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Unflappable' describes someone who stays calm and composed under pressure, which fits remaining steady despite harsh criticism. 'Easily angered and flustered' is the direct opposite and is the most tempting distractor.",
+    "tags": [
+      "vocabulary",
+      "word-meaning-in-context"
+    ],
+    "companies": [
+      "accenture",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-vrb-040",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 1,
+    "question": "Choose the word that is most nearly the ANTONYM of **AUGMENT**.",
+    "options": [
+      "Expand",
+      "Diminish",
+      "Reinforce",
+      "Accumulate"
+    ],
+    "answerIndex": 1,
+    "explanation": "To 'augment' means to increase or add to, so its antonym is 'diminish' (to make smaller). 'Expand', 'reinforce' and 'accumulate' all suggest increase, making them synonyms and therefore distractors.",
+    "tags": [
+      "vocabulary",
+      "antonyms"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ]
+  }
+]

@@ -88,6 +88,8 @@ If nothing fits in 30 seconds, eliminate options by plausibility — the answer 
 
 ## Memorized values that pay back
 
+| Family | Values |
+|---|---|
 | Squares | 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225 |
 | Cubes | 1, 8, 27, 64, 125, 216, 343, 512, 729, 1000 |
 | Factorials | 1, 2, 6, 24, 120, 720, 5040 |
@@ -101,7 +103,7 @@ When you spot 144 or 89 in a sequence, your first guess should be Fibonacci or a
 - `120, 99, 80, 63, 48, ?` → differences −21, −19, −17, −15, **−13** → 48 − 13 = **35**.
 - `4, 9, 25, 49, 121, ?` → squares of primes (2², 3², 5², 7², 11²) → next 13² = **169**.
 - `J, F, M, A, M, J, ?` → first letters of months → **J** (July).
-- `7, 26, 63, 124, ?` → n³ + (n−1)? 7=1+? Let's see: 8−1, 27−1, 64−1, 125−1 — yes, n³ − 1 starting n=2. Next n=6: 216 − 1 = **215**.
+- `7, 26, 63, 124, ?` → n³ − 1 for n = 2, 3, 4, 5 (8−1, 27−1, 64−1, 125−1) → next n = 6: 216 − 1 = **215**.
 
 ## Quick reference
 

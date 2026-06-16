@@ -1,0 +1,710 @@
+[
+  {
+    "id": "apt-q-rsn-001",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "**Linear arrangement.** Six friends P, Q, R, S, T and U sit in a row of six seats, all facing north (seats numbered 1 to 6 from the left). Clues:\n- R sits at one of the extreme ends.\n- Exactly two people sit between R and Q.\n- T sits immediately to the right of Q.\n- S occupies the 5th seat from the left.\n- U does not sit at either extreme end.\n\nWho sits at the extreme left end of the row?",
+    "options": [
+      "P",
+      "U",
+      "Q",
+      "R"
+    ],
+    "answerIndex": 0,
+    "explanation": "S is at seat 5. R must be at seat 6 (if R were at seat 1, Q would be at seat 4 and T at seat 5, clashing with S). Then Q=3, T=4, leaving P and U for seats 1 and 2; since U cannot be at an end, U=2 and P=1, so P is at the extreme left. R is wrong because R is forced to the extreme right end.",
+    "tags": [
+      "seating-arrangement",
+      "linear-arrangement",
+      "logical-reasoning"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro",
+      "accenture"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-002",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "**Linear arrangement.** Six friends P, Q, R, S, T and U sit in a row of six seats, all facing north (seats numbered 1 to 6 from the left). Clues:\n- R sits at one of the extreme ends.\n- Exactly two people sit between R and Q.\n- T sits immediately to the right of Q.\n- S occupies the 5th seat from the left.\n- U does not sit at either extreme end.\n\nWho sits immediately to the left of S?",
+    "options": [
+      "Q",
+      "T",
+      "R",
+      "U"
+    ],
+    "answerIndex": 1,
+    "explanation": "The unique seating is P(1), U(2), Q(3), T(4), S(5), R(6). The seat immediately to the left of S (seat 5) is seat 4, occupied by T. R is wrong because R sits to S's right, at seat 6.",
+    "tags": [
+      "seating-arrangement",
+      "linear-arrangement",
+      "logical-reasoning"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-003",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "**Linear arrangement.** Six friends P, Q, R, S, T and U sit in a row of six seats, all facing north (seats numbered 1 to 6 from the left). Clues:\n- R sits at one of the extreme ends.\n- Exactly two people sit between R and Q.\n- T sits immediately to the right of Q.\n- S occupies the 5th seat from the left.\n- U does not sit at either extreme end.\n\nHow many people sit between U and T?",
+    "options": [
+      "None",
+      "Exactly one",
+      "Exactly two",
+      "Exactly three"
+    ],
+    "answerIndex": 1,
+    "explanation": "The unique seating is P(1), U(2), Q(3), T(4), S(5), R(6). U is at seat 2 and T at seat 4, so only Q (seat 3) sits between them: exactly one person. 'Exactly two' is wrong because it miscounts seat 3 plus an extra non-existent person.",
+    "tags": [
+      "seating-arrangement",
+      "linear-arrangement",
+      "logical-reasoning"
+    ],
+    "companies": [
+      "tcs",
+      "accenture",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-004",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "**Linear arrangement.** Six friends P, Q, R, S, T and U sit in a row of six seats, all facing north (seats numbered 1 to 6 from the left). Clues:\n- R sits at one of the extreme ends.\n- Exactly two people sit between R and Q.\n- T sits immediately to the right of Q.\n- S occupies the 5th seat from the left.\n- U does not sit at either extreme end.\n\nWho sits exactly midway between Q and S?",
+    "options": [
+      "U",
+      "P",
+      "T",
+      "R"
+    ],
+    "answerIndex": 2,
+    "explanation": "The unique seating is P(1), U(2), Q(3), T(4), S(5), R(6). Q is at seat 3 and S at seat 5, so the midway seat is 4, occupied by T. R is wrong because R sits at seat 6, outside the Q-to-S span.",
+    "tags": [
+      "seating-arrangement",
+      "linear-arrangement",
+      "logical-reasoning"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-005",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 3,
+    "question": "**Circular arrangement.** Eight people A, B, C, D, E, F, G and H sit around a circular table. A, B, D and F face the centre, while C, E, G and H face outward. Clues:\n- D sits exactly opposite A.\n- B sits 2nd to the left of A.\n- C sits 2nd to the right of A.\n- E sits immediately to the right of C.\n- F sits immediately to the left of A.\n- G sits immediately to the left of D.\n\n(Remember: for a person facing the centre, the seat to their right is the counter-clockwise neighbour; for a person facing outward, the seat to their right is the clockwise neighbour.)\n\nWho sits immediately to the right of A?",
+    "options": [
+      "F",
+      "E",
+      "B",
+      "C"
+    ],
+    "answerIndex": 1,
+    "explanation": "Going clockwise the unique order is A, F, B, H, D, G, C, E. A faces the centre, so A's right is the counter-clockwise neighbour, which is E (the seat before A clockwise). F is wrong because F is the clockwise neighbour, i.e. immediately to A's left, not right.",
+    "tags": [
+      "seating-arrangement",
+      "circular-arrangement",
+      "direction-facing"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "accenture",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-006",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 3,
+    "question": "**Circular arrangement.** Eight people A, B, C, D, E, F, G and H sit around a circular table. A, B, D and F face the centre, while C, E, G and H face outward. Clues:\n- D sits exactly opposite A.\n- B sits 2nd to the left of A.\n- C sits 2nd to the right of A.\n- E sits immediately to the right of C.\n- F sits immediately to the left of A.\n- G sits immediately to the left of D.\n\n(Remember: for a person facing the centre, the seat to their right is the counter-clockwise neighbour; for a person facing outward, the seat to their right is the clockwise neighbour.)\n\nWho sits exactly opposite F?",
+    "options": [
+      "H",
+      "C",
+      "G",
+      "E"
+    ],
+    "answerIndex": 2,
+    "explanation": "Going clockwise the unique order is A, F, B, H, D, G, C, E, so F and G are diametrically opposite (4 seats apart). H is wrong because H sits opposite F's neighbour, not F itself; H is actually opposite E.",
+    "tags": [
+      "seating-arrangement",
+      "circular-arrangement",
+      "direction-facing"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-007",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 3,
+    "question": "**Circular arrangement.** Eight people A, B, C, D, E, F, G and H sit around a circular table. A, B, D and F face the centre, while C, E, G and H face outward. Clues:\n- D sits exactly opposite A.\n- B sits 2nd to the left of A.\n- C sits 2nd to the right of A.\n- E sits immediately to the right of C.\n- F sits immediately to the left of A.\n- G sits immediately to the left of D.\n\n(Remember: for a person facing the centre, the seat to their right is the counter-clockwise neighbour; for a person facing outward, the seat to their right is the clockwise neighbour.)\n\nWho sits 2nd to the left of H?",
+    "options": [
+      "A",
+      "D",
+      "F",
+      "G"
+    ],
+    "answerIndex": 2,
+    "explanation": "Going clockwise the unique order is A, F, B, H, D, G, C, E. H faces outward, so H's left is the clockwise-previous direction: 1st left is B and 2nd left is F. D is wrong because D is H's clockwise neighbour, which (H facing outward) is to H's right, not left.",
+    "tags": [
+      "seating-arrangement",
+      "circular-arrangement",
+      "direction-facing"
+    ],
+    "companies": [
+      "tcs",
+      "accenture",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-008",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "**Circular arrangement.** Eight people A, B, C, D, E, F, G and H sit around a circular table. A, B, D and F face the centre, while C, E, G and H face outward. Clues:\n- D sits exactly opposite A.\n- B sits 2nd to the left of A.\n- C sits 2nd to the right of A.\n- E sits immediately to the right of C.\n- F sits immediately to the left of A.\n- G sits immediately to the left of D.\n\n(Remember: for a person facing the centre, the seat to their right is the counter-clockwise neighbour; for a person facing outward, the seat to their right is the clockwise neighbour.)\n\nWho are the two immediate neighbours of D?",
+    "options": [
+      "B and H",
+      "H and G",
+      "G and C",
+      "C and E"
+    ],
+    "answerIndex": 1,
+    "explanation": "Going clockwise the unique order is A, F, B, H, D, G, C, E, so the seats adjacent to D are H (clockwise-before) and G (clockwise-after). 'C and E' is wrong because those two sit beyond G on the far arc, not next to D.",
+    "tags": [
+      "seating-arrangement",
+      "circular-arrangement",
+      "logical-reasoning"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-009",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "**Statements:**\n1. All books are pens.\n2. All pens are erasers.\n\n**Conclusions:**\nI. All books are erasers.\nII. All erasers are books.\n\nWhich conclusion(s) follow?",
+    "options": [
+      "Only I follows",
+      "Only II follows",
+      "Both I and II follow",
+      "Neither follows"
+    ],
+    "answerIndex": 0,
+    "explanation": "From 'All books are pens' and 'All pens are erasers', it necessarily follows that all books are erasers (I). Conclusion II reverses the relation, but the statements never guarantee every eraser is a book, so it does not follow.",
+    "tags": [
+      "syllogism",
+      "logical-reasoning",
+      "categorical-logic"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-010",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "**Statements:**\n1. Some doctors are engineers.\n2. All engineers are teachers.\n\n**Conclusions:**\nI. Some doctors are teachers.\nII. Some teachers are doctors.\n\nWhich conclusion(s) follow?",
+    "options": [
+      "Only I follows",
+      "Only II follows",
+      "Both I and II follow",
+      "Neither follows"
+    ],
+    "answerIndex": 2,
+    "explanation": "The doctors who are engineers must also be teachers (since all engineers are teachers), so 'some doctors are teachers' (I) follows, and its valid converse 'some teachers are doctors' (II) also follows. Both particular-affirmative conclusions are guaranteed, so both follow.",
+    "tags": [
+      "syllogism",
+      "logical-reasoning",
+      "categorical-logic"
+    ],
+    "companies": [
+      "infosys",
+      "wipro",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-011",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "**Statements:**\n1. No cat is a dog.\n2. All dogs are animals.\n\n**Conclusions:**\nI. No cat is an animal.\nII. Some animals are not cats.\n\nWhich conclusion(s) follow?",
+    "options": [
+      "Only I follows",
+      "Only II follows",
+      "Both I and II follow",
+      "Neither follows"
+    ],
+    "answerIndex": 1,
+    "explanation": "Dogs are animals and no cat is a dog, so those dog-animals are animals that are not cats, making II ('some animals are not cats') follow. Conclusion I is too strong: cats are excluded only from dogs, not from all animals, so it does not follow.",
+    "tags": [
+      "syllogism",
+      "logical-reasoning",
+      "categorical-logic"
+    ],
+    "companies": [
+      "tcs",
+      "accenture",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-012",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "**Statements:**\n1. Some pens are red.\n2. Some red things are markers.\n\n**Conclusions:**\nI. Some pens are markers.\nII. No pen is a marker.\n\nWhich conclusion(s) follow?",
+    "options": [
+      "Only I follows",
+      "Only II follows",
+      "Both I and II follow",
+      "Neither follows"
+    ],
+    "answerIndex": 3,
+    "explanation": "With two particular ('Some') premises, no definite link is established between pens and markers, so neither 'Some pens are markers' (I) nor 'No pen is a marker' (II) is guaranteed. Although I and II form a complementary pair, neither is individually forced by the premises, so neither follows.",
+    "tags": [
+      "syllogism",
+      "logical-reasoning",
+      "categorical-logic"
+    ],
+    "companies": [
+      "infosys",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-013",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "**Statements:**\n1. All flowers are plants.\n2. Some plants are trees.\n\n**Conclusions:**\nI. Some flowers are trees.\nII. Some trees are plants.\n\nWhich conclusion(s) follow?",
+    "options": [
+      "Only I follows",
+      "Only II follows",
+      "Both I and II follow",
+      "Neither follows"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Some plants are trees' validly converts to 'Some trees are plants' (II), so II follows. Conclusion I is not guaranteed because the plants that are trees need not be the same plants that are flowers, so 'Some flowers are trees' does not follow.",
+    "tags": [
+      "syllogism",
+      "logical-reasoning",
+      "categorical-logic"
+    ],
+    "companies": [
+      "tcs",
+      "wipro",
+      "accenture"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-014",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "In a certain code, each letter is replaced by the letter three positions later in the English alphabet (A→D, B→E, ... and the alphabet wraps around so X→A, Y→B, Z→C). Using the same rule, how is the word **TIGER** coded?",
+    "options": [
+      "WLJHU",
+      "WLHJU",
+      "VKIDT",
+      "WKJHU"
+    ],
+    "answerIndex": 0,
+    "explanation": "Shifting each letter +3: T→W, I→L, G→J, E→H, R→U gives WLJHU. WLHJU is wrong because it swaps the codes for G and E (the third and fourth letters).",
+    "tags": [
+      "coding-decoding",
+      "letter-shift"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-015",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "In a certain code language: '**go home now**' is written as '**pa so ri**', '**come home soon**' is written as '**to pa ka**', and '**go there fast**' is written as '**ri lu me**'. In this code, what is the word for '**go**'?",
+    "options": [
+      "ri",
+      "pa",
+      "so",
+      "ka"
+    ],
+    "answerIndex": 0,
+    "explanation": "'go' appears in the first and third statements, whose common code word is 'ri', so go=ri. 'pa' is wrong because it is common to the first and second statements, which share the word 'home', not 'go'.",
+    "tags": [
+      "coding-decoding",
+      "word-to-code"
+    ],
+    "companies": [
+      "infosys",
+      "accenture",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-016",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "If each letter is coded by its position number in the English alphabet (A=1, B=2, C=3, ... , Z=26), then the word **GATE** is written as which sequence of numbers?",
+    "options": [
+      "7-1-20-5",
+      "7-1-19-5",
+      "6-1-20-5",
+      "7-1-20-6"
+    ],
+    "answerIndex": 0,
+    "explanation": "G=7, A=1, T=20, E=5, giving 7-1-20-5. The option 7-1-19-5 is wrong because it uses 19 (the position of S) instead of 20 for T.",
+    "tags": [
+      "coding-decoding",
+      "number-letter-code"
+    ],
+    "companies": [
+      "tcs",
+      "wipro",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-017",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "In a certain code, every letter is replaced by the letter immediately preceding it in the alphabet (B→A, C→B, ... and A→Z by wrapping around), and then the whole resulting word is written in reverse order. Using the same rule, how is the word **WORD** coded?",
+    "options": [
+      "CQNV",
+      "VNQC",
+      "CPNV",
+      "CQOV"
+    ],
+    "answerIndex": 0,
+    "explanation": "Shifting each letter −1 gives W→V, O→N, R→Q, D→C, i.e. VNQC; reversing that word gives CQNV. VNQC is the tempting wrong answer because it omits the final reversal step.",
+    "tags": [
+      "coding-decoding",
+      "letter-shift"
+    ],
+    "companies": [
+      "infosys",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-018",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "In a certain code, each letter is replaced by its 'opposite' letter in the alphabet, where A↔Z, B↔Y, C↔X, and so on (the letter at position n maps to the letter at position 27−n). Using the same rule, how is the word **ROSE** coded?",
+    "options": [
+      "ILHV",
+      "ILVH",
+      "JLHV",
+      "IKHV"
+    ],
+    "answerIndex": 0,
+    "explanation": "R(18)→I(9), O(15)→L(12), S(19)→H(8), E(5)→V(22) gives ILHV. ILVH is wrong because it swaps the codes for S and E (the third and fourth letters).",
+    "tags": [
+      "coding-decoding",
+      "letter-shift"
+    ],
+    "companies": [
+      "tcs",
+      "accenture"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-019",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "Rohan starts from his house and walks **10 m towards North**. He then turns right and walks **8 m**, after which he turns right again and walks **4 m**. How far is he now from his starting point (straight-line distance)?",
+    "options": [
+      "10 m",
+      "12 m",
+      "14 m",
+      "8 m"
+    ],
+    "answerIndex": 0,
+    "explanation": "After 10 m N, a right turn faces East (8 m E), and another right turn faces South (4 m S). Net displacement is (10-4)=6 m North and 8 m East, so distance = √(6²+8²)=√100=10 m. Adding 8+4=12 wrongly sums path lengths instead of using the resultant.",
+    "tags": [
+      "directions",
+      "distance"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-020",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "A man walks **5 km towards South**, then turns left and walks **3 km**. He then turns left again and walks **5 km**, and finally turns right and walks **2 km**. In which direction is he now from his starting point?",
+    "options": [
+      "East",
+      "West",
+      "North",
+      "South"
+    ],
+    "answerIndex": 0,
+    "explanation": "5 km S, left → East 3 km, left → North 5 km (cancels the 5 km South), right → East 2 km. Net North-South = 0 and net East-West = 3+2 = 5 km East, so he is due East of the start. 'North' is the tempting trap because the last left turn faced North, but it is fully cancelled.",
+    "tags": [
+      "directions"
+    ],
+    "companies": [
+      "infosys",
+      "accenture",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-021",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "A boy is facing **North**. He turns 90° clockwise, then turns 90° clockwise again, then turns 90° anti-clockwise, and finally makes an about-turn (180°). Which direction is he facing now?",
+    "options": [
+      "West",
+      "East",
+      "North",
+      "South"
+    ],
+    "answerIndex": 0,
+    "explanation": "North → 90° CW = East → 90° CW = South → 90° ACW = East → 180° about-turn = West. The tempting 'East' arises if you stop after three turns and forget the final 180° about-turn.",
+    "tags": [
+      "directions",
+      "turns"
+    ],
+    "companies": [
+      "tcs",
+      "wipro",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-022",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 3,
+    "question": "Starting from point P, Priya walks **17 m towards North**, then turns right and walks **5 m**, then turns right again and walks **5 m**. What is her straight-line distance from the starting point P?",
+    "options": [
+      "13 m",
+      "12 m",
+      "17 m",
+      "22 m"
+    ],
+    "answerIndex": 0,
+    "explanation": "17 m N, right → East 5 m, right → South 5 m. Net North-South = 17-5 = 12 m North and net East-West = 5 m East, so distance = √(12²+5²)=√169=13 m. Choosing 12 forgets the 5 m eastward offset, taking only the net vertical leg.",
+    "tags": [
+      "directions",
+      "distance"
+    ],
+    "companies": [
+      "infosys",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-023",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Pointing to a photograph, Rohan said, \"She is the daughter of the only son of my grandmother.\" How is the woman in the photograph related to Rohan?",
+    "options": [
+      "Sister",
+      "Mother",
+      "Aunt",
+      "Niece"
+    ],
+    "answerIndex": 0,
+    "explanation": "The only son of Rohan's grandmother is Rohan's own father; that father's daughter is therefore Rohan's sister. \"Mother\" is wrong because the mother is the father's wife, not his daughter.",
+    "tags": [
+      "blood-relations"
+    ],
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-024",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 3,
+    "question": "In a family, A is the brother of B. C is the mother of B. D is the father of C. E is the son of D. Based only on this, how is A related to D?",
+    "options": [
+      "Grandson",
+      "Son",
+      "Nephew",
+      "Father"
+    ],
+    "answerIndex": 0,
+    "explanation": "C is D's daughter (D is C's father) and C is the mother of A and B, so D is the grandparent of A; since A is male, A is D's grandson. \"Son\" is wrong because A's parent in this chain is C, not D.",
+    "tags": [
+      "blood-relations"
+    ],
+    "companies": [
+      "tcs",
+      "cognizant",
+      "capgemini"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-025",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "**Statement:** All the students in the class are intelligent. Rohit is a student of the class.\n\n**Conclusions:**\nI. Rohit is intelligent.\nII. Rohit is not intelligent.\n\nWhich conclusion(s) logically follow(s) from the statement?",
+    "options": [
+      "Only conclusion I follows",
+      "Only conclusion II follows",
+      "Both I and II follow",
+      "Neither I nor II follows"
+    ],
+    "answerIndex": 0,
+    "explanation": "Since every student in the class is intelligent and Rohit is a student of that class, it necessarily follows that Rohit is intelligent (I). Conclusion II directly contradicts the premise and so cannot follow.",
+    "tags": [
+      "statement-conclusion"
+    ],
+    "companies": [
+      "infosys",
+      "wipro",
+      "accenture"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-026",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Find the missing term in the analogy: **AZ : CX :: EV : ?**\n\n(Each letter pair shifts by a fixed rule based on its position in the English alphabet.)",
+    "options": [
+      "GT",
+      "FT",
+      "GU",
+      "HT"
+    ],
+    "answerIndex": 0,
+    "explanation": "The first letters increase by two (A->C->E->G) while the second letters decrease by two (Z->X->V->T), giving GT. \"GU\" is the tempting trap because it moves the second letter by only one step instead of two.",
+    "tags": [
+      "analogy"
+    ],
+    "companies": [
+      "tcs",
+      "capgemini",
+      "cognizant"
+    ]
+  },
+  {
+    "id": "apt-q-rsn-027",
+    "track": "aptitude",
+    "topic": "reasoning",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "Three of the following four numbers share a common property, and one does not. Choose the number that is the odd one out: **125, 343, 216, 100**.",
+    "options": [
+      "125",
+      "343",
+      "216",
+      "100"
+    ],
+    "answerIndex": 3,
+    "explanation": "125 = 5^3, 343 = 7^3 and 216 = 6^3 are all perfect cubes, whereas 100 = 10^2 is only a perfect square, so 100 is the odd one out. 216 is tempting because it is also an even perfect square (would be wrong only if the rule were \"squares\"), but the shared property here is being a perfect cube.",
+    "tags": [
+      "odd-one-out"
+    ],
+    "companies": [
+      "tcs",
+      "wipro"
+    ]
+  }
+]
