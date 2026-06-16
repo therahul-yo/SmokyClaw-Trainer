@@ -28,6 +28,7 @@ export function RulebookPage() {
   // Warm-up states
   const [warmupActive, setWarmupActive] = useState(false);
   const [warmupIndex, setWarmupIndex] = useState(0);
+  const [warmupRules, setWarmupRules] = useState<RuleItem[]>([]);
 
   // Process traces into list of rules
   const rules = useMemo(() => {
@@ -123,19 +124,15 @@ export function RulebookPage() {
     return Array.from(set).sort();
   }, [rules]);
 
-  // Warm-up Rules selection
-  const warmupRules = useMemo(() => {
-    // Return up to 3 random rules
-    const rulesWithText = rules.filter((r) => r.rule.trim().length > 0);
-    const shuffled = [...rulesWithText].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 3);
-  }, [rules]);
-
   const startWarmup = () => {
-    if (warmupRules.length === 0) {
+    const rulesWithText = rules.filter((r) => r.rule.trim().length > 0);
+    if (rulesWithText.length === 0) {
       alert("You need to write some compressed rules in your thinking traces first!");
       return;
     }
+    // Pick up to 3 random rules per warm-up run.
+    const shuffled = [...rulesWithText].sort(() => 0.5 - Math.random());
+    setWarmupRules(shuffled.slice(0, 3));
     setWarmupIndex(0);
     setWarmupActive(true);
   };

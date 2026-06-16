@@ -87,7 +87,7 @@
     "blurb": "Pointer manipulation, dummy heads, reverse / detect cycle / merge.",
     "prerequisites": [],
     "lessonIds": ["dsa-10-linked-lists"],
-    "itemIds": ["dsa-q-028", "dsa-q-029", "dsa-c-reverse-linked-list", "dsa-c-reverse-list", "dsa-c-detect-cycle-array"]
+    "itemIds": ["dsa-q-028", "dsa-q-029", "dsa-c-reverse-linked-list", "dsa-c-detect-cycle-array"]
   },
   {
     "id": "stack-queue",
@@ -141,7 +141,7 @@
     "blurb": "Climb stairs, house robber, coin change. State = current index.",
     "prerequisites": ["recursion"],
     "lessonIds": ["dsa-17-dp-1d"],
-    "itemIds": ["dsa-q-044", "dsa-q-045", "dsa-q-046", "dsa-q-047", "dsa-c-max-subarray", "dsa-c-climb-stairs", "dsa-c-house-robber", "dsa-c-coin-change"]
+    "itemIds": ["dsa-q-044", "dsa-q-045", "dsa-q-046", "dsa-q-047", "dsa-c-climb-stairs", "dsa-c-house-robber", "dsa-c-coin-change"]
   },
   {
     "id": "dp-2d",
@@ -276,7 +276,7 @@
     "blurb": "Correlated subqueries, WITH clauses, recursive CTEs.",
     "prerequisites": ["sql-joins"],
     "lessonIds": ["sql-04-subqueries", "sql-05-cte"],
-    "itemIds": ["sql-c-above-dept-avg", "sql-c-products-never-delivered", "sql-c-employees-hired-2024"]
+    "itemIds": ["sql-c-above-dept-avg", "sql-c-products-never-delivered", "sql-c-employees-hired-2024", "sql-c-salary-tiers", "sql-c-degrees-separation"]
   },
   {
     "id": "sql-window",
@@ -321,6 +321,6 @@
     "blurb": "Arithmetic speed, formulas, classification, and timed accuracy before company-style sections.",
     "prerequisites": [],
     "lessonIds": ["aptitude-00-absolute-zero", "aptitude-00-foundations", "aptitude-13-advanced-probability-combinatorics", "aptitude-14-logical-deductions-syllogisms"],
-    "itemIds": ["apt-q-001", "apt-q-002", "apt-q-003", "apt-q-004", "apt-q-005", "apt-q-006", "apt-q-010", "apt-q-011", "apt-q-012", "apt-q-013", "apt-q-014", "apt-q-015", "apt-q-016", "apt-q-017", "apt-q-018", "apt-q-019", "apt-q-020", "apt-q-021", "apt-q-022", "apt-q-023", "apt-q-024", "apt-q-025", "apt-q-026", "apt-q-027", "apt-q-028", "apt-q-029", "apt-q-030", "apt-q-031", "apt-q-032", "apt-q-033", "apt-q-034", "apt-q-035", "apt-q-036", "apt-q-037", "apt-q-038", "apt-q-039", "apt-q-040", "apt-q-041", "apt-q-042", "apt-q-043", "apt-q-044", "apt-q-045", "apt-q-046", "apt-q-047", "apt-q-048", "apt-q-049", "apt-q-050", "apt-q-051", "apt-q-052", "apt-q-053", "apt-q-054", "apt-q-055", "apt-q-056", "apt-q-057", "apt-q-058", "apt-q-059", "apt-q-060", "apt-q-061", "apt-q-062", "apt-q-063", "apt-q-064"]
+    "itemIds": ["apt-q-001", "apt-q-002", "apt-q-003", "apt-q-004", "apt-q-005", "apt-q-006", "apt-q-010", "apt-q-011", "apt-q-012", "apt-q-013", "apt-q-014", "apt-q-015", "apt-q-016", "apt-q-017", "apt-q-018", "apt-q-019", "apt-q-020", "apt-q-021", "apt-q-022", "apt-q-023", "apt-q-024", "apt-q-025", "apt-q-026", "apt-q-027", "apt-q-028", "apt-q-029", "apt-q-030", "apt-q-031", "apt-q-032", "apt-q-033", "apt-q-034", "apt-q-035", "apt-q-036", "apt-q-037", "apt-q-038", "apt-q-039", "apt-q-040", "apt-q-041", "apt-q-042", "apt-q-043", "apt-q-044", "apt-q-045", "apt-q-046", "apt-q-047", "apt-q-048", "apt-q-049", "apt-q-050", "apt-q-051", "apt-q-052", "apt-q-053", "apt-q-054", "apt-q-055", "apt-q-056", "apt-q-057", "apt-q-058", "apt-q-060", "apt-q-061", "apt-q-062", "apt-q-063", "apt-q-064"]
   }
 ]

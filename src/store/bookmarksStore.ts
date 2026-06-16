@@ -18,7 +18,8 @@ export const useBookmarksStore = create<BookmarksState>()(
       toggle: (itemId) => {
         const existing = get().items[itemId];
         if (existing) {
-          const { [itemId]: _, ...rest } = get().items;
+          const rest = { ...get().items };
+          delete rest[itemId];
           set({ items: rest });
         } else {
           set((s) => ({

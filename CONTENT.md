@@ -123,16 +123,30 @@ Each pattern in `src/data/patterns.json` should reach this bar before being decl
 - **≥ 2 MCQs** testing the conceptual edges (complexity, when not to use it).
 - Lesson and item ids must be listed under the pattern entry in `patterns.json`.
 
-## Target content counts
+## Content counts — current vs target (authoritative)
 
-| Track | Lessons | MCQs | Coding/SQL |
+> **This table is the single source of truth for content targets.** `CURRICULUM.md`
+> defers to it. The *current* column is whatever `pnpm validate` reports — run it
+> for live numbers; the snapshot below was taken 2026-06-13 (314 items + 82 lessons).
+
+| Track | Lessons (cur → target) | MCQs (cur → target) | Coding/SQL (cur → target) |
 |---|---|---|---|
-| Python | 25 | 80 | 40 |
-| DSA | 20 (one per pattern) | 60 | 120 (≥ 6 per pattern × 19 patterns) |
-| SQL | 15 | 60 | 50 (across `employees`, `ecommerce`, `social`) |
-| Aptitude | n/a | 120 | n/a |
+| Python | 20 → 25 | 46 → 80 | 23 → 40 |
+| DSA | 26 → 20¹ | 44 → 60 | 65 → 120² |
+| SQL | 15 → 15 | 33 → 60 | 21 → 50³ |
+| Aptitude | 21 → n/a | 82 → 120 | n/a |
+| **Total** | **82** | **205** | **109** → **314 items** |
 
-The catalog in `src/data/patterns.json` is intentionally aspirational — it lists item ids that don't yet exist. The loader filters those out, so the UI shows you what's authored vs. what remains.
+¹ DSA already exceeds the "one lesson per pattern" floor — the extra lessons are
+  worked-examples and company machine-plans; the bar is ≥1 teaching lesson per pattern.
+² ≥ 6 coding drills per pattern × 20 patterns (2 easy / 3 medium / 1 hard).
+³ Split across `employees`, `ecommerce`, `social` — weight new drills toward the
+  under-used `social` and `ecommerce` schemas.
+
+The catalog in `src/data/patterns.json` is intentionally aspirational — it may list
+item ids that don't yet exist. The loader filters those out, so the UI shows you
+what's authored vs. what remains. `pnpm validate` warns on every such unauthored
+reference, so the gap is always visible.
 
 ## Mock-test wiring
 
