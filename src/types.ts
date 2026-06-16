@@ -106,6 +106,15 @@ export type CodingTest = {
   orderInsensitive?: boolean;
 };
 
+// stdin/stdout (online-judge style) test: the whole program is run with `stdin`
+// piped in, and everything it prints is compared to `expectedStdout` (trailing
+// whitespace per line and trailing blank lines are ignored). Used for company
+// coding rounds that read input rather than fill in a function.
+export type StdioTest = {
+  stdin: string;
+  expectedStdout: string;
+};
+
 export type CodingItem = QuizItemCommon & {
   id: string;
   track: TrackId;
@@ -115,8 +124,11 @@ export type CodingItem = QuizItemCommon & {
   difficulty: Difficulty;
   prompt: string;
   starter: string;
-  entry: string; // function name to invoke
+  entry: string; // function name to invoke (function-return mode)
   tests: CodingTest[];
+  // When present, the item is graded in stdin/stdout mode instead: the whole
+  // program runs against each test's stdin and its output is compared.
+  stdioTests?: StdioTest[];
   explanation?: string;
   tags: string[];
 };

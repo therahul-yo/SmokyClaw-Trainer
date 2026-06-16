@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import type { CodingItem } from "../../types";
 import {
   buildCodingHarness,
+  buildStdioHarness,
   compareSqlResult,
   deepEqual,
   evaluateCodingRun,
+  evaluateStdioRun,
 } from "../graderCore";
 
 const item: CodingItem = {
@@ -146,6 +148,65 @@ describe("evaluateCodingRun", () => {
       stderr: "",
     });
     expect(res.ok).toBe(true);
+  });
+});
+
+describe("stdin/stdout grading", () => {
+  const stdioItem: CodingItem = {
+    ...item,
+    entry: "main",
+    tests: [],
+    stdioTests: [
+      { stdin: "3\n1 2 3\n", expectedStdout: "6" },
+      { stdin: "2\n5 5\n", expectedStdout: "10\n" },
+    ],
+  };
+
+  const stdoutFor = (results: { i: number; out: string; err: string | null }[]) =>
+    `__RESULT__${JSON.stringify(results)}`;
+
+  it("embeds the program source and cases via json.loads", () => {
+    const harness = buildStdioHarness(stdioItem, "print(sum(...))");
+    expect(harness).toContain("contextlib.redirect_stdout");
+    expect(harness).toContain("json.loads(");
+    expect(harness).toContain("exec(__src");
+  });
+
+  it("passes when output matches, ignoring trailing whitespace/newlines", () => {
+    const res = evaluateStdioRun(stdioItem, {
+      stdout: stdoutFor([
+        { i: 0, out: "6\n", err: null }, // expected "6"
+        { i: 1, out: "10", err: null }, // expected "10\n"
+      ]),
+      stderr: "",
+    });
+    expect(res.ok).toBe(true);
+    expect(res.passed).toBe(2);
+  });
+
+  it("fails mismatched output and surfaces the actual", () => {
+    const res = evaluateStdioRun(stdioItem, {
+      stdout: stdoutFor([
+        { i: 0, out: "7", err: null },
+        { i: 1, out: "10", err: null },
+      ]),
+      stderr: "",
+    });
+    expect(res.ok).toBe(false);
+    expect(res.passed).toBe(1);
+    expect(res.tests[0].actual).toBe("7");
+  });
+
+  it("treats per-case python errors as failures", () => {
+    const res = evaluateStdioRun(stdioItem, {
+      stdout: stdoutFor([
+        { i: 0, out: "", err: "ValueError: bad" },
+        { i: 1, out: "10", err: null },
+      ]),
+      stderr: "",
+    });
+    expect(res.ok).toBe(false);
+    expect(res.tests[0].error).toContain("ValueError");
   });
 });
 
