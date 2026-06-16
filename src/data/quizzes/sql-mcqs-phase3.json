@@ -1,0 +1,704 @@
+[
+  {
+    "id": "sql-q-038",
+    "track": "sql",
+    "topic": "set-operations",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "What is the difference between `UNION` and `UNION ALL`?",
+    "options": [
+      "UNION ALL removes duplicate rows; UNION keeps them",
+      "UNION removes duplicate rows; UNION ALL keeps every row",
+      "They are identical",
+      "UNION sorts; UNION ALL does not, but both dedupe"
+    ],
+    "answerIndex": 1,
+    "explanation": "UNION combines two result sets and eliminates duplicate rows (requiring a sort/hash to dedupe). UNION ALL simply concatenates, keeping duplicates \u2014 and is therefore cheaper.",
+    "tags": [
+      "set-operations",
+      "union"
+    ],
+    "companies": [
+      "tcs",
+      "infosys"
+    ]
+  },
+  {
+    "id": "sql-q-039",
+    "track": "sql",
+    "topic": "set-operations",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "For `SELECT ... UNION SELECT ...` to be valid, the two queries must:",
+    "options": [
+      "return the same number of columns with compatible types",
+      "return exactly one column each",
+      "query the same table",
+      "be sorted identically"
+    ],
+    "answerIndex": 0,
+    "explanation": "Set operations are positional: both SELECTs must produce the same number of columns, and corresponding columns must have compatible (union-able) types. Column names come from the first query.",
+    "tags": [
+      "set-operations",
+      "union",
+      "compatibility"
+    ],
+    "companies": [
+      "amazon",
+      "wipro"
+    ]
+  },
+  {
+    "id": "sql-q-040",
+    "track": "sql",
+    "topic": "set-operations",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "`INTERSECT` returns:",
+    "options": [
+      "all rows from both queries",
+      "rows present in BOTH result sets (and distinct)",
+      "rows in the first but not the second",
+      "the Cartesian product"
+    ],
+    "answerIndex": 1,
+    "explanation": "INTERSECT yields the distinct rows that appear in both result sets \u2014 the set intersection. (Some engines also offer INTERSECT ALL to keep duplicate multiplicities.)",
+    "tags": [
+      "set-operations",
+      "intersect"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "sql-q-041",
+    "track": "sql",
+    "topic": "set-operations",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "`EXCEPT` (called `MINUS` in Oracle) returns:",
+    "options": [
+      "rows in either query",
+      "rows common to both",
+      "distinct rows in the FIRST query that are not in the second",
+      "rows in the second query only"
+    ],
+    "answerIndex": 2,
+    "explanation": "EXCEPT computes set difference: the distinct rows of the first query with any rows that also appear in the second removed. Order matters \u2014 A EXCEPT B differs from B EXCEPT A.",
+    "tags": [
+      "set-operations",
+      "except",
+      "minus"
+    ],
+    "companies": [
+      "amazon",
+      "accenture"
+    ]
+  },
+  {
+    "id": "sql-q-042",
+    "track": "sql",
+    "topic": "set-operations",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "If you KNOW two result sets share no rows, why prefer `UNION ALL` over `UNION`?",
+    "options": [
+      "UNION ALL sorts the output for free",
+      "UNION ALL skips the duplicate-elimination step (a sort or hash), so it avoids unnecessary work",
+      "UNION ALL guarantees distinct rows more cheaply",
+      "There is no performance difference"
+    ],
+    "answerIndex": 1,
+    "explanation": "UNION must remove duplicates, which forces a sort or hash over the combined rows. When duplicates are impossible, that work is wasted, so UNION ALL \u2014 plain concatenation \u2014 is faster and uses less memory.",
+    "tags": [
+      "set-operations",
+      "union-all",
+      "performance"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "sql-q-043",
+    "track": "sql",
+    "topic": "window-functions",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "How does a window function such as `ROW_NUMBER() OVER (...)` differ from an aggregate used with `GROUP BY`?",
+    "options": [
+      "it collapses each group into one row",
+      "it returns a value for EACH row without collapsing the rows",
+      "it can only be used in the WHERE clause",
+      "it cannot use ORDER BY"
+    ],
+    "answerIndex": 1,
+    "explanation": "A window function computes across a set of rows (the window) but attaches its result to every individual row, so the row count is preserved \u2014 unlike GROUP BY, which reduces each group to a single row.",
+    "tags": [
+      "window-functions",
+      "over"
+    ],
+    "companies": [
+      "amazon",
+      "tcs"
+    ]
+  },
+  {
+    "id": "sql-q-044",
+    "track": "sql",
+    "topic": "window-functions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "After a tie in the ordering, how do ROW_NUMBER, RANK and DENSE_RANK behave?",
+    "options": [
+      "all three assign the same number to tied rows",
+      "ROW_NUMBER gives unique numbers; RANK repeats then SKIPS the next value(s); DENSE_RANK repeats with NO gap",
+      "they are interchangeable",
+      "DENSE_RANK assigns unique numbers; ROW_NUMBER repeats"
+    ],
+    "answerIndex": 1,
+    "explanation": "ROW_NUMBER is always 1..n unique (ties broken arbitrarily by the order). RANK gives tied rows the same rank then leaves a gap (1,1,3). DENSE_RANK ties without a gap (1,1,2).",
+    "tags": [
+      "window-functions",
+      "rank",
+      "dense-rank",
+      "row-number"
+    ],
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "sql-q-045",
+    "track": "sql",
+    "topic": "window-functions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "`PARTITION BY department` inside an `OVER (...)` clause:",
+    "options": [
+      "filters out other departments",
+      "divides rows into per-department groups, computing the window function independently within each",
+      "sorts the output by department",
+      "collapses each department to one row"
+    ],
+    "answerIndex": 1,
+    "explanation": "PARTITION BY splits the rows into partitions; the window function (rank, running total, lag, etc.) restarts and is computed separately within each partition, while all rows are still returned.",
+    "tags": [
+      "window-functions",
+      "partition-by"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "sql-q-046",
+    "track": "sql",
+    "topic": "window-functions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "`LAG(salary) OVER (ORDER BY hired_at)` returns, for each row:",
+    "options": [
+      "the next row's salary",
+      "the previous row's salary in the hire-date ordering (NULL for the first row)",
+      "the maximum salary",
+      "the running total of salaries"
+    ],
+    "answerIndex": 1,
+    "explanation": "LAG looks backward: it returns the value from the row that comes before the current one in the window's ORDER BY. The first row has no predecessor, so LAG yields NULL (or a supplied default). LEAD is its forward counterpart.",
+    "tags": [
+      "window-functions",
+      "lag",
+      "lead"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "sql-q-047",
+    "track": "sql",
+    "topic": "window-functions",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "A running total `SUM(x) OVER (ORDER BY d)` uses the DEFAULT frame `RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`. With duplicate `d` values, the tied rows will:",
+    "options": [
+      "each get a distinct incremental total",
+      "all receive the SAME cumulative total, because RANGE treats peer rows (equal d) as one frame",
+      "be excluded from the sum",
+      "raise an error"
+    ],
+    "answerIndex": 1,
+    "explanation": "The default RANGE frame includes all rows that are PEERS of the current row (equal in the ORDER BY), so tied rows share an identical cumulative value. To get a strict per-row running total, specify `ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW` instead.",
+    "tags": [
+      "window-functions",
+      "frame",
+      "range-vs-rows",
+      "running-total"
+    ],
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "sql-q-048",
+    "track": "sql",
+    "topic": "transactions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "In ACID, the 'I' (Isolation) guarantees that:",
+    "options": [
+      "transactions are written to disk durably",
+      "concurrent transactions do not observe each other's uncommitted, intermediate state",
+      "every transaction is atomic",
+      "data satisfies all constraints"
+    ],
+    "answerIndex": 1,
+    "explanation": "Isolation means concurrently running transactions are kept from interfering: the result is as if they ran in some serial order, so one transaction can't see another's half-finished changes (depending on the isolation level chosen).",
+    "tags": [
+      "transactions",
+      "acid",
+      "isolation"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "sql-q-049",
+    "track": "sql",
+    "topic": "transactions",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "A 'dirty read' occurs when a transaction:",
+    "options": [
+      "reads data that another transaction wrote but has NOT yet committed (and might roll back)",
+      "reads the same row twice and gets different values",
+      "cannot acquire a lock",
+      "reads its own uncommitted writes"
+    ],
+    "answerIndex": 0,
+    "explanation": "A dirty read is reading another transaction's uncommitted changes. If that other transaction rolls back, the reader acted on data that never officially existed. READ COMMITTED and higher prevent this.",
+    "tags": [
+      "transactions",
+      "dirty-read",
+      "anomalies"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "sql-q-050",
+    "track": "sql",
+    "topic": "transactions",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "Which isolation level prevents dirty reads but still permits non-repeatable reads?",
+    "options": [
+      "READ UNCOMMITTED",
+      "READ COMMITTED",
+      "REPEATABLE READ",
+      "SERIALIZABLE"
+    ],
+    "answerIndex": 1,
+    "explanation": "READ COMMITTED only lets you read committed data (no dirty reads), but a row you read can be changed by another committed transaction before you read it again (a non-repeatable read). REPEATABLE READ and SERIALIZABLE close that gap.",
+    "tags": [
+      "transactions",
+      "isolation-levels",
+      "read-committed"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "sql-q-051",
+    "track": "sql",
+    "topic": "indexes",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "A B-tree index most directly speeds up:",
+    "options": [
+      "inserts and updates",
+      "equality lookups, range scans, and ORDER BY on the indexed column(s)",
+      "full-table aggregations",
+      "reducing table storage size"
+    ],
+    "answerIndex": 1,
+    "explanation": "B-tree indexes keep keys sorted, so they accelerate equality (=), range (<, >, BETWEEN), and ordering on the indexed columns. They add cost to writes and consume extra space.",
+    "tags": [
+      "indexes",
+      "b-tree"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "sql-q-052",
+    "track": "sql",
+    "topic": "indexes",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "A composite index on `(last_name, first_name)` can be used efficiently for a query filtering on:",
+    "options": [
+      "first_name alone",
+      "last_name alone, or last_name AND first_name (the leftmost prefix)",
+      "any single column",
+      "only both columns together"
+    ],
+    "answerIndex": 1,
+    "explanation": "Composite indexes follow the leftmost-prefix rule: the index helps when the filter includes the first column (optionally plus the next). Filtering on first_name alone cannot use this index effectively.",
+    "tags": [
+      "indexes",
+      "composite",
+      "leftmost-prefix"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "sql-q-053",
+    "track": "sql",
+    "topic": "indexes",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "A 'covering index' for a query is one that:",
+    "options": [
+      "covers every table in the database",
+      "contains all the columns the query needs, so it is answered from the index alone without reading the table",
+      "is automatically created on primary keys",
+      "covers the WHERE clause but never the SELECT list"
+    ],
+    "answerIndex": 1,
+    "explanation": "When an index includes all columns referenced by a query (both filter and output), the engine can satisfy the query entirely from the index \u2014 an 'index-only scan' \u2014 avoiding the extra lookups into the table heap.",
+    "tags": [
+      "indexes",
+      "covering-index",
+      "index-only-scan"
+    ],
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "sql-q-054",
+    "track": "sql",
+    "topic": "joins",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "A `LEFT JOIN` returns:",
+    "options": [
+      "only rows that match in both tables",
+      "all rows from the left table, with NULLs where the right table has no match",
+      "all rows from the right table only",
+      "the Cartesian product"
+    ],
+    "answerIndex": 1,
+    "explanation": "A LEFT (OUTER) JOIN keeps every row of the left table; where no right-table row matches the condition, the right-side columns come back as NULL. This is the basis of anti-joins (filter WHERE right.key IS NULL).",
+    "tags": [
+      "joins",
+      "left-join",
+      "outer-join"
+    ],
+    "companies": [
+      "tcs",
+      "infosys"
+    ]
+  },
+  {
+    "id": "sql-q-055",
+    "track": "sql",
+    "topic": "joins",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "A self-join is:",
+    "options": [
+      "a join that needs no ON clause",
+      "joining a table to itself, typically with two aliases, to relate rows within the same table",
+      "a join that returns each row once",
+      "an automatic join on primary keys"
+    ],
+    "answerIndex": 1,
+    "explanation": "A self-join references the same table twice under different aliases \u2014 useful for comparing rows to other rows of the same table (e.g. employees to their managers, or mutual follows).",
+    "tags": [
+      "joins",
+      "self-join",
+      "aliases"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "sql-q-056",
+    "track": "sql",
+    "topic": "joins",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "If you join table A (1,000 rows) to table B (1,000 rows) with NO join condition (a cross join), how many rows does the result contain?",
+    "options": [
+      "1,000",
+      "2,000",
+      "1,000,000",
+      "0"
+    ],
+    "answerIndex": 2,
+    "explanation": "A cross join (Cartesian product) pairs every row of A with every row of B: 1,000 \u00d7 1,000 = 1,000,000 rows. A missing or always-true join condition is a common cause of accidental row explosions.",
+    "tags": [
+      "joins",
+      "cross-join",
+      "cartesian-product"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "sql-q-057",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 2,
+    "question": "How does `COUNT(column)` differ from `COUNT(*)`?",
+    "options": [
+      "they are identical",
+      "COUNT(column) ignores rows where that column is NULL; COUNT(*) counts all rows",
+      "COUNT(*) ignores NULLs; COUNT(column) counts all rows",
+      "COUNT(column) counts distinct values"
+    ],
+    "answerIndex": 1,
+    "explanation": "COUNT(*) counts every row in the group. COUNT(column) counts only rows where that column is non-NULL. (COUNT(DISTINCT column) counts distinct non-NULL values.)",
+    "tags": [
+      "aggregation",
+      "count",
+      "nulls"
+    ],
+    "companies": [
+      "tcs",
+      "amazon"
+    ]
+  },
+  {
+    "id": "sql-q-058",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "`WHERE` and `HAVING` differ in that:",
+    "options": [
+      "WHERE filters groups after aggregation; HAVING filters rows before",
+      "WHERE filters individual rows BEFORE grouping; HAVING filters GROUPS after aggregation",
+      "they are interchangeable",
+      "HAVING cannot reference aggregate functions"
+    ],
+    "answerIndex": 1,
+    "explanation": "WHERE applies to raw rows before GROUP BY, so it cannot use aggregates. HAVING applies to the grouped results, so it can filter on COUNT/SUM/AVG, etc.",
+    "tags": [
+      "aggregation",
+      "where",
+      "having"
+    ],
+    "companies": [
+      "amazon",
+      "infosys"
+    ]
+  },
+  {
+    "id": "sql-q-059",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "`AVG(salary)` over a column where some rows have NULL salary:",
+    "options": [
+      "returns NULL if any salary is NULL",
+      "treats NULL as 0",
+      "ignores NULLs and averages only the non-NULL values",
+      "raises an error"
+    ],
+    "answerIndex": 2,
+    "explanation": "SQL aggregate functions skip NULLs. AVG sums the non-NULL salaries and divides by the COUNT of non-NULL salaries \u2014 NULLs are neither summed nor counted (which can surprise you versus treating them as 0).",
+    "tags": [
+      "aggregation",
+      "avg",
+      "nulls"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "sql-q-060",
+    "track": "sql",
+    "topic": "subqueries",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "A correlated subquery is one that:",
+    "options": [
+      "can be evaluated once, independently of the outer query",
+      "references a column from the outer query, so it is conceptually re-evaluated for each outer row",
+      "always returns a single value",
+      "cannot appear in a WHERE clause"
+    ],
+    "answerIndex": 1,
+    "explanation": "A correlated subquery depends on the current outer row (it references an outer column), so logically it runs per outer row. A non-correlated subquery is independent and can be evaluated just once.",
+    "tags": [
+      "subqueries",
+      "correlated"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "sql-q-061",
+    "track": "sql",
+    "topic": "subqueries",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "Why can `NOT IN (subquery)` behave unexpectedly when the subquery can return a NULL, while `NOT EXISTS` does not?",
+    "options": [
+      "NOT IN is invalid SQL",
+      "a NULL in the IN-list makes the NOT IN comparison evaluate to UNKNOWN, so NO rows are returned; NOT EXISTS is NULL-safe",
+      "NOT EXISTS ignores the subquery",
+      "they always return the same result"
+    ],
+    "answerIndex": 1,
+    "explanation": "`x NOT IN (a, b, NULL)` becomes `x<>a AND x<>b AND x<>NULL`; the last term is UNKNOWN, so the whole predicate is never TRUE and the query returns nothing. NOT EXISTS checks row presence and is unaffected by NULLs \u2014 generally the safer choice for anti-joins.",
+    "tags": [
+      "subqueries",
+      "not-in",
+      "not-exists",
+      "nulls"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "sql-q-062",
+    "track": "sql",
+    "topic": "cte",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "A RECURSIVE common table expression requires:",
+    "options": [
+      "a single SELECT with no UNION",
+      "an anchor (base) member UNIONed with a recursive member that references the CTE itself",
+      "a GROUP BY clause",
+      "a temporary table to be created first"
+    ],
+    "answerIndex": 1,
+    "explanation": "A recursive CTE has an anchor query (the starting rows) combined via UNION [ALL] with a recursive query that refers back to the CTE, iterating until it produces no new rows \u2014 used for hierarchies and graph traversals.",
+    "tags": [
+      "cte",
+      "recursive",
+      "with"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  },
+  {
+    "id": "sql-q-063",
+    "track": "sql",
+    "topic": "cte",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Compared with repeating a subquery, a CTE (WITH clause) mainly improves:",
+    "options": [
+      "raw execution speed in every case",
+      "readability and lets you reference the same named intermediate result multiple times in one query",
+      "storage usage",
+      "transaction isolation"
+    ],
+    "answerIndex": 1,
+    "explanation": "A CTE names an intermediate result so the query reads top-down and the same logic can be referenced more than once without duplication. (Performance is usually similar to an equivalent subquery; some engines may materialize CTEs.)",
+    "tags": [
+      "cte",
+      "with",
+      "readability"
+    ],
+    "companies": [
+      "amazon",
+      "microsoft"
+    ]
+  },
+  {
+    "id": "sql-q-064",
+    "track": "sql",
+    "topic": "nulls",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "In SQL, the expression `NULL = NULL` evaluates to:",
+    "options": [
+      "TRUE",
+      "FALSE",
+      "NULL (UNKNOWN) \u2014 which is why it never matches in a WHERE clause",
+      "an error"
+    ],
+    "answerIndex": 2,
+    "explanation": "NULL means 'unknown', and any comparison with NULL (including NULL = NULL) yields UNKNOWN, treated as not-true by WHERE. To match NULLs you use IS NULL, and to compare treating NULLs as equal you use IS NOT DISTINCT FROM (or engine-specific equivalents).",
+    "tags": [
+      "nulls",
+      "three-valued-logic",
+      "comparison"
+    ],
+    "companies": [
+      "amazon",
+      "google"
+    ]
+  }
+]

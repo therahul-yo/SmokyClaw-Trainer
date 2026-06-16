@@ -7,54 +7,150 @@
     "difficulty": "medium",
     "pattern": "sql-window",
     "estMinutes": 12,
-    "companies": ["amazon-india", "infosys"],
+    "companies": [
+      "amazon-india",
+      "infosys"
+    ],
     "schema": "social",
     "prompt": "For each user, return the running count of posts they've made over time. Output columns must be `user_id`, `posted_at`, `posts_so_far`. Order by `user_id` ascending, then `posted_at` ascending.",
-    "constraints": "Use a window function — don't self-join or correlate.",
+    "constraints": "Use a window function \u2014 don't self-join or correlate.",
     "examples": [
       {
         "input": "posts table with users 1..8 and 15 total posts",
         "output": "(1, 2024-01-01, 1), (1, 2024-01-03, 2), (2, 2024-01-02, 1), ...",
         "explanation": "Each user starts at 1 and increments with each new post in chronological order."
+      },
+      {
+        "input": "social seed data",
+        "output": "1, 2024-01-01, 1; 1, 2024-01-03, 2; 2, 2024-01-02, 1 ..."
       }
     ],
     "starter": "-- Use COUNT(*) OVER (PARTITION BY ... ORDER BY ...)\nSELECT user_id, posted_at, ...\nFROM posts\nORDER BY user_id, posted_at;\n",
     "expected": {
-      "columns": ["user_id", "posted_at", "posts_so_far"],
+      "columns": [
+        "user_id",
+        "posted_at",
+        "posts_so_far"
+      ],
       "rows": [
-        [1, "2024-01-01", 1],
-        [1, "2024-01-03", 2],
-        [2, "2024-01-02", 1],
-        [2, "2024-01-04", 2],
-        [2, "2024-01-08", 3],
-        [3, "2024-01-05", 1],
-        [4, "2024-01-06", 1],
-        [4, "2024-01-07", 2],
-        [5, "2024-01-09", 1],
-        [5, "2024-01-12", 2],
-        [6, "2024-01-10", 1],
-        [7, "2024-01-11", 1],
-        [8, "2024-01-13", 1],
-        [8, "2024-01-14", 2],
-        [8, "2024-01-15", 3]
+        [
+          1,
+          "2024-01-01",
+          1
+        ],
+        [
+          1,
+          "2024-01-03",
+          2
+        ],
+        [
+          2,
+          "2024-01-02",
+          1
+        ],
+        [
+          2,
+          "2024-01-04",
+          2
+        ],
+        [
+          2,
+          "2024-01-08",
+          3
+        ],
+        [
+          3,
+          "2024-01-05",
+          1
+        ],
+        [
+          4,
+          "2024-01-06",
+          1
+        ],
+        [
+          4,
+          "2024-01-07",
+          2
+        ],
+        [
+          5,
+          "2024-01-09",
+          1
+        ],
+        [
+          5,
+          "2024-01-12",
+          2
+        ],
+        [
+          6,
+          "2024-01-10",
+          1
+        ],
+        [
+          7,
+          "2024-01-11",
+          1
+        ],
+        [
+          8,
+          "2024-01-13",
+          1
+        ],
+        [
+          8,
+          "2024-01-14",
+          2
+        ],
+        [
+          8,
+          "2024-01-15",
+          3
+        ]
       ]
     },
     "hints": [
-      "You need an aggregate that doesn't collapse rows — that's a window function.",
+      "You need an aggregate that doesn't collapse rows \u2014 that's a window function.",
       "COUNT(*) OVER (PARTITION BY user_id ORDER BY posted_at) gives a running count per user.",
-      "Don't forget the outer ORDER BY user_id, posted_at — the row order in the result must match the expected output."
+      "Don't forget the outer ORDER BY user_id, posted_at \u2014 the row order in the result must match the expected output."
     ],
     "bruteForce": {
-      "code": "-- Correlated subquery — works but is O(n^2)\nSELECT p.user_id, p.posted_at,\n       (SELECT COUNT(*) FROM posts p2\n        WHERE p2.user_id = p.user_id AND p2.posted_at <= p.posted_at) AS posts_so_far\nFROM posts p\nORDER BY p.user_id, p.posted_at;",
-      "complexity": "O(n^2) — re-counts for every row.",
+      "code": "-- Correlated subquery \u2014 works but is O(n^2)\nSELECT p.user_id, p.posted_at,\n       (SELECT COUNT(*) FROM posts p2\n        WHERE p2.user_id = p.user_id AND p2.posted_at <= p.posted_at) AS posts_so_far\nFROM posts p\nORDER BY p.user_id, p.posted_at;",
+      "complexity": "O(n^2) \u2014 re-counts for every row.",
       "explanation": "Correlated subquery: for each row, count all earlier posts by the same user. Correct, but the planner re-runs the inner query per outer row."
     },
     "optimal": {
       "code": "SELECT user_id, posted_at,\n       COUNT(*) OVER (PARTITION BY user_id ORDER BY posted_at) AS posts_so_far\nFROM posts\nORDER BY user_id, posted_at;",
-      "complexity": "O(n log n) — one sort + a single scan.",
-      "explanation": "Window function partitions by user and orders by posted_at. The default frame is UNBOUNDED PRECEDING → CURRENT ROW, so COUNT(*) gives the running total. One pass over the (sorted) data."
+      "complexity": "O(n log n) \u2014 one sort + a single scan.",
+      "explanation": "Window function partitions by user and orders by posted_at. The default frame is UNBOUNDED PRECEDING \u2192 CURRENT ROW, so COUNT(*) gives the running total. One pass over the (sorted) data."
     },
-    "tags": ["window", "running-total", "leetcode-medium"]
+    "tags": [
+      "window",
+      "running-total",
+      "leetcode-medium"
+    ],
+    "complexityCheck": {
+      "question": "How does a window function differ from GROUP BY?",
+      "choices": [
+        {
+          "label": "It adds a computed column while keeping the individual rows (no collapsing)",
+          "correct": true
+        },
+        {
+          "label": "It always sorts the table",
+          "correct": false
+        },
+        {
+          "label": "It removes duplicate rows",
+          "correct": false
+        },
+        {
+          "label": "It is identical to GROUP BY",
+          "correct": false
+        }
+      ]
+    }
   },
   {
     "id": "sql-c-top-per-group",
@@ -64,42 +160,104 @@
     "difficulty": "medium",
     "pattern": "sql-window",
     "estMinutes": 12,
-    "companies": ["amazon-india", "infosys"],
+    "companies": [
+      "amazon-india",
+      "infosys"
+    ],
     "schema": "social",
     "prompt": "For each user, return their most recent post. Output columns: `user_id`, `body`. Order by `user_id` ascending. Assume `(user_id, posted_at)` is unique within posts.",
-    "constraints": "Use ROW_NUMBER() — don't use GROUP BY with MAX(posted_at) + self-join.",
+    "constraints": "Use ROW_NUMBER() \u2014 don't use GROUP BY with MAX(posted_at) + self-join.",
     "examples": [
-      { "input": "8 users, 15 posts", "output": "8 rows, one per user, each with their latest body." }
+      {
+        "input": "8 users, 15 posts",
+        "output": "8 rows, one per user, each with their latest body."
+      },
+      {
+        "input": "social seed data",
+        "output": "1, another post; 2, evening walk; 3, first post ..."
+      }
     ],
     "starter": "SELECT user_id, body\nFROM (\n  -- inner query with ROW_NUMBER() here\n) t\nWHERE -- pick rn = 1\nORDER BY user_id;\n",
     "expected": {
-      "columns": ["user_id", "body"],
+      "columns": [
+        "user_id",
+        "body"
+      ],
       "rows": [
-        [1, "another post"],
-        [2, "evening walk"],
-        [3, "first post"],
-        [4, "travel diary 2"],
-        [5, "follow-up"],
-        [6, "london is rainy"],
-        [7, "photo dump"],
-        [8, "launched!"]
+        [
+          1,
+          "another post"
+        ],
+        [
+          2,
+          "evening walk"
+        ],
+        [
+          3,
+          "first post"
+        ],
+        [
+          4,
+          "travel diary 2"
+        ],
+        [
+          5,
+          "follow-up"
+        ],
+        [
+          6,
+          "london is rainy"
+        ],
+        [
+          7,
+          "photo dump"
+        ],
+        [
+          8,
+          "launched!"
+        ]
       ]
     },
     "hints": [
       "Number each user's posts from newest to oldest, then keep number 1 per user.",
-      "ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY posted_at DESC) — wrap it in a subquery and filter rn = 1.",
+      "ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY posted_at DESC) \u2014 wrap it in a subquery and filter rn = 1.",
       "If a tie were possible you'd need to pick between ROW_NUMBER (arbitrary tie-break) vs RANK (multiple rows per group). Here uniqueness is guaranteed."
     ],
     "bruteForce": {
       "code": "SELECT p.user_id, p.body\nFROM posts p\nJOIN (\n  SELECT user_id, MAX(posted_at) AS mx\n  FROM posts\n  GROUP BY user_id\n) m ON p.user_id = m.user_id AND p.posted_at = m.mx\nORDER BY p.user_id;",
-      "complexity": "O(n log n) — works, but verbose.",
+      "complexity": "O(n log n) \u2014 works, but verbose.",
       "explanation": "Compute the max posted_at per user, then self-join to recover the body. Functional but more SQL than needed."
     },
     "optimal": {
       "code": "SELECT user_id, body\nFROM (\n  SELECT user_id, body,\n         ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY posted_at DESC) AS rn\n  FROM posts\n) t\nWHERE rn = 1\nORDER BY user_id;",
-      "complexity": "O(n log n) — one sort + one filter pass.",
+      "complexity": "O(n log n) \u2014 one sort + one filter pass.",
       "explanation": "Window function numbers each user's posts newest-first; outer query keeps only the latest. Reads more naturally than the self-join, and extends easily to 'top K per group' by changing the WHERE."
     },
-    "tags": ["window", "top-n-per-group", "leetcode-medium"]
+    "tags": [
+      "window",
+      "top-n-per-group",
+      "leetcode-medium"
+    ],
+    "complexityCheck": {
+      "question": "How does a window function differ from GROUP BY?",
+      "choices": [
+        {
+          "label": "It adds a computed column while keeping the individual rows (no collapsing)",
+          "correct": true
+        },
+        {
+          "label": "It always sorts the table",
+          "correct": false
+        },
+        {
+          "label": "It removes duplicate rows",
+          "correct": false
+        },
+        {
+          "label": "It is identical to GROUP BY",
+          "correct": false
+        }
+      ]
+    }
   }
 ]

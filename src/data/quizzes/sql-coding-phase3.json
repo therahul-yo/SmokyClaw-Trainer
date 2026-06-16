@@ -1,0 +1,2673 @@
+[
+  {
+    "id": "sql-c-null-department",
+    "track": "sql",
+    "topic": "nulls",
+    "type": "sql",
+    "difficulty": "easy",
+    "pattern": "sql-foundations",
+    "estMinutes": 6,
+    "companies": [
+      "tcs",
+      "infosys"
+    ],
+    "schema": "employees",
+    "prompt": "List the `name` of every employee who has NOT been assigned to a department (their `department_id` is NULL). Order by name ascending.",
+    "constraints": "Use `IS NULL` \u2014 comparing with `= NULL` never matches in SQL.",
+    "examples": [
+      {
+        "input": "employees seed data",
+        "output": "Frank"
+      },
+      {
+        "input": "employees seed data",
+        "output": "1 row(s), columns: name"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "Frank"
+        ]
+      ]
+    },
+    "hints": [
+      "A missing department means department_id is NULL.",
+      "`= NULL` is always unknown; use `IS NULL`.",
+      "Order the result by name."
+    ],
+    "bruteForce": {
+      "code": "SELECT name FROM employees WHERE department_id IS NULL ORDER BY name ASC;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT name FROM employees WHERE department_id IS NULL ORDER BY name;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "Why use IS NULL instead of = NULL?",
+      "choices": [
+        {
+          "label": "= NULL evaluates to UNKNOWN and never matches a row",
+          "correct": true
+        },
+        {
+          "label": "= NULL is a syntax error",
+          "correct": false
+        },
+        {
+          "label": "They behave identically",
+          "correct": false
+        },
+        {
+          "label": "IS NULL is slower but required",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "nulls",
+      "is-null",
+      "filter"
+    ]
+  },
+  {
+    "id": "sql-c-coalesce-department",
+    "track": "sql",
+    "topic": "nulls",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-foundations",
+    "estMinutes": 9,
+    "companies": [
+      "amazon",
+      "wipro"
+    ],
+    "schema": "employees",
+    "prompt": "For every employee return `name` and a `dept` column that shows their `department` text, but substitutes the literal `'Unassigned'` when `department` is NULL. Order by name ascending.",
+    "constraints": "Use COALESCE (or IFNULL) to provide the fallback.",
+    "examples": [
+      {
+        "input": "employees seed data",
+        "output": "Alice, Engineering; Bob, Sales; Carol, Engineering"
+      },
+      {
+        "input": "employees seed data",
+        "output": "8 row(s), columns: name, dept"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "name",
+        "dept"
+      ],
+      "rows": [
+        [
+          "Alice",
+          "Engineering"
+        ],
+        [
+          "Bob",
+          "Sales"
+        ],
+        [
+          "Carol",
+          "Engineering"
+        ],
+        [
+          "Dave",
+          "Sales"
+        ],
+        [
+          "Eve",
+          "Marketing"
+        ],
+        [
+          "Frank",
+          "Unassigned"
+        ],
+        [
+          "Grace",
+          "Finance"
+        ],
+        [
+          "Hugo",
+          "Engineering"
+        ]
+      ]
+    },
+    "hints": [
+      "COALESCE returns the first non-NULL of its arguments.",
+      "COALESCE(department, 'Unassigned') yields the label or the fallback.",
+      "Order by name."
+    ],
+    "bruteForce": {
+      "code": "SELECT name, IFNULL(department, 'Unassigned') AS dept FROM employees ORDER BY name ASC;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT name, COALESCE(department, 'Unassigned') AS dept FROM employees ORDER BY name;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "What does COALESCE(a, b) return?",
+      "choices": [
+        {
+          "label": "a if a is not NULL, otherwise b",
+          "correct": true
+        },
+        {
+          "label": "b always",
+          "correct": false
+        },
+        {
+          "label": "NULL if either is NULL",
+          "correct": false
+        },
+        {
+          "label": "the larger of a and b",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "nulls",
+      "coalesce",
+      "ifnull"
+    ]
+  },
+  {
+    "id": "sql-c-dept-having-avg",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-aggregation",
+    "estMinutes": 11,
+    "companies": [
+      "amazon",
+      "infosys",
+      "accenture"
+    ],
+    "schema": "employees",
+    "prompt": "Return each `department` (text) whose AVERAGE salary is strictly greater than 50000, along with that rounded average as `avg_salary` (rounded to 2 decimals). Ignore employees with a NULL department. Order by `avg_salary` descending.",
+    "constraints": "Filter groups with HAVING, not WHERE. Exclude NULL departments.",
+    "examples": [
+      {
+        "input": "employees seed data",
+        "output": "Engineering, 72333.33; Finance, 65000.0"
+      },
+      {
+        "input": "employees seed data",
+        "output": "2 row(s), columns: department, avg_salary"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "department",
+        "avg_salary"
+      ],
+      "rows": [
+        [
+          "Engineering",
+          72333.33
+        ],
+        [
+          "Finance",
+          65000.0
+        ]
+      ]
+    },
+    "hints": [
+      "Group by department and aggregate the salary.",
+      "A condition on an aggregate belongs in HAVING, applied after grouping.",
+      "WHERE filters rows before grouping (used here to drop NULL departments); HAVING filters the groups."
+    ],
+    "bruteForce": {
+      "code": "SELECT department, ROUND(AVG(salary),2) AS avg_salary FROM employees WHERE department IS NOT NULL GROUP BY department HAVING AVG(salary) > 50000 ORDER BY 2 DESC;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT department, ROUND(AVG(salary), 2) AS avg_salary FROM employees WHERE department IS NOT NULL GROUP BY department HAVING AVG(salary) > 50000 ORDER BY avg_salary DESC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "Why use HAVING rather than WHERE for the average condition?",
+      "choices": [
+        {
+          "label": "WHERE is evaluated before grouping, so it cannot reference aggregate values",
+          "correct": true
+        },
+        {
+          "label": "HAVING is faster",
+          "correct": false
+        },
+        {
+          "label": "WHERE cannot appear with GROUP BY",
+          "correct": false
+        },
+        {
+          "label": "They are interchangeable",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "aggregation",
+      "having",
+      "group-by"
+    ]
+  },
+  {
+    "id": "sql-c-location-multi-headcount",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-aggregation",
+    "estMinutes": 10,
+    "companies": [
+      "tcs",
+      "cognizant"
+    ],
+    "schema": "employees",
+    "prompt": "Join employees to departments and return each department `location` that hosts MORE THAN ONE employee, with the headcount as `headcount`. Order by `headcount` descending, then `location` ascending.",
+    "constraints": "Join on department_id = departments.id; filter groups with HAVING COUNT(*) > 1.",
+    "examples": [
+      {
+        "input": "employees seed data",
+        "output": "Bangalore, 3; Chennai, 2"
+      },
+      {
+        "input": "employees seed data",
+        "output": "2 row(s), columns: location, headcount"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "location",
+        "headcount"
+      ],
+      "rows": [
+        [
+          "Bangalore",
+          3
+        ],
+        [
+          "Chennai",
+          2
+        ]
+      ]
+    },
+    "hints": [
+      "Join employees to departments to reach location.",
+      "Group by location and count employees.",
+      "Keep only groups with COUNT(*) > 1 via HAVING."
+    ],
+    "bruteForce": {
+      "code": "SELECT d.location, COUNT(e.id) AS headcount FROM departments d JOIN employees e ON e.department_id=d.id GROUP BY d.location HAVING COUNT(e.id)>1 ORDER BY headcount DESC, d.location;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT d.location, COUNT(*) AS headcount FROM employees e JOIN departments d ON e.department_id = d.id GROUP BY d.location HAVING COUNT(*) > 1 ORDER BY headcount DESC, d.location ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "What does HAVING COUNT(*) > 1 keep?",
+      "choices": [
+        {
+          "label": "Only groups containing more than one row",
+          "correct": true
+        },
+        {
+          "label": "Only the first group",
+          "correct": false
+        },
+        {
+          "label": "All groups",
+          "correct": false
+        },
+        {
+          "label": "Rows where a column > 1",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "aggregation",
+      "having",
+      "joins",
+      "count"
+    ]
+  },
+  {
+    "id": "sql-c-salary-dense-rank",
+    "track": "sql",
+    "topic": "window-functions",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-window",
+    "estMinutes": 13,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "schema": "employees",
+    "prompt": "Rank employees by `salary` descending using DENSE_RANK across the whole company. Return `name`, `salary`, and the rank as `rnk`. Order by `rnk` ascending, then `name` ascending.",
+    "constraints": "Use DENSE_RANK() OVER (ORDER BY salary DESC) so equal salaries share a rank with no gaps.",
+    "examples": [
+      {
+        "input": "employees seed data",
+        "output": "Carol, 92000, 1; Alice, 75000, 2; Grace, 65000, 3"
+      },
+      {
+        "input": "employees seed data",
+        "output": "8 row(s), columns: name, salary, rnk"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "name",
+        "salary",
+        "rnk"
+      ],
+      "rows": [
+        [
+          "Carol",
+          92000,
+          1
+        ],
+        [
+          "Alice",
+          75000,
+          2
+        ],
+        [
+          "Grace",
+          65000,
+          3
+        ],
+        [
+          "Hugo",
+          50000,
+          4
+        ],
+        [
+          "Dave",
+          48000,
+          5
+        ],
+        [
+          "Bob",
+          45000,
+          6
+        ],
+        [
+          "Eve",
+          38000,
+          7
+        ],
+        [
+          "Frank",
+          30000,
+          8
+        ]
+      ]
+    },
+    "hints": [
+      "A window function ranks without collapsing rows.",
+      "DENSE_RANK avoids gaps after ties (unlike RANK).",
+      "Order the final output by the computed rank."
+    ],
+    "bruteForce": {
+      "code": "SELECT name, salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk FROM employees ORDER BY 3, 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT name, salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk FROM employees ORDER BY rnk ASC, name ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "How does DENSE_RANK differ from RANK after a tie?",
+      "choices": [
+        {
+          "label": "DENSE_RANK leaves no gap in the next rank; RANK skips numbers",
+          "correct": true
+        },
+        {
+          "label": "They are identical",
+          "correct": false
+        },
+        {
+          "label": "DENSE_RANK breaks ties randomly",
+          "correct": false
+        },
+        {
+          "label": "RANK never produces ties",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "window-functions",
+      "dense-rank",
+      "ranking"
+    ]
+  },
+  {
+    "id": "sql-c-above-company-avg-union-newest",
+    "track": "sql",
+    "topic": "set-operations",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-advanced",
+    "estMinutes": 13,
+    "companies": [
+      "amazon",
+      "accenture"
+    ],
+    "schema": "employees",
+    "prompt": "Return the distinct `name` of every employee who EITHER earns more than the company-wide average salary OR was hired in 2025 (their `hired_at` starts with '2025'). Combine the two groups with UNION (which removes duplicates). Order by name ascending.",
+    "constraints": "Use UNION between two SELECTs. The company average is a scalar subquery.",
+    "examples": [
+      {
+        "input": "employees seed data",
+        "output": "Alice; Carol; Eve"
+      },
+      {
+        "input": "employees seed data",
+        "output": "5 row(s), columns: name"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "Alice"
+        ],
+        [
+          "Carol"
+        ],
+        [
+          "Eve"
+        ],
+        [
+          "Frank"
+        ],
+        [
+          "Grace"
+        ]
+      ]
+    },
+    "hints": [
+      "Write each condition as its own SELECT.",
+      "UNION merges the two result sets and removes duplicates (UNION ALL would keep them).",
+      "A scalar subquery gives the company average for the first SELECT."
+    ],
+    "bruteForce": {
+      "code": "SELECT name FROM employees WHERE salary > (SELECT AVG(salary) FROM employees) UNION SELECT name FROM employees WHERE substr(hired_at,1,4)='2025' ORDER BY 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT name FROM employees WHERE salary > (SELECT AVG(salary) FROM employees) UNION SELECT name FROM employees WHERE hired_at LIKE '2025%' ORDER BY name;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "How does UNION differ from UNION ALL?",
+      "choices": [
+        {
+          "label": "UNION removes duplicate rows; UNION ALL keeps every row",
+          "correct": true
+        },
+        {
+          "label": "UNION keeps duplicates; UNION ALL removes them",
+          "correct": false
+        },
+        {
+          "label": "They are identical",
+          "correct": false
+        },
+        {
+          "label": "UNION ALL sorts the result",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "set-operations",
+      "union",
+      "subquery"
+    ]
+  },
+  {
+    "id": "sql-c-dept-no-employees-except",
+    "track": "sql",
+    "topic": "set-operations",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-advanced",
+    "estMinutes": 12,
+    "companies": [
+      "amazon",
+      "google"
+    ],
+    "schema": "employees",
+    "prompt": "Using a set operation, return the `name` of every department that has NO employees. Take all department ids and subtract the department ids that appear in the employees table with EXCEPT. Return the department names, ordered ascending.",
+    "constraints": "Use EXCEPT between department ids and the (non-NULL) department_ids used by employees.",
+    "examples": [
+      {
+        "input": "employees seed data",
+        "output": "HR"
+      },
+      {
+        "input": "employees seed data",
+        "output": "1 row(s), columns: name"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "HR"
+        ]
+      ]
+    },
+    "hints": [
+      "EXCEPT returns rows in the first query not present in the second.",
+      "All department ids EXCEPT the ones used by employees gives the empty departments.",
+      "Exclude NULL department_ids from the second query."
+    ],
+    "bruteForce": {
+      "code": "SELECT name FROM departments d WHERE NOT EXISTS (SELECT 1 FROM employees e WHERE e.department_id = d.id) ORDER BY name;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT name FROM departments WHERE id IN (SELECT id FROM departments EXCEPT SELECT department_id FROM employees WHERE department_id IS NOT NULL) ORDER BY name;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "What does EXCEPT return?",
+      "choices": [
+        {
+          "label": "Rows from the first query that are not in the second",
+          "correct": true
+        },
+        {
+          "label": "Rows common to both queries",
+          "correct": false
+        },
+        {
+          "label": "All rows from both queries",
+          "correct": false
+        },
+        {
+          "label": "Rows from the second query only",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "set-operations",
+      "except",
+      "anti-join"
+    ]
+  },
+  {
+    "id": "sql-c-salary-gap-to-max",
+    "track": "sql",
+    "topic": "window-functions",
+    "type": "sql",
+    "difficulty": "hard",
+    "pattern": "sql-window",
+    "estMinutes": 16,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "schema": "employees",
+    "prompt": "For each employee in a (non-NULL) department, return `name`, `department`, and `gap_to_top`: the difference between the highest salary in that employee's department and the employee's own salary (0 for the top earner). Use a window function partitioned by department. Order by `department` ascending, then `gap_to_top` ascending.",
+    "constraints": "Use MAX(salary) OVER (PARTITION BY department). Exclude NULL departments.",
+    "examples": [
+      {
+        "input": "employees seed data",
+        "output": "Carol, Engineering, 0; Alice, Engineering, 17000; Hugo, Engineering, 42000"
+      },
+      {
+        "input": "employees seed data",
+        "output": "7 row(s), columns: name, department, gap_to_top"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "name",
+        "department",
+        "gap_to_top"
+      ],
+      "rows": [
+        [
+          "Carol",
+          "Engineering",
+          0
+        ],
+        [
+          "Alice",
+          "Engineering",
+          17000
+        ],
+        [
+          "Hugo",
+          "Engineering",
+          42000
+        ],
+        [
+          "Grace",
+          "Finance",
+          0
+        ],
+        [
+          "Eve",
+          "Marketing",
+          0
+        ],
+        [
+          "Dave",
+          "Sales",
+          0
+        ],
+        [
+          "Bob",
+          "Sales",
+          3000
+        ]
+      ]
+    },
+    "hints": [
+      "A windowed MAX over the department gives each row its department's top salary.",
+      "PARTITION BY department restarts the window per department.",
+      "Subtract the employee's salary from that windowed max."
+    ],
+    "bruteForce": {
+      "code": "SELECT e.name, e.department, (SELECT MAX(salary) FROM employees x WHERE x.department=e.department)-e.salary AS gap_to_top FROM employees e WHERE e.department IS NOT NULL ORDER BY e.department, gap_to_top;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT name, department, MAX(salary) OVER (PARTITION BY department) - salary AS gap_to_top FROM employees WHERE department IS NOT NULL ORDER BY department ASC, gap_to_top ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "What does PARTITION BY department do in the window?",
+      "choices": [
+        {
+          "label": "Computes the MAX separately within each department",
+          "correct": true
+        },
+        {
+          "label": "Filters out other departments",
+          "correct": false
+        },
+        {
+          "label": "Sorts by department",
+          "correct": false
+        },
+        {
+          "label": "Groups rows, collapsing them",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "window-functions",
+      "partition-by",
+      "max-over"
+    ]
+  },
+  {
+    "id": "sql-c-order-line-totals",
+    "track": "sql",
+    "topic": "joins",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-joins",
+    "estMinutes": 12,
+    "companies": [
+      "amazon",
+      "flipkart"
+    ],
+    "schema": "ecommerce",
+    "prompt": "For every order item, return the order `id` as `order_id`, the product `name` as `product`, and the line total `quantity * price` as `line_total`. Join order_items to products. Order by `order_id` ascending, then `product` ascending.",
+    "constraints": "Join order_items.product_id = products.id; multiply quantity by price.",
+    "examples": [
+      {
+        "input": "ecommerce seed data",
+        "output": "1, Headphones, 6000; 1, Laptop, 60000; 2, Phone, 25000"
+      },
+      {
+        "input": "ecommerce seed data",
+        "output": "6 row(s), columns: order_id, product, line_total"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "order_id",
+        "product",
+        "line_total"
+      ],
+      "rows": [
+        [
+          1,
+          "Headphones",
+          6000
+        ],
+        [
+          1,
+          "Laptop",
+          60000
+        ],
+        [
+          2,
+          "Phone",
+          25000
+        ],
+        [
+          3,
+          "Book",
+          1500
+        ],
+        [
+          4,
+          "Notebook",
+          750
+        ],
+        [
+          5,
+          "Laptop",
+          120000
+        ]
+      ]
+    },
+    "hints": [
+      "Join order_items to products on product_id.",
+      "The line total is quantity times the product price.",
+      "Alias the computed column line_total and order by order_id then product."
+    ],
+    "bruteForce": {
+      "code": "SELECT oi.order_id AS order_id, p.name AS product, p.price*oi.quantity AS line_total FROM products p JOIN order_items oi ON oi.product_id=p.id ORDER BY 1,2;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT oi.order_id AS order_id, p.name AS product, oi.quantity * p.price AS line_total FROM order_items oi JOIN products p ON oi.product_id = p.id ORDER BY order_id ASC, product ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "Where does the per-line price come from?",
+      "choices": [
+        {
+          "label": "The products table, joined via product_id",
+          "correct": true
+        },
+        {
+          "label": "The orders table",
+          "correct": false
+        },
+        {
+          "label": "The customers table",
+          "correct": false
+        },
+        {
+          "label": "order_items stores the price directly",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "joins",
+      "arithmetic",
+      "order-items"
+    ]
+  },
+  {
+    "id": "sql-c-revenue-per-category",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-aggregation",
+    "estMinutes": 13,
+    "companies": [
+      "amazon",
+      "google"
+    ],
+    "schema": "ecommerce",
+    "prompt": "Compute total revenue per product `category` across ALL order items (revenue = sum of quantity * price). Return `category` and `revenue`. Order by `revenue` descending, then `category` ascending.",
+    "constraints": "Join order_items to products, group by category, sum quantity*price.",
+    "examples": [
+      {
+        "input": "ecommerce seed data",
+        "output": "electronics, 211000; books, 1500; stationery, 750"
+      },
+      {
+        "input": "ecommerce seed data",
+        "output": "3 row(s), columns: category, revenue"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "category",
+        "revenue"
+      ],
+      "rows": [
+        [
+          "electronics",
+          211000
+        ],
+        [
+          "books",
+          1500
+        ],
+        [
+          "stationery",
+          750
+        ]
+      ]
+    },
+    "hints": [
+      "Join to products to get category and price.",
+      "Revenue per line is quantity * price; SUM it per category.",
+      "Group by category, order by the summed revenue."
+    ],
+    "bruteForce": {
+      "code": "SELECT p.category, SUM(p.price*oi.quantity) AS revenue FROM products p JOIN order_items oi ON oi.product_id=p.id GROUP BY p.category ORDER BY 2 DESC, 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT p.category, SUM(oi.quantity * p.price) AS revenue FROM order_items oi JOIN products p ON oi.product_id = p.id GROUP BY p.category ORDER BY revenue DESC, p.category ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "Which clause produces one row per category?",
+      "choices": [
+        {
+          "label": "GROUP BY category",
+          "correct": true
+        },
+        {
+          "label": "ORDER BY category",
+          "correct": false
+        },
+        {
+          "label": "DISTINCT category",
+          "correct": false
+        },
+        {
+          "label": "HAVING category",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "aggregation",
+      "sum",
+      "group-by",
+      "joins"
+    ]
+  },
+  {
+    "id": "sql-c-customers-multi-order",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-aggregation",
+    "estMinutes": 11,
+    "companies": [
+      "amazon",
+      "wipro"
+    ],
+    "schema": "ecommerce",
+    "prompt": "Return the `name` of each customer who has placed MORE THAN ONE order, with their order count as `orders`. Order by `orders` descending, then `name` ascending.",
+    "constraints": "Join customers to orders, group by customer, HAVING COUNT(*) > 1.",
+    "examples": [
+      {
+        "input": "ecommerce seed data",
+        "output": "Riya, 2"
+      },
+      {
+        "input": "ecommerce seed data",
+        "output": "1 row(s), columns: name, orders"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "name",
+        "orders"
+      ],
+      "rows": [
+        [
+          "Riya",
+          2
+        ]
+      ]
+    },
+    "hints": [
+      "Join orders to customers and count orders per customer.",
+      "HAVING COUNT(*) > 1 keeps repeat customers.",
+      "Group by the customer; order by the count."
+    ],
+    "bruteForce": {
+      "code": "SELECT c.name, COUNT(o.id) AS orders FROM customers c JOIN orders o ON o.customer_id=c.id GROUP BY c.id HAVING COUNT(o.id)>1 ORDER BY orders DESC, c.name;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT c.name, COUNT(*) AS orders FROM customers c JOIN orders o ON o.customer_id = c.id GROUP BY c.id, c.name HAVING COUNT(*) > 1 ORDER BY orders DESC, c.name ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "Why group by c.id (not just c.name)?",
+      "choices": [
+        {
+          "label": "id uniquely identifies a customer even if two share a name",
+          "correct": true
+        },
+        {
+          "label": "name cannot be grouped",
+          "correct": false
+        },
+        {
+          "label": "It is required for ORDER BY",
+          "correct": false
+        },
+        {
+          "label": "To sort alphabetically",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "aggregation",
+      "having",
+      "count",
+      "joins"
+    ]
+  },
+  {
+    "id": "sql-c-customers-no-delivered",
+    "track": "sql",
+    "topic": "nulls",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-joins",
+    "estMinutes": 12,
+    "companies": [
+      "amazon",
+      "accenture"
+    ],
+    "schema": "ecommerce",
+    "prompt": "Return the `name` of every customer who has NO `'delivered'` order \u2014 they may have placed other orders (shipped/cancelled) but none that reached delivered. Use a LEFT JOIN to the customer's delivered orders and a NULL check (an anti-join). Order by name ascending.",
+    "constraints": "LEFT JOIN orders with the status='delivered' condition in the JOIN (not WHERE), then keep rows where the order id IS NULL.",
+    "examples": [
+      {
+        "input": "ecommerce seed data",
+        "output": "Kavya"
+      },
+      {
+        "input": "ecommerce seed data",
+        "output": "1 row(s), columns: name"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "Kavya"
+        ]
+      ]
+    },
+    "hints": [
+      "Put the status='delivered' condition in the JOIN ON clause so non-delivered customers still produce a NULL match.",
+      "A LEFT JOIN keeps every customer; unmatched ones have NULL order columns.",
+      "Filter WHERE o.id IS NULL to keep customers with no delivered order."
+    ],
+    "bruteForce": {
+      "code": "SELECT name FROM customers WHERE id NOT IN (SELECT customer_id FROM orders WHERE status='delivered') ORDER BY name;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT c.name FROM customers c LEFT JOIN orders o ON o.customer_id = c.id AND o.status = 'delivered' WHERE o.id IS NULL ORDER BY c.name;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "Why put status='delivered' in the ON clause rather than WHERE?",
+      "choices": [
+        {
+          "label": "In WHERE it would discard the NULL rows from the LEFT JOIN, breaking the anti-join",
+          "correct": true
+        },
+        {
+          "label": "WHERE cannot reference status",
+          "correct": false
+        },
+        {
+          "label": "It is purely stylistic",
+          "correct": false
+        },
+        {
+          "label": "ON is faster than WHERE",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "nulls",
+      "left-join",
+      "anti-join",
+      "conditional-join"
+    ]
+  },
+  {
+    "id": "sql-c-products-above-avg-price",
+    "track": "sql",
+    "topic": "subqueries",
+    "type": "sql",
+    "difficulty": "easy",
+    "pattern": "sql-subqueries",
+    "estMinutes": 8,
+    "companies": [
+      "tcs",
+      "infosys"
+    ],
+    "schema": "ecommerce",
+    "prompt": "Return the `name` and `price` of every product priced strictly above the average product price. Order by `price` descending, then `name` ascending.",
+    "constraints": "Use a scalar subquery for the average price.",
+    "examples": [
+      {
+        "input": "ecommerce seed data",
+        "output": "Laptop, 60000; Phone, 25000"
+      },
+      {
+        "input": "ecommerce seed data",
+        "output": "2 row(s), columns: name, price"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "name",
+        "price"
+      ],
+      "rows": [
+        [
+          "Laptop",
+          60000
+        ],
+        [
+          "Phone",
+          25000
+        ]
+      ]
+    },
+    "hints": [
+      "A scalar subquery returns the single average price.",
+      "Compare each product's price to that value.",
+      "Order by price descending."
+    ],
+    "bruteForce": {
+      "code": "SELECT name, price FROM products WHERE price > (SELECT AVG(price) FROM products) ORDER BY 2 DESC, 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT name, price FROM products WHERE price > (SELECT AVG(price) FROM products) ORDER BY price DESC, name ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "What kind of subquery is (SELECT AVG(price) FROM products)?",
+      "choices": [
+        {
+          "label": "A scalar subquery returning a single value",
+          "correct": true
+        },
+        {
+          "label": "A correlated subquery",
+          "correct": false
+        },
+        {
+          "label": "A derived table",
+          "correct": false
+        },
+        {
+          "label": "A common table expression",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "subqueries",
+      "scalar-subquery",
+      "average"
+    ]
+  },
+  {
+    "id": "sql-c-product-price-rank-in-category",
+    "track": "sql",
+    "topic": "window-functions",
+    "type": "sql",
+    "difficulty": "hard",
+    "pattern": "sql-window",
+    "estMinutes": 15,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "schema": "ecommerce",
+    "prompt": "Within each product `category`, rank products by `price` descending using ROW_NUMBER. Return `category`, `name`, `price`, and the rank as `price_rank`. Order by `category` ascending, then `price_rank` ascending.",
+    "constraints": "Use ROW_NUMBER() OVER (PARTITION BY category ORDER BY price DESC). Break ties deterministically by name.",
+    "examples": [
+      {
+        "input": "ecommerce seed data",
+        "output": "books, Book, 500, 1; electronics, Laptop, 60000, 1; electronics, Phone, 25000, 2"
+      },
+      {
+        "input": "ecommerce seed data",
+        "output": "5 row(s), columns: category, name, price, price_rank"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "category",
+        "name",
+        "price",
+        "price_rank"
+      ],
+      "rows": [
+        [
+          "books",
+          "Book",
+          500,
+          1
+        ],
+        [
+          "electronics",
+          "Laptop",
+          60000,
+          1
+        ],
+        [
+          "electronics",
+          "Phone",
+          25000,
+          2
+        ],
+        [
+          "electronics",
+          "Headphones",
+          3000,
+          3
+        ],
+        [
+          "stationery",
+          "Notebook",
+          150,
+          1
+        ]
+      ]
+    },
+    "hints": [
+      "PARTITION BY category restarts numbering per category.",
+      "ROW_NUMBER gives a unique 1..n within each partition.",
+      "Add name to the window ORDER BY so ties are deterministic."
+    ],
+    "bruteForce": {
+      "code": "SELECT category, name, price, ROW_NUMBER() OVER (PARTITION BY category ORDER BY price DESC, name) AS price_rank FROM products ORDER BY 1, 4;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT category, name, price, ROW_NUMBER() OVER (PARTITION BY category ORDER BY price DESC, name ASC) AS price_rank FROM products ORDER BY category ASC, price_rank ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "How does ROW_NUMBER differ from RANK?",
+      "choices": [
+        {
+          "label": "ROW_NUMBER is always unique (1..n); RANK can repeat on ties",
+          "correct": true
+        },
+        {
+          "label": "They are identical",
+          "correct": false
+        },
+        {
+          "label": "ROW_NUMBER repeats on ties",
+          "correct": false
+        },
+        {
+          "label": "RANK is always unique",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "window-functions",
+      "row-number",
+      "partition-by"
+    ]
+  },
+  {
+    "id": "sql-c-delivered-revenue-by-customer",
+    "track": "sql",
+    "topic": "joins",
+    "type": "sql",
+    "difficulty": "hard",
+    "pattern": "sql-joins",
+    "estMinutes": 17,
+    "companies": [
+      "amazon",
+      "flipkart",
+      "google"
+    ],
+    "schema": "ecommerce",
+    "prompt": "Considering only orders with status `'delivered'`, return each customer `name` and their total delivered revenue as `revenue` (sum of quantity * price over that customer's delivered orders). Only include customers with at least one delivered order. Order by `revenue` descending, then `name` ascending.",
+    "constraints": "Chain customers -> orders -> order_items -> products; filter status = 'delivered'.",
+    "examples": [
+      {
+        "input": "ecommerce seed data",
+        "output": "Sahil, 120000; Riya, 66000; Arjun, 25000"
+      },
+      {
+        "input": "ecommerce seed data",
+        "output": "3 row(s), columns: name, revenue"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "name",
+        "revenue"
+      ],
+      "rows": [
+        [
+          "Sahil",
+          120000
+        ],
+        [
+          "Riya",
+          66000
+        ],
+        [
+          "Arjun",
+          25000
+        ]
+      ]
+    },
+    "hints": [
+      "Join four tables: customers, orders, order_items, products.",
+      "Filter to delivered orders in WHERE.",
+      "Group by customer and sum quantity*price."
+    ],
+    "bruteForce": {
+      "code": "SELECT c.name, SUM(p.price*oi.quantity) AS revenue FROM customers c, orders o, order_items oi, products p WHERE o.customer_id=c.id AND oi.order_id=o.id AND p.id=oi.product_id AND o.status='delivered' GROUP BY c.id ORDER BY 2 DESC, 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT c.name, SUM(oi.quantity * p.price) AS revenue FROM customers c JOIN orders o ON o.customer_id = c.id JOIN order_items oi ON oi.order_id = o.id JOIN products p ON p.id = oi.product_id WHERE o.status = 'delivered' GROUP BY c.id, c.name ORDER BY revenue DESC, c.name ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "Where should the status = 'delivered' filter go?",
+      "choices": [
+        {
+          "label": "In WHERE \u2014 it filters rows before aggregation",
+          "correct": true
+        },
+        {
+          "label": "In HAVING",
+          "correct": false
+        },
+        {
+          "label": "In ORDER BY",
+          "correct": false
+        },
+        {
+          "label": "It cannot be filtered",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "joins",
+      "multi-join",
+      "aggregation",
+      "filter"
+    ]
+  },
+  {
+    "id": "sql-c-category-spend-cte",
+    "track": "sql",
+    "topic": "cte",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-subqueries",
+    "estMinutes": 14,
+    "companies": [
+      "amazon",
+      "google"
+    ],
+    "schema": "ecommerce",
+    "prompt": "Using a CTE that first computes each order item's line total (quantity * price), return each product `category` and its total `revenue`, but only for categories whose total revenue is at least 10000. Order by `revenue` descending, then `category` ascending.",
+    "constraints": "Define a WITH clause for the line totals, then aggregate and filter with HAVING.",
+    "examples": [
+      {
+        "input": "ecommerce seed data",
+        "output": "electronics, 211000"
+      },
+      {
+        "input": "ecommerce seed data",
+        "output": "1 row(s), columns: category, revenue"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "category",
+        "revenue"
+      ],
+      "rows": [
+        [
+          "electronics",
+          211000
+        ]
+      ]
+    },
+    "hints": [
+      "A WITH clause names an intermediate result you can query like a table.",
+      "First compute line totals with category, then group and sum.",
+      "Filter the grouped revenue with HAVING."
+    ],
+    "bruteForce": {
+      "code": "SELECT p.category, SUM(p.price*oi.quantity) AS revenue FROM products p JOIN order_items oi ON oi.product_id=p.id GROUP BY p.category HAVING SUM(p.price*oi.quantity)>=10000 ORDER BY 2 DESC, 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "WITH lines AS (SELECT p.category AS category, oi.quantity * p.price AS line_total FROM order_items oi JOIN products p ON p.id = oi.product_id) SELECT category, SUM(line_total) AS revenue FROM lines GROUP BY category HAVING SUM(line_total) >= 10000 ORDER BY revenue DESC, category ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "What is a CTE (WITH clause)?",
+      "choices": [
+        {
+          "label": "A named temporary result set usable within the query",
+          "correct": true
+        },
+        {
+          "label": "A permanent table",
+          "correct": false
+        },
+        {
+          "label": "An index hint",
+          "correct": false
+        },
+        {
+          "label": "A stored procedure",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "cte",
+      "with",
+      "aggregation",
+      "having"
+    ]
+  },
+  {
+    "id": "sql-c-top-spending-customer",
+    "track": "sql",
+    "topic": "subqueries",
+    "type": "sql",
+    "difficulty": "hard",
+    "pattern": "sql-subqueries",
+    "estMinutes": 16,
+    "companies": [
+      "amazon",
+      "google",
+      "flipkart"
+    ],
+    "schema": "ecommerce",
+    "prompt": "Return the single `name` and total spend as `total_spent` of the customer with the highest overall spend (sum of quantity * price across all their order items, any status). If there were a tie, return the alphabetically first name. Return exactly one row.",
+    "constraints": "Aggregate spend per customer, order by spend desc then name, and LIMIT 1.",
+    "examples": [
+      {
+        "input": "ecommerce seed data",
+        "output": "Sahil, 120000"
+      },
+      {
+        "input": "ecommerce seed data",
+        "output": "1 row(s), columns: name, total_spent"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "name",
+        "total_spent"
+      ],
+      "rows": [
+        [
+          "Sahil",
+          120000
+        ]
+      ]
+    },
+    "hints": [
+      "Sum quantity*price per customer across the joins.",
+      "Order by the total descending, name ascending for the tie-break.",
+      "LIMIT 1 returns just the top customer."
+    ],
+    "bruteForce": {
+      "code": "SELECT c.name, SUM(p.price*oi.quantity) AS total_spent FROM customers c JOIN orders o ON o.customer_id=c.id JOIN order_items oi ON oi.order_id=o.id JOIN products p ON p.id=oi.product_id GROUP BY c.id ORDER BY 2 DESC, 1 LIMIT 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT c.name, SUM(oi.quantity * p.price) AS total_spent FROM customers c JOIN orders o ON o.customer_id = c.id JOIN order_items oi ON oi.order_id = o.id JOIN products p ON p.id = oi.product_id GROUP BY c.id, c.name ORDER BY total_spent DESC, c.name ASC LIMIT 1;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "How is the tie-break (alphabetical) guaranteed?",
+      "choices": [
+        {
+          "label": "ORDER BY total_spent DESC, name ASC before LIMIT 1",
+          "correct": true
+        },
+        {
+          "label": "LIMIT 1 picks alphabetically by default",
+          "correct": false
+        },
+        {
+          "label": "GROUP BY sorts by name",
+          "correct": false
+        },
+        {
+          "label": "It is not guaranteed",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "subqueries",
+      "aggregation",
+      "limit",
+      "top-n"
+    ]
+  },
+  {
+    "id": "sql-c-posts-per-user",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "sql",
+    "difficulty": "easy",
+    "pattern": "sql-aggregation",
+    "estMinutes": 8,
+    "companies": [
+      "tcs",
+      "infosys"
+    ],
+    "schema": "social",
+    "prompt": "Return each `username` and how many posts they have authored as `post_count`, including users with zero posts. Order by `post_count` descending, then `username` ascending.",
+    "constraints": "LEFT JOIN users to posts so zero-post users still appear; COUNT the post ids.",
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "bhavna, 3; harsh, 3; aarav, 2"
+      },
+      {
+        "input": "social seed data",
+        "output": "8 row(s), columns: username, post_count"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "username",
+        "post_count"
+      ],
+      "rows": [
+        [
+          "bhavna",
+          3
+        ],
+        [
+          "harsh",
+          3
+        ],
+        [
+          "aarav",
+          2
+        ],
+        [
+          "divya",
+          2
+        ],
+        [
+          "esha",
+          2
+        ],
+        [
+          "chetan",
+          1
+        ],
+        [
+          "farhan",
+          1
+        ],
+        [
+          "gita",
+          1
+        ]
+      ]
+    },
+    "hints": [
+      "A LEFT JOIN keeps users with no posts.",
+      "COUNT(p.id) counts only matched posts (0 for none).",
+      "Group by the user."
+    ],
+    "bruteForce": {
+      "code": "SELECT u.username, COUNT(p.id) AS post_count FROM users u LEFT JOIN posts p ON p.user_id=u.id GROUP BY u.id ORDER BY 2 DESC, 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT u.username, COUNT(p.id) AS post_count FROM users u LEFT JOIN posts p ON p.user_id = u.id GROUP BY u.id, u.username ORDER BY post_count DESC, u.username ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "Why COUNT(p.id) rather than COUNT(*) here?",
+      "choices": [
+        {
+          "label": "COUNT(*) would count the unmatched LEFT JOIN row as 1; COUNT(p.id) ignores NULLs giving 0",
+          "correct": true
+        },
+        {
+          "label": "COUNT(*) is invalid with GROUP BY",
+          "correct": false
+        },
+        {
+          "label": "They always give the same result",
+          "correct": false
+        },
+        {
+          "label": "COUNT(p.id) counts users",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "aggregation",
+      "left-join",
+      "count"
+    ]
+  },
+  {
+    "id": "sql-c-users-more-than-two-posts",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-aggregation",
+    "estMinutes": 10,
+    "companies": [
+      "amazon",
+      "wipro"
+    ],
+    "schema": "social",
+    "prompt": "Return the `username` of every user who has authored MORE THAN TWO posts, with their `post_count`. Order by `post_count` descending, then `username` ascending.",
+    "constraints": "Group posts by user and filter with HAVING COUNT(*) > 2.",
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "bhavna, 3; harsh, 3"
+      },
+      {
+        "input": "social seed data",
+        "output": "2 row(s), columns: username, post_count"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "username",
+        "post_count"
+      ],
+      "rows": [
+        [
+          "bhavna",
+          3
+        ],
+        [
+          "harsh",
+          3
+        ]
+      ]
+    },
+    "hints": [
+      "Join users to their posts and count.",
+      "HAVING COUNT(*) > 2 keeps only prolific posters.",
+      "Group by the user."
+    ],
+    "bruteForce": {
+      "code": "SELECT u.username, COUNT(p.id) AS post_count FROM users u JOIN posts p ON p.user_id=u.id GROUP BY u.id HAVING COUNT(p.id)>2 ORDER BY 2 DESC, 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT u.username, COUNT(*) AS post_count FROM users u JOIN posts p ON p.user_id = u.id GROUP BY u.id, u.username HAVING COUNT(*) > 2 ORDER BY post_count DESC, u.username ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "HAVING COUNT(*) > 2 is applied:",
+      "choices": [
+        {
+          "label": "After grouping, to filter whole groups",
+          "correct": true
+        },
+        {
+          "label": "Before grouping, per row",
+          "correct": false
+        },
+        {
+          "label": "During ORDER BY",
+          "correct": false
+        },
+        {
+          "label": "Only with DISTINCT",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "aggregation",
+      "having",
+      "count"
+    ]
+  },
+  {
+    "id": "sql-c-mutual-follows",
+    "track": "sql",
+    "topic": "joins",
+    "type": "sql",
+    "difficulty": "hard",
+    "pattern": "sql-joins",
+    "estMinutes": 18,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "schema": "social",
+    "prompt": "Find all MUTUAL follow pairs: distinct pairs of users who follow each other (A follows B AND B follows A). Return two username columns `user_a` and `user_b` with `user_a` < `user_b` (alphabetically) to avoid listing each pair twice. Order by `user_a` ascending, then `user_b` ascending.",
+    "constraints": "Self-join follows to its reverse, then join to users twice for the names; keep each pair once with a < b.",
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "aarav, bhavna; aarav, chetan; bhavna, esha"
+      },
+      {
+        "input": "social seed data",
+        "output": "3 row(s), columns: user_a, user_b"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "user_a",
+        "user_b"
+      ],
+      "rows": [
+        [
+          "aarav",
+          "bhavna"
+        ],
+        [
+          "aarav",
+          "chetan"
+        ],
+        [
+          "bhavna",
+          "esha"
+        ]
+      ]
+    },
+    "hints": [
+      "A mutual follow means a row (a,b) AND a row (b,a) both exist in follows.",
+      "Self-join follows where f1.follower=f2.followee and f1.followee=f2.follower.",
+      "Use username_a < username_b to keep each pair only once, then join users for the names."
+    ],
+    "bruteForce": {
+      "code": "SELECT ua.username AS user_a, ub.username AS user_b FROM follows f1 JOIN follows f2 ON f1.follower_id=f2.followee_id AND f1.followee_id=f2.follower_id JOIN users ua ON ua.id=f1.follower_id JOIN users ub ON ub.id=f1.followee_id WHERE ua.username<ub.username ORDER BY 1,2;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT ua.username AS user_a, ub.username AS user_b FROM follows f1 JOIN follows f2 ON f1.follower_id = f2.followee_id AND f1.followee_id = f2.follower_id JOIN users ua ON ua.id = f1.follower_id JOIN users ub ON ub.id = f1.followee_id WHERE ua.username < ub.username ORDER BY user_a ASC, user_b ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "Why the condition user_a < user_b?",
+      "choices": [
+        {
+          "label": "To list each mutual pair once instead of as both (a,b) and (b,a)",
+          "correct": true
+        },
+        {
+          "label": "To sort the follows table",
+          "correct": false
+        },
+        {
+          "label": "To exclude self-follows only",
+          "correct": false
+        },
+        {
+          "label": "It is required by the self-join syntax",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "joins",
+      "self-join",
+      "mutual"
+    ]
+  },
+  {
+    "id": "sql-c-post-like-counts",
+    "track": "sql",
+    "topic": "joins",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-joins",
+    "estMinutes": 12,
+    "companies": [
+      "amazon",
+      "flipkart"
+    ],
+    "schema": "social",
+    "prompt": "Return the `body` of each post and the number of likes it received as `likes`, including posts with zero likes. Order by `likes` descending, then `body` ascending.",
+    "constraints": "LEFT JOIN posts to likes and COUNT the like rows.",
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "hello world, 4; launched!, 3; product launch, 3"
+      },
+      {
+        "input": "social seed data",
+        "output": "15 row(s), columns: body, likes"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "body",
+        "likes"
+      ],
+      "rows": [
+        [
+          "hello world",
+          4
+        ],
+        [
+          "launched!",
+          3
+        ],
+        [
+          "product launch",
+          3
+        ],
+        [
+          "startup grind",
+          3
+        ],
+        [
+          "good morning",
+          1
+        ],
+        [
+          "lunch was great",
+          1
+        ],
+        [
+          "another post",
+          0
+        ],
+        [
+          "evening walk",
+          0
+        ],
+        [
+          "first post",
+          0
+        ],
+        [
+          "follow-up",
+          0
+        ],
+        [
+          "london is rainy",
+          0
+        ],
+        [
+          "photo dump",
+          0
+        ],
+        [
+          "shipping day",
+          0
+        ],
+        [
+          "travel diary 1",
+          0
+        ],
+        [
+          "travel diary 2",
+          0
+        ]
+      ]
+    },
+    "hints": [
+      "LEFT JOIN keeps posts that nobody liked.",
+      "COUNT(l.post_id) is 0 for unliked posts.",
+      "Group by the post."
+    ],
+    "bruteForce": {
+      "code": "SELECT p.body, COUNT(l.post_id) AS likes FROM posts p LEFT JOIN likes l ON l.post_id=p.id GROUP BY p.id ORDER BY 2 DESC, 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT p.body, COUNT(l.post_id) AS likes FROM posts p LEFT JOIN likes l ON l.post_id = p.id GROUP BY p.id, p.body ORDER BY likes DESC, p.body ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "What guarantees zero-like posts still appear?",
+      "choices": [
+        {
+          "label": "The LEFT JOIN preserves every post even with no matching like",
+          "correct": true
+        },
+        {
+          "label": "COUNT always returns at least 1",
+          "correct": false
+        },
+        {
+          "label": "The GROUP BY adds them",
+          "correct": false
+        },
+        {
+          "label": "An inner join",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "joins",
+      "left-join",
+      "count",
+      "aggregation"
+    ]
+  },
+  {
+    "id": "sql-c-most-liked-post",
+    "track": "sql",
+    "topic": "subqueries",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-subqueries",
+    "estMinutes": 13,
+    "companies": [
+      "amazon",
+      "google"
+    ],
+    "schema": "social",
+    "prompt": "Return the `body` and like count `likes` of the single most-liked post. If multiple posts tie for the most likes, return the one whose `body` is alphabetically first. Return exactly one row.",
+    "constraints": "Aggregate likes per post, order by likes desc then body, LIMIT 1.",
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "hello world, 4"
+      },
+      {
+        "input": "social seed data",
+        "output": "1 row(s), columns: body, likes"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "body",
+        "likes"
+      ],
+      "rows": [
+        [
+          "hello world",
+          4
+        ]
+      ]
+    },
+    "hints": [
+      "Count likes per post.",
+      "Order by the like count descending, body ascending for the tie-break.",
+      "LIMIT 1 returns the winner."
+    ],
+    "bruteForce": {
+      "code": "SELECT p.body, COUNT(l.post_id) AS likes FROM posts p LEFT JOIN likes l ON l.post_id=p.id GROUP BY p.id ORDER BY 2 DESC, 1 LIMIT 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT p.body, COUNT(l.post_id) AS likes FROM posts p LEFT JOIN likes l ON l.post_id = p.id GROUP BY p.id, p.body ORDER BY likes DESC, p.body ASC LIMIT 1;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "How is the tie resolved deterministically?",
+      "choices": [
+        {
+          "label": "Secondary sort on body ascending before LIMIT 1",
+          "correct": true
+        },
+        {
+          "label": "LIMIT 1 is random on ties",
+          "correct": false
+        },
+        {
+          "label": "The first inserted post wins",
+          "correct": false
+        },
+        {
+          "label": "It returns all tied posts",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "subqueries",
+      "aggregation",
+      "limit",
+      "top-n"
+    ]
+  },
+  {
+    "id": "sql-c-days-between-posts",
+    "track": "sql",
+    "topic": "window-functions",
+    "type": "sql",
+    "difficulty": "hard",
+    "pattern": "sql-window",
+    "estMinutes": 18,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "schema": "social",
+    "prompt": "For users who have posted more than once, return `username`, `posted_at`, and `days_since_prev`: the number of days between this post and that user's PREVIOUS post (using LAG over posts ordered by date within each user). Only return rows where a previous post exists (skip each user's first post). Order by `username` ascending, then `posted_at` ascending.",
+    "constraints": "Use LAG(posted_at) OVER (PARTITION BY user_id ORDER BY posted_at) and julianday() difference; filter out NULL gaps.",
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "aarav, 2024-01-03, 2; bhavna, 2024-01-04, 2; bhavna, 2024-01-08, 4"
+      },
+      {
+        "input": "social seed data",
+        "output": "7 row(s), columns: username, posted_at, days_since_prev"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "username",
+        "posted_at",
+        "days_since_prev"
+      ],
+      "rows": [
+        [
+          "aarav",
+          "2024-01-03",
+          2
+        ],
+        [
+          "bhavna",
+          "2024-01-04",
+          2
+        ],
+        [
+          "bhavna",
+          "2024-01-08",
+          4
+        ],
+        [
+          "divya",
+          "2024-01-07",
+          1
+        ],
+        [
+          "esha",
+          "2024-01-12",
+          3
+        ],
+        [
+          "harsh",
+          "2024-01-14",
+          1
+        ],
+        [
+          "harsh",
+          "2024-01-15",
+          1
+        ]
+      ]
+    },
+    "hints": [
+      "LAG fetches the previous row's value within the partition.",
+      "Partition by user and order by posted_at so LAG gives the prior post date.",
+      "julianday() lets you subtract two dates to get a day count; the first post per user has a NULL gap to filter out."
+    ],
+    "bruteForce": {
+      "code": "WITH gaps AS (SELECT u.username AS username, p.posted_at AS posted_at, CAST(julianday(p.posted_at)-julianday(LAG(p.posted_at) OVER (PARTITION BY p.user_id ORDER BY p.posted_at)) AS INTEGER) AS days_since_prev FROM posts p JOIN users u ON u.id=p.user_id) SELECT username, posted_at, days_since_prev FROM gaps WHERE days_since_prev IS NOT NULL ORDER BY 1,2;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "WITH gaps AS (SELECT u.username AS username, p.posted_at AS posted_at, CAST(julianday(p.posted_at) - julianday(LAG(p.posted_at) OVER (PARTITION BY p.user_id ORDER BY p.posted_at)) AS INTEGER) AS days_since_prev FROM posts p JOIN users u ON u.id = p.user_id) SELECT username, posted_at, days_since_prev FROM gaps WHERE days_since_prev IS NOT NULL ORDER BY username ASC, posted_at ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "What does LAG(posted_at) OVER (PARTITION BY user_id ORDER BY posted_at) return?",
+      "choices": [
+        {
+          "label": "The previous post's date for the same user (NULL for their first post)",
+          "correct": true
+        },
+        {
+          "label": "The next post's date",
+          "correct": false
+        },
+        {
+          "label": "The earliest post overall",
+          "correct": false
+        },
+        {
+          "label": "The average posting date",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "window-functions",
+      "lag",
+      "dates",
+      "cte"
+    ]
+  },
+  {
+    "id": "sql-c-followers-count",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-aggregation",
+    "estMinutes": 11,
+    "companies": [
+      "amazon",
+      "wipro"
+    ],
+    "schema": "social",
+    "prompt": "Return each `username` and their number of FOLLOWERS as `followers` (people who follow them), including users with zero followers. Order by `followers` descending, then `username` ascending.",
+    "constraints": "LEFT JOIN users to follows on users.id = follows.followee_id; count followers.",
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "aarav, 5; esha, 4; bhavna, 2"
+      },
+      {
+        "input": "social seed data",
+        "output": "8 row(s), columns: username, followers"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "username",
+        "followers"
+      ],
+      "rows": [
+        [
+          "aarav",
+          5
+        ],
+        [
+          "esha",
+          4
+        ],
+        [
+          "bhavna",
+          2
+        ],
+        [
+          "chetan",
+          1
+        ],
+        [
+          "divya",
+          1
+        ],
+        [
+          "farhan",
+          0
+        ],
+        [
+          "gita",
+          0
+        ],
+        [
+          "harsh",
+          0
+        ]
+      ]
+    },
+    "hints": [
+      "A follower is a row in follows whose followee_id is this user.",
+      "LEFT JOIN keeps users nobody follows.",
+      "Count the follower_id (0 for none)."
+    ],
+    "bruteForce": {
+      "code": "SELECT u.username, COUNT(f.follower_id) AS followers FROM users u LEFT JOIN follows f ON f.followee_id=u.id GROUP BY u.id ORDER BY 2 DESC, 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT u.username, COUNT(f.follower_id) AS followers FROM users u LEFT JOIN follows f ON f.followee_id = u.id GROUP BY u.id, u.username ORDER BY followers DESC, u.username ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "Which join column identifies a user's followers?",
+      "choices": [
+        {
+          "label": "follows.followee_id = users.id",
+          "correct": true
+        },
+        {
+          "label": "follows.follower_id = users.id",
+          "correct": false
+        },
+        {
+          "label": "follows.follower_id = follows.followee_id",
+          "correct": false
+        },
+        {
+          "label": "users.id = posts.user_id",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "aggregation",
+      "left-join",
+      "count",
+      "graph"
+    ]
+  },
+  {
+    "id": "sql-c-posters-or-likers-union",
+    "track": "sql",
+    "topic": "set-operations",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-advanced",
+    "estMinutes": 12,
+    "companies": [
+      "amazon",
+      "accenture"
+    ],
+    "schema": "social",
+    "prompt": "Return the distinct `username` of every user who has EITHER authored at least one post OR liked at least one post, combined with UNION. Order by username ascending.",
+    "constraints": "UNION the usernames of posters and likers (joining through users).",
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "aarav; bhavna; chetan"
+      },
+      {
+        "input": "social seed data",
+        "output": "8 row(s), columns: username"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "username"
+      ],
+      "rows": [
+        [
+          "aarav"
+        ],
+        [
+          "bhavna"
+        ],
+        [
+          "chetan"
+        ],
+        [
+          "divya"
+        ],
+        [
+          "esha"
+        ],
+        [
+          "farhan"
+        ],
+        [
+          "gita"
+        ],
+        [
+          "harsh"
+        ]
+      ]
+    },
+    "hints": [
+      "One SELECT for users who posted, one for users who liked.",
+      "UNION removes duplicates so a user who did both appears once.",
+      "Join each side through users to get the username."
+    ],
+    "bruteForce": {
+      "code": "SELECT username FROM users WHERE id IN (SELECT user_id FROM posts) OR id IN (SELECT user_id FROM likes) ORDER BY username;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT u.username FROM users u JOIN posts p ON p.user_id = u.id UNION SELECT u.username FROM users u JOIN likes l ON l.user_id = u.id ORDER BY username;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "A user who both posted and liked appears how many times under UNION?",
+      "choices": [
+        {
+          "label": "Once \u2014 UNION de-duplicates",
+          "correct": true
+        },
+        {
+          "label": "Twice",
+          "correct": false
+        },
+        {
+          "label": "Zero times",
+          "correct": false
+        },
+        {
+          "label": "Once per post",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "set-operations",
+      "union",
+      "distinct"
+    ]
+  },
+  {
+    "id": "sql-c-engagement-cte",
+    "track": "sql",
+    "topic": "cte",
+    "type": "sql",
+    "difficulty": "hard",
+    "pattern": "sql-subqueries",
+    "estMinutes": 19,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "schema": "social",
+    "prompt": "Using CTEs, compute for each user a `username`, their `posts` count, and the total `likes_received` across all their posts. Include users with zero posts (their counts are 0). Order by `likes_received` descending, then `username` ascending.",
+    "constraints": "One CTE for posts-per-user, one for likes-received-per-user; LEFT JOIN both onto users and COALESCE missing counts to 0.",
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "harsh, 3, 6; aarav, 2, 4; esha, 2, 3"
+      },
+      {
+        "input": "social seed data",
+        "output": "8 row(s), columns: username, posts, likes_received"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "username",
+        "posts",
+        "likes_received"
+      ],
+      "rows": [
+        [
+          "harsh",
+          3,
+          6
+        ],
+        [
+          "aarav",
+          2,
+          4
+        ],
+        [
+          "esha",
+          2,
+          3
+        ],
+        [
+          "bhavna",
+          3,
+          2
+        ],
+        [
+          "chetan",
+          1,
+          0
+        ],
+        [
+          "divya",
+          2,
+          0
+        ],
+        [
+          "farhan",
+          1,
+          0
+        ],
+        [
+          "gita",
+          1,
+          0
+        ]
+      ]
+    },
+    "hints": [
+      "Build two summaries: posts per user, and likes received per user (likes joined to the post's author).",
+      "LEFT JOIN both summaries onto the users table.",
+      "COALESCE the counts to 0 for users missing from a summary."
+    ],
+    "bruteForce": {
+      "code": "WITH pc AS (SELECT user_id, COUNT(*) AS posts FROM posts GROUP BY user_id), lc AS (SELECT p.user_id AS user_id, COUNT(*) AS likes_received FROM likes l JOIN posts p ON p.id=l.post_id GROUP BY p.user_id) SELECT u.username, COALESCE(pc.posts,0) AS posts, COALESCE(lc.likes_received,0) AS likes_received FROM users u LEFT JOIN pc ON pc.user_id=u.id LEFT JOIN lc ON lc.user_id=u.id ORDER BY 3 DESC, 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "WITH pc AS (SELECT user_id, COUNT(*) AS posts FROM posts GROUP BY user_id), lc AS (SELECT p.user_id AS user_id, COUNT(*) AS likes_received FROM likes l JOIN posts p ON p.id = l.post_id GROUP BY p.user_id) SELECT u.username, COALESCE(pc.posts, 0) AS posts, COALESCE(lc.likes_received, 0) AS likes_received FROM users u LEFT JOIN pc ON pc.user_id = u.id LEFT JOIN lc ON lc.user_id = u.id ORDER BY likes_received DESC, u.username ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "Why COALESCE(...,0) on the joined counts?",
+      "choices": [
+        {
+          "label": "LEFT JOIN yields NULL for users absent from a CTE; COALESCE turns that into 0",
+          "correct": true
+        },
+        {
+          "label": "To convert text to numbers",
+          "correct": false
+        },
+        {
+          "label": "COUNT can return NULL otherwise",
+          "correct": false
+        },
+        {
+          "label": "To sort the result",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "cte",
+      "left-join",
+      "coalesce",
+      "aggregation"
+    ]
+  },
+  {
+    "id": "sql-c-country-user-counts",
+    "track": "sql",
+    "topic": "aggregation",
+    "type": "sql",
+    "difficulty": "easy",
+    "pattern": "sql-aggregation",
+    "estMinutes": 7,
+    "companies": [
+      "tcs",
+      "infosys"
+    ],
+    "schema": "social",
+    "prompt": "Return each `country` and the number of users from it as `users`, only for countries with at least 2 users. Order by `users` descending, then `country` ascending.",
+    "constraints": "Group users by country; HAVING COUNT(*) >= 2.",
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "IN, 5; US, 2"
+      },
+      {
+        "input": "social seed data",
+        "output": "2 row(s), columns: country, users"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "country",
+        "users"
+      ],
+      "rows": [
+        [
+          "IN",
+          5
+        ],
+        [
+          "US",
+          2
+        ]
+      ]
+    },
+    "hints": [
+      "Group the users by country.",
+      "Count members per country.",
+      "HAVING COUNT(*) >= 2 keeps the larger countries."
+    ],
+    "bruteForce": {
+      "code": "SELECT country, COUNT(*) AS users FROM users GROUP BY country HAVING COUNT(*)>=2 ORDER BY 2 DESC, 1;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT country, COUNT(*) AS users FROM users GROUP BY country HAVING COUNT(*) >= 2 ORDER BY users DESC, country ASC;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "HAVING COUNT(*) >= 2 filters:",
+      "choices": [
+        {
+          "label": "Groups (countries) with two or more users",
+          "correct": true
+        },
+        {
+          "label": "Individual user rows",
+          "correct": false
+        },
+        {
+          "label": "The first two countries",
+          "correct": false
+        },
+        {
+          "label": "Nothing \u2014 it is decorative",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "aggregation",
+      "having",
+      "group-by"
+    ]
+  },
+  {
+    "id": "sql-c-follow-both-ways-intersect",
+    "track": "sql",
+    "topic": "set-operations",
+    "type": "sql",
+    "difficulty": "medium",
+    "pattern": "sql-advanced",
+    "estMinutes": 12,
+    "companies": [
+      "amazon",
+      "google"
+    ],
+    "schema": "social",
+    "prompt": "Using INTERSECT, return the `username` of every user who BOTH follows at least one person AND is followed by at least one person (active in the follow graph in both directions). Order by username ascending.",
+    "constraints": "Intersect the set of follower_ids with the set of followee_ids, then map to usernames.",
+    "examples": [
+      {
+        "input": "social seed data",
+        "output": "aarav; bhavna; chetan"
+      },
+      {
+        "input": "social seed data",
+        "output": "5 row(s), columns: username"
+      }
+    ],
+    "starter": "-- write your query here\nSELECT ...;\n",
+    "expected": {
+      "columns": [
+        "username"
+      ],
+      "rows": [
+        [
+          "aarav"
+        ],
+        [
+          "bhavna"
+        ],
+        [
+          "chetan"
+        ],
+        [
+          "divya"
+        ],
+        [
+          "esha"
+        ]
+      ]
+    },
+    "hints": [
+      "follower_id is 'who follows'; followee_id is 'who is followed'.",
+      "INTERSECT returns ids present in BOTH sets.",
+      "Map the intersected ids back to usernames."
+    ],
+    "bruteForce": {
+      "code": "SELECT username FROM users u WHERE EXISTS (SELECT 1 FROM follows f WHERE f.follower_id=u.id) AND EXISTS (SELECT 1 FROM follows f WHERE f.followee_id=u.id) ORDER BY username;",
+      "complexity": "varies",
+      "explanation": "An equivalent formulation; the validator executes the optimal query."
+    },
+    "optimal": {
+      "code": "SELECT username FROM users WHERE id IN (SELECT follower_id FROM follows INTERSECT SELECT followee_id FROM follows) ORDER BY username;",
+      "complexity": "see explanation",
+      "explanation": "Reference query for this task."
+    },
+    "complexityCheck": {
+      "question": "What does INTERSECT return?",
+      "choices": [
+        {
+          "label": "Rows present in BOTH result sets",
+          "correct": true
+        },
+        {
+          "label": "Rows in either set",
+          "correct": false
+        },
+        {
+          "label": "Rows in the first but not the second",
+          "correct": false
+        },
+        {
+          "label": "The Cartesian product",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "set-operations",
+      "intersect",
+      "graph"
+    ]
+  }
+]

@@ -25,65 +25,107 @@ Given tables `A` and `B`:
 | `FULL OUTER JOIN` | All rows from both; NULLs where the other side is missing. |
 | `CROSS JOIN` | Cartesian product — every A × every B. |
 
-SQLite (this sandbox) supports INNER, LEFT, and CROSS. RIGHT and FULL are not implemented but can be simulated by flipping the tables or using `UNION`.
+This sandbox runs a recent SQLite (≥3.39), so **all five join types work**, including `RIGHT JOIN` and `FULL OUTER JOIN`. (Older SQLite only supported INNER/LEFT/CROSS, which is why you'll still see advice to "simulate RIGHT by flipping the tables" — no longer necessary here.)
 
-## Setup we'll use
+## The tables we'll use
 
-Two tiny tables:
+This track ships a real `employees` database you can run every query against:
 
 ```
-employees (id, name, dept_id)
-  1, 'Alice', 10
-  2, 'Bob',   20
-  3, 'Cara',  NULL
+departments (id, name, location)
+  1, 'Engineering', 'Bangalore'
+  2, 'Sales',       'Chennai'
+  3, 'Marketing',   'Mumbai'
+  4, 'Finance',     'Delhi'
+  5, 'HR',          'Pune'        -- intentionally has no employees
 
-departments (id, name)
-  10, 'Eng'
-  20, 'Sales'
-  30, 'HR'
+employees (id, name, department, department_id, salary, hired_at)
+  1, 'Alice', 'Engineering', 1, 75000, ...
+  ...
+  6, 'Frank', NULL,          NULL, 30000, ...   -- no department
+  ...
 ```
+
+The link is `employees.department_id = departments.id`. Frank has a NULL
+`department_id` (no department); HR has no matching employees. Those two
+"missing" cases are exactly what the outer joins below expose.
 
 ## INNER JOIN
 
 ```sql
 SELECT e.name, d.name AS dept
 FROM employees e
-INNER JOIN departments d ON e.dept_id = d.id;
+INNER JOIN departments d ON e.department_id = d.id
+ORDER BY e.id;
 ```
 
 Result (intersection):
 ```
-Alice  Eng
+Alice  Engineering
 Bob    Sales
+Carol  Engineering
+...
 ```
 
-Cara is dropped (no dept). HR is dropped (no employees).
+Frank is dropped (no department). HR is dropped (no employees). An INNER JOIN
+keeps only rows that match on **both** sides.
 
 ## LEFT JOIN
 
 ```sql
 SELECT e.name, d.name AS dept
 FROM employees e
-LEFT JOIN departments d ON e.dept_id = d.id;
+LEFT JOIN departments d ON e.department_id = d.id
+ORDER BY e.id;
 ```
 
 Result (all employees, NULL on no match):
 ```
-Alice  Eng
-Bob    Sales
-Cara   NULL
+Alice  Engineering
+...
+Frank  NULL
+...
 ```
 
-**Pattern: find rows in A with no match in B.**
+Every employee appears; Frank's `dept` is NULL because his `department_id` matches
+nothing.
+
+**Pattern: find rows in A with no match in B (the anti-join).** Here, departments
+with no employees:
 
 ```sql
-SELECT e.name
-FROM employees e
-LEFT JOIN departments d ON e.dept_id = d.id
-WHERE d.id IS NULL;       -- 'Cara'
+SELECT d.name
+FROM departments d
+LEFT JOIN employees e ON e.department_id = d.id
+WHERE e.id IS NULL;       -- 'HR'
 ```
 
-The "anti-join" — left-join then filter for NULL on the right side. Common interview pattern.
+Left-join, then filter for NULL on the right side. A staple interview pattern —
+"customers with no orders", "products never sold", and so on.
+
+## RIGHT JOIN and FULL OUTER JOIN
+
+`RIGHT JOIN` keeps all rows of the *right* table; it's a mirror of `LEFT JOIN`.
+This keeps every department (HR included, with NULL employee):
+
+```sql
+SELECT d.name AS dept, e.name
+FROM employees e
+RIGHT JOIN departments d ON e.department_id = d.id
+ORDER BY d.id, e.id;       -- HR appears with a NULL name
+```
+
+`FULL OUTER JOIN` keeps unmatched rows from **both** sides at once — every
+employee *and* every department, NULLs where either side is missing:
+
+```sql
+SELECT e.name, d.name AS dept
+FROM employees e
+FULL OUTER JOIN departments d ON e.department_id = d.id
+ORDER BY e.id;             -- Frank (no dept) AND HR (no employee) both show up
+```
+
+In practice most people write everything as `LEFT JOIN` for consistency — `A RIGHT JOIN B` is just `B LEFT JOIN A`.
 
 ## CROSS JOIN
 
@@ -91,7 +133,8 @@ The "anti-join" — left-join then filter for NULL on the right side. Common int
 SELECT e.name, d.name FROM employees e CROSS JOIN departments d;
 ```
 
-Every combination — 3 × 3 = 9 rows. Useful for "generate all possible pairs" or padding a calendar table.
+Every combination — 8 employees × 5 departments = 40 rows. Useful for "generate
+all possible pairs" or padding a calendar/grid table.
 
 ## JOIN order ≠ result order
 
@@ -103,48 +146,49 @@ B INNER JOIN A ON ...
 A, B WHERE A.x = B.y      -- old comma-join syntax; don't write this
 ```
 
-For OUTER joins, order matters: `A LEFT JOIN B` ≠ `B LEFT JOIN A`. Use `LEFT` consistently and flip the table order rather than mixing LEFT and RIGHT.
+For OUTER joins, order matters: `A LEFT JOIN B` ≠ `B LEFT JOIN A`. Pick `LEFT`
+consistently and flip the table order rather than mixing LEFT and RIGHT.
 
 ## JOIN vs WHERE for the condition
 
 ```sql
--- correct: filter happens during the join
-SELECT * FROM A LEFT JOIN B ON A.id = B.a_id AND B.flag = 1;
+-- correct: filter happens DURING the join, outer rows preserved
+SELECT * FROM departments d
+LEFT JOIN employees e ON e.department_id = d.id AND e.salary > 60000;
 
 -- wrong-ish: filter happens AFTER the join, kills the outer-ness
-SELECT * FROM A LEFT JOIN B ON A.id = B.a_id WHERE B.flag = 1;
+SELECT * FROM departments d
+LEFT JOIN employees e ON e.department_id = d.id WHERE e.salary > 60000;
 ```
 
-Putting a B-side filter in `WHERE` of a `LEFT JOIN` turns it into an effective `INNER JOIN` (because NULL fails any equality test). Keep B-conditions inside the `ON` clause to preserve unmatched A rows.
+Putting a B-side filter in the `WHERE` of a `LEFT JOIN` turns it into an effective
+`INNER JOIN` (because NULL fails any comparison). Keep B-conditions inside the
+`ON` clause to preserve unmatched A rows.
 
-## Multi-table joins
+## Multi-table joins (and self-joins)
+
+Each additional `JOIN` brings in another table. A table can even be joined to
+**itself** — alias it twice. This finds same-department coworker pairs and labels
+the department, using `employees` twice plus `departments`:
 
 ```sql
-SELECT e.name, d.name AS dept, m.name AS manager
+SELECT e.name AS employee, c.name AS coworker, d.name AS dept
 FROM employees e
-JOIN departments d ON e.dept_id = d.id
-JOIN employees m ON d.manager_id = m.id;
+JOIN employees c ON e.department_id = c.department_id AND e.id < c.id
+JOIN departments d ON e.department_id = d.id
+ORDER BY e.id, c.id;
 ```
 
-Each `JOIN` adds another table. Pick aliases that read naturally (`e`, `d`, `m`). Don't omit aliases — same-column-name collisions become unreadable fast.
-
-## Self-join
-
-A table joined to itself. Classic: "find employees who earn more than their manager."
-
-```sql
-SELECT e.name AS employee, m.name AS manager
-FROM employees e
-JOIN employees m ON e.manager_id = m.id
-WHERE e.salary > m.salary;
-```
-
-Alias the table twice — once as `e` (employee), once as `m` (manager).
+The `e.id < c.id` condition pairs each person with later colleagues only — without
+it you'd get every pair twice plus everyone paired with themselves. Pick aliases
+that read naturally (`e`, `c`, `d`); never omit them on a self-join or the columns
+become hopelessly ambiguous.
 
 ## Common mistakes
 
 - **Forgetting the `ON` clause.** Without `ON`, INNER JOIN behaves like CROSS JOIN — Cartesian explosion.
-- **Joining on the wrong key.** Especially when columns share names — `e.id = d.id` is almost never what you want; you usually want `e.dept_id = d.id`.
-- **WHERE-filtering a LEFT JOIN's right side** and accidentally turning it into an inner.
+- **Joining on the wrong key.** Especially when columns share names — `e.id = d.id` is almost never what you want; you want `e.department_id = d.id`.
+- **WHERE-filtering a LEFT JOIN's right side** and accidentally turning it into an inner join.
 - **Duplicate rows after a join.** Caused by one-to-many. Use `DISTINCT` or aggregate to dedupe.
+- **Self-join without an inequality** (`e.id < c.id`) — you get mirror duplicates and self-pairs.
 - **`SELECT *` on a join** — ambiguous columns, brittle when the schema changes. Spell out columns.

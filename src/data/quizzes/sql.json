@@ -7,10 +7,17 @@
     "difficulty": "easy",
     "estMinutes": 1,
     "question": "Which clause is used to filter rows in a SELECT statement?",
-    "options": ["HAVING", "WHERE", "FILTER", "GROUP BY"],
+    "options": [
+      "HAVING",
+      "WHERE",
+      "FILTER",
+      "GROUP BY"
+    ],
     "answerIndex": 1,
     "explanation": "WHERE filters rows BEFORE grouping. HAVING filters AFTER grouping (operates on aggregates).",
-    "tags": ["fundamentals"]
+    "tags": [
+      "fundamentals"
+    ]
   },
   {
     "id": "sql-q-002",
@@ -20,10 +27,18 @@
     "difficulty": "easy",
     "estMinutes": 1,
     "question": "Which is the correct way to check for NULL in SQL?",
-    "options": ["WHERE x = NULL", "WHERE x == NULL", "WHERE x IS NULL", "WHERE x.isNull()"],
+    "options": [
+      "WHERE x = NULL",
+      "WHERE x == NULL",
+      "WHERE x IS NULL",
+      "WHERE x.isNull()"
+    ],
     "answerIndex": 2,
-    "explanation": "NULL is unknown — equality with NULL is always NULL, not TRUE. Use IS NULL / IS NOT NULL.",
-    "tags": ["null-handling", "interview-classic"]
+    "explanation": "NULL is unknown \u2014 equality with NULL is always NULL, not TRUE. Use IS NULL / IS NOT NULL.",
+    "tags": [
+      "null-handling",
+      "interview-classic"
+    ]
   },
   {
     "id": "sql-001",
@@ -35,8 +50,20 @@
     "schema": "employees",
     "starter": "SELECT name\nFROM employees\nWHERE -- your filter here\nORDER BY -- ...",
     "expected": {
-      "columns": ["name"],
-      "rows": [["Carol"], ["Alice"], ["Grace"]]
+      "columns": [
+        "name"
+      ],
+      "rows": [
+        [
+          "Carol"
+        ],
+        [
+          "Alice"
+        ],
+        [
+          "Grace"
+        ]
+      ]
     },
     "optimal": {
       "code": "SELECT name FROM employees WHERE salary > 50000 ORDER BY salary DESC;",
@@ -44,6 +71,40 @@
       "explanation": "Filter rows with WHERE, then sort with ORDER BY salary DESC."
     },
     "explanation": "WHERE salary > 50000 ORDER BY salary DESC.",
-    "tags": ["select", "tcs-nqt"]
+    "tags": [
+      "select",
+      "tcs-nqt"
+    ],
+    "complexityCheck": {
+      "question": "What does ORDER BY ... DESC do to the result?",
+      "choices": [
+        {
+          "label": "Sorts rows by that column in descending order",
+          "correct": true
+        },
+        {
+          "label": "Filters rows",
+          "correct": false
+        },
+        {
+          "label": "Groups rows",
+          "correct": false
+        },
+        {
+          "label": "Removes duplicates",
+          "correct": false
+        }
+      ]
+    },
+    "examples": [
+      {
+        "input": "employees seed data",
+        "output": "Carol; Alice; Grace"
+      },
+      {
+        "input": "employees seed data",
+        "output": "3 row(s), columns: name"
+      }
+    ]
   }
 ]

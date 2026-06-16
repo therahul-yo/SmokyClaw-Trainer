@@ -1,0 +1,3551 @@
+[
+  {
+    "id": "py-c-account-ledger",
+    "track": "python",
+    "topic": "oop",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 11,
+    "companies": [
+      "tcs",
+      "infosys",
+      "accenture"
+    ],
+    "prompt": "Model a bank account as a class. Process a list of operations `ops`, each `[\"deposit\", amount]` or `[\"withdraw\", amount]`. A deposit always succeeds; a withdrawal succeeds only if the balance is sufficient (otherwise it is rejected and leaves the balance unchanged). The account starts at `0`. Return a two-element list `[final_balance, rejected_count]`.",
+    "constraints": "- `0 <= len(ops) <= 10^4`\n- amounts are positive integers.",
+    "examples": [
+      {
+        "input": "[[\"deposit\",100],[\"withdraw\",30],[\"withdraw\",100]]",
+        "output": "[70, 1]",
+        "explanation": "100 in, 30 out (ok), then 100 out is rejected (only 70 left). Final 70, 1 rejected."
+      },
+      {
+        "input": "[[\"withdraw\",50]]",
+        "output": "[0, 1]",
+        "explanation": "Nothing deposited, so the withdrawal is rejected."
+      }
+    ],
+    "starter": "def run_account(...):\n    # your code here\n    pass\n",
+    "entry": "run_account",
+    "tests": [
+      {
+        "args": [
+          [
+            [
+              "deposit",
+              100
+            ],
+            [
+              "withdraw",
+              30
+            ],
+            [
+              "withdraw",
+              100
+            ]
+          ]
+        ],
+        "expect": [
+          70,
+          1
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              "withdraw",
+              50
+            ]
+          ]
+        ],
+        "expect": [
+          0,
+          1
+        ]
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": [
+          0,
+          0
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              "deposit",
+              10
+            ],
+            [
+              "deposit",
+              20
+            ],
+            [
+              "withdraw",
+              5
+            ]
+          ]
+        ],
+        "expect": [
+          25,
+          0
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              "deposit",
+              5
+            ],
+            [
+              "withdraw",
+              5
+            ],
+            [
+              "withdraw",
+              1
+            ]
+          ]
+        ],
+        "expect": [
+          0,
+          1
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              "deposit",
+              1000
+            ],
+            [
+              "withdraw",
+              1000
+            ],
+            [
+              "withdraw",
+              1
+            ]
+          ]
+        ],
+        "expect": [
+          0,
+          1
+        ]
+      }
+    ],
+    "hints": [
+      "Encapsulate the balance in a class with deposit/withdraw methods.",
+      "Have withdraw return whether it succeeded so you can count rejections.",
+      "Track final balance and rejected count; return them as a list."
+    ],
+    "bruteForce": {
+      "code": "class _Account:\n    def __init__(self):\n        self.balance = 0\n        self.rejected = 0\n    def deposit(self, amt):\n        self.balance += amt\n    def withdraw(self, amt):\n        if amt <= self.balance:\n            self.balance -= amt\n        else:\n            self.rejected += 1\n\ndef run_account(ops):\n    acc = _Account()\n    for kind, amt in ops:\n        if kind == \"deposit\":\n            acc.deposit(amt)\n        else:\n            acc.withdraw(amt)\n    return [acc.balance, acc.rejected]\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "A class encapsulating balance and a rejection counter, driven by the op list."
+    },
+    "optimal": {
+      "code": "def run_account(ops):\n    balance = rejected = 0\n    for kind, amt in ops:\n        if kind == \"deposit\":\n            balance += amt\n        elif amt <= balance:\n            balance -= amt\n        else:\n            rejected += 1\n    return [balance, rejected]\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "The same state machine without the class wrapper \u2014 two integers updated in one pass."
+    },
+    "complexityCheck": {
+      "question": "Time complexity of processing n operations?",
+      "choices": [
+        {
+          "label": "O(n)",
+          "correct": true
+        },
+        {
+          "label": "O(n^2)",
+          "correct": false
+        },
+        {
+          "label": "O(log n)",
+          "correct": false
+        },
+        {
+          "label": "O(1)",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "oop",
+      "class",
+      "simulation"
+    ]
+  },
+  {
+    "id": "py-c-text-buffer-class",
+    "track": "python",
+    "topic": "oop",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 12,
+    "companies": [
+      "amazon",
+      "microsoft",
+      "wipro"
+    ],
+    "prompt": "Implement a simple text buffer supporting an undo. Process `ops`: `[\"append\", text]` appends a string to the buffer, and `[\"undo\"]` reverts the most recent append (an undo with nothing to revert is a no-op). Return the final buffer contents as a single string.",
+    "constraints": "- `0 <= len(ops) <= 10^4`\n- appended strings are non-empty.",
+    "examples": [
+      {
+        "input": "[[\"append\",\"ab\"],[\"append\",\"cd\"],[\"undo\"]]",
+        "output": "\"ab\"",
+        "explanation": "Append 'ab' then 'cd', undo removes 'cd', leaving 'ab'."
+      },
+      {
+        "input": "[[\"undo\"],[\"append\",\"x\"]]",
+        "output": "\"x\"",
+        "explanation": "The leading undo is a no-op; then 'x' is appended."
+      }
+    ],
+    "starter": "def run_buffer(...):\n    # your code here\n    pass\n",
+    "entry": "run_buffer",
+    "tests": [
+      {
+        "args": [
+          [
+            [
+              "append",
+              "ab"
+            ],
+            [
+              "append",
+              "cd"
+            ],
+            [
+              "undo"
+            ]
+          ]
+        ],
+        "expect": "ab"
+      },
+      {
+        "args": [
+          [
+            [
+              "undo"
+            ],
+            [
+              "append",
+              "x"
+            ]
+          ]
+        ],
+        "expect": "x"
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": ""
+      },
+      {
+        "args": [
+          [
+            [
+              "append",
+              "hello"
+            ],
+            [
+              "append",
+              " "
+            ],
+            [
+              "append",
+              "world"
+            ]
+          ]
+        ],
+        "expect": "hello world"
+      },
+      {
+        "args": [
+          [
+            [
+              "append",
+              "a"
+            ],
+            [
+              "undo"
+            ],
+            [
+              "undo"
+            ]
+          ]
+        ],
+        "expect": ""
+      },
+      {
+        "args": [
+          [
+            [
+              "append",
+              "1"
+            ],
+            [
+              "append",
+              "2"
+            ],
+            [
+              "undo"
+            ],
+            [
+              "append",
+              "3"
+            ]
+          ]
+        ],
+        "expect": "13"
+      }
+    ],
+    "hints": [
+      "Keep a stack of the appended pieces.",
+      "Undo just pops the last piece off the stack.",
+      "Join the stack to produce the final string."
+    ],
+    "bruteForce": {
+      "code": "class _Buffer:\n    def __init__(self):\n        self.pieces = []\n    def append(self, t):\n        self.pieces.append(t)\n    def undo(self):\n        if self.pieces:\n            self.pieces.pop()\n    def text(self):\n        return \"\".join(self.pieces)\n\ndef run_buffer(ops):\n    buf = _Buffer()\n    for op in ops:\n        if op[0] == \"append\":\n            buf.append(op[1])\n        else:\n            buf.undo()\n    return buf.text()\n",
+      "complexity": "O(total) time, O(total) space",
+      "explanation": "A class holding a stack of appended pieces; undo pops, text joins."
+    },
+    "optimal": {
+      "code": "def run_buffer(ops):\n    stack = []\n    for op in ops:\n        if op[0] == \"append\":\n            stack.append(op[1])\n        elif stack:\n            stack.pop()\n    return \"\".join(stack)\n",
+      "complexity": "O(total) time, O(total) space",
+      "explanation": "The buffer is just a stack of strings; the final join is linear in total characters."
+    },
+    "complexityCheck": {
+      "question": "Which data structure makes undo O(1)?",
+      "choices": [
+        {
+          "label": "A stack (list) of appended pieces",
+          "correct": true
+        },
+        {
+          "label": "A sorted list",
+          "correct": false
+        },
+        {
+          "label": "A hash map",
+          "correct": false
+        },
+        {
+          "label": "A binary tree",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "oop",
+      "stack",
+      "class"
+    ]
+  },
+  {
+    "id": "py-c-event-frequency-counter",
+    "track": "python",
+    "topic": "oop",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 14,
+    "companies": [
+      "amazon",
+      "google",
+      "flipkart"
+    ],
+    "prompt": "Build an event-frequency tracker. Process `ops`: `[\"record\", name]` logs one occurrence of an event, and `[\"top\"]` records the name of the **most frequent** event so far (ties broken by the name that is alphabetically smallest); if no events have been recorded yet a `\"top\"` records `None`. Return the list of results produced by the `\"top\"` operations, in order.",
+    "constraints": "- `0 <= len(ops) <= 10^4`\n- event names are lowercase strings.",
+    "examples": [
+      {
+        "input": "[[\"record\",\"a\"],[\"record\",\"b\"],[\"record\",\"a\"],[\"top\"]]",
+        "output": "[\"a\"]",
+        "explanation": "'a' occurs twice, 'b' once \u2014 'a' is most frequent."
+      },
+      {
+        "input": "[[\"record\",\"y\"],[\"record\",\"x\"],[\"top\"]]",
+        "output": "[\"x\"]",
+        "explanation": "Both occur once; the tie goes to the alphabetically smaller name 'x'."
+      }
+    ],
+    "starter": "def run_counter(...):\n    # your code here\n    pass\n",
+    "entry": "run_counter",
+    "tests": [
+      {
+        "args": [
+          [
+            [
+              "record",
+              "a"
+            ],
+            [
+              "record",
+              "b"
+            ],
+            [
+              "record",
+              "a"
+            ],
+            [
+              "top"
+            ]
+          ]
+        ],
+        "expect": [
+          "a"
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              "record",
+              "y"
+            ],
+            [
+              "record",
+              "x"
+            ],
+            [
+              "top"
+            ]
+          ]
+        ],
+        "expect": [
+          "x"
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              "top"
+            ]
+          ]
+        ],
+        "expect": [
+          null
+        ]
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            [
+              "record",
+              "z"
+            ],
+            [
+              "top"
+            ],
+            [
+              "record",
+              "z"
+            ],
+            [
+              "record",
+              "y"
+            ],
+            [
+              "record",
+              "y"
+            ],
+            [
+              "top"
+            ]
+          ]
+        ],
+        "expect": [
+          "z",
+          "y"
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              "record",
+              "m"
+            ],
+            [
+              "record",
+              "m"
+            ],
+            [
+              "record",
+              "n"
+            ],
+            [
+              "record",
+              "n"
+            ],
+            [
+              "top"
+            ]
+          ]
+        ],
+        "expect": [
+          "m"
+        ]
+      }
+    ],
+    "hints": [
+      "Maintain a frequency map updated on each 'record'.",
+      "For 'top', find the max count; break ties by the smaller name.",
+      "min/max with a tuple key (-count, name) gives 'most frequent, then alphabetical'."
+    ],
+    "bruteForce": {
+      "code": "class _Tracker:\n    def __init__(self):\n        self.counts = {}\n    def record(self, name):\n        self.counts[name] = self.counts.get(name, 0) + 1\n    def top(self):\n        if not self.counts:\n            return None\n        best = None\n        for name in sorted(self.counts):          # alphabetical first\n            if best is None or self.counts[name] > self.counts[best]:\n                best = name\n        return best\n\ndef run_counter(ops):\n    t = _Tracker()\n    out = []\n    for op in ops:\n        if op[0] == \"record\":\n            t.record(op[1])\n        else:\n            out.append(t.top())\n    return out\n",
+      "complexity": "O(t * k) time (t tops, k distinct events)",
+      "explanation": "Scan the sorted names on each 'top'; alphabetical iteration plus strict '>' yields the tie-break for free."
+    },
+    "optimal": {
+      "code": "def run_counter(ops):\n    counts = {}\n    out = []\n    for op in ops:\n        if op[0] == \"record\":\n            counts[op[1]] = counts.get(op[1], 0) + 1\n        else:\n            if not counts:\n                out.append(None)\n            else:\n                out.append(min(counts, key=lambda n: (-counts[n], n)))\n    return out\n",
+      "complexity": "O(t * k) time, O(k) space",
+      "explanation": "A single min() with the composite key (-count, name) selects the most frequent and breaks ties alphabetically in one expression."
+    },
+    "complexityCheck": {
+      "question": "What key selects 'most frequent, ties alphabetical'?",
+      "choices": [
+        {
+          "label": "(-count, name)",
+          "correct": true
+        },
+        {
+          "label": "(count, name)",
+          "correct": false
+        },
+        {
+          "label": "(name, count)",
+          "correct": false
+        },
+        {
+          "label": "(-count, -name)",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "oop",
+      "hashmap",
+      "class"
+    ]
+  },
+  {
+    "id": "py-c-lru-cache-ops",
+    "track": "python",
+    "topic": "oop",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "hard",
+    "estMinutes": 24,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "prompt": "Implement an LRU (least-recently-used) cache of fixed `capacity`. Process `ops`: `[\"put\", key, value]` inserts/updates a key, and `[\"get\", key]` returns the value (or `-1` if absent). Both `get` and `put` count as **using** a key, making it most-recently-used. When a `put` exceeds capacity, evict the least-recently-used key. Return the list of results from the `get` operations.",
+    "constraints": "- `1 <= capacity <= 10^4`\n- `0 <= len(ops) <= 10^4`\n- keys and values are integers.",
+    "examples": [
+      {
+        "input": "capacity=2, ops=[[\"put\",1,1],[\"put\",2,2],[\"get\",1],[\"put\",3,3],[\"get\",2]]",
+        "output": "[1, -1]",
+        "explanation": "get(1)=1 (and marks 1 used); putting 3 evicts the LRU key 2; so get(2)=-1."
+      },
+      {
+        "input": "capacity=1, ops=[[\"put\",1,10],[\"put\",2,20],[\"get\",1]]",
+        "output": "[-1]",
+        "explanation": "Capacity 1: putting 2 evicts 1, so get(1)=-1."
+      }
+    ],
+    "starter": "def run_lru(...):\n    # your code here\n    pass\n",
+    "entry": "run_lru",
+    "tests": [
+      {
+        "args": [
+          2,
+          [
+            [
+              "put",
+              1,
+              1
+            ],
+            [
+              "put",
+              2,
+              2
+            ],
+            [
+              "get",
+              1
+            ],
+            [
+              "put",
+              3,
+              3
+            ],
+            [
+              "get",
+              2
+            ]
+          ]
+        ],
+        "expect": [
+          1,
+          -1
+        ]
+      },
+      {
+        "args": [
+          1,
+          [
+            [
+              "put",
+              1,
+              10
+            ],
+            [
+              "put",
+              2,
+              20
+            ],
+            [
+              "get",
+              1
+            ]
+          ]
+        ],
+        "expect": [
+          -1
+        ]
+      },
+      {
+        "args": [
+          2,
+          [
+            [
+              "get",
+              5
+            ]
+          ]
+        ],
+        "expect": [
+          -1
+        ]
+      },
+      {
+        "args": [
+          2,
+          [
+            [
+              "put",
+              1,
+              1
+            ],
+            [
+              "put",
+              1,
+              5
+            ],
+            [
+              "get",
+              1
+            ]
+          ]
+        ],
+        "expect": [
+          5
+        ]
+      },
+      {
+        "args": [
+          3,
+          [
+            [
+              "put",
+              1,
+              1
+            ],
+            [
+              "put",
+              2,
+              2
+            ],
+            [
+              "put",
+              3,
+              3
+            ],
+            [
+              "get",
+              1
+            ],
+            [
+              "put",
+              4,
+              4
+            ],
+            [
+              "get",
+              2
+            ],
+            [
+              "get",
+              3
+            ],
+            [
+              "get",
+              4
+            ]
+          ]
+        ],
+        "expect": [
+          1,
+          -1,
+          3,
+          4
+        ]
+      },
+      {
+        "args": [
+          2,
+          [
+            [
+              "put",
+              2,
+              1
+            ],
+            [
+              "put",
+              2,
+              2
+            ],
+            [
+              "get",
+              2
+            ],
+            [
+              "put",
+              1,
+              1
+            ],
+            [
+              "put",
+              4,
+              1
+            ],
+            [
+              "get",
+              2
+            ]
+          ]
+        ],
+        "expect": [
+          2,
+          -1
+        ]
+      }
+    ],
+    "hints": [
+      "You need O(1) lookup AND O(1) recency updates \u2014 a hash map plus an ordering.",
+      "collections.OrderedDict supports move_to_end and popitem(last=False) for exactly this.",
+      "On get/put, move_to_end(key); on overflow, popitem(last=False) drops the LRU entry."
+    ],
+    "bruteForce": {
+      "code": "def run_lru(capacity, ops):\n    # list of [key, value], front = least recently used\n    cache = []\n    def find(k):\n        for i, (key, _) in enumerate(cache):\n            if key == k:\n                return i\n        return -1\n    out = []\n    for op in ops:\n        if op[0] == \"put\":\n            _, k, v = op\n            i = find(k)\n            if i != -1:\n                cache.pop(i)\n            cache.append([k, v])\n            if len(cache) > capacity:\n                cache.pop(0)\n        else:\n            _, k = op\n            i = find(k)\n            if i == -1:\n                out.append(-1)\n            else:\n                entry = cache.pop(i)\n                cache.append(entry)\n                out.append(entry[1])\n    return out\n",
+      "complexity": "O(n * c) time, O(c) space",
+      "explanation": "A plain list ordered by recency; linear scans to find keys and reorder. Correct but each op is O(capacity)."
+    },
+    "optimal": {
+      "code": "def run_lru(capacity, ops):\n    from collections import OrderedDict\n    cache = OrderedDict()\n    out = []\n    for op in ops:\n        if op[0] == \"put\":\n            _, k, v = op\n            if k in cache:\n                cache.move_to_end(k)\n            cache[k] = v\n            if len(cache) > capacity:\n                cache.popitem(last=False)\n        else:\n            _, k = op\n            if k in cache:\n                cache.move_to_end(k)\n                out.append(cache[k])\n            else:\n                out.append(-1)\n    return out\n",
+      "complexity": "O(n) time, O(capacity) space",
+      "explanation": "An OrderedDict gives O(1) lookup, O(1) move-to-end recency updates, and O(1) eviction of the oldest entry via popitem(last=False)."
+    },
+    "complexityCheck": {
+      "question": "What makes each LRU operation O(1)?",
+      "choices": [
+        {
+          "label": "A hash map paired with an ordered/linked structure",
+          "correct": true
+        },
+        {
+          "label": "Sorting the cache each operation",
+          "correct": false
+        },
+        {
+          "label": "A binary search tree",
+          "correct": false
+        },
+        {
+          "label": "Scanning a list",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "oop",
+      "lru",
+      "ordereddict",
+      "design"
+    ]
+  },
+  {
+    "id": "py-c-safe-divide-pairs",
+    "track": "python",
+    "topic": "exceptions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 9,
+    "companies": [
+      "tcs",
+      "infosys",
+      "cognizant"
+    ],
+    "prompt": "Given a list of `[a, b]` integer pairs, return a list with the integer quotient `a // b` for each pair, but when `b` is `0` catch the `ZeroDivisionError` and use `None` for that result instead.",
+    "constraints": "- `0 <= len(pairs) <= 10^4`\n- values are integers; b may be 0.",
+    "examples": [
+      {
+        "input": "[[10,2],[5,0],[9,3]]",
+        "output": "[5, None, 3]",
+        "explanation": "10//2=5, 5//0 raises and becomes None, 9//3=3."
+      },
+      {
+        "input": "[[7,0]]",
+        "output": "[None]",
+        "explanation": "Division by zero is caught and reported as None."
+      }
+    ],
+    "starter": "def safe_divide(...):\n    # your code here\n    pass\n",
+    "entry": "safe_divide",
+    "tests": [
+      {
+        "args": [
+          [
+            [
+              10,
+              2
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              9,
+              3
+            ]
+          ]
+        ],
+        "expect": [
+          5,
+          null,
+          3
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              7,
+              0
+            ]
+          ]
+        ],
+        "expect": [
+          null
+        ]
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            [
+              100,
+              10
+            ],
+            [
+              50,
+              5
+            ]
+          ]
+        ],
+        "expect": [
+          10,
+          10
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        "expect": [
+          0,
+          null,
+          null
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              -9,
+              3
+            ],
+            [
+              8,
+              0
+            ]
+          ]
+        ],
+        "expect": [
+          -3,
+          null
+        ]
+      }
+    ],
+    "hints": [
+      "Wrap each division in try/except.",
+      "Catch ZeroDivisionError specifically, not a bare except.",
+      "Append the quotient on success, None in the except block."
+    ],
+    "bruteForce": {
+      "code": "def safe_divide(pairs):\n    out = []\n    for a, b in pairs:\n        try:\n            out.append(a // b)\n        except ZeroDivisionError:\n            out.append(None)\n    return out\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Try the division, catch the specific ZeroDivisionError, substitute None."
+    },
+    "optimal": {
+      "code": "def safe_divide(pairs):\n    return [(a // b if b != 0 else None) for a, b in pairs]\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "A guard on b avoids the exception entirely; same result, expressed as a comprehension."
+    },
+    "complexityCheck": {
+      "question": "Which exception should be caught here?",
+      "choices": [
+        {
+          "label": "ZeroDivisionError",
+          "correct": true
+        },
+        {
+          "label": "ValueError",
+          "correct": false
+        },
+        {
+          "label": "TypeError",
+          "correct": false
+        },
+        {
+          "label": "a bare except:",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "exceptions",
+      "try-except"
+    ]
+  },
+  {
+    "id": "py-c-parse-ints-or-default",
+    "track": "python",
+    "topic": "exceptions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 9,
+    "companies": [
+      "tcs",
+      "wipro",
+      "accenture"
+    ],
+    "prompt": "Given a list of strings, convert each to an integer. When a string is not a valid integer (raising `ValueError`), substitute `0`. Return the list of integers.",
+    "constraints": "- `0 <= len(tokens) <= 10^4`\n- tokens are arbitrary strings.",
+    "examples": [
+      {
+        "input": "[\"3\",\"x\",\"10\",\"-4\"]",
+        "output": "[3, 0, 10, -4]",
+        "explanation": "'x' fails int() and becomes 0; the rest parse normally."
+      },
+      {
+        "input": "[\"\",\"\"]",
+        "output": "[0, 0]",
+        "explanation": "Empty strings are invalid integers, so both become 0."
+      }
+    ],
+    "starter": "def parse_or_default(...):\n    # your code here\n    pass\n",
+    "entry": "parse_or_default",
+    "tests": [
+      {
+        "args": [
+          [
+            "3",
+            "x",
+            "10",
+            "-4"
+          ]
+        ],
+        "expect": [
+          3,
+          0,
+          10,
+          -4
+        ]
+      },
+      {
+        "args": [
+          [
+            "",
+            ""
+          ]
+        ],
+        "expect": [
+          0,
+          0
+        ]
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            "42"
+          ]
+        ],
+        "expect": [
+          42
+        ]
+      },
+      {
+        "args": [
+          [
+            "1",
+            "two",
+            "3",
+            "four"
+          ]
+        ],
+        "expect": [
+          1,
+          0,
+          3,
+          0
+        ]
+      },
+      {
+        "args": [
+          [
+            "  5  ",
+            "6"
+          ]
+        ],
+        "expect": [
+          5,
+          6
+        ]
+      }
+    ],
+    "hints": [
+      "int(s) raises ValueError on bad input.",
+      "Wrap each conversion in try/except ValueError.",
+      "Note int(' 5 ') succeeds \u2014 Python strips surrounding whitespace."
+    ],
+    "bruteForce": {
+      "code": "def parse_or_default(tokens):\n    out = []\n    for t in tokens:\n        try:\n            out.append(int(t))\n        except ValueError:\n            out.append(0)\n    return out\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Attempt int() per token, fall back to 0 on ValueError."
+    },
+    "optimal": {
+      "code": "def parse_or_default(tokens):\n    def conv(t):\n        try:\n            return int(t)\n        except ValueError:\n            return 0\n    return [conv(t) for t in tokens]\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Same logic refactored into a helper used by a comprehension."
+    },
+    "complexityCheck": {
+      "question": "What does int(' 5 ') return?",
+      "choices": [
+        {
+          "label": "5 \u2014 int() strips surrounding whitespace",
+          "correct": true
+        },
+        {
+          "label": "raises ValueError",
+          "correct": false
+        },
+        {
+          "label": "None",
+          "correct": false
+        },
+        {
+          "label": "' 5 '",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "exceptions",
+      "parsing",
+      "value-error"
+    ]
+  },
+  {
+    "id": "py-c-validate-records",
+    "track": "python",
+    "topic": "exceptions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 14,
+    "companies": [
+      "amazon",
+      "infosys",
+      "cognizant"
+    ],
+    "prompt": "Each record is `[name, age_string]`. A record is valid only if `name` is non-empty AND `age_string` parses to an integer in the inclusive range `0..150`. Validate by raising and catching a `ValueError` for any bad record. Return the list of valid `name`s, preserving input order.",
+    "constraints": "- `0 <= len(records) <= 10^4`\n- name is a string, age_string is a string.",
+    "examples": [
+      {
+        "input": "[[\"Ann\",\"30\"],[\"\",\"25\"],[\"Bob\",\"999\"],[\"Cid\",\"x\"]]",
+        "output": "[\"Ann\"]",
+        "explanation": "Ann is valid; empty name, out-of-range 999, and non-numeric 'x' are all rejected."
+      },
+      {
+        "input": "[[\"Zoe\",\"0\"],[\"Max\",\"150\"]]",
+        "output": "[\"Zoe\", \"Max\"]",
+        "explanation": "Both ages 0 and 150 are within the inclusive range."
+      }
+    ],
+    "starter": "def valid_names(...):\n    # your code here\n    pass\n",
+    "entry": "valid_names",
+    "tests": [
+      {
+        "args": [
+          [
+            [
+              "Ann",
+              "30"
+            ],
+            [
+              "",
+              "25"
+            ],
+            [
+              "Bob",
+              "999"
+            ],
+            [
+              "Cid",
+              "x"
+            ]
+          ]
+        ],
+        "expect": [
+          "Ann"
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              "Zoe",
+              "0"
+            ],
+            [
+              "Max",
+              "150"
+            ]
+          ]
+        ],
+        "expect": [
+          "Zoe",
+          "Max"
+        ]
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            [
+              "A",
+              "-1"
+            ],
+            [
+              "B",
+              "151"
+            ]
+          ]
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            [
+              "X",
+              "abc"
+            ],
+            [
+              "Y",
+              "50"
+            ],
+            [
+              "Z",
+              ""
+            ]
+          ]
+        ],
+        "expect": [
+          "Y"
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              "Solo",
+              "75"
+            ]
+          ]
+        ],
+        "expect": [
+          "Solo"
+        ]
+      }
+    ],
+    "hints": [
+      "A record fails for several reasons: empty name, non-numeric age, or out-of-range age.",
+      "Define a validator that raises ValueError on any failure, and call it in try/except.",
+      "int(age) raises ValueError on non-numeric input; raise it yourself for empty name or out-of-range age."
+    ],
+    "bruteForce": {
+      "code": "def valid_names(records):\n    out = []\n    for name, age_s in records:\n        try:\n            if not name:\n                raise ValueError(\"empty name\")\n            age = int(age_s)\n            if not (0 <= age <= 150):\n                raise ValueError(\"age out of range\")\n            out.append(name)\n        except ValueError:\n            pass\n    return out\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Raise a ValueError on any failed check and swallow it; only fully valid records reach the append."
+    },
+    "optimal": {
+      "code": "def valid_names(records):\n    def ok(name, age_s):\n        if not name:\n            return False\n        try:\n            age = int(age_s)\n        except ValueError:\n            return False\n        return 0 <= age <= 150\n    return [name for name, age_s in records if ok(name, age_s)]\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "A boolean predicate centralizes the rules; the comprehension keeps only records that pass."
+    },
+    "complexityCheck": {
+      "question": "Why catch ValueError rather than use a bare except?",
+      "choices": [
+        {
+          "label": "To avoid masking unrelated errors (e.g. bugs) \u2014 catch only what you expect",
+          "correct": true
+        },
+        {
+          "label": "Bare except is faster",
+          "correct": false
+        },
+        {
+          "label": "ValueError cannot be raised manually",
+          "correct": false
+        },
+        {
+          "label": "There is no difference",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "exceptions",
+      "validation",
+      "value-error"
+    ]
+  },
+  {
+    "id": "py-c-safe-key-path",
+    "track": "python",
+    "topic": "exceptions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 13,
+    "companies": [
+      "amazon",
+      "microsoft",
+      "google"
+    ],
+    "prompt": "You are given a nested dictionary `data` and a list of `paths`, where each path is a list of keys to follow (e.g. `[\"a\",\"b\",\"c\"]`). For each path return the value found by descending through the keys, or `None` if any key is missing or a non-dict is encountered partway. Use `KeyError`/`TypeError` handling rather than pre-checking every level.",
+    "constraints": "- nesting depth and number of paths are each `<= 10^3`\n- leaf values are JSON-clean (ints, strings, lists).",
+    "examples": [
+      {
+        "input": "data={\"a\":{\"b\":{\"c\":7}}}, paths=[[\"a\",\"b\",\"c\"],[\"a\",\"x\"]]",
+        "output": "[7, null]",
+        "explanation": "The first path resolves to 7; the second hits a missing key 'x' and returns None."
+      },
+      {
+        "input": "data={\"a\":5}, paths=[[\"a\",\"b\"]]",
+        "output": "[null]",
+        "explanation": "After 'a' the value 5 is not a dict, so descending further fails -> None."
+      }
+    ],
+    "starter": "def resolve_paths(...):\n    # your code here\n    pass\n",
+    "entry": "resolve_paths",
+    "tests": [
+      {
+        "args": [
+          {
+            "a": {
+              "b": {
+                "c": 7
+              }
+            }
+          },
+          [
+            [
+              "a",
+              "b",
+              "c"
+            ],
+            [
+              "a",
+              "x"
+            ]
+          ]
+        ],
+        "expect": [
+          7,
+          null
+        ]
+      },
+      {
+        "args": [
+          {
+            "a": 5
+          },
+          [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        ],
+        "expect": [
+          null
+        ]
+      },
+      {
+        "args": [
+          {},
+          [
+            [
+              "x"
+            ]
+          ]
+        ],
+        "expect": [
+          null
+        ]
+      },
+      {
+        "args": [
+          {
+            "k": {
+              "v": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          [
+            [
+              "k",
+              "v"
+            ],
+            [
+              "k",
+              "v",
+              "0"
+            ]
+          ]
+        ],
+        "expect": [
+          [
+            1,
+            2,
+            3
+          ],
+          null
+        ]
+      },
+      {
+        "args": [
+          {
+            "a": {
+              "b": 1
+            }
+          },
+          [
+            [
+              "a"
+            ],
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "b",
+              "c"
+            ]
+          ]
+        ],
+        "expect": [
+          {
+            "b": 1
+          },
+          1,
+          null
+        ]
+      },
+      {
+        "args": [
+          {
+            "x": {
+              "y": {
+                "z": "deep"
+              }
+            }
+          },
+          [
+            [
+              "x",
+              "y",
+              "z"
+            ]
+          ]
+        ],
+        "expect": [
+          "deep"
+        ]
+      }
+    ],
+    "hints": [
+      "Descend one key at a time, but the value might not be a dict to index into.",
+      "Wrap the descent in try/except catching both KeyError and TypeError.",
+      "On KeyError (missing key) or TypeError (indexing a non-dict), return None for that path."
+    ],
+    "bruteForce": {
+      "code": "def resolve_paths(data, paths):\n    out = []\n    for path in paths:\n        cur = data\n        ok = True\n        for key in path:\n            if isinstance(cur, dict) and key in cur:\n                cur = cur[key]\n            else:\n                ok = False\n                break\n        out.append(cur if ok else None)\n    return out\n",
+      "complexity": "O(P * D) time",
+      "explanation": "Explicitly check isinstance(dict) and membership at each step; bail out to None on the first failure."
+    },
+    "optimal": {
+      "code": "def resolve_paths(data, paths):\n    out = []\n    for path in paths:\n        cur = data\n        try:\n            for key in path:\n                cur = cur[key]\n            out.append(cur)\n        except (KeyError, TypeError):\n            out.append(None)\n    return out\n",
+      "complexity": "O(P * D) time",
+      "explanation": "EAFP style: just index through and catch KeyError (missing key) or TypeError (indexing a non-dict), defaulting to None."
+    },
+    "complexityCheck": {
+      "question": "Indexing into a non-dict value (e.g. 5['b']) raises which error?",
+      "choices": [
+        {
+          "label": "TypeError",
+          "correct": true
+        },
+        {
+          "label": "KeyError",
+          "correct": false
+        },
+        {
+          "label": "IndexError",
+          "correct": false
+        },
+        {
+          "label": "AttributeError",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "exceptions",
+      "nested-dict",
+      "eafp"
+    ]
+  },
+  {
+    "id": "py-c-take-while-positive",
+    "track": "python",
+    "topic": "iterators",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 9,
+    "companies": [
+      "tcs",
+      "infosys",
+      "amazon"
+    ],
+    "prompt": "Write a **generator** `take_while_positive(nums)` that yields elements from `nums` from the start, stopping at (and not including) the first non-positive value (`<= 0`). The grader collects everything you yield into a list.",
+    "constraints": "- `0 <= len(nums) <= 10^5`\n- values are integers.",
+    "examples": [
+      {
+        "input": "[3, 1, 4, 0, 9]",
+        "output": "[3, 1, 4]",
+        "explanation": "Yields until the 0, which stops the generator."
+      },
+      {
+        "input": "[-1, 2, 3]",
+        "output": "[]",
+        "explanation": "The first element is non-positive, so nothing is yielded."
+      }
+    ],
+    "starter": "def take_while_positive(...):\n    # your code here\n    pass\n",
+    "entry": "take_while_positive",
+    "tests": [
+      {
+        "args": [
+          [
+            3,
+            1,
+            4,
+            0,
+            9
+          ]
+        ],
+        "expect": [
+          3,
+          1,
+          4
+        ]
+      },
+      {
+        "args": [
+          [
+            -1,
+            2,
+            3
+          ]
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            5,
+            5,
+            5
+          ]
+        ],
+        "expect": [
+          5,
+          5,
+          5
+        ]
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            -3,
+            4
+          ]
+        ],
+        "expect": [
+          1,
+          2
+        ]
+      },
+      {
+        "args": [
+          [
+            0
+          ]
+        ],
+        "expect": []
+      }
+    ],
+    "hints": [
+      "A generator uses yield and pauses between values.",
+      "Loop and yield each element while it is positive.",
+      "return (or just stop yielding) the moment you hit a value <= 0."
+    ],
+    "bruteForce": {
+      "code": "def take_while_positive(nums):\n    out = []\n    for x in nums:\n        if x <= 0:\n            break\n        out.append(x)\n    return iter(out)\n",
+      "complexity": "O(k) time where k = prefix length",
+      "explanation": "Build the positive prefix into a list and return an iterator over it."
+    },
+    "optimal": {
+      "code": "def take_while_positive(nums):\n    for x in nums:\n        if x <= 0:\n            return\n        yield x\n",
+      "complexity": "O(k) time, O(1) space",
+      "explanation": "A true generator: yields lazily and returns at the first non-positive value without materializing a list."
+    },
+    "complexityCheck": {
+      "question": "What keyword makes a function a generator?",
+      "choices": [
+        {
+          "label": "yield",
+          "correct": true
+        },
+        {
+          "label": "return",
+          "correct": false
+        },
+        {
+          "label": "async",
+          "correct": false
+        },
+        {
+          "label": "lambda",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "iterators",
+      "generator",
+      "yield"
+    ]
+  },
+  {
+    "id": "py-c-running-maximum",
+    "track": "python",
+    "topic": "iterators",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 10,
+    "companies": [
+      "amazon",
+      "wipro",
+      "accenture"
+    ],
+    "prompt": "Write a **generator** `running_maximum(nums)` that yields the running maximum: the i-th value yielded is the maximum of `nums[0..i]`. For an empty input it yields nothing.",
+    "constraints": "- `0 <= len(nums) <= 10^5`\n- values are integers.",
+    "examples": [
+      {
+        "input": "[3, 1, 4, 1, 5]",
+        "output": "[3, 3, 4, 4, 5]",
+        "explanation": "Each position reports the largest value seen so far."
+      },
+      {
+        "input": "[5, 4, 3]",
+        "output": "[5, 5, 5]",
+        "explanation": "5 stays the maximum throughout."
+      }
+    ],
+    "starter": "def running_maximum(...):\n    # your code here\n    pass\n",
+    "entry": "running_maximum",
+    "tests": [
+      {
+        "args": [
+          [
+            3,
+            1,
+            4,
+            1,
+            5
+          ]
+        ],
+        "expect": [
+          3,
+          3,
+          4,
+          4,
+          5
+        ]
+      },
+      {
+        "args": [
+          [
+            5,
+            4,
+            3
+          ]
+        ],
+        "expect": [
+          5,
+          5,
+          5
+        ]
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            7
+          ]
+        ],
+        "expect": [
+          7
+        ]
+      },
+      {
+        "args": [
+          [
+            -1,
+            -2,
+            0,
+            -5
+          ]
+        ],
+        "expect": [
+          -1,
+          -1,
+          0,
+          0
+        ]
+      },
+      {
+        "args": [
+          [
+            2,
+            2,
+            2,
+            2
+          ]
+        ],
+        "expect": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    ],
+    "hints": [
+      "Track the best value seen so far.",
+      "Update it with max() at each step and yield the current best.",
+      "The first element initializes the running maximum."
+    ],
+    "bruteForce": {
+      "code": "def running_maximum(nums):\n    out = []\n    best = None\n    for x in nums:\n        best = x if best is None else max(best, x)\n        out.append(best)\n    return iter(out)\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Compute the prefix maxima into a list and return an iterator over it."
+    },
+    "optimal": {
+      "code": "def running_maximum(nums):\n    best = None\n    for x in nums:\n        best = x if best is None else (x if x > best else best)\n        yield best\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "A generator that keeps a single running maximum and yields it each step \u2014 no list materialized."
+    },
+    "complexityCheck": {
+      "question": "Extra space for the streaming generator (excluding output)?",
+      "choices": [
+        {
+          "label": "O(1)",
+          "correct": true
+        },
+        {
+          "label": "O(n)",
+          "correct": false
+        },
+        {
+          "label": "O(log n)",
+          "correct": false
+        },
+        {
+          "label": "O(n^2)",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "iterators",
+      "generator",
+      "prefix-max"
+    ]
+  },
+  {
+    "id": "py-c-pairwise-iter",
+    "track": "python",
+    "topic": "iterators",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 12,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "prompt": "Write a **generator** `pairwise(items)` that yields consecutive overlapping pairs as two-element lists: from `[a, b, c, d]` it yields `[a,b]`, `[b,c]`, `[c,d]`. If the input has fewer than two elements it yields nothing.",
+    "constraints": "- `0 <= len(items) <= 10^5`\n- elements are JSON-clean values.",
+    "examples": [
+      {
+        "input": "[1, 2, 3, 4]",
+        "output": "[[1,2],[2,3],[3,4]]",
+        "explanation": "Three overlapping adjacent pairs."
+      },
+      {
+        "input": "[9]",
+        "output": "[]",
+        "explanation": "A single element has no pair."
+      }
+    ],
+    "starter": "def pairwise(...):\n    # your code here\n    pass\n",
+    "entry": "pairwise",
+    "tests": [
+      {
+        "args": [
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "expect": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      {
+        "args": [
+          [
+            9
+          ]
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            1,
+            2
+          ]
+        ],
+        "expect": [
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      {
+        "args": [
+          [
+            "a",
+            "b",
+            "c"
+          ]
+        ],
+        "expect": [
+          [
+            "a",
+            "b"
+          ],
+          [
+            "b",
+            "c"
+          ]
+        ]
+      },
+      {
+        "args": [
+          [
+            5,
+            5,
+            5,
+            5
+          ]
+        ],
+        "expect": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ]
+      }
+    ],
+    "hints": [
+      "Each pair shares an element with the next \u2014 index i with i+1.",
+      "Iterate i from 0 to len-2 and yield [items[i], items[i+1]].",
+      "Fewer than two elements means zero pairs."
+    ],
+    "bruteForce": {
+      "code": "def pairwise(items):\n    out = []\n    for i in range(len(items) - 1):\n        out.append([items[i], items[i + 1]])\n    return iter(out)\n",
+      "complexity": "O(n) time, O(n) space",
+      "explanation": "Build all adjacent pairs into a list and return its iterator."
+    },
+    "optimal": {
+      "code": "def pairwise(items):\n    prev = object()\n    sentinel = prev\n    for x in items:\n        if prev is not sentinel:\n            yield [prev, x]\n        prev = x\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "A single pass remembering the previous element and yielding [prev, current] lazily, without building the full list first."
+    },
+    "complexityCheck": {
+      "question": "How many pairs does pairwise yield for n elements (n>=1)?",
+      "choices": [
+        {
+          "label": "n - 1",
+          "correct": true
+        },
+        {
+          "label": "n",
+          "correct": false
+        },
+        {
+          "label": "n + 1",
+          "correct": false
+        },
+        {
+          "label": "n / 2",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "iterators",
+      "generator",
+      "pairwise"
+    ]
+  },
+  {
+    "id": "py-c-flatten-deep",
+    "track": "python",
+    "topic": "iterators",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "hard",
+    "estMinutes": 18,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "prompt": "Write `flatten(nested)` that fully flattens an arbitrarily nested list of integers into a single flat list, left to right. Lists may be nested to any depth and may be empty. Non-list elements are integers.",
+    "constraints": "- total element count `<= 10^4`\n- nesting depth `<= 1000`\n- leaves are integers.",
+    "examples": [
+      {
+        "input": "[1, [2, [3, 4], 5], [], [[6]]]",
+        "output": "[1, 2, 3, 4, 5, 6]",
+        "explanation": "Every integer is collected in left-to-right order regardless of depth."
+      },
+      {
+        "input": "[[[[7]]]]",
+        "output": "[7]",
+        "explanation": "Deep single-element nesting flattens to one value."
+      }
+    ],
+    "starter": "def flatten(...):\n    # your code here\n    pass\n",
+    "entry": "flatten",
+    "tests": [
+      {
+        "args": [
+          [
+            1,
+            [
+              2,
+              [
+                3,
+                4
+              ],
+              5
+            ],
+            [],
+            [
+              [
+                6
+              ]
+            ]
+          ]
+        ],
+        "expect": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              [
+                [
+                  7
+                ]
+              ]
+            ]
+          ]
+        ],
+        "expect": [
+          7
+        ]
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        "expect": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "args": [
+          [
+            [],
+            [],
+            []
+          ]
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            1,
+            [
+              2
+            ],
+            [
+              [
+                3
+              ]
+            ],
+            [
+              [
+                [
+                  4
+                ]
+              ]
+            ]
+          ]
+        ],
+        "expect": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ],
+    "hints": [
+      "A nested list is a recursive structure \u2014 flatten each element, recursing when it is itself a list.",
+      "Use isinstance(x, list) to decide whether to recurse or emit.",
+      "A generator with 'yield from flatten(x)' for sublists and 'yield x' for integers reads cleanly."
+    ],
+    "bruteForce": {
+      "code": "def flatten(nested):\n    result = []\n    def walk(node):\n        for x in node:\n            if isinstance(x, list):\n                walk(x)\n            else:\n                result.append(x)\n    walk(nested)\n    return result\n",
+      "complexity": "O(total) time, O(depth) recursion",
+      "explanation": "Recursively walk the structure, appending integers to a shared result list."
+    },
+    "optimal": {
+      "code": "def flatten(nested):\n    def gen(node):\n        for x in node:\n            if isinstance(x, list):\n                yield from gen(x)\n            else:\n                yield x\n    return list(gen(nested))\n",
+      "complexity": "O(total) time, O(depth) space",
+      "explanation": "A recursive generator using 'yield from' to splice in flattened sublists; materialized once at the end."
+    },
+    "complexityCheck": {
+      "question": "What does 'yield from gen(x)' do?",
+      "choices": [
+        {
+          "label": "Delegates to the sub-generator, yielding all its values in order",
+          "correct": true
+        },
+        {
+          "label": "Yields the generator object itself",
+          "correct": false
+        },
+        {
+          "label": "Returns from the function",
+          "correct": false
+        },
+        {
+          "label": "Yields x unchanged",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "iterators",
+      "recursion",
+      "generator",
+      "flatten"
+    ]
+  },
+  {
+    "id": "py-c-parse-key-value-config",
+    "track": "python",
+    "topic": "file-io",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 11,
+    "companies": [
+      "tcs",
+      "infosys",
+      "wipro"
+    ],
+    "prompt": "You are given the text of a config file as a single string `text` (lines separated by `\\n`). Each non-blank line is `key=value`. Blank lines and lines starting with `#` (comments) are ignored. If a key repeats, the **last** value wins. Surrounding whitespace around keys and values is stripped. Return the resulting dict.",
+    "constraints": "- `0 <= len(text) <= 10^5`\n- well-formed lines contain exactly one `=`.",
+    "examples": [
+      {
+        "input": "\"a=1\\n# comment\\nb = 2\\na=3\"",
+        "output": "{\"a\": \"3\", \"b\": \"2\"}",
+        "explanation": "The comment is skipped; key 'a' repeats so its last value 3 wins; whitespace is trimmed."
+      },
+      {
+        "input": "\"\"",
+        "output": "{}",
+        "explanation": "Empty input yields an empty config."
+      }
+    ],
+    "starter": "def parse_config(...):\n    # your code here\n    pass\n",
+    "entry": "parse_config",
+    "tests": [
+      {
+        "args": [
+          "a=1\n# comment\nb = 2\na=3"
+        ],
+        "expect": {
+          "a": "3",
+          "b": "2"
+        }
+      },
+      {
+        "args": [
+          ""
+        ],
+        "expect": {}
+      },
+      {
+        "args": [
+          "x=10"
+        ],
+        "expect": {
+          "x": "10"
+        }
+      },
+      {
+        "args": [
+          "# only a comment"
+        ],
+        "expect": {}
+      },
+      {
+        "args": [
+          "k1=v1\nk2=v2\nk1=v3"
+        ],
+        "expect": {
+          "k1": "v3",
+          "k2": "v2"
+        }
+      },
+      {
+        "args": [
+          "  spaced  =  value  \n\n"
+        ],
+        "expect": {
+          "spaced": "value"
+        }
+      }
+    ],
+    "hints": [
+      "Split the text on newlines and process each line.",
+      "Skip blank lines and lines whose first non-space char is '#'.",
+      "split('=', 1) separates key and value; strip both; later assignments overwrite earlier ones in a dict."
+    ],
+    "bruteForce": {
+      "code": "def parse_config(text):\n    config = {}\n    for line in text.split(\"\\n\"):\n        stripped = line.strip()\n        if not stripped or stripped.startswith(\"#\"):\n            continue\n        if \"=\" not in stripped:\n            continue\n        key, value = stripped.split(\"=\", 1)\n        config[key.strip()] = value.strip()\n    return config\n",
+      "complexity": "O(n) time, O(k) space",
+      "explanation": "Iterate lines, skip blanks/comments, split on the first '=', strip, and let later keys overwrite earlier ones."
+    },
+    "optimal": {
+      "code": "def parse_config(text):\n    config = {}\n    for raw in text.split(\"\\n\"):\n        line = raw.strip()\n        if not line or line[0] == \"#\" or \"=\" not in line:\n            continue\n        k, _, v = line.partition(\"=\")\n        config[k.strip()] = v.strip()\n    return config\n",
+      "complexity": "O(n) time, O(k) space",
+      "explanation": "str.partition('=') splits on the first '=' in one call; the dict naturally keeps the last value per key."
+    },
+    "complexityCheck": {
+      "question": "Why use split('=', 1) / partition rather than split('=')?",
+      "choices": [
+        {
+          "label": "To keep '=' characters that appear inside the value",
+          "correct": true
+        },
+        {
+          "label": "It is faster to type",
+          "correct": false
+        },
+        {
+          "label": "split('=') raises an error",
+          "correct": false
+        },
+        {
+          "label": "There is no difference",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "file-io",
+      "parsing",
+      "dict"
+    ]
+  },
+  {
+    "id": "py-c-tally-log-levels",
+    "track": "python",
+    "topic": "file-io",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 13,
+    "companies": [
+      "amazon",
+      "cognizant",
+      "infosys"
+    ],
+    "prompt": "Given log output as a single string `text` (lines separated by `\\n`), where each non-blank line begins with a level token `INFO`, `WARN`, or `ERROR` followed by a space and a message, return a dict mapping each level that appears to its count. Blank lines and lines whose first token is not one of the three levels are ignored.",
+    "constraints": "- `0 <= len(text) <= 10^5`\n- level tokens are uppercase.",
+    "examples": [
+      {
+        "input": "\"INFO started\\nWARN low disk\\nINFO ok\\nERROR boom\"",
+        "output": "{\"INFO\": 2, \"WARN\": 1, \"ERROR\": 1}",
+        "explanation": "Two INFO lines, one WARN, one ERROR."
+      },
+      {
+        "input": "\"DEBUG x\\nINFO y\"",
+        "output": "{\"INFO\": 1}",
+        "explanation": "DEBUG is not a tracked level, so only the INFO line counts."
+      }
+    ],
+    "starter": "def tally_levels(...):\n    # your code here\n    pass\n",
+    "entry": "tally_levels",
+    "tests": [
+      {
+        "args": [
+          "INFO started\nWARN low disk\nINFO ok\nERROR boom"
+        ],
+        "expect": {
+          "INFO": 2,
+          "WARN": 1,
+          "ERROR": 1
+        }
+      },
+      {
+        "args": [
+          "DEBUG x\nINFO y"
+        ],
+        "expect": {
+          "INFO": 1
+        }
+      },
+      {
+        "args": [
+          ""
+        ],
+        "expect": {}
+      },
+      {
+        "args": [
+          "ERROR a\nERROR b\nERROR c"
+        ],
+        "expect": {
+          "ERROR": 3
+        }
+      },
+      {
+        "args": [
+          "\n\nINFO solo\n\n"
+        ],
+        "expect": {
+          "INFO": 1
+        }
+      },
+      {
+        "args": [
+          "random line\nWARN hey\nblah"
+        ],
+        "expect": {
+          "WARN": 1
+        }
+      }
+    ],
+    "hints": [
+      "Process each line; the level is the first whitespace-separated token.",
+      "Only count INFO/WARN/ERROR; ignore anything else.",
+      "A dict or collections.Counter accumulates the counts; skip lines whose first token isn't a known level."
+    ],
+    "bruteForce": {
+      "code": "def tally_levels(text):\n    levels = {\"INFO\", \"WARN\", \"ERROR\"}\n    counts = {}\n    for line in text.split(\"\\n\"):\n        parts = line.split()\n        if not parts:\n            continue\n        token = parts[0]\n        if token in levels:\n            counts[token] = counts.get(token, 0) + 1\n    return counts\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "Split each line, take the first token, count it only if it is a recognized level."
+    },
+    "optimal": {
+      "code": "def tally_levels(text):\n    from collections import Counter\n    levels = {\"INFO\", \"WARN\", \"ERROR\"}\n    c = Counter(\n        line.split()[0]\n        for line in text.split(\"\\n\")\n        if line.split() and line.split()[0] in levels\n    )\n    return dict(c)\n",
+      "complexity": "O(n) time, O(1) space",
+      "explanation": "A Counter over the first token of each qualifying line; converted to a plain dict for a JSON-clean return."
+    },
+    "complexityCheck": {
+      "question": "How is each line's level identified?",
+      "choices": [
+        {
+          "label": "The first whitespace-separated token",
+          "correct": true
+        },
+        {
+          "label": "The last token",
+          "correct": false
+        },
+        {
+          "label": "The whole line",
+          "correct": false
+        },
+        {
+          "label": "Characters after the first space",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "file-io",
+      "parsing",
+      "counter"
+    ]
+  },
+  {
+    "id": "py-c-csv-column-sum",
+    "track": "python",
+    "topic": "file-io",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 14,
+    "companies": [
+      "amazon",
+      "google",
+      "wipro"
+    ],
+    "prompt": "Given CSV text as a string `text` \u2014 the first line is a header of column names, the rest are data rows of comma-separated values \u2014 and a column name `column`, return the integer sum of that column across all data rows. The named column always exists and its values are integers. If there are no data rows the sum is `0`.",
+    "constraints": "- `1 <= number of columns <= 50`\n- `0 <= data rows <= 10^4`\n- the target column holds integer strings.",
+    "examples": [
+      {
+        "input": "text=\"qty,price\\n2,100\\n3,50\", column=\"qty\"",
+        "output": "5",
+        "explanation": "The 'qty' column holds 2 and 3, summing to 5."
+      },
+      {
+        "input": "text=\"a,b\\n\", column=\"a\"",
+        "output": "0",
+        "explanation": "Header only, no data rows -> sum 0."
+      }
+    ],
+    "starter": "def column_sum(...):\n    # your code here\n    pass\n",
+    "entry": "column_sum",
+    "tests": [
+      {
+        "args": [
+          "qty,price\n2,100\n3,50",
+          "qty"
+        ],
+        "expect": 5
+      },
+      {
+        "args": [
+          "a,b\n",
+          "a"
+        ],
+        "expect": 0
+      },
+      {
+        "args": [
+          "x\n5\n6\n7",
+          "x"
+        ],
+        "expect": 18
+      },
+      {
+        "args": [
+          "name,age\nAnn,30\nBob,25",
+          "age"
+        ],
+        "expect": 55
+      },
+      {
+        "args": [
+          "c1,c2,c3\n1,2,3\n4,5,6",
+          "c2"
+        ],
+        "expect": 7
+      },
+      {
+        "args": [
+          "only\n42",
+          "only"
+        ],
+        "expect": 42
+      }
+    ],
+    "hints": [
+      "Split into lines; the first line names the columns.",
+      "Find the index of the target column in the header.",
+      "For each data row, split on commas and add the int at that column index."
+    ],
+    "bruteForce": {
+      "code": "def column_sum(text, column):\n    lines = text.split(\"\\n\")\n    if not lines:\n        return 0\n    header = lines[0].split(\",\")\n    idx = header.index(column)\n    total = 0\n    for line in lines[1:]:\n        if line.strip() == \"\":\n            continue\n        cells = line.split(\",\")\n        total += int(cells[idx])\n    return total\n",
+      "complexity": "O(rows * cols) time",
+      "explanation": "Locate the column index from the header, then split each data row and accumulate the integer at that index."
+    },
+    "optimal": {
+      "code": "def column_sum(text, column):\n    lines = [ln for ln in text.split(\"\\n\") if ln.strip()]\n    if not lines:\n        return 0\n    header = lines[0].split(\",\")\n    idx = header.index(column)\n    return sum(int(line.split(\",\")[idx]) for line in lines[1:])\n",
+      "complexity": "O(rows * cols) time, O(1) extra space",
+      "explanation": "Filter blank lines once, resolve the column index, then sum the parsed cells with a generator expression."
+    },
+    "complexityCheck": {
+      "question": "How is the target column located?",
+      "choices": [
+        {
+          "label": "header.index(column) gives its position, used on every row",
+          "correct": true
+        },
+        {
+          "label": "By summing all columns",
+          "correct": false
+        },
+        {
+          "label": "It is always column 0",
+          "correct": false
+        },
+        {
+          "label": "By sorting the header",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "file-io",
+      "csv",
+      "parsing"
+    ]
+  },
+  {
+    "id": "py-c-transpose-matrix",
+    "track": "python",
+    "topic": "comprehensions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 9,
+    "companies": [
+      "tcs",
+      "infosys",
+      "amazon"
+    ],
+    "prompt": "Given a rectangular `matrix` (a list of equal-length rows), return its transpose: a new matrix where `result[c][r] == matrix[r][c]`. An empty matrix transposes to an empty list. Use a comprehension.",
+    "constraints": "- `0 <= rows, cols <= 200`\n- the matrix is rectangular (all rows the same length).",
+    "examples": [
+      {
+        "input": "[[1,2,3],[4,5,6]]",
+        "output": "[[1,4],[2,5],[3,6]]",
+        "explanation": "Rows become columns: a 2x3 matrix transposes to 3x2."
+      },
+      {
+        "input": "[[1],[2],[3]]",
+        "output": "[[1,2,3]]",
+        "explanation": "A 3x1 column becomes a 1x3 row."
+      }
+    ],
+    "starter": "def transpose(...):\n    # your code here\n    pass\n",
+    "entry": "transpose",
+    "tests": [
+      {
+        "args": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              4,
+              5,
+              6
+            ]
+          ]
+        ],
+        "expect": [
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            6
+          ]
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              3
+            ]
+          ]
+        ],
+        "expect": [
+          [
+            1,
+            2,
+            3
+          ]
+        ]
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            [
+              7
+            ]
+          ]
+        ],
+        "expect": [
+          [
+            7
+          ]
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5,
+              6
+            ]
+          ]
+        ],
+        "expect": [
+          [
+            1,
+            3,
+            5
+          ],
+          [
+            2,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        "expect": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    ],
+    "hints": [
+      "The transpose's row c is built from column c of every original row.",
+      "Outer loop over columns, inner over rows.",
+      "[[matrix[r][c] for r in range(rows)] for c in range(cols)], guarding the empty case."
+    ],
+    "bruteForce": {
+      "code": "def transpose(matrix):\n    if not matrix:\n        return []\n    rows, cols = len(matrix), len(matrix[0])\n    result = []\n    for c in range(cols):\n        new_row = []\n        for r in range(rows):\n            new_row.append(matrix[r][c])\n        result.append(new_row)\n    return result\n",
+      "complexity": "O(rows * cols) time",
+      "explanation": "Explicit nested loops building each transposed row from a column of the original."
+    },
+    "optimal": {
+      "code": "def transpose(matrix):\n    if not matrix:\n        return []\n    return [[row[c] for row in matrix] for c in range(len(matrix[0]))]\n",
+      "complexity": "O(rows * cols) time",
+      "explanation": "A nested comprehension: the outer iterates columns, the inner gathers that column from every row."
+    },
+    "complexityCheck": {
+      "question": "In the comprehension, what does the outer loop iterate over?",
+      "choices": [
+        {
+          "label": "Column indices of the original matrix",
+          "correct": true
+        },
+        {
+          "label": "Row indices",
+          "correct": false
+        },
+        {
+          "label": "Individual cells",
+          "correct": false
+        },
+        {
+          "label": "Nothing \u2014 it is single-level",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "comprehensions",
+      "matrix",
+      "transpose"
+    ]
+  },
+  {
+    "id": "py-c-flatten-and-keep-even",
+    "track": "python",
+    "topic": "comprehensions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "easy",
+    "estMinutes": 8,
+    "companies": [
+      "tcs",
+      "wipro",
+      "cognizant"
+    ],
+    "prompt": "Given a list of lists of integers `grid`, return a single flat list containing only the **even** numbers, in row-major (left-to-right, top-to-bottom) order. Use a nested comprehension with a filter.",
+    "constraints": "- total elements `<= 10^4`\n- values are integers.",
+    "examples": [
+      {
+        "input": "[[1,2,3],[4,5],[6]]",
+        "output": "[2, 4, 6]",
+        "explanation": "Flatten then keep evens in order."
+      },
+      {
+        "input": "[[1,3],[5,7]]",
+        "output": "[]",
+        "explanation": "No even numbers present."
+      }
+    ],
+    "starter": "def flatten_even(...):\n    # your code here\n    pass\n",
+    "entry": "flatten_even",
+    "tests": [
+      {
+        "args": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              6
+            ]
+          ]
+        ],
+        "expect": [
+          2,
+          4,
+          6
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              3
+            ],
+            [
+              5,
+              7
+            ]
+          ]
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            [
+              2,
+              4,
+              6
+            ]
+          ]
+        ],
+        "expect": [
+          2,
+          4,
+          6
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              0,
+              -2,
+              3
+            ],
+            [
+              -4,
+              5
+            ]
+          ]
+        ],
+        "expect": [
+          0,
+          -2,
+          -4
+        ]
+      },
+      {
+        "args": [
+          [
+            [],
+            [
+              8
+            ],
+            []
+          ]
+        ],
+        "expect": [
+          8
+        ]
+      }
+    ],
+    "hints": [
+      "A nested comprehension can loop rows then elements.",
+      "Add an 'if x % 2 == 0' filter clause.",
+      "[x for row in grid for x in row if x % 2 == 0] \u2014 note 0 and negatives are even."
+    ],
+    "bruteForce": {
+      "code": "def flatten_even(grid):\n    out = []\n    for row in grid:\n        for x in row:\n            if x % 2 == 0:\n                out.append(x)\n    return out\n",
+      "complexity": "O(total) time",
+      "explanation": "Nested loops appending even values in row-major order."
+    },
+    "optimal": {
+      "code": "def flatten_even(grid):\n    return [x for row in grid for x in row if x % 2 == 0]\n",
+      "complexity": "O(total) time",
+      "explanation": "A single flattening comprehension whose filter keeps only even values; the loop order preserves row-major sequence."
+    },
+    "complexityCheck": {
+      "question": "Is -4 kept by the 'x % 2 == 0' filter?",
+      "choices": [
+        {
+          "label": "Yes \u2014 negatives can be even; -4 % 2 == 0",
+          "correct": true
+        },
+        {
+          "label": "No \u2014 only positive evens pass",
+          "correct": false
+        },
+        {
+          "label": "It raises an error",
+          "correct": false
+        },
+        {
+          "label": "Only zero passes",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "comprehensions",
+      "flatten",
+      "filter"
+    ]
+  },
+  {
+    "id": "py-c-invert-multimap",
+    "track": "python",
+    "topic": "comprehensions",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 13,
+    "companies": [
+      "amazon",
+      "microsoft",
+      "google"
+    ],
+    "prompt": "Given a dict `mapping` from a string key to a list of string values, build the **inverted** dict: each distinct value becomes a key whose value is the sorted list of original keys that pointed to it. Return the inverted dict.",
+    "constraints": "- total (key, value) pairs `<= 10^4`\n- keys and values are strings.",
+    "examples": [
+      {
+        "input": "{\"a\": [\"x\",\"y\"], \"b\": [\"y\"]}",
+        "output": "{\"x\": [\"a\"], \"y\": [\"a\",\"b\"]}",
+        "explanation": "'y' was listed under both 'a' and 'b', so it inverts to ['a','b'] (sorted)."
+      },
+      {
+        "input": "{\"k\": []}",
+        "output": "{}",
+        "explanation": "No values to invert -> empty result."
+      }
+    ],
+    "starter": "def invert(...):\n    # your code here\n    pass\n",
+    "entry": "invert",
+    "tests": [
+      {
+        "args": [
+          {
+            "a": [
+              "x",
+              "y"
+            ],
+            "b": [
+              "y"
+            ]
+          }
+        ],
+        "expect": {
+          "x": [
+            "a"
+          ],
+          "y": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      {
+        "args": [
+          {
+            "k": []
+          }
+        ],
+        "expect": {}
+      },
+      {
+        "args": [
+          {}
+        ],
+        "expect": {}
+      },
+      {
+        "args": [
+          {
+            "one": [
+              "1"
+            ],
+            "two": [
+              "1",
+              "2"
+            ],
+            "three": [
+              "2",
+              "3"
+            ]
+          }
+        ],
+        "expect": {
+          "1": [
+            "one",
+            "two"
+          ],
+          "2": [
+            "three",
+            "two"
+          ],
+          "3": [
+            "three"
+          ]
+        }
+      },
+      {
+        "args": [
+          {
+            "z": [
+              "a"
+            ],
+            "y": [
+              "a"
+            ],
+            "x": [
+              "a"
+            ]
+          }
+        ],
+        "expect": {
+          "a": [
+            "x",
+            "y",
+            "z"
+          ]
+        }
+      },
+      {
+        "args": [
+          {
+            "solo": [
+              "only"
+            ]
+          }
+        ],
+        "expect": {
+          "only": [
+            "solo"
+          ]
+        }
+      }
+    ],
+    "hints": [
+      "Walk every (key, value) pair and group keys under each value.",
+      "A defaultdict(list) collects the keys per value before sorting.",
+      "Finally sort each list of keys; return a plain dict."
+    ],
+    "bruteForce": {
+      "code": "def invert(mapping):\n    result = {}\n    for key, values in mapping.items():\n        for v in values:\n            result.setdefault(v, []).append(key)\n    return {v: sorted(keys) for v, keys in result.items()}\n",
+      "complexity": "O(P log P) time (P = total pairs)",
+      "explanation": "Accumulate keys per value with setdefault, then sort each bucket."
+    },
+    "optimal": {
+      "code": "def invert(mapping):\n    from collections import defaultdict\n    inv = defaultdict(list)\n    for key, values in mapping.items():\n        for v in values:\n            inv[v].append(key)\n    return {v: sorted(keys) for v, keys in inv.items()}\n",
+      "complexity": "O(P log P) time, O(P) space",
+      "explanation": "A defaultdict groups original keys under each value; a dict comprehension sorts each bucket and drops the defaultdict wrapper."
+    },
+    "complexityCheck": {
+      "question": "Why convert the defaultdict to a plain dict at the end?",
+      "choices": [
+        {
+          "label": "For a clean, JSON-serializable return (and to stop auto-creating keys)",
+          "correct": true
+        },
+        {
+          "label": "defaultdicts cannot be sorted",
+          "correct": false
+        },
+        {
+          "label": "To change the values",
+          "correct": false
+        },
+        {
+          "label": "It is required by Python syntax",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "comprehensions",
+      "dict",
+      "invert"
+    ]
+  },
+  {
+    "id": "py-c-spiral-order",
+    "track": "python",
+    "topic": "advanced-python",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "hard",
+    "estMinutes": 20,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "prompt": "Given an `m x n` `matrix`, return all its elements in **spiral order**: start at the top-left, go right across the top row, down the right column, left across the bottom, up the left column, and spiral inward until every element is listed once.",
+    "constraints": "- `0 <= m, n <= 50`\n- the matrix is rectangular.",
+    "examples": [
+      {
+        "input": "[[1,2,3],[4,5,6],[7,8,9]]",
+        "output": "[1,2,3,6,9,8,7,4,5]",
+        "explanation": "Clockwise spiral from the top-left, ending at the center."
+      },
+      {
+        "input": "[[1,2],[3,4]]",
+        "output": "[1,2,4,3]",
+        "explanation": "Right, down, left covers the 2x2."
+      }
+    ],
+    "starter": "def spiral_order(...):\n    # your code here\n    pass\n",
+    "entry": "spiral_order",
+    "tests": [
+      {
+        "args": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              4,
+              5,
+              6
+            ],
+            [
+              7,
+              8,
+              9
+            ]
+          ]
+        ],
+        "expect": [
+          1,
+          2,
+          3,
+          6,
+          9,
+          8,
+          7,
+          4,
+          5
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ]
+          ]
+        ],
+        "expect": [
+          1,
+          2,
+          4,
+          3
+        ]
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ]
+        ],
+        "expect": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              3
+            ]
+          ]
+        ],
+        "expect": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              4,
+              5,
+              6
+            ]
+          ]
+        ],
+        "expect": [
+          1,
+          2,
+          3,
+          6,
+          5,
+          4
+        ]
+      }
+    ],
+    "hints": [
+      "Peel the matrix layer by layer using four boundaries: top, bottom, left, right.",
+      "After traversing each edge, shrink the corresponding boundary inward.",
+      "Guard against re-traversing the middle row/column when the boundaries cross."
+    ],
+    "bruteForce": {
+      "code": "def spiral_order(matrix):\n    if not matrix or not matrix[0]:\n        return []\n    m, n = len(matrix), len(matrix[0])\n    seen = [[False] * n for _ in range(m)]\n    dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]\n    r = c = d = 0\n    out = []\n    for _ in range(m * n):\n        out.append(matrix[r][c])\n        seen[r][c] = True\n        dr, dc = dirs[d]\n        nr, nc = r + dr, c + dc\n        if not (0 <= nr < m and 0 <= nc < n and not seen[nr][nc]):\n            d = (d + 1) % 4\n            dr, dc = dirs[d]\n            nr, nc = r + dr, c + dc\n        r, c = nr, nc\n    return out\n",
+      "complexity": "O(m*n) time, O(m*n) space",
+      "explanation": "Walk cell by cell, turning clockwise whenever the next cell is out of bounds or already visited; a visited grid tracks progress."
+    },
+    "optimal": {
+      "code": "def spiral_order(matrix):\n    if not matrix or not matrix[0]:\n        return []\n    top, bottom = 0, len(matrix) - 1\n    left, right = 0, len(matrix[0]) - 1\n    out = []\n    while top <= bottom and left <= right:\n        for c in range(left, right + 1):\n            out.append(matrix[top][c])\n        top += 1\n        for r in range(top, bottom + 1):\n            out.append(matrix[r][right])\n        right -= 1\n        if top <= bottom:\n            for c in range(right, left - 1, -1):\n                out.append(matrix[bottom][c])\n            bottom -= 1\n        if left <= right:\n            for r in range(bottom, top - 1, -1):\n                out.append(matrix[r][left])\n            left += 1\n    return out\n",
+      "complexity": "O(m*n) time, O(1) extra space",
+      "explanation": "Four shrinking boundaries traverse each edge once; the inner guards prevent double-counting the last row/column. No visited grid needed."
+    },
+    "complexityCheck": {
+      "question": "Why the 'if top <= bottom' / 'if left <= right' guards in the boundary method?",
+      "choices": [
+        {
+          "label": "To avoid re-traversing a row/column when the spiral reaches the center",
+          "correct": true
+        },
+        {
+          "label": "To handle negative numbers",
+          "correct": false
+        },
+        {
+          "label": "For performance only",
+          "correct": false
+        },
+        {
+          "label": "They are unnecessary",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "advanced-python",
+      "matrix",
+      "spiral",
+      "simulation"
+    ]
+  },
+  {
+    "id": "py-c-count-valid-parentheses",
+    "track": "python",
+    "topic": "recursion",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "hard",
+    "estMinutes": 20,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "prompt": "Return the number of distinct well-formed parentheses strings using exactly `n` pairs of parentheses. For example `n = 3` has 5 valid strings. (This count is the n-th Catalan number.) For `n = 0` the answer is `1` (the empty string).",
+    "constraints": "- `0 <= n <= 16`.",
+    "examples": [
+      {
+        "input": "3",
+        "output": "5",
+        "explanation": "((())) (()()) (())() ()(()) ()()() \u2014 five valid arrangements."
+      },
+      {
+        "input": "0",
+        "output": "1",
+        "explanation": "The empty string is the single valid arrangement of zero pairs."
+      }
+    ],
+    "starter": "def count_parens(...):\n    # your code here\n    pass\n",
+    "entry": "count_parens",
+    "tests": [
+      {
+        "args": [
+          3
+        ],
+        "expect": 5
+      },
+      {
+        "args": [
+          0
+        ],
+        "expect": 1
+      },
+      {
+        "args": [
+          1
+        ],
+        "expect": 1
+      },
+      {
+        "args": [
+          2
+        ],
+        "expect": 2
+      },
+      {
+        "args": [
+          4
+        ],
+        "expect": 14
+      },
+      {
+        "args": [
+          5
+        ],
+        "expect": 42
+      }
+    ],
+    "hints": [
+      "You can enumerate by backtracking: add '(' if any remain, add ')' if it wouldn't unbalance.",
+      "Counting only, the answer is the Catalan number C(n).",
+      "C(n) = sum over i of C(i)*C(n-1-i), or C(n) = comb(2n, n)/(n+1)."
+    ],
+    "bruteForce": {
+      "code": "def count_parens(n):\n    # backtracking enumeration, counting complete valid strings\n    count = 0\n    def build(open_used, close_used):\n        nonlocal count\n        if open_used == n and close_used == n:\n            count += 1\n            return\n        if open_used < n:\n            build(open_used + 1, close_used)\n        if close_used < open_used:\n            build(open_used, close_used + 1)\n    build(0, 0)\n    return count\n",
+      "complexity": "O(Catalan(n)) time",
+      "explanation": "Explicitly construct every balanced sequence by backtracking and count the completed ones."
+    },
+    "optimal": {
+      "code": "def count_parens(n):\n    # Catalan via DP: C[k] = sum C[i]*C[k-1-i]\n    C = [0] * (n + 1)\n    C[0] = 1\n    for k in range(1, n + 1):\n        C[k] = sum(C[i] * C[k - 1 - i] for i in range(k))\n    return C[n]\n",
+      "complexity": "O(n^2) time, O(n) space",
+      "explanation": "The Catalan recurrence computes the count directly without enumerating any strings \u2014 quadratic instead of exponential."
+    },
+    "complexityCheck": {
+      "question": "The count of valid n-pair parentheses strings is:",
+      "choices": [
+        {
+          "label": "The n-th Catalan number",
+          "correct": true
+        },
+        {
+          "label": "n factorial",
+          "correct": false
+        },
+        {
+          "label": "2^n",
+          "correct": false
+        },
+        {
+          "label": "n squared",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "recursion",
+      "catalan",
+      "backtracking",
+      "dp"
+    ]
+  },
+  {
+    "id": "py-c-merge-intervals",
+    "track": "python",
+    "topic": "advanced-python",
+    "type": "coding",
+    "language": "python",
+    "difficulty": "medium",
+    "estMinutes": 16,
+    "companies": [
+      "amazon",
+      "google",
+      "microsoft"
+    ],
+    "prompt": "Given a list of `intervals` `[start, end]` (with `start <= end`), merge all overlapping or touching intervals and return the merged list sorted by start. Two intervals overlap/touch when one's start is `<=` the other's end.",
+    "constraints": "- `0 <= len(intervals) <= 10^4`\n- integer endpoints, `start <= end`.",
+    "examples": [
+      {
+        "input": "[[1,3],[2,6],[8,10],[15,18]]",
+        "output": "[[1,6],[8,10],[15,18]]",
+        "explanation": "[1,3] and [2,6] overlap into [1,6]; the rest are disjoint."
+      },
+      {
+        "input": "[[1,4],[4,5]]",
+        "output": "[[1,5]]",
+        "explanation": "Touching intervals (4 == 4) merge into one."
+      }
+    ],
+    "starter": "def merge_intervals(...):\n    # your code here\n    pass\n",
+    "entry": "merge_intervals",
+    "tests": [
+      {
+        "args": [
+          [
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              8,
+              10
+            ],
+            [
+              15,
+              18
+            ]
+          ]
+        ],
+        "expect": [
+          [
+            1,
+            6
+          ],
+          [
+            8,
+            10
+          ],
+          [
+            15,
+            18
+          ]
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ]
+        ],
+        "expect": [
+          [
+            1,
+            5
+          ]
+        ]
+      },
+      {
+        "args": [
+          []
+        ],
+        "expect": []
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              4
+            ]
+          ]
+        ],
+        "expect": [
+          [
+            1,
+            4
+          ]
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              1,
+              4
+            ],
+            [
+              5,
+              6
+            ]
+          ]
+        ],
+        "expect": [
+          [
+            1,
+            4
+          ],
+          [
+            5,
+            6
+          ]
+        ]
+      },
+      {
+        "args": [
+          [
+            [
+              6,
+              8
+            ],
+            [
+              1,
+              9
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              4,
+              7
+            ]
+          ]
+        ],
+        "expect": [
+          [
+            1,
+            9
+          ]
+        ]
+      }
+    ],
+    "hints": [
+      "Sort by start so overlaps are adjacent.",
+      "Walk the sorted list, extending the current interval's end when the next start is within it.",
+      "Touching counts as overlap: use start <= current_end."
+    ],
+    "bruteForce": {
+      "code": "def merge_intervals(intervals):\n    # repeatedly merge any overlapping pair until stable\n    items = [list(iv) for iv in intervals]\n    merged = True\n    while merged:\n        merged = False\n        out = []\n        for iv in items:\n            placed = False\n            for ex in out:\n                if iv[0] <= ex[1] and ex[0] <= iv[1]:\n                    ex[0] = min(ex[0], iv[0])\n                    ex[1] = max(ex[1], iv[1])\n                    placed = True\n                    merged = True\n                    break\n            if not placed:\n                out.append(list(iv))\n        items = out\n    return sorted(items, key=lambda x: x[0])\n",
+      "complexity": "O(n^2) per pass, multiple passes",
+      "explanation": "Keep merging any overlapping pair into accumulated buckets until a full pass makes no change, then sort."
+    },
+    "optimal": {
+      "code": "def merge_intervals(intervals):\n    if not intervals:\n        return []\n    ordered = sorted(intervals, key=lambda x: x[0])\n    out = [list(ordered[0])]\n    for start, end in ordered[1:]:\n        if start <= out[-1][1]:\n            out[-1][1] = max(out[-1][1], end)\n        else:\n            out.append([start, end])\n    return out\n",
+      "complexity": "O(n log n) time, O(n) space",
+      "explanation": "Sort by start, then a single sweep extends the last merged interval whenever the next one overlaps or touches it."
+    },
+    "complexityCheck": {
+      "question": "Why sort by start before the single-pass merge?",
+      "choices": [
+        {
+          "label": "So all intervals that can merge become adjacent",
+          "correct": true
+        },
+        {
+          "label": "To remove duplicates",
+          "correct": false
+        },
+        {
+          "label": "Sorting is not needed",
+          "correct": false
+        },
+        {
+          "label": "To make endpoints positive",
+          "correct": false
+        }
+      ]
+    },
+    "tags": [
+      "advanced-python",
+      "intervals",
+      "sorting",
+      "greedy"
+    ]
+  }
+]
