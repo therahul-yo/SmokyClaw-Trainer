@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { McqItem } from "../types";
 import { useProgressStore, useReviewQueueStore, useStreakStore } from "../store";
+import { shuffleOptions } from "../lib/shuffleOptions";
 import { BookmarkButton } from "./BookmarkButton";
 import { LessonRenderer } from "./LessonRenderer";
 import { Box } from "./terminal/Box";
@@ -16,6 +17,13 @@ export function McqCard({
   const [submitted, setSubmitted] = useState(false);
   const startedAt = useState(() => Date.now())[0];
 
+  // Seeded, stable per-item shuffle so the correct answer isn't always in the
+  // authored position (kills position memorization). answerIndex is remapped.
+  const shuffled = useMemo(
+    () => shuffleOptions(item.id, item.options, item.answerIndex),
+    [item.id, item.options, item.answerIndex],
+  );
+
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
   const registerAttempt = useReviewQueueStore((s) => s.registerAttempt);
   const ping = useStreakStore((s) => s.ping);
@@ -24,7 +32,7 @@ export function McqCard({
     if (submitted) return;
     setSelected(idx);
     setSubmitted(true);
-    const correct = idx === item.answerIndex;
+    const correct = idx === shuffled.answerIndex;
     // clickedAt is sampled in the onClick handler (an event-handler context),
     // so no impure Date.now() runs in this render-scope function.
     recordAttempt({ itemId: item.id, correct, timeMs: clickedAt - startedAt });
@@ -33,7 +41,7 @@ export function McqCard({
     onAnswered?.(correct);
   };
 
-  const correct = submitted && selected === item.answerIndex;
+  const correct = submitted && selected === shuffled.answerIndex;
 
   return (
     <Box
@@ -54,9 +62,9 @@ export function McqCard({
         </div>
 
         <ul className="space-y-2">
-          {item.options.map((opt, i) => {
+          {shuffled.options.map((opt, i) => {
             const chosen = i === selected;
-            const isAnswer = i === item.answerIndex;
+            const isAnswer = i === shuffled.answerIndex;
             let borderColor = "var(--color-border-bright)";
             let bgColor = "transparent";
             let opacity = 1;
