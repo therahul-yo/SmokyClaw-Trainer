@@ -438,6 +438,50 @@ export const SQL_ONLY_BLUEPRINT: MockTestBlueprint = {
   ],
 };
 
+export const COGNIZANT_GENC_BLUEPRINT: MockTestBlueprint = {
+  id: "cognizant-genc",
+  title: "Cognizant GenC",
+  subtitle: "Aptitude + logical + verbal + Automata coding round",
+  sections: [
+    {
+      id: "quantitative",
+      title: "Quantitative Aptitude",
+      durationMinutes: 25,
+      questionCount: 20,
+      pickFrom: { track: "aptitude", topics: ["quant"] },
+    },
+    {
+      id: "logical-reasoning",
+      title: "Logical Reasoning",
+      durationMinutes: 25,
+      questionCount: 20,
+      pickFrom: { track: "aptitude", topics: ["reasoning"] },
+    },
+    {
+      id: "verbal-ability",
+      title: "Verbal Ability",
+      durationMinutes: 20,
+      questionCount: 18,
+      pickFrom: { track: "aptitude", topics: ["verbal"] },
+    },
+    {
+      id: "programming-fundamentals",
+      title: "Programming Fundamentals",
+      durationMinutes: 15,
+      questionCount: 10,
+      pickFrom: [
+        { track: "python", type: "mcq" },
+        { track: "dsa", type: "mcq" },
+      ],
+    },
+  ],
+  codingSection: {
+    durationMinutes: 45,
+    problemCount: 2,
+    pool: { track: "python" },
+  },
+};
+
 export const BLUEPRINTS: MockTestBlueprint[] = [
   TCS_NQT_BLUEPRINT,
   TCS_NQT_COGNITIVE_BLUEPRINT,
@@ -450,6 +494,7 @@ export const BLUEPRINTS: MockTestBlueprint[] = [
   ACCENTURE_FULL_FLOW_BLUEPRINT,
   WIPRO_ELITE_BLUEPRINT,
   CAPGEMINI_BLUEPRINT,
+  COGNIZANT_GENC_BLUEPRINT,
   GENERIC_DSA_BLUEPRINT,
   SQL_ONLY_BLUEPRINT,
 ];

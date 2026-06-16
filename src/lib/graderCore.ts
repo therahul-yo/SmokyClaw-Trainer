@@ -104,7 +104,7 @@ export function evaluateCodingRun(
     const r = parsed.find((p) => p.i === i);
     const got = r?.got ?? null;
     const err = r?.err ?? undefined;
-    const ok = !err && deepEqual(got, t.expect);
+    const ok = !err && deepEqual(got, t.expect, t.orderInsensitive ?? false);
     if (ok) passed += 1;
     tests.push({
       index: i,
@@ -125,13 +125,29 @@ export function evaluateCodingRun(
   };
 }
 
-export function deepEqual(a: unknown, b: unknown): boolean {
+// Structural deep-equality. When `orderInsensitive` is true, arrays compare as
+// multisets (element order ignored) — for drills like "return the subsets" or
+// "group the anagrams" where any ordering of the result is correct. The flag
+// threads recursively, so nested arrays are also compared order-insensitively.
+export function deepEqual(
+  a: unknown,
+  b: unknown,
+  orderInsensitive = false,
+): boolean {
   if (a === b) return true;
   if (typeof a !== typeof b) return false;
   if (a == null || b == null) return false;
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
-    return a.every((v, i) => deepEqual(v, b[i]));
+    if (orderInsensitive) {
+      // Sort both by a stable serialization, then compare pairwise. Equal
+      // multisets sort to the same sequence, so a positional compare suffices.
+      const key = (x: unknown) => JSON.stringify(x);
+      const sa = [...a].sort((x, y) => (key(x) < key(y) ? -1 : key(x) > key(y) ? 1 : 0));
+      const sb = [...b].sort((x, y) => (key(x) < key(y) ? -1 : key(x) > key(y) ? 1 : 0));
+      return sa.every((v, i) => deepEqual(v, sb[i], orderInsensitive));
+    }
+    return a.every((v, i) => deepEqual(v, b[i], orderInsensitive));
   }
   if (typeof a === "object" && typeof b === "object") {
     const ka = Object.keys(a as object);
@@ -141,6 +157,7 @@ export function deepEqual(a: unknown, b: unknown): boolean {
       deepEqual(
         (a as Record<string, unknown>)[k],
         (b as Record<string, unknown>)[k],
+        orderInsensitive,
       ),
     );
   }
@@ -150,22 +167,58 @@ export function deepEqual(a: unknown, b: unknown): boolean {
 export function compareSqlResult(
   expected: { columns: string[]; rows: unknown[][] },
   actual: { columns: string[]; rows: unknown[][] },
+  opts: { orderInsensitive?: boolean } = {},
 ): boolean {
-  return (
-    actual.columns.length === expected.columns.length &&
-    actual.columns.every(
+  if (actual.columns.length !== expected.columns.length) return false;
+  if (
+    !actual.columns.every(
       (c, i) => c.toLowerCase() === expected.columns[i].toLowerCase(),
-    ) &&
-    actual.rows.length === expected.rows.length &&
-    actual.rows.every(
-      (row, i) =>
-        row.length === expected.rows[i].length &&
-        row.every((v, j) => normalizeSqlValue(v) === normalizeSqlValue(expected.rows[i][j])),
     )
+  ) {
+    return false;
+  }
+  if (actual.rows.length !== expected.rows.length) return false;
+
+  // When the reference query has no deterministic ORDER BY, compare row sets
+  // independent of order: sort both by a stable serialization, then line up.
+  let expRows = expected.rows;
+  let actRows = actual.rows;
+  if (opts.orderInsensitive) {
+    const rowKey = (row: unknown[]) =>
+      JSON.stringify(row.map(normalizeSqlValue));
+    const byKey = (x: unknown[], y: unknown[]) => {
+      const kx = rowKey(x);
+      const ky = rowKey(y);
+      return kx < ky ? -1 : kx > ky ? 1 : 0;
+    };
+    expRows = [...expected.rows].sort(byKey);
+    actRows = [...actual.rows].sort(byKey);
+  }
+
+  return actRows.every(
+    (row, i) =>
+      row.length === expRows[i].length &&
+      row.every((v, j) => cellsEqual(v, expRows[i][j])),
   );
 }
 
 function normalizeSqlValue(v: unknown): string {
   if (v === null || v === undefined) return "NULL";
   return String(v);
+}
+
+// Numeric-aware cell comparison: if BOTH cells parse as finite numbers, compare
+// numerically so `1.0 === 1` and `'01' === 1` (sql.js may return a numeric
+// literal where the reference produced a string, or vice versa). Otherwise fall
+// back to the NULL-normalized string compare (keeps text/NULL semantics exact).
+function cellsEqual(a: unknown, b: unknown): boolean {
+  const sa = normalizeSqlValue(a);
+  const sb = normalizeSqlValue(b);
+  if (sa === sb) return true;
+  const na = Number(sa);
+  const nb = Number(sb);
+  if (sa.trim() !== "" && sb.trim() !== "" && Number.isFinite(na) && Number.isFinite(nb)) {
+    return na === nb;
+  }
+  return false;
 }

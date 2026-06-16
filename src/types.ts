@@ -102,6 +102,9 @@ export type McqItem = QuizItemCommon & {
 export type CodingTest = {
   args: unknown[];
   expect: unknown;
+  // When true, the result array is compared as a multiset (element order
+  // ignored) — for drills where any ordering of the output is correct.
+  orderInsensitive?: boolean;
 };
 
 export type CodingItem = QuizItemCommon & {
@@ -131,6 +134,9 @@ export type SqlItem = QuizItemCommon & {
   schema: SqlSchemaName;
   starter?: string;
   expected: { columns: string[]; rows: unknown[][] };
+  // When true, grading ignores row order (for queries with no deterministic
+  // ORDER BY). Default false — most drills end with an explicit ORDER BY.
+  orderInsensitive?: boolean;
   explanation?: string;
   tags: string[];
 };
@@ -190,6 +196,10 @@ export type MockSection = {
   pickFrom:
     | { track: TrackId; topics?: string[]; type?: QuizItem["type"] }
     | { track: TrackId; topics?: string[]; type?: QuizItem["type"] }[];
+  // Optional company filter. When set, the picker prefers items tagged with
+  // this company but still allows untagged ("generic") items, so pools stay
+  // feasible. An item tagged for a *different* company is excluded.
+  company?: CompanyTag;
 };
 
 export type MockTestBlueprint = {
@@ -205,6 +215,7 @@ export type MockTestBlueprint = {
     | "accenture-full-flow"
     | "wipro-elite"
     | "capgemini"
+    | "cognizant-genc"
     | "generic-dsa"
     | "sql-only";
   title: string;
@@ -217,13 +228,30 @@ export type MockTestBlueprint = {
   };
 };
 
+// Summary of one coding problem attempted during a mock's coding round,
+// surfaced in the PostMockReport. (Full per-attempt detail — passed test count,
+// hints — still lands in progressStore via CodingSandbox.)
+export type MockCodingResult = {
+  itemId: string;
+  solved: boolean;
+  gaveUp: boolean;
+  timeMs: number;
+};
+
+// Persisted in-flight mock run — lets a 100+ minute exam survive a refresh.
 export type MockTestRunState = {
   blueprintId: MockTestBlueprint["id"];
+  runId: string; // seeds the picker so a resume re-picks identical questions
   startedAt: number;
-  currentSectionIndex: number;
+  phase: "section" | "coding" | "done";
+  sectionIdx: number;
+  itemIdsBySection: string[][]; // pre-selected MCQ ids per section
+  codingItemIds: string[]; // pre-selected coding-round problem ids
   sectionDeadlines: number[]; // epoch ms when each section auto-submits
-  itemIdsBySection: string[][]; // pre-selected items per section
-  answersByItemId: Record<string, number | string | null>;
+  codingDeadline: number | null; // epoch ms when the coding round auto-submits
+  mcqAnswers: Record<string, number>; // itemId -> chosen option index
+  itemStartTsById: Record<string, number>; // first-seen ts per item, for timeMs
+  codingResultsById: Record<string, MockCodingResult>;
 };
 
 // ────────── Study plan ──────────

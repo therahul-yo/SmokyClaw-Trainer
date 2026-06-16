@@ -55,7 +55,9 @@ export async function gradeSql(
     if (!actual) {
       return { ok: false, expected: item.expected, actual: null, error: "Query returned no result" };
     }
-    const ok = compareSqlResult(item.expected, actual);
+    const ok = compareSqlResult(item.expected, actual, {
+      orderInsensitive: item.orderInsensitive ?? false,
+    });
     return { ok, expected: item.expected, actual };
   } catch (e) {
     return { ok: false, expected: item.expected, actual: null, error: String(e) };

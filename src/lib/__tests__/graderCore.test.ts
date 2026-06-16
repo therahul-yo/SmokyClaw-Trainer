@@ -36,6 +36,16 @@ describe("deepEqual", () => {
     expect(deepEqual(null, null)).toBe(true);
     expect(deepEqual(null, 0)).toBe(false);
   });
+
+  it("compares arrays as multisets when orderInsensitive is set", () => {
+    expect(deepEqual([1, 2, 3], [3, 1, 2], true)).toBe(true);
+    expect(deepEqual([1, 2, 2], [2, 1, 2], true)).toBe(true);
+    expect(deepEqual([1, 2, 2], [1, 1, 2], true)).toBe(false); // multiset, not set
+    // nested order-insensitivity threads recursively
+    expect(deepEqual([[2, 1], [3]], [[3], [1, 2]], true)).toBe(true);
+    // still length-strict and value-strict
+    expect(deepEqual([1, 2], [1, 2, 3], true)).toBe(false);
+  });
 });
 
 describe("buildCodingHarness", () => {
@@ -171,5 +181,48 @@ describe("compareSqlResult", () => {
         { columns: ["x"], rows: [[null], ["1"]] },
       ),
     ).toBe(true);
+  });
+
+  it("compares numeric cells by value (1.0 === 1, '01' === 1)", () => {
+    expect(
+      compareSqlResult(
+        { columns: ["avg"], rows: [[1.0]] },
+        { columns: ["avg"], rows: [["1"]] },
+      ),
+    ).toBe(true);
+    expect(
+      compareSqlResult(
+        { columns: ["n"], rows: [[1]] },
+        { columns: ["n"], rows: [["01"]] },
+      ),
+    ).toBe(true);
+    // genuinely different numbers still fail
+    expect(
+      compareSqlResult(
+        { columns: ["n"], rows: [[1]] },
+        { columns: ["n"], rows: [[2]] },
+      ),
+    ).toBe(false);
+    // text that isn't numeric is not coerced
+    expect(
+      compareSqlResult(
+        { columns: ["s"], rows: [["alice"]] },
+        { columns: ["s"], rows: [["Alice"]] },
+      ),
+    ).toBe(false);
+  });
+
+  it("matches unordered rows when orderInsensitive is set", () => {
+    expect(
+      compareSqlResult(expected, { columns: ["name"], rows: [["Alice"], ["Carol"]] }, {
+        orderInsensitive: true,
+      }),
+    ).toBe(true);
+    // still rejects a genuinely different set
+    expect(
+      compareSqlResult(expected, { columns: ["name"], rows: [["Alice"], ["Bob"]] }, {
+        orderInsensitive: true,
+      }),
+    ).toBe(false);
   });
 });
