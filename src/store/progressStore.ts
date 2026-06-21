@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Attempt, LessonProgress, TrackId } from "../types";
+import { migrateStorageKey } from "./migration";
+
+// Phase 5 audit: localStorage key rename from "interview-trainer/progress" → "smokyclaw/progress".
+migrateStorageKey("interview-trainer/progress", "smokyclaw/progress");
 
 export type RecognitionAttempt = {
   itemId: string;
@@ -92,6 +96,6 @@ export const useProgressStore = create<ProgressState>()(
         return Math.round((correctCount / itemIdsByTrack.length) * 100);
       },
     }),
-    { name: "interview-trainer/progress" },
+    { name: "smokyclaw/progress" },
   ),
 );

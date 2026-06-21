@@ -1,5 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { migrateStorageKey } from "./migration";
+
+// Phase 5 audit: localStorage key rename from "interview-trainer/streak" → "smokyclaw/streak".
+// Runs once at module load, before the store is created, so persist reads from the new key.
+migrateStorageKey("interview-trainer/streak", "smokyclaw/streak");
 
 function dayKey(ts: number = Date.now()): string {
   const d = new Date(ts);
@@ -48,6 +53,6 @@ export const useStreakStore = create<StreakState>()(
       resetAll: () =>
         set({ lastActiveDay: null, currentStreak: 0, longestStreak: 0 }),
     }),
-    { name: "interview-trainer/streak" },
+    { name: "smokyclaw/streak" },
   ),
 );
