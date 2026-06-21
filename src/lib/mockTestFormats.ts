@@ -1,29 +1,33 @@
 import type { MockTestBlueprint } from "../types";
 
+// Source: TCS NQT 2025 official pattern (iON-proctored cognitive + coding).
+// Real TCS NQT (2024-2026) runs a 4-section cognitive battery plus a
+// 2-problem coding round. Previous version over-counted verbal/reasoning
+// and pushed reasoning to 50 min, which didn't match the live assessment.
 export const TCS_NQT_BLUEPRINT: MockTestBlueprint = {
   id: "tcs-nqt",
   title: "TCS NQT",
-  subtitle: "National Qualifier Test · cognitive sections + coding round",
+  subtitle: "iON 2025 pattern · foundation + cognitive + programming logic + coding",
   sections: [
     {
       id: "numerical",
-      title: "Numerical Ability",
+      title: "Numerical Ability (Foundation)",
       durationMinutes: 25,
       questionCount: 25,
       pickFrom: { track: "aptitude", topics: ["quant"] },
     },
     {
       id: "verbal",
-      title: "Verbal Ability",
+      title: "Verbal Ability (Cognitive)",
       durationMinutes: 25,
-      questionCount: 24,
+      questionCount: 20,
       pickFrom: { track: "aptitude", topics: ["verbal"] },
     },
     {
       id: "reasoning",
-      title: "Reasoning Ability",
-      durationMinutes: 50,
-      questionCount: 30,
+      title: "Reasoning Ability (Cognitive)",
+      durationMinutes: 25,
+      questionCount: 20,
       pickFrom: { track: "aptitude", topics: ["reasoning"] },
     },
     {
@@ -37,6 +41,7 @@ export const TCS_NQT_BLUEPRINT: MockTestBlueprint = {
       ],
     },
   ],
+  // Cognitive total: 25+20+20+10 = 75q / 90min + 2-problem coding = 75q / 120min.
   codingSection: {
     durationMinutes: 30,
     problemCount: 2,
