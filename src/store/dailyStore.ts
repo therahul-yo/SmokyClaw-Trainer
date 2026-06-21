@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { diffDaysLocal } from "../lib/dateKey";
 
 type DailyState = {
   completedDates: Record<string, true>; // YYYY-MM-DD
@@ -10,12 +11,6 @@ type DailyState = {
   isCompleted: (dateKey: string) => boolean;
   resetAll: () => void;
 };
-
-function diffDays(a: string, b: string): number {
-  const da = new Date(a + "T00:00:00").getTime();
-  const db = new Date(b + "T00:00:00").getTime();
-  return Math.round((db - da) / (24 * 60 * 60 * 1000));
-}
 
 export const useDailyStore = create<DailyState>()(
   persist(
@@ -30,7 +25,7 @@ export const useDailyStore = create<DailyState>()(
         const last = get().lastCompletedDate;
         let next = 1;
         if (last) {
-          const gap = diffDays(last, dateKey);
+          const gap = diffDaysLocal(last, dateKey);
           if (gap === 0) return; // same day, ignore
           if (gap === 1) next = get().currentStreak + 1;
         }
@@ -53,6 +48,7 @@ export const useDailyStore = create<DailyState>()(
           lastCompletedDate: null,
         }),
     }),
+    // Persist key intentionally not renamed here — see PR notes.
     { name: "smokyclaw/daily" },
   ),
 );

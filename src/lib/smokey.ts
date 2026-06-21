@@ -15,6 +15,7 @@ import type {
   TrackId,
 } from "../types";
 import { todayKey } from "./daily";
+import { hashString } from "./hash";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -71,15 +72,18 @@ export type SmokeyInput = {
   blueprints: MockTestBlueprint[];
 };
 
-// ── small deterministic helpers ────────────────────────────────
+// Deterministic 32-bit FNV-1a hash lives in lib/hash.ts (shared with the
+// training-machine stable-picker and the daily-challenge picker — each
+// used to have an identical private copy that would drift on the first
+// refactor; see lib/hash.ts for the rationale).
 
-function hashString(s: string): number {
-  let h = 2166136261 >>> 0;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619) >>> 0;
-  }
-  return h >>> 0;
+// Milliseconds from `now` (ms epoch) until the next local midnight.
+// Uses local-date components so the result is correct for non-UTC users
+// and across DST transitions. Exported for testability.
+export function msToLocalMidnight(now: number): number {
+  const d = new Date(now);
+  const tomorrow = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
+  return tomorrow.getTime() - now;
 }
 
 // Pick one phrasing, stable for a given seed.
@@ -250,7 +254,7 @@ export function runSmokey(input: SmokeyInput, now: number): SmokeyReport {
     (a) => todayKey(new Date(a.attemptedAt)) === todayK,
   );
   const hour = new Date(now).getHours();
-  const minsToMidnight = Math.round((DAY_MS - (now % DAY_MS)) / 60000);
+  const minsToMidnight = Math.round(msToLocalMidnight(now) / 60000);
 
   // 1 — cold start: not enough data to coach.
   if (total < 5) {

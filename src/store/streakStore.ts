@@ -1,24 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { dayKeyLocal, diffDaysLocal } from "../lib/dateKey";
 import { migrateStorageKey } from "./migration";
 
 // Phase 5 audit: localStorage key rename from "interview-trainer/streak" → "smokyclaw/streak".
 // Runs once at module load, before the store is created, so persist reads from the new key.
 migrateStorageKey("interview-trainer/streak", "smokyclaw/streak");
-
-function dayKey(ts: number = Date.now()): string {
-  const d = new Date(ts);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-function diffDays(a: string, b: string): number {
-  const da = new Date(a);
-  const db = new Date(b);
-  return Math.round((db.getTime() - da.getTime()) / (24 * 60 * 60 * 1000));
-}
 
 type StreakState = {
   lastActiveDay: string | null;
@@ -36,14 +23,14 @@ export const useStreakStore = create<StreakState>()(
       longestStreak: 0,
 
       ping: () => {
-        const today = dayKey();
+        const today = dayKeyLocal();
         const last = get().lastActiveDay;
         if (last === today) return; // already counted today
         let current = get().currentStreak;
         if (last === null) {
           current = 1;
         } else {
-          const delta = diffDays(last, today);
+          const delta = diffDaysLocal(last, today);
           current = delta === 1 ? current + 1 : 1;
         }
         const longest = Math.max(get().longestStreak, current);

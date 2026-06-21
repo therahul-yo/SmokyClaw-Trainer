@@ -1,14 +1,16 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { getAllQuizItems } from "../lib/contentLoader";
-import { pickDailyItem, todayKey, nowMs } from "../lib/daily";
+import { pickDailyItem, todayKey, yesterdayKey, nowMs } from "../lib/daily";
 import { useProgressStore, useDailyStore } from "../store";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 export function DailyChallengeCard() {
   const dateKey = todayKey();
-  const yesterdayKey = todayKey(new Date(nowMs() - DAY_MS));
+  // Compute yesterday via local-date components, not ms subtraction — DST
+  // transitions make "1 day = 86_400_000 ms" a lie twice a year.
+  const yKey = yesterdayKey(nowMs());
   const completed = useDailyStore((s) => Boolean(s.completedDates[dateKey]));
   const streak = useDailyStore((s) => s.currentStreak);
   const longest = useDailyStore((s) => s.longestStreak);
@@ -29,8 +31,11 @@ export function DailyChallengeCard() {
     for (const [id, v] of latest) {
       if (!v.correct && v.at > cutoff) wrongIds.push(id);
     }
+    // Use a Date constructed from yesterday's local-date key so pickDailyItem's
+    // todayKey(date) sees yesterday's calendar day across DST transitions.
+    const yDate = new Date(yKey + "T00:00:00");
     const yesterdayItem = pickDailyItem({
-      date: new Date(nowMs() - DAY_MS),
+      date: yDate,
       allItems: all,
       recentWrongIds: wrongIds,
       yesterdayId: null,
@@ -118,7 +123,7 @@ export function DailyChallengeCard() {
           ? "// you already crushed today's. tomorrow's drop at 00:00."
           : "// solve to bank a streak day. one item per day, picks by weakness."}
         {" · yesterday key: "}
-        <span style={{ color: "var(--color-text-muted)" }}>{yesterdayKey}</span>
+        <span style={{ color: "var(--color-text-muted)" }}>{yKey}</span>
       </div>
     </Link>
   );

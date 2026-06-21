@@ -1,4 +1,5 @@
 import type { QuizItem } from "../types";
+import { hashString } from "./hash";
 
 // Wall-clock read routed through a helper so render-purity lint doesn't flag
 // the inherently time-dependent daily-challenge math at every call site.
@@ -13,14 +14,19 @@ export function todayKey(d: Date = new Date()): string {
   return `${y}-${m}-${day}`;
 }
 
-// Deterministic 32-bit hash from a string.
-function hashString(s: string): number {
-  let h = 2166136261 >>> 0;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619) >>> 0;
-  }
-  return h >>> 0;
+// Prior local date as YYYY-MM-DD. Computed from local-date components
+// (year/month/day - 1) rather than `now - 86_400_000` because a local day
+// is 23h on spring-forward and 25h on fall-back — ms subtraction can
+// land on the wrong calendar day across DST.
+export function yesterdayKey(now: number = Date.now()): string {
+  const d = new Date(now);
+  // Local-midnight on the prior day; Date handles month/year roll-over
+  // (e.g. Jan 1 - 1 day = Dec 31 of the previous year) automatically.
+  const y = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 1);
+  const yy = y.getFullYear();
+  const mm = String(y.getMonth() + 1).padStart(2, "0");
+  const dd = String(y.getDate()).padStart(2, "0");
+  return `${yy}-${mm}-${dd}`;
 }
 
 // Pick today's challenge: deterministic by date, biased toward items the user
