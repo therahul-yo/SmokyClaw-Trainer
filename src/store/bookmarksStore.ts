@@ -1,5 +1,9 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { migrateStorageKey } from "./migration";
+
+// Phase 5 audit: localStorage key rename from "interview-trainer/bookmarks" → "smokyclaw/bookmarks".
+migrateStorageKey("interview-trainer/bookmarks", "smokyclaw/bookmarks");
 
 type BookmarksState = {
   items: Record<string, { addedAt: number; note?: string }>;
@@ -45,6 +49,6 @@ export const useBookmarksStore = create<BookmarksState>()(
 
       resetAll: () => set({ items: {} }),
     }),
-    { name: "interview-trainer/bookmarks" },
+    { name: "smokyclaw/bookmarks" },
   ),
 );

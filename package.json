@@ -1,8 +1,33 @@
 {
-  "name": "interview-trainer",
-  "private": true,
+  "name": "smokyclaw-trainer",
+  "private": false,
   "version": "0.0.0",
   "type": "module",
+  "description": "Local-first training for Indian campus hiring tests — TCS NQT, Infosys SP, Wipro Elite, Capgemini. Python, DSA, SQL, Aptitude with in-browser code execution and exact mock-test formats.",
+  "license": "MIT",
+  "homepage": "https://github.com/therahul-yo/SmokyClaw-Trainer#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/therahul-yo/SmokyClaw-Trainer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/therahul-yo/SmokyClaw-Trainer/issues"
+  },
+  "keywords": [
+    "tcs-nqt",
+    "infosys",
+    "wipro",
+    "capgemini",
+    "interview-prep",
+    "spaced-repetition",
+    "pyodide",
+    "sql.js",
+    "pwa"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
