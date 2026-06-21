@@ -82,6 +82,15 @@ function hashString(s: string): number {
   return h >>> 0;
 }
 
+// Milliseconds from `now` (ms epoch) until the next local midnight.
+// Uses local-date components so the result is correct for non-UTC users
+// and across DST transitions. Exported for testability.
+export function msToLocalMidnight(now: number): number {
+  const d = new Date(now);
+  const tomorrow = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
+  return tomorrow.getTime() - now;
+}
+
 // Pick one phrasing, stable for a given seed.
 function pick(templates: string[], seed: number): string {
   return templates[seed % templates.length];
@@ -250,7 +259,7 @@ export function runSmokey(input: SmokeyInput, now: number): SmokeyReport {
     (a) => todayKey(new Date(a.attemptedAt)) === todayK,
   );
   const hour = new Date(now).getHours();
-  const minsToMidnight = Math.round((DAY_MS - (now % DAY_MS)) / 60000);
+  const minsToMidnight = Math.round(msToLocalMidnight(now) / 60000);
 
   // 1 — cold start: not enough data to coach.
   if (total < 5) {
