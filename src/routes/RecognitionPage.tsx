@@ -3,6 +3,7 @@ import { useProgressStore } from "../store";
 import { getAllQuizItems } from "../lib/contentLoader";
 import { RecognitionDrill } from "../components/RecognitionDrill";
 import { PATTERN_LABELS } from "../lib/patternLabels";
+import { shuffle } from "../lib/rng";
 import { Box } from "../components/terminal/Box";
 import { BracketButton } from "../components/terminal/BracketButton";
 import { Prompt } from "../components/terminal/Prompt";
@@ -62,7 +63,7 @@ export function RecognitionPage() {
     }
     setDifficulty(mode);
     // Shuffle and pick 10 random items
-    const shuffled = [...dsaItems].sort(() => Math.random() - 0.5);
+    const shuffled = shuffle(dsaItems);
     setSessionItems(shuffled.slice(0, 10));
     setCurrentIndex(0);
     setSessionResults([]);
