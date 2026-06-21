@@ -214,8 +214,8 @@ export function defaultSpeedTargetSec(item: QuizItem): number {
 export function isMastered(item: QuizItem, latest: LatestAttempt | undefined): boolean {
   if (!latest?.correct || latest.gaveUp) return false;
   const targetMs = defaultSpeedTargetSec(item) * 1000;
-  const speedPass = latest.timeMs <= targetMs || item.difficulty === "hard";
-  const hintPass = (latest.hintsUsed ?? 0) === 0 || item.difficulty === "hard";
+  const speedPass = latest.timeMs <= targetMs;
+  const hintPass = (latest.hintsUsed ?? 0) === 0;
   return speedPass && hintPass;
 }
 
