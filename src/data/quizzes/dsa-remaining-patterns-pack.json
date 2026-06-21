@@ -77,32 +77,6 @@
     "tags": ["sorting", "intervals"]
   },
   {
-    "id": "dsa-c-reverse-list",
-    "track": "dsa",
-    "topic": "linked-list",
-    "type": "coding",
-    "language": "python",
-    "difficulty": "easy",
-    "pattern": "linked-list",
-    "estMinutes": 10,
-    "prompt": "A linked list is represented as an array for this drill. Return the reversed list.",
-    "constraints": "0 <= len(values) <= 10^5.",
-    "examples": [{ "input": "values = [1,2,3]", "output": "[3,2,1]" }],
-    "starter": "def reverse_list(values):\n    # your code here\n    pass\n",
-    "entry": "reverse_list",
-    "tests": [
-      { "args": [[1, 2, 3]], "expect": [3, 2, 1] },
-      { "args": [[]], "expect": [] },
-      { "args": [[1]], "expect": [1] },
-      { "args": [[1, 1, 2]], "expect": [2, 1, 1] }
-    ],
-    "hints": ["The pointer version uses prev, cur, next.", "For array representation, slicing proves the target result.", "Understand the output before implementing node pointers later."],
-    "bruteForce": { "code": "def reverse_list(values):\n    out = []\n    for x in values:\n        out.insert(0, x)\n    return out", "complexity": "O(n^2) time", "explanation": "Inserting at the front shifts existing values." },
-    "optimal": { "code": "def reverse_list(values):\n    return values[::-1]", "complexity": "O(n) time, O(n) space", "explanation": "Array-form reversal; the linked-list mental model is reversing direction one edge at a time." },
-    "complexityCheck": { "question": "In a real linked list, what pointer stores the reversed part?", "choices": [{ "label": "prev", "correct": true }, { "label": "mid", "correct": false }, { "label": "heap", "correct": false }, { "label": "prefix", "correct": false }] },
-    "tags": ["linked-list", "basics"]
-  },
-  {
     "id": "dsa-c-detect-cycle-array",
     "track": "dsa",
     "topic": "linked-list",
@@ -198,7 +172,7 @@
       { "args": [[3, 9, 20, null, null, 15, 7]], "expect": [[3], [9, 20], [15, 7]] },
       { "args": [[]], "expect": [] },
       { "args": [[1]], "expect": [[1]] },
-      { "args": [[1, null, 2, null, null, 3]], "expect": [[1], [2]] }
+      { "args": [[1, null, 2, null, null, 3]], "expect": [[1], [2], [3]] }
     ],
     "hints": ["BFS uses a queue.", "Process one level at a time.", "Skip None and out-of-range children."],
     "bruteForce": { "code": "def level_order(tree):\n    # Since input is already level-order, scan by index ranges.\n    out = []; start = 0; width = 1\n    while start < len(tree):\n        vals = [x for x in tree[start:start+width] if x is not None]\n        if vals: out.append(vals)\n        start += width; width *= 2\n    return out", "complexity": "O(n) time", "explanation": "Works only because the representation is array level-order." },
@@ -522,7 +496,7 @@
     "type": "coding",
     "language": "python",
     "difficulty": "hard",
-    "pattern": "dynamic-programming",
+    "pattern": "dsa-advanced",
     "estMinutes": 25,
     "prompt": "Find the minimum cost to visit all V cities exactly once and return to the starting city 0. The cost between cities is represented as an adjacency matrix `dists`.",
     "constraints": "1 <= V <= 12, 0 <= dists[i][j] <= 1000.",

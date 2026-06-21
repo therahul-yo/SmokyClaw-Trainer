@@ -3,10 +3,226 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAllLessons, getAllQuizItems } from "../lib/contentLoader";
 import { todayBucket } from "../lib/planner";
 import { usePlanStore } from "../store";
-import type { StudyPlanDay } from "../types";
+import type { Lesson, QuizItem, StudyPlanDay } from "../types";
 import { Prompt } from "../components/terminal/Prompt";
 import { Box } from "../components/terminal/Box";
 import { BracketButton } from "../components/terminal/BracketButton";
+
+type ItemMap = Map<string, QuizItem>;
+type LessonMap = Map<string, Lesson>;
+
+interface DaySectionProps {
+  bucket: StudyPlanDay;
+  title: string;
+  compact?: boolean;
+  highlighted?: boolean;
+  items: ItemMap;
+  lessons: LessonMap;
+  isCompleted: (dayIndex: number, itemId: string) => boolean;
+  toggleCompleted: (dayIndex: number, itemId: string) => void;
+}
+
+/**
+ * Renders one day of the study plan (header + lesson/review/practice list).
+ *
+ * Hoisted to module scope so React sees a stable component identity across
+ * parent re-renders. Defining this inside `PlanPage` previously created a new
+ * function reference on every render, which caused React to unmount and
+ * remount the whole day subtree — losing any local state (e.g. focused
+ * checkboxes, scroll position) every time the parent re-rendered.
+ */
+function DaySection({
+  bucket,
+  title,
+  compact,
+  highlighted,
+  items,
+  lessons,
+  isCompleted,
+  toggleCompleted,
+}: DaySectionProps) {
+  const totalCount =
+    bucket.lessonIds.length +
+    bucket.itemIds.length +
+    bucket.reviewItemIds.length;
+  return (
+    <section
+      className="p-3"
+      style={{
+        background: compact
+          ? "var(--color-bg)"
+          : highlighted
+            ? "rgba(255, 140, 0, 0.04)"
+            : "var(--color-bg-alt)",
+        border: highlighted
+          ? "1px solid var(--color-accent)"
+          : "1px solid var(--color-border-bright)",
+      }}
+    >
+      <div className="flex items-center justify-between mb-2 font-mono">
+        <div
+          className="text-sm font-bold"
+          style={{
+            color: highlighted ? "var(--color-accent)" : "var(--color-text)",
+          }}
+        >
+          {highlighted ? "▸ " : ""}
+          {title}
+        </div>
+        <div
+          className="text-xs"
+          style={{ color: "var(--color-text-muted)" }}
+        >
+          {totalCount} items · ~{bucket.estMinutes}m
+        </div>
+      </div>
+      {bucket.note && (
+        <div
+          className="text-xs mb-2 font-mono"
+          style={{ color: "var(--color-amber)" }}
+        >
+          // {bucket.note}
+        </div>
+      )}
+      {totalCount === 0 ? (
+        <div
+          className="text-sm italic font-mono"
+          style={{ color: "var(--color-text-muted)" }}
+        >
+          rest day — review queue empty.
+        </div>
+      ) : (
+        <ul className="space-y-1">
+          {bucket.lessonIds.map((id) =>
+            renderLesson(id, bucket.dayIndex, lessons, isCompleted, toggleCompleted),
+          )}
+          {bucket.reviewItemIds.map((id) =>
+            renderItem(id, bucket.dayIndex, "review", items, isCompleted, toggleCompleted),
+          )}
+          {bucket.itemIds.map((id) =>
+            renderItem(id, bucket.dayIndex, "practice", items, isCompleted, toggleCompleted),
+          )}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function renderItem(
+  itemId: string,
+  dayIndex: number,
+  kind: "review" | "practice",
+  items: ItemMap,
+  isCompleted: (dayIndex: number, itemId: string) => boolean,
+  toggleCompleted: (dayIndex: number, itemId: string) => void,
+) {
+  const item = items.get(itemId);
+  const done = isCompleted(dayIndex, itemId);
+  if (!item) return null;
+  const href = `/quiz/${item.track}/${item.topic}`;
+  const kindColor =
+    kind === "review" ? "var(--color-amber)" : "var(--color-accent)";
+  return (
+    <li
+      key={`${itemId}-${kind}`}
+      className="flex items-center gap-2 px-2 py-1.5 font-mono text-sm"
+      style={{
+        background: "var(--color-bg-card)",
+        border: "1px solid var(--color-border)",
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={done}
+        onChange={() => toggleCompleted(dayIndex, itemId)}
+        className="accent-[var(--color-accent)]"
+        aria-label={`Mark ${item.id} done`}
+      />
+      <span
+        className="text-[10px] px-1"
+        style={{
+          border: `1px solid ${kindColor}`,
+          color: kindColor,
+        }}
+      >
+        {kind === "review" ? "rev" : item.type}
+      </span>
+      <Link
+        to={href}
+        className="flex-1 truncate hover:underline"
+        style={{
+          color: done ? "var(--color-text-muted)" : "var(--color-text)",
+          textDecoration: done ? "line-through" : undefined,
+        }}
+      >
+        {item.type === "mcq"
+          ? item.question.slice(0, 80)
+          : item.prompt.slice(0, 80)}
+      </Link>
+      <span
+        className="text-xs"
+        style={{ color: "var(--color-text-muted)" }}
+      >
+        {item.topic}
+      </span>
+    </li>
+  );
+}
+
+function renderLesson(
+  lessonId: string,
+  dayIndex: number,
+  lessons: LessonMap,
+  isCompleted: (dayIndex: number, itemId: string) => boolean,
+  toggleCompleted: (dayIndex: number, itemId: string) => void,
+) {
+  const lesson = lessons.get(lessonId);
+  const done = isCompleted(dayIndex, lessonId);
+  if (!lesson) return null;
+  return (
+    <li
+      key={lessonId}
+      className="flex items-center gap-2 px-2 py-1.5 font-mono text-sm"
+      style={{
+        background: "var(--color-bg-card)",
+        border: "1px solid var(--color-border)",
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={done}
+        onChange={() => toggleCompleted(dayIndex, lessonId)}
+        className="accent-[var(--color-accent)]"
+        aria-label={`Mark ${lesson.id} done`}
+      />
+      <span
+        className="text-[10px] px-1"
+        style={{
+          border: "1px solid var(--color-cyan)",
+          color: "var(--color-cyan)",
+        }}
+      >
+        lsn
+      </span>
+      <Link
+        to={`/lesson/${lesson.id}`}
+        className="flex-1 truncate hover:underline"
+        style={{
+          color: done ? "var(--color-text-muted)" : "var(--color-text)",
+          textDecoration: done ? "line-through" : undefined,
+        }}
+      >
+        {lesson.title}
+      </Link>
+      <span
+        className="text-xs"
+        style={{ color: "var(--color-text-muted)" }}
+      >
+        {lesson.estMinutes}m
+      </span>
+    </li>
+  );
+}
 
 export function PlanPage() {
   const navigate = useNavigate();
@@ -53,113 +269,6 @@ export function PlanPage() {
     Math.ceil((plan.deadline - Date.now()) / (24 * 60 * 60 * 1000)),
   );
 
-  function renderItem(
-    itemId: string,
-    dayIndex: number,
-    kind: "review" | "practice",
-  ) {
-    const item = items.get(itemId);
-    const done = isCompleted(dayIndex, itemId);
-    if (!item) return null;
-    const href = `/quiz/${item.track}/${item.topic}`;
-    const kindColor =
-      kind === "review" ? "var(--color-amber)" : "var(--color-accent)";
-    return (
-      <li
-        key={`${itemId}-${kind}`}
-        className="flex items-center gap-2 px-2 py-1.5 font-mono text-sm"
-        style={{
-          background: "var(--color-bg-card)",
-          border: "1px solid var(--color-border)",
-        }}
-      >
-        <input
-          type="checkbox"
-          checked={done}
-          onChange={() => toggleCompleted(dayIndex, itemId)}
-          className="accent-[var(--color-accent)]"
-          aria-label={`Mark ${item.id} done`}
-        />
-        <span
-          className="text-[10px] px-1"
-          style={{
-            border: `1px solid ${kindColor}`,
-            color: kindColor,
-          }}
-        >
-          {kind === "review" ? "rev" : item.type}
-        </span>
-        <Link
-          to={href}
-          className="flex-1 truncate hover:underline"
-          style={{
-            color: done ? "var(--color-text-muted)" : "var(--color-text)",
-            textDecoration: done ? "line-through" : undefined,
-          }}
-        >
-          {item.type === "mcq"
-            ? item.question.slice(0, 80)
-            : item.prompt.slice(0, 80)}
-        </Link>
-        <span
-          className="text-xs"
-          style={{ color: "var(--color-text-muted)" }}
-        >
-          {item.topic}
-        </span>
-      </li>
-    );
-  }
-
-  function renderLesson(lessonId: string, dayIndex: number) {
-    const lesson = lessons.get(lessonId);
-    const done = isCompleted(dayIndex, lessonId);
-    if (!lesson) return null;
-    return (
-      <li
-        key={lessonId}
-        className="flex items-center gap-2 px-2 py-1.5 font-mono text-sm"
-        style={{
-          background: "var(--color-bg-card)",
-          border: "1px solid var(--color-border)",
-        }}
-      >
-        <input
-          type="checkbox"
-          checked={done}
-          onChange={() => toggleCompleted(dayIndex, lessonId)}
-          className="accent-[var(--color-accent)]"
-          aria-label={`Mark ${lesson.id} done`}
-        />
-        <span
-          className="text-[10px] px-1"
-          style={{
-            border: "1px solid var(--color-cyan)",
-            color: "var(--color-cyan)",
-          }}
-        >
-          lsn
-        </span>
-        <Link
-          to={`/lesson/${lesson.id}`}
-          className="flex-1 truncate hover:underline"
-          style={{
-            color: done ? "var(--color-text-muted)" : "var(--color-text)",
-            textDecoration: done ? "line-through" : undefined,
-          }}
-        >
-          {lesson.title}
-        </Link>
-        <span
-          className="text-xs"
-          style={{ color: "var(--color-text-muted)" }}
-        >
-          {lesson.estMinutes}m
-        </span>
-      </li>
-    );
-  }
-
   return (
     <div className="space-y-4">
       <Prompt path="~/plan">
@@ -196,7 +305,17 @@ export function PlanPage() {
         </div>
       </div>
 
-      {today && <DaySection bucket={today} title="today" highlighted />}
+      {today && (
+        <DaySection
+          bucket={today}
+          title="today"
+          highlighted
+          items={items}
+          lessons={lessons}
+          isCompleted={isCompleted}
+          toggleCompleted={toggleCompleted}
+        />
+      )}
 
       <Box title="$ week --at-a-glance" trailing={`${plan.days.length} days`}>
         <div className="space-y-3">
@@ -212,6 +331,10 @@ export function PlanPage() {
                     : `day ${String(d.dayIndex + 1).padStart(2, "0")} · ${d.date}`
                 }
                 compact={!isToday}
+                items={items}
+                lessons={lessons}
+                isCompleted={isCompleted}
+                toggleCompleted={toggleCompleted}
               />
             );
           })}
@@ -219,80 +342,4 @@ export function PlanPage() {
       </Box>
     </div>
   );
-
-  function DaySection({
-    bucket,
-    title,
-    compact,
-    highlighted,
-  }: {
-    bucket: StudyPlanDay;
-    title: string;
-    compact?: boolean;
-    highlighted?: boolean;
-  }) {
-    const totalCount =
-      bucket.lessonIds.length +
-      bucket.itemIds.length +
-      bucket.reviewItemIds.length;
-    return (
-      <section
-        className="p-3"
-        style={{
-          background: compact
-            ? "var(--color-bg)"
-            : highlighted
-              ? "rgba(255, 140, 0, 0.04)"
-              : "var(--color-bg-alt)",
-          border: highlighted
-            ? "1px solid var(--color-accent)"
-            : "1px solid var(--color-border-bright)",
-        }}
-      >
-        <div className="flex items-center justify-between mb-2 font-mono">
-          <div
-            className="text-sm font-bold"
-            style={{
-              color: highlighted ? "var(--color-accent)" : "var(--color-text)",
-            }}
-          >
-            {highlighted ? "▸ " : ""}
-            {title}
-          </div>
-          <div
-            className="text-xs"
-            style={{ color: "var(--color-text-muted)" }}
-          >
-            {totalCount} items · ~{bucket.estMinutes}m
-          </div>
-        </div>
-        {bucket.note && (
-          <div
-            className="text-xs mb-2 font-mono"
-            style={{ color: "var(--color-amber)" }}
-          >
-            // {bucket.note}
-          </div>
-        )}
-        {totalCount === 0 ? (
-          <div
-            className="text-sm italic font-mono"
-            style={{ color: "var(--color-text-muted)" }}
-          >
-            rest day — review queue empty.
-          </div>
-        ) : (
-          <ul className="space-y-1">
-            {bucket.lessonIds.map((id) => renderLesson(id, bucket.dayIndex))}
-            {bucket.reviewItemIds.map((id) =>
-              renderItem(id, bucket.dayIndex, "review"),
-            )}
-            {bucket.itemIds.map((id) =>
-              renderItem(id, bucket.dayIndex, "practice"),
-            )}
-          </ul>
-        )}
-      </section>
-    );
-  }
 }

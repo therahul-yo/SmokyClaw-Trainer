@@ -548,7 +548,7 @@
       "explanation": "Simple decorator but doesn't preserve metadata without wraps."
     },
     "optimal": {
-      "code": "import functools\n\ndef execution_counter(func):\n    @functools.wraps(func)\n    def wrapper(*args, **kwargs):\n        wrapper.call_count += 1\n        return func(*args, **kwargs)\n    wrapper.call_count = 0\n    return wrapper",
+      "code": "import functools\n\ndef execution_counter(func):\n    @functools.wraps(func)\n    def wrapper(*args, **kwargs):\n        wrapper.call_count += 1\n        return func(*args, **kwargs)\n    wrapper.call_count = 0\n    return wrapper\n\ndef test_decorator(n):\n    @execution_counter\n    def dummy():\n        \"\"\"Hello Doc\"\"\"\n        return 42\n    for _ in range(n):\n        dummy()\n    return [dummy.call_count, dummy.__name__, dummy.__doc__]",
       "complexity": "O(1) time and space",
       "explanation": "Using @functools.wraps(func) ensures the docstring, name, etc., are preserved. The call_count attribute is attached to the wrapper function object itself."
     },

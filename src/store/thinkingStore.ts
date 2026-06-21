@@ -2,6 +2,10 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { MistakeTag, ThinkingTrace, ThinkingTraceField } from "../lib/thinkingTrace";
 import { EMPTY_TRACE } from "../lib/thinkingTrace";
+import { migrateStorageKey } from "./migration";
+
+// Phase 5 audit: localStorage key rename from "interview-trainer/thinking" → "smokyclaw/thinking".
+migrateStorageKey("interview-trainer/thinking", "smokyclaw/thinking");
 
 type ThinkingState = {
   traces: Record<string, ThinkingTrace>;
@@ -54,6 +58,6 @@ export const useThinkingStore = create<ThinkingState>()(
           return { traces: rest };
         }),
     }),
-    { name: "interview-trainer/thinking" },
+    { name: "smokyclaw/thinking" },
   ),
 );

@@ -3,7 +3,7 @@ id: dsa-20-worked-windows-prefix
 title: Worked examples: sliding window and prefix sums
 track: dsa
 topic: worked-examples
-order: 20
+order: 23
 estMinutes: 38
 prerequisites: [dsa-18-pattern-recognition-machine]
 pattern: sliding-window

@@ -4,10 +4,10 @@ import type {
   McqItem,
   MockSection,
   MockTestBlueprint,
-  QuizItem,
 } from "../types";
 import { getBlueprint } from "../lib/mockTestFormats";
 import { getAllQuizItems } from "../lib/contentLoader";
+import { pickItemsForSection } from "../lib/mockPicker";
 import { useProgressStore } from "../store";
 import { Prompt } from "../components/terminal/Prompt";
 import { Box } from "../components/terminal/Box";
@@ -20,28 +20,6 @@ type PickedSection = {
   meta: MockSection;
   items: McqItem[];
 };
-
-function pickItemsForSection(section: MockSection, pool: QuizItem[]): McqItem[] {
-  const criteria = Array.isArray(section.pickFrom)
-    ? section.pickFrom
-    : [section.pickFrom];
-  const matches: McqItem[] = [];
-  for (const item of pool) {
-    if (item.type !== "mcq") continue;
-    const ok = criteria.some((c) => {
-      if (c.track !== item.track) return false;
-      if (c.topics && !c.topics.includes(item.topic)) return false;
-      if (c.type && c.type !== item.type) return false;
-      return true;
-    });
-    if (ok) matches.push(item);
-  }
-  for (let i = matches.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [matches[i], matches[j]] = [matches[j], matches[i]];
-  }
-  return matches.slice(0, section.questionCount);
-}
 
 export function MockTestPage() {
   const { id } = useParams<{ id: string }>();
@@ -56,9 +34,10 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
   const [sectionIdx, setSectionIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [deadlines, setDeadlines] = useState<number[]>([]);
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(0);
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
 
+  // Display clock — drives only the countdown UI.
   useEffect(() => {
     if (phase !== "section") return;
     const t = setInterval(() => setNow(Date.now()), 500);
@@ -81,23 +60,10 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
         return startTs + prior * 60_000;
       }),
     );
+    setNow(startTs);
     setSectionIdx(0);
     setPhase("section");
   };
-
-  useEffect(() => {
-    if (phase !== "section") return;
-    const deadline = deadlines[sectionIdx];
-    if (!deadline) return;
-    if (now >= deadline) {
-      if (sectionIdx < sections.length - 1) {
-        setSectionIdx(sectionIdx + 1);
-      } else {
-        finalize();
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [now, deadlines, sectionIdx, sections.length, phase]);
 
   const finalize = () => {
     for (const sec of sections) {
@@ -109,6 +75,23 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
     }
     setPhase("done");
   };
+
+  // Section auto-advance — a single timeout aimed at the current deadline.
+  // Re-arming on every dep change is harmless: the target instant is fixed.
+  useEffect(() => {
+    if (phase !== "section") return;
+    const deadline = deadlines[sectionIdx];
+    if (!deadline) return;
+    const t = setTimeout(() => {
+      if (sectionIdx < sections.length - 1) {
+        setSectionIdx(sectionIdx + 1);
+      } else {
+        finalize();
+      }
+    }, Math.max(0, deadline - Date.now()));
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, deadlines, sectionIdx, sections, answers]);
 
   if (phase === "intro") return <Intro blueprint={blueprint} onStart={start} />;
   if (phase === "done")

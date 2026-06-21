@@ -9,7 +9,9 @@ INSERT INTO departments (id, name, location) VALUES
   (1, 'Engineering', 'Bangalore'),
   (2, 'Sales',       'Chennai'),
   (3, 'Marketing',   'Mumbai'),
-  (4, 'Finance',     'Delhi');
+  (4, 'Finance',     'Delhi'),
+  (5, 'HR',          'Pune');
+-- Note: HR intentionally has no employees (anti-join drills depend on it).
 
 CREATE TABLE employees (
   id INTEGER PRIMARY KEY,

@@ -9,17 +9,17 @@ import { BootOverlay } from "./BootOverlay";
 import { InstallButton } from "./InstallButton";
 import { MobileNav } from "./MobileNav";
 
-function useClock() {
+// Isolated clock component: ticking the wall clock here re-renders only this
+// small leaf rather than the entire Layout tree (TreeNav, MobileNav, etc.).
+function Clock() {
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     const id = window.setInterval(() => setNow(new Date()), 1000);
     return () => window.clearInterval(id);
   }, []);
-  return now;
-}
-
-function formatTime(d: Date) {
-  return d.toTimeString().slice(0, 8);
+  return (
+    <span className="tabular-nums">{now.toTimeString().slice(0, 8)}</span>
+  );
 }
 
 function pathBreadcrumb(pathname: string): string {
@@ -40,7 +40,6 @@ function isTypingTarget(t: EventTarget | null): boolean {
 export function Layout({ children }: { children: ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const now = useClock();
   const crumb = pathBreadcrumb(location.pathname);
 
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -225,7 +224,7 @@ export function Layout({ children }: { children: ReactNode }) {
             <span>{crumb}</span>
             <span style={{ color: "var(--color-text-muted)" }}>·</span>
           </div>
-          <span className="tabular-nums">{formatTime(now)}</span>
+          <Clock />
         </div>
       </header>
 

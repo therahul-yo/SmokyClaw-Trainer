@@ -81,7 +81,7 @@
     "options": ["54 km/h", "60 km/h", "72 km/h", "75 km/h"],
     "answerIndex": 2,
     "explanation": "Speed = 200/10 = 20 m/s = 20 × 18/5 = 72 km/h. (Crossing a point: distance = train length.)",
-    "tags": ["tsd", "trains"]
+    "tags": ["speed-distance", "trains"]
   },
   {
     "id": "apt-q-017",
@@ -93,7 +93,7 @@
     "options": ["12s", "14s", "16s", "20s"],
     "answerIndex": 1,
     "explanation": "Relative speed = 90 km/h = 25 m/s. Combined length = 350m. Time = 350/25 = 14s.",
-    "tags": ["tsd", "trains", "relative-speed"]
+    "tags": ["speed-distance", "trains", "relative-speed"]
   },
   {
     "id": "apt-q-018",
@@ -105,7 +105,7 @@
     "options": ["2 km/h", "3 km/h", "5 km/h", "6 km/h"],
     "answerIndex": 1,
     "explanation": "Stream = (down − up)/2 = (13 − 7)/2 = 3 km/h. (Boat in still water = (13 + 7)/2 = 10.)",
-    "tags": ["tsd", "boats-streams"]
+    "tags": ["speed-distance", "boats-streams"]
   },
   {
     "id": "apt-q-019",
@@ -117,7 +117,7 @@
     "options": ["40 km/h", "45 km/h", "48 km/h", "50 km/h"],
     "answerIndex": 0,
     "explanation": "Equal distances at speeds a, b → harmonic mean 2ab/(a+b) = 3600/90 = 40 km/h. NOT 45 (arithmetic).",
-    "tags": ["tsd", "average-speed", "interview-classic"]
+    "tags": ["speed-distance", "average-speed", "interview-classic"]
   },
   {
     "id": "apt-q-020",
@@ -210,9 +210,9 @@
     "type": "mcq",
     "difficulty": "medium",
     "question": "Smallest number which when divided by 4, 5, 6, 7, 8 leaves remainder 3 in each case:",
-    "options": ["843", "843", "840", "843"],
+    "options": ["843", "840", "837", "723"],
     "answerIndex": 0,
-    "explanation": "LCM(4,5,6,7,8) = 840. Answer = LCM + 3 = 843. (Distractor 840 is the LCM itself; 843 = LCM + remainder.)",
+    "explanation": "LCM(4,5,6,7,8) = 840. Answer = LCM + 3 = 843. (Distractors: 840 is the LCM itself, 837 is LCM \u2212 3, 723 comes from the wrong LCM 720.)",
     "tags": ["number-system", "lcm-remainder"]
   },
   {
@@ -237,7 +237,7 @@
     "options": ["60", "120", "240", "720"],
     "answerIndex": 0,
     "explanation": "6 letters with A×3, N×2, B×1. Arrangements = 6! / (3! 2! 1!) = 720 / 12 = 60.",
-    "tags": ["perm-comb", "repeated-letters"]
+    "tags": ["permutation-combination", "repeated-letters"]
   },
   {
     "id": "apt-q-030",
@@ -249,7 +249,7 @@
     "options": ["4536", "5040", "9000", "9990"],
     "answerIndex": 0,
     "explanation": "First digit: 9 choices (1–9, can't start with 0). Then 9, 8, 7 for the rest. 9 × 9 × 8 × 7 = 4536.",
-    "tags": ["perm-comb", "tcs-nqt"]
+    "tags": ["permutation-combination", "tcs-nqt"]
   },
   {
     "id": "apt-q-031",
@@ -261,7 +261,7 @@
     "options": ["105", "175", "210", "350"],
     "answerIndex": 2,
     "explanation": "Pick 2 women × pick 3 men = 4C2 × 7C3 = 6 × 35 = 210.",
-    "tags": ["perm-comb", "selection"]
+    "tags": ["permutation-combination", "selection"]
   },
   {
     "id": "apt-q-032",
@@ -456,7 +456,7 @@
     ],
     "answerIndex": 1,
     "explanation": "'Each' is singular → singular verb 'has'. 'Boys' is the object of preposition, not the subject.",
-    "tags": ["grammar", "verbal", "subject-verb"]
+    "tags": ["grammar", "verbal", "subject-verb-agreement"]
   },
   {
     "id": "apt-q-047",
@@ -613,18 +613,6 @@
     "tags": ["percentages"]
   },
   {
-    "id": "apt-q-059",
-    "track": "aptitude",
-    "topic": "quant",
-    "type": "mcq",
-    "difficulty": "medium",
-    "question": "A's income is 25% more than B's. By what % is B's income less than A's?",
-    "options": ["20%", "22.22%", "25%", "30%"],
-    "answerIndex": 0,
-    "explanation": "Let B = 100, A = 125. B less than A = 25/125 × 100 = 20%. Asymmetry between 'more than' and 'less than'.",
-    "tags": ["percentages", "interview-classic"]
-  },
-  {
     "id": "apt-q-060",
     "track": "aptitude",
     "topic": "quant",
@@ -634,7 +622,7 @@
     "options": ["50 km", "56 km", "70 km", "80 km"],
     "answerIndex": 0,
     "explanation": "Let actual distance be x. Time = x/10. At 14 km/h, time = (x+20)/14. Since times are equal: x/10 = (x+20)/14 -> 14x = 10x + 200 -> 4x = 200 -> x = 50 km.",
-    "tags": ["tsd", "ratios", "tcs-nqt"]
+    "tags": ["speed-distance", "ratios", "tcs-nqt"]
   },
   {
     "id": "apt-q-061",
@@ -670,7 +658,7 @@
     "options": ["36", "66", "28", "120"],
     "answerIndex": 0,
     "explanation": "Using the Stars and Bars positive integer formula: C(n-1, k-1) where n=10 identical items and k=3 distinct children. C(10-1, 3-1) = C(9, 2) = (9 * 8) / 2 = 36.",
-    "tags": ["permutations-combinations", "stars-and-bars"]
+    "tags": ["permutation-combination", "stars-and-bars"]
   },
   {
     "id": "apt-q-064",
