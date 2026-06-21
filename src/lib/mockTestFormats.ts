@@ -256,14 +256,14 @@ export const ACCENTURE_COGNITIVE_TECHNICAL_BLUEPRINT: MockTestBlueprint = {
     {
       id: "cognitive-quant",
       title: "Cognitive: Quant + DI",
-      durationMinutes: 20,
+      durationMinutes: 25,
       questionCount: 20,
       pickFrom: { track: "aptitude", topics: ["quant"] },
     },
     {
       id: "cognitive-reasoning",
       title: "Cognitive: Logical Reasoning",
-      durationMinutes: 20,
+      durationMinutes: 25,
       questionCount: 20,
       pickFrom: { track: "aptitude", topics: ["reasoning"] },
     },
@@ -278,7 +278,7 @@ export const ACCENTURE_COGNITIVE_TECHNICAL_BLUEPRINT: MockTestBlueprint = {
       id: "technical",
       title: "Technical Assessment",
       durationMinutes: 40,
-      questionCount: 40,
+      questionCount: 30,
       pickFrom: [
         { track: "python", type: "mcq" },
         { track: "sql", type: "mcq" },
@@ -286,6 +286,11 @@ export const ACCENTURE_COGNITIVE_TECHNICAL_BLUEPRINT: MockTestBlueprint = {
       ],
     },
   ],
+  codingSection: {
+    durationMinutes: 45,
+    problemCount: 2,
+    pool: { track: "python" },
+  },
 };
 
 export const ACCENTURE_CODING_BLUEPRINT: MockTestBlueprint = {
