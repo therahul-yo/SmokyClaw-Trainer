@@ -19,7 +19,7 @@
 
   --color-text:         #f5ead3;   /* cream */
   --color-text-dim:     #b69772;   /* dim cream */
-  --color-text-muted:   #6b5840;
+  --color-text-muted:   #9b9b9b;   /* light gray — WCAG AA on #000 (~7:1) */
 
   --color-accent:       #ff8c00;   /* primary orange */
   --color-accent-dim:   #cc6e00;
