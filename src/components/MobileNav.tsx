@@ -13,6 +13,7 @@ const TABS: { to: string; label: string; glyph: string; end?: boolean }[] = [
 export function MobileNav() {
   return (
     <nav
+      aria-label="Primary mobile navigation"
       className="md:hidden shrink-0 grid grid-cols-5"
       style={{
         background: "var(--color-bg-alt)",
@@ -33,8 +34,9 @@ export function MobileNav() {
               ? "2px solid var(--color-accent)"
               : "2px solid transparent",
           })}
+          aria-current={({ isActive }) => (isActive ? "page" : undefined)}
         >
-          <span style={{ fontSize: 16, lineHeight: 1 }}>{t.glyph}</span>
+          <span aria-hidden="true" style={{ fontSize: 16, lineHeight: 1 }}>{t.glyph}</span>
           <span style={{ fontSize: 9 }}>{t.label}</span>
         </NavLink>
       ))}

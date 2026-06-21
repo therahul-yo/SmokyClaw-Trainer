@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { BracketButton } from "./terminal/BracketButton";
+import { useFocusTrap } from "../lib/useFocusTrap";
 
 const STORAGE_KEY = "smokyclaw/onboarded";
 
@@ -32,6 +33,9 @@ const SLIDES = [
 export function OnboardingModal() {
   const [open, setOpen] = useState<boolean>(shouldShowOnMount);
   const [step, setStep] = useState(0);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const headingId = "onboard-modal-title";
+  useFocusTrap(open, () => setOpen(false), dialogRef);
 
   if (!open) return null;
 
@@ -59,6 +63,10 @@ export function OnboardingModal() {
       }}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={headingId}
         className="max-w-md w-full p-5 space-y-4 font-mono boot-in my-auto max-h-[90vh] overflow-y-auto"
         style={{
           background: "var(--color-bg-alt)",
@@ -82,6 +90,7 @@ export function OnboardingModal() {
         </div>
 
         <div
+          id={headingId}
           className="text-base font-bold crt-glow"
           style={{ color: "var(--color-accent)" }}
         >

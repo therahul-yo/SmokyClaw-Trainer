@@ -1,3 +1,6 @@
+import { useRef } from "react";
+import { useFocusTrap } from "../lib/useFocusTrap";
+
 type Binding = { keys: string[]; desc: string };
 
 const BINDINGS: { group: string; items: Binding[] }[] = [
@@ -36,6 +39,10 @@ const BINDINGS: { group: string; items: Binding[] }[] = [
 ];
 
 export function KeysHelp({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const headingId = "keys-help-title";
+  useFocusTrap(open, onClose, dialogRef);
+
   if (!open) return null;
   return (
     <div
@@ -44,6 +51,10 @@ export function KeysHelp({ open, onClose }: { open: boolean; onClose: () => void
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={headingId}
         className="w-full max-w-lg p-4 boot-in font-mono"
         style={{
           background: "var(--color-bg-alt)",
@@ -53,6 +64,7 @@ export function KeysHelp({ open, onClose }: { open: boolean; onClose: () => void
         onClick={(e) => e.stopPropagation()}
       >
         <div
+          id={headingId}
           className="flex items-center justify-between text-xs mb-3 pb-2"
           style={{ borderBottom: "1px dashed var(--color-border-bright)" }}
         >

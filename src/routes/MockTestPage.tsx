@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import type {
   McqItem,
@@ -103,6 +103,28 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
   const remaining = Math.max(0, deadline - now);
   const lowTime = remaining < 60_000;
 
+  // Announce the countdown to assistive tech, but throttle the announcement so
+  // we don't spam the screen reader on every 500 ms tick.
+  // - normal pace: announce once per minute
+  // - last minute: announce once per 30 s
+  // - last 10 s: announce every 10 s (so the user has time to react)
+  const lastSpokenRef = useRef<string>("");
+  const bucket = remaining < 10_000
+    ? 10_000
+    : lowTime
+      ? 30_000
+      : 60_000;
+  const snapped = Math.floor(remaining / bucket) * bucket;
+  const spokenLabel =
+    snapped <= 0
+      ? "time's up"
+      : snapped < 60_000
+        ? `${Math.max(1, Math.ceil(snapped / 1000))} seconds remaining`
+        : `${Math.ceil(snapped / 60_000)} minutes remaining`;
+  if (spokenLabel !== lastSpokenRef.current) {
+    lastSpokenRef.current = spokenLabel;
+  }
+
   return (
     <div className="space-y-4">
       <Prompt path={`~/mock/${blueprint.id}`}>
@@ -142,8 +164,14 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
             style={{
               color: lowTime ? "var(--color-danger)" : "var(--color-accent)",
             }}
+            aria-live="polite"
+            aria-atomic="true"
           >
-            {formatTime(remaining)}
+            <span aria-hidden="true">⏱&nbsp;</span>
+            <span>{formatTime(remaining)}</span>
+          </div>
+          <div className="sr-only" aria-live="polite">
+            {spokenLabel}
           </div>
         </div>
       </div>

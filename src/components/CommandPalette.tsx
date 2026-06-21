@@ -5,6 +5,7 @@ import {
   getAllQuizItems,
   getTracks,
 } from "../lib/contentLoader";
+import { useFocusTrap } from "../lib/useFocusTrap";
 
 type Command = {
   id: string;
@@ -66,12 +67,18 @@ function CommandPaletteInner({
 }) {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const headingId = "cmd-palette-title";
+  useFocusTrap(true, onClose, dialogRef);
   const [q, setQ] = useState("");
   const [active, setActive] = useState(0);
 
-  // Focus the input on mount (no setState — safe inside an effect).
+  // The focus trap already moves focus into the dialog (to the input — it's
+  // the first focusable), so this legacy effect is no longer required, but we
+  // keep a defensive focus call so the caret lands even if the input mounts
+  // after the initial microtask (e.g. filtered list rerenders).
   useEffect(() => {
-    queueMicrotask(() => inputRef.current?.focus());
+    inputRef.current?.focus();
   }, []);
 
   // Build commands once (tracks/lessons/items are static at runtime).
@@ -264,6 +271,10 @@ function CommandPaletteInner({
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={headingId}
         className="w-full max-w-xl boot-in"
         style={{
           background: "var(--color-bg-alt)",
@@ -272,6 +283,9 @@ function CommandPaletteInner({
         }}
         onClick={(e) => e.stopPropagation()}
       >
+        <h2 id={headingId} className="sr-only">
+          Command palette
+        </h2>
         <div
           className="flex items-center gap-2 px-3 py-2"
           style={{ borderBottom: "1px solid var(--color-border-bright)" }}

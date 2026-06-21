@@ -1,3 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="56">🦞</text>
+  <!-- Fallback raster icon for browsers that can't render emoji in <text> -->
+  <image href="/pwa-192.png" width="64" height="64" />
+  <!-- Primary emoji glyph with explicit color-emoji font stack -->
+  <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="56" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif">🦞</text>
 </svg>
