@@ -52,7 +52,7 @@ export const TCS_NQT_BLUEPRINT: MockTestBlueprint = {
 export const TCS_NQT_COGNITIVE_BLUEPRINT: MockTestBlueprint = {
   id: "tcs-nqt-cognitive",
   title: "TCS NQT Cognitive",
-  subtitle: "Official TCS iON cognitive shape · 65 questions · 105 minutes",
+  subtitle: "Official TCS iON cognitive shape · 65 questions · 75 minutes",
   sections: [
     {
       id: "numerical",
