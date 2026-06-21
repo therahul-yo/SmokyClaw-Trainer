@@ -2,6 +2,10 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { ReviewRecord } from "../types";
 import { applyAttempt, dueRecords, newRecord } from "../lib/leitner";
+import { migrateStorageKey } from "./migration";
+
+// Phase 5 audit: localStorage key rename from "interview-trainer/review-queue" → "smokyclaw/review-queue".
+migrateStorageKey("interview-trainer/review-queue", "smokyclaw/review-queue");
 
 type ReviewQueueState = {
   records: Record<string, ReviewRecord>;
@@ -28,6 +32,6 @@ export const useReviewQueueStore = create<ReviewQueueState>()(
 
       resetAll: () => set({ records: {} }),
     }),
-    { name: "interview-trainer/review-queue" },
+    { name: "smokyclaw/review-queue" },
   ),
 );

@@ -3,7 +3,7 @@ id: dsa-19-worked-arrays-hashing
 title: Worked examples: arrays and hashing
 track: dsa
 topic: worked-examples
-order: 19
+order: 22
 estMinutes: 35
 prerequisites: [dsa-00-foundations, dsa-18-pattern-recognition-machine]
 pattern: hashing

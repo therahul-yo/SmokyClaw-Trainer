@@ -112,14 +112,11 @@ sets.
 
 ## Content Expansion Targets
 
-To fully support the promise, the repository should keep expanding toward:
-
-| Track | Target |
-|---|---:|
-| DSA / LeetCode | 220+ items, including 120+ executable coding drills. |
-| Python | 140+ items, including 50+ executable coding drills. |
-| SQL / DBMS | 120+ items, including 60+ executable SQL drills. |
-| Aptitude | 220+ timed MCQs. |
+Per-track content targets and the current authored counts live in **[`CONTENT.md`
+→ "Content counts — current vs target"](CONTENT.md#content-counts--current-vs-target-authoritative)**,
+which is the single source of truth. Run `pnpm validate` for the live tally. This
+file (CURRICULUM.md) describes the *pedagogy and ordering*; CONTENT.md owns the
+*numbers and the authoring bar*.
 
 The next highest-value expansion is not more theory. It is more graded drills
 with clean explanations, edge cases, recognition prompts, speed targets, and

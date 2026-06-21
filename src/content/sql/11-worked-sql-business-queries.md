@@ -3,7 +3,7 @@ id: sql-11-worked-business-queries
 title: Worked examples: SQL business queries
 track: sql
 topic: worked-examples
-order: 11
+order: 13
 estMinutes: 38
 prerequisites: [sql-00-foundations, sql-10-interview-machine]
 pattern: sql-worked-queries

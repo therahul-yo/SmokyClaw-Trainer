@@ -26,7 +26,7 @@ export function CodingSandbox({
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<CodingGradeResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [pyodideLoading, setPyodideLoading] = useState(false);
+  const [pyodideLoading, setPyodideLoading] = useState(true);
   const [hintsUsed, setHintsUsed] = useState(0);
   const [editorialUnlocked, setEditorialUnlocked] = useState(false);
   const [complexityDone, setComplexityDone] = useState(false);
@@ -38,11 +38,9 @@ export function CodingSandbox({
   const ping = useStreakStore((s) => s.ping);
 
   useEffect(() => {
-    setPyodideLoading(true);
-    void (async () => {
-      preloadPyodide();
-      setTimeout(() => setPyodideLoading(false), 100);
-    })();
+    preloadPyodide();
+    const t = setTimeout(() => setPyodideLoading(false), 100);
+    return () => clearTimeout(t);
   }, []);
 
   const run = async () => {
