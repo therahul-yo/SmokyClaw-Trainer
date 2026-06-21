@@ -19,20 +19,18 @@ import { RecognitionDrill } from "./RecognitionDrill";
 import type { MachineBlock } from "../lib/trainingMachine";
 
 export function MachineSession() {
-  const {
-    isActive,
-    isCompleted,
-    currentBlockIndex,
-    currentItemIndex,
-    blocks,
-    results,
-    sessionStartedAt,
-    itemStartedAt,
-    recordItemResult,
-    goToNext,
-    endSession,
-    resetAll,
-  } = useMachineSessionStore();
+  const isActive = useMachineSessionStore((s) => s.isActive);
+  const isCompleted = useMachineSessionStore((s) => s.isCompleted);
+  const currentBlockIndex = useMachineSessionStore((s) => s.currentBlockIndex);
+  const currentItemIndex = useMachineSessionStore((s) => s.currentItemIndex);
+  const blocks = useMachineSessionStore((s) => s.blocks);
+  const results = useMachineSessionStore((s) => s.results);
+  const sessionStartedAt = useMachineSessionStore((s) => s.sessionStartedAt);
+  const itemStartedAt = useMachineSessionStore((s) => s.itemStartedAt);
+  const recordItemResult = useMachineSessionStore((s) => s.recordItemResult);
+  const goToNext = useMachineSessionStore((s) => s.goToNext);
+  const endSession = useMachineSessionStore((s) => s.endSession);
+  const resetAll = useMachineSessionStore((s) => s.resetAll);
 
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
   const registerAttempt = useReviewQueueStore((s) => s.registerAttempt);
