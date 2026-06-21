@@ -2,7 +2,7 @@
 // Pyodide is ~10MB; we load it from the official CDN on first use and cache
 // the instance forever. Subsequent runs are instant.
 
-const PYODIDE_VERSION = "0.26.4";
+const PYODIDE_VERSION = "0.29.4";
 const PYODIDE_INDEX_URL = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
 
 type PyodideAPI = {
@@ -19,12 +19,18 @@ async function loadPyodide(): Promise<PyodideAPI> {
     // Pyodide ships a loader script that injects globals into window. We load
     // it via a script tag rather than ESM because the official build expects
     // window.loadPyodide.
-    await loadScript(`${PYODIDE_INDEX_URL}pyodide.js`);
-    const loader = (window as unknown as {
-      loadPyodide: (opts: { indexURL: string }) => Promise<PyodideAPI>;
-    }).loadPyodide;
-    const py = await loader({ indexURL: PYODIDE_INDEX_URL });
-    return py;
+    try {
+      await loadScript(`${PYODIDE_INDEX_URL}pyodide.js`);
+      const loader = (window as unknown as {
+        loadPyodide: (opts: { indexURL: string }) => Promise<PyodideAPI>;
+      }).loadPyodide;
+      return await loader({ indexURL: PYODIDE_INDEX_URL });
+    } catch (err) {
+      // Reset singleton so a retry can succeed instead of returning the
+      // cached rejected promise forever.
+      pyodidePromise = null;
+      throw err;
+    }
   })();
   return pyodidePromise;
 }

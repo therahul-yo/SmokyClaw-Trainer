@@ -26,7 +26,12 @@ function loadSqlJsScript(): Promise<void> {
     script.src = SQLJS_SCRIPT_URL;
     script.async = true;
     script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Failed to load sql.js"));
+    script.onerror = () => {
+      // Reset singleton so a retry can succeed instead of returning the
+      // cached rejected promise forever.
+      scriptPromise = null;
+      reject(new Error("Failed to load sql.js"));
+    };
     document.head.appendChild(script);
   });
 
@@ -35,15 +40,22 @@ function loadSqlJsScript(): Promise<void> {
 
 async function loadSqlJs(): Promise<SqlJsStatic> {
   if (sqlJsPromise) return sqlJsPromise;
-  await loadSqlJsScript();
-  const sqlGlobal = globalThis as unknown as SqlJsGlobal;
-  if (!sqlGlobal.initSqlJs) {
-    throw new Error("sql.js loaded, but initSqlJs was not available");
+  try {
+    await loadSqlJsScript();
+    const sqlGlobal = globalThis as unknown as SqlJsGlobal;
+    if (!sqlGlobal.initSqlJs) {
+      throw new Error("sql.js loaded, but initSqlJs was not available");
+    }
+    sqlJsPromise = sqlGlobal.initSqlJs({
+      locateFile: () => SQLJS_WASM_URL,
+    });
+    return sqlJsPromise;
+  } catch (err) {
+    // Reset both singletons so a retry can succeed.
+    sqlJsPromise = null;
+    scriptPromise = null;
+    throw err;
   }
-  sqlJsPromise = sqlGlobal.initSqlJs({
-    locateFile: () => SQLJS_WASM_URL,
-  });
-  return sqlJsPromise;
 }
 
 function freshDb(SQL: SqlJsStatic, schema: SqlSchemaName): Database {
