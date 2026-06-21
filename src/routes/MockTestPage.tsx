@@ -8,7 +8,7 @@ import type {
 } from "../types";
 import { getBlueprint } from "../lib/mockTestFormats";
 import { getAllQuizItems } from "../lib/contentLoader";
-import { useProgressStore } from "../store";
+import { useProgressStore, useReviewQueueStore } from "../store";
 import { Prompt } from "../components/terminal/Prompt";
 import { Box } from "../components/terminal/Box";
 import { BracketButton } from "../components/terminal/BracketButton";
@@ -61,6 +61,7 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
   const [runStartTs, setRunStartTs] = useState<number>(0);
   const [now, setNow] = useState(Date.now());
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
+  const registerAttempt = useReviewQueueStore((s) => s.registerAttempt);
 
   useEffect(() => {
     if (phase !== "section") return;
@@ -153,6 +154,11 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
           hintsUsed: 0,
           gaveUp: false,
         });
+        // Push every attempted item into the Leitner review queue. Correct
+        // answers advance the bucket; missed items get reset to bucket 1
+        // (due in one day), so the post-mock-report claim about review-queue
+        // insertion is now actually true.
+        registerAttempt(item.id, correct);
       }
     }
     setPhase("done");

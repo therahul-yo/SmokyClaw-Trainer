@@ -163,7 +163,9 @@ export function PostMockReport({ blueprint, sections, answers }: PostMockReportP
         className="text-xs leading-relaxed"
         style={{ color: "var(--color-text-dim)" }}
       >
-        // missed items have been inserted back into your Leitner spaced repetition review queue to guarantee retention.
+        // every attempted item has been registered in your Leitner spaced
+        repetition review queue — missed items will resurface in 1 day, correct
+        items have advanced to their next review window.
       </div>
 
       <div className="flex gap-2">
