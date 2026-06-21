@@ -48,15 +48,22 @@ function PythonRepl() {
   const [out, setOut] = useState("");
   const [err, setErr] = useState("");
   const [running, setRunning] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const run = async () => {
     setRunning(true);
+    setError(null);
     setOut("");
     setErr("");
-    const r = await runPython(code);
-    setOut(r.stdout);
-    setErr(r.stderr + (r.error ? `\n${r.error}` : ""));
-    setRunning(false);
+    try {
+      const r = await runPython(code);
+      setOut(r.stdout);
+      setErr(r.stderr + (r.error ? `\n${r.error}` : ""));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setRunning(false);
+    }
   };
 
   return (
@@ -89,6 +96,19 @@ function PythonRepl() {
       <BracketButton variant="primary" onClick={run} disabled={running}>
         {running ? "running…" : "run"}
       </BracketButton>
+
+      {error && (
+        <pre
+          className="p-3 text-xs whitespace-pre-wrap font-mono"
+          style={{
+            background: "rgba(255, 68, 68, 0.06)",
+            border: "1px solid var(--color-danger)",
+            color: "var(--color-danger)",
+          }}
+        >
+          {error}
+        </pre>
+      )}
       {(out || err) && (
         <Box title="$ stdout">
           {out && (
