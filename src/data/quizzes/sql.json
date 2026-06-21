@@ -34,7 +34,12 @@
     "starter": "SELECT name\nFROM employees\nWHERE -- your filter here\nORDER BY -- ...",
     "expected": {
       "columns": ["name"],
-      "rows": [["Carol"], ["Alice"]]
+      "rows": [["Carol"], ["Alice"], ["Grace"]]
+    },
+    "optimal": {
+      "code": "SELECT name FROM employees WHERE salary > 50000 ORDER BY salary DESC;",
+      "complexity": "Full scan + sort",
+      "explanation": "Filter rows with WHERE, then sort with ORDER BY salary DESC."
     },
     "explanation": "WHERE salary > 50000 ORDER BY salary DESC.",
     "tags": ["select", "tcs-nqt"]

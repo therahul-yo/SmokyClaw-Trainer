@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { StudyPlan } from "../types";
+import { migrateStorageKey } from "./migration";
+
+// Phase 5 audit: localStorage key rename from "interview-trainer/plan" → "smokyclaw/plan".
+migrateStorageKey("interview-trainer/plan", "smokyclaw/plan");
 
 type PlanState = {
   plan: StudyPlan | null;
@@ -39,6 +43,6 @@ export const usePlanStore = create<PlanState>()(
 
       clearPlan: () => set({ plan: null, completedItemsByDay: {} }),
     }),
-    { name: "interview-trainer/plan" },
+    { name: "smokyclaw/plan" },
   ),
 );

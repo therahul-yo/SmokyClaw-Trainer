@@ -1,29 +1,33 @@
 import type { MockTestBlueprint } from "../types";
 
+// Source: TCS NQT 2025 official pattern (iON-proctored cognitive + coding).
+// Real TCS NQT (2024-2026) runs a 4-section cognitive battery plus a
+// 2-problem coding round. Previous version over-counted verbal/reasoning
+// and pushed reasoning to 50 min, which didn't match the live assessment.
 export const TCS_NQT_BLUEPRINT: MockTestBlueprint = {
   id: "tcs-nqt",
   title: "TCS NQT",
-  subtitle: "National Qualifier Test · cognitive sections + coding round",
+  subtitle: "iON 2025 pattern · foundation + cognitive + programming logic + coding",
   sections: [
     {
       id: "numerical",
-      title: "Numerical Ability",
+      title: "Numerical Ability (Foundation)",
       durationMinutes: 25,
       questionCount: 25,
       pickFrom: { track: "aptitude", topics: ["quant"] },
     },
     {
       id: "verbal",
-      title: "Verbal Ability",
+      title: "Verbal Ability (Cognitive)",
       durationMinutes: 25,
-      questionCount: 24,
+      questionCount: 20,
       pickFrom: { track: "aptitude", topics: ["verbal"] },
     },
     {
       id: "reasoning",
-      title: "Reasoning Ability",
-      durationMinutes: 50,
-      questionCount: 30,
+      title: "Reasoning Ability (Cognitive)",
+      durationMinutes: 25,
+      questionCount: 20,
       pickFrom: { track: "aptitude", topics: ["reasoning"] },
     },
     {
@@ -37,6 +41,7 @@ export const TCS_NQT_BLUEPRINT: MockTestBlueprint = {
       ],
     },
   ],
+  // Cognitive total: 25+20+20+10 = 75q / 90min + 2-problem coding = 75q / 120min.
   codingSection: {
     durationMinutes: 30,
     problemCount: 2,
@@ -47,7 +52,7 @@ export const TCS_NQT_BLUEPRINT: MockTestBlueprint = {
 export const TCS_NQT_COGNITIVE_BLUEPRINT: MockTestBlueprint = {
   id: "tcs-nqt-cognitive",
   title: "TCS NQT Cognitive",
-  subtitle: "Official TCS iON cognitive shape · 65 questions · 105 minutes",
+  subtitle: "Official TCS iON cognitive shape · 65 questions · 75 minutes",
   sections: [
     {
       id: "numerical",
@@ -150,16 +155,6 @@ export const INFOSYS_SP_BLUEPRINT: MockTestBlueprint = {
       questionCount: 20,
       pickFrom: { track: "aptitude", topics: ["verbal"] },
     },
-    {
-      id: "pseudocode",
-      title: "Pseudocode",
-      durationMinutes: 10,
-      questionCount: 5,
-      pickFrom: [
-        { track: "python", type: "mcq" },
-        { track: "dsa", type: "mcq" },
-      ],
-    },
   ],
   codingSection: {
     durationMinutes: 45,
@@ -261,14 +256,14 @@ export const ACCENTURE_COGNITIVE_TECHNICAL_BLUEPRINT: MockTestBlueprint = {
     {
       id: "cognitive-quant",
       title: "Cognitive: Quant + DI",
-      durationMinutes: 20,
+      durationMinutes: 25,
       questionCount: 20,
       pickFrom: { track: "aptitude", topics: ["quant"] },
     },
     {
       id: "cognitive-reasoning",
       title: "Cognitive: Logical Reasoning",
-      durationMinutes: 20,
+      durationMinutes: 25,
       questionCount: 20,
       pickFrom: { track: "aptitude", topics: ["reasoning"] },
     },
@@ -283,7 +278,7 @@ export const ACCENTURE_COGNITIVE_TECHNICAL_BLUEPRINT: MockTestBlueprint = {
       id: "technical",
       title: "Technical Assessment",
       durationMinutes: 40,
-      questionCount: 40,
+      questionCount: 30,
       pickFrom: [
         { track: "python", type: "mcq" },
         { track: "sql", type: "mcq" },
@@ -291,6 +286,11 @@ export const ACCENTURE_COGNITIVE_TECHNICAL_BLUEPRINT: MockTestBlueprint = {
       ],
     },
   ],
+  codingSection: {
+    durationMinutes: 45,
+    problemCount: 2,
+    pool: { track: "python" },
+  },
 };
 
 export const ACCENTURE_CODING_BLUEPRINT: MockTestBlueprint = {
@@ -345,21 +345,21 @@ export const WIPRO_ELITE_BLUEPRINT: MockTestBlueprint = {
     {
       id: "quant",
       title: "Quantitative Ability",
-      durationMinutes: 20,
+      durationMinutes: 16,
       questionCount: 16,
       pickFrom: { track: "aptitude", topics: ["quant"] },
     },
     {
       id: "reasoning",
       title: "Logical Reasoning",
-      durationMinutes: 20,
+      durationMinutes: 16,
       questionCount: 14,
       pickFrom: { track: "aptitude", topics: ["reasoning"] },
     },
     {
       id: "verbal",
       title: "Verbal Ability",
-      durationMinutes: 20,
+      durationMinutes: 18,
       questionCount: 18,
       pickFrom: { track: "aptitude", topics: ["verbal"] },
     },
@@ -391,13 +391,13 @@ export const CAPGEMINI_BLUEPRINT: MockTestBlueprint = {
       pickFrom: { track: "aptitude", topics: ["reasoning"] },
     },
     {
-      id: "pseudocode",
-      title: "Pseudocode",
+      id: "english-tech",
+      title: "English + Technical",
       durationMinutes: 20,
       questionCount: 20,
       pickFrom: [
+        { track: "aptitude", topics: ["verbal", "reasoning"] },
         { track: "python", type: "mcq" },
-        { track: "dsa", type: "mcq" },
       ],
     },
   ],

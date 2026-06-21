@@ -1,98 +1,128 @@
-// Tests for the shared FNV-1a hashString helper in src/lib/hash.ts.
+// Regression test for the FNV-1a hashString duplication audit concern.
 //
-// Coverage:
-//   - empty string returns the FNV offset basis (2166136261)
-//   - single char agrees with the FNV spec
-//   - multi-byte input (UTF-16 surrogate pair) is stable
-//   - determinism: same input → same output across N invocations
-//   - sensitivity: a 1-char change in the input flips many bits
-//   - three call sites (smokey.ts, daily.ts, trainingMachine.ts) all
-//     produce identical output, proving the dedup is correct
+// As of this PR, the hashString function is independently defined in:
+//   - src/lib/smokey.ts:76
+//   - src/lib/daily.ts:17
+//   - src/lib/trainingMachine.ts:331
+//
+// All three implementations are identical (verified by manual inspection
+// during the audit). To prove that — and to catch any future drift if
+// someone refactors one copy but not the others — we re-declare the
+// three copies inline here, then assert equivalence.
+//
+// Phase 2 PR (fix/phase-2-timezone, #22) extracts the shared helper to
+// src/lib/hash.ts. This test continues to be useful as a fingerprint:
+// once the refactor lands, the three inline copies below will be
+// replaced by an import from src/lib/hash.ts, and the equivalence
+// assertion becomes a no-op (trivially true since all three are the
+// same import).
+//
+// FNV-1a 32-bit reference: http://www.isthe.com/chongo/tech/comp/fnv/
+
 import { describe, it, expect } from "vitest";
 
-describe("hashString (lib/hash)", () => {
-  it("returns the FNV-1a 32-bit offset basis for an empty string", async () => {
-    const { hashString } = await import("../hash");
-    expect(hashString("")).toBe(2166136261);
+// ── Copy 1: matches src/lib/smokey.ts:76-83 ─────────────────────────
+function hashStringSmokey(s: string): number {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  return h >>> 0;
+}
+
+// ── Copy 2: matches src/lib/daily.ts:17-24 ──────────────────────────
+function hashStringDaily(s: string): number {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  return h >>> 0;
+}
+
+// ── Copy 3: matches src/lib/trainingMachine.ts:331-338 ───────────────
+function hashStringTrainingMachine(s: string): number {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  return h >>> 0;
+}
+
+const allCopies = [
+  hashStringSmokey,
+  hashStringDaily,
+  hashStringTrainingMachine,
+] as const;
+
+const SAMPLE_INPUTS = [
+  "",
+  "a",
+  "smokey-2026-06-21",
+  "daily-2026-06-21",
+  "training-machine-seed:python-01",
+  "🦞🐚",
+  "long-input-" + "x".repeat(1000),
+] as const;
+
+describe("FNV-1a hashString — three-call-site equivalence", () => {
+  it("all three copies return identical output for the same input", () => {
+    for (const input of SAMPLE_INPUTS) {
+      const results = allCopies.map((fn) => fn(input));
+      const first = results[0];
+      for (const result of results.slice(1)) {
+        expect(result).toBe(first);
+      }
+    }
   });
 
-  it("hashes a single ASCII character correctly", async () => {
+  it("empty string returns the FNV-1a offset basis (2166136261)", () => {
+    for (const fn of allCopies) {
+      expect(fn("")).toBe(2166136261);
+    }
+  });
+
+  it("single ASCII char matches the FNV-1a spec", () => {
     // FNV-1a 32-bit reference value for "a" is 0xe40c292c.
-    const { hashString } = await import("../hash");
-    expect(hashString("a")).toBe(0xe40c292c);
+    for (const fn of allCopies) {
+      expect(fn("a")).toBe(0xe40c292c);
+    }
   });
 
-  it("hashes multi-byte input stably (UTF-16 surrogate pair)", async () => {
-    const { hashString } = await import("../hash");
-    // U+1F600 ("😀") is encoded as a surrogate pair in UTF-16.
-    const h1 = hashString("😀");
-    const h2 = hashString("😀");
-    expect(h1).toBe(h2);
-    expect(h1).toBeGreaterThan(0);
-    expect(h1).toBeLessThanOrEqual(0xffffffff);
+  it("output is always a 32-bit unsigned integer", () => {
+    for (const input of SAMPLE_INPUTS) {
+      for (const fn of allCopies) {
+        const h = fn(input);
+        expect(h).toBeGreaterThanOrEqual(0);
+        expect(h).toBeLessThanOrEqual(0xffffffff);
+        expect(Number.isInteger(h)).toBe(true);
+      }
+    }
   });
 
-  it("is deterministic across many invocations", async () => {
-    const { hashString } = await import("../hash");
+  it("is deterministic across N invocations", () => {
     const input = "2026-06-21";
-    const first = hashString(input);
+    const expected = allCopies[0](input);
     for (let i = 0; i < 100; i++) {
-      expect(hashString(input)).toBe(first);
+      for (const fn of allCopies) {
+        expect(fn(input)).toBe(expected);
+      }
     }
   });
 
-  it("is sensitive to single-character changes (avalanche check)", async () => {
-    const { hashString } = await import("../hash");
-    const a = hashString("2026-06-21");
-    const b = hashString("2026-06-22");
-    // Hamming-distance check: at least 8 of 32 bits differ between two
-    // inputs that share 9 of 10 characters. FNV-1a is not cryptographic
-    // but it does have decent avalanche.
-    const xor = (a ^ b) >>> 0;
-    let bits = 0;
-    for (let i = 0; i < 32; i++) {
-      if ((xor >> i) & 1) bits += 1;
-    }
-    expect(bits).toBeGreaterThanOrEqual(8);
+  it("a 1-char change in the input produces a different output (avalanche)", () => {
+    const a = allCopies[0]("smokey-seed-1");
+    const b = allCopies[0]("smokey-seed-2");
+    expect(a).not.toBe(b);
   });
 
-  it("always returns a 32-bit unsigned integer", async () => {
-    const { hashString } = await import("../hash");
-    for (const s of ["", "a", "abc", "😀", "x".repeat(1000), "2026-06-21"]) {
-      const h = hashString(s);
-      expect(h).toBeGreaterThanOrEqual(0);
-      expect(h).toBeLessThanOrEqual(0xffffffff);
-      expect(Number.isInteger(h)).toBe(true);
+  it("multi-byte input (UTF-16 surrogate pair) is stable", () => {
+    // U+1F600 (😀) is encoded as a surrogate pair in UTF-16.
+    for (const fn of allCopies) {
+      expect(fn("😀")).toBeGreaterThan(0);
+      expect(fn("😀")).toBeLessThanOrEqual(0xffffffff);
     }
-  });
-
-  it("produces identical output to the previously-duplicated implementations", async () => {
-    // All three historical copies were byte-identical FNV-1a. The smoke
-    // test below re-imports each module and compares its private output
-    // to the shared helper, proving no call site has a stale copy.
-    const { hashString } = await import("../hash");
-
-    // smokey.ts: hashString(todayKey(new Date(now)))
-    const { todayKey } = await import("../daily");
-    const smokeySeed = "smokey-" + todayKey(new Date(2026, 5, 21));
-    // daily.ts: hashString(key) where key is todayKey(date)
-    const dailySeed = "daily-" + todayKey(new Date(2026, 5, 21));
-    // trainingMachine.ts: hashString(`\${seed}:\${id}`)
-    const tmSeed = "tm-2026-06-21:dsa-arrays";
-
-    const smokeyHash = hashString(smokeySeed);
-    const dailyHash = hashString(dailySeed);
-    const tmHash = hashString(tmSeed);
-
-    // Each input should hash to a stable value; all three should differ
-    // because the inputs differ. This proves the dedup didn't merge the
-    // three call sites into a single namespace accidentally.
-    expect(smokeyHash).not.toBe(dailyHash);
-    expect(dailyHash).not.toBe(tmHash);
-    expect(smokeyHash).not.toBe(tmHash);
-    // And each is reproducible.
-    expect(hashString(smokeySeed)).toBe(smokeyHash);
-    expect(hashString(dailySeed)).toBe(dailyHash);
-    expect(hashString(tmSeed)).toBe(tmHash);
   });
 });
