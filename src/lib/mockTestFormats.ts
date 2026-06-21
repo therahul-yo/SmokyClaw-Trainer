@@ -386,13 +386,13 @@ export const CAPGEMINI_BLUEPRINT: MockTestBlueprint = {
       pickFrom: { track: "aptitude", topics: ["reasoning"] },
     },
     {
-      id: "pseudocode",
-      title: "Pseudocode",
+      id: "english-tech",
+      title: "English + Technical",
       durationMinutes: 20,
       questionCount: 20,
       pickFrom: [
+        { track: "aptitude", topics: ["verbal", "reasoning"] },
         { track: "python", type: "mcq" },
-        { track: "dsa", type: "mcq" },
       ],
     },
   ],
