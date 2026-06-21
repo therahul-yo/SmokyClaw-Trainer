@@ -53,7 +53,11 @@ export function McqCard({
           <LessonRenderer body={item.question} />
         </div>
 
-        <ul className="space-y-2">
+        <ul
+          className="space-y-2"
+          role="radiogroup"
+          aria-label={`Question: ${item.question.replace(/<[^>]+>/g, "")}`}
+        >
           {item.options.map((opt, i) => {
             const chosen = i === selected;
             const isAnswer = i === item.answerIndex;
@@ -74,6 +78,10 @@ export function McqCard({
             return (
               <li key={i}>
                 <button
+                  type="button"
+                  role="radio"
+                  aria-checked={chosen}
+                  aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt.replace(/<[^>]+>/g, "")}`}
                   onClick={() => submit(i)}
                   disabled={submitted}
                   className="w-full text-left px-3 py-2 font-mono text-sm transition-colors hover:brightness-110 disabled:cursor-not-allowed"
