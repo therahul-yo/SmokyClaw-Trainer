@@ -3,7 +3,7 @@
   "private": false,
   "version": "0.0.0",
   "type": "module",
-  "description": "Local-first training for Indian campus hiring tests — TCS NQT, Infosys SP, Wipro Elite, Capgemini. Python, DSA, SQL, Aptitude with in-browser code execution and exact mock-test formats.",
+  "description": "Local-first training for Indian campus hiring tests \u2014 TCS NQT, Infosys SP, Wipro Elite, Capgemini. Python, DSA, SQL, Aptitude with in-browser code execution and exact mock-test formats.",
   "license": "MIT",
   "homepage": "https://github.com/therahul-yo/SmokyClaw-Trainer#readme",
   "repository": {
@@ -75,5 +75,6 @@
     "vite": "^8.0.16",
     "vite-plugin-pwa": "^1.3.0",
     "vitest": "^4.1.9"
-  }
+  },
+  "packageManager": "pnpm@9.15.0"
 }
