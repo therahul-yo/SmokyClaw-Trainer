@@ -155,16 +155,6 @@ export const INFOSYS_SP_BLUEPRINT: MockTestBlueprint = {
       questionCount: 20,
       pickFrom: { track: "aptitude", topics: ["verbal"] },
     },
-    {
-      id: "pseudocode",
-      title: "Pseudocode",
-      durationMinutes: 10,
-      questionCount: 5,
-      pickFrom: [
-        { track: "python", type: "mcq" },
-        { track: "dsa", type: "mcq" },
-      ],
-    },
   ],
   codingSection: {
     durationMinutes: 45,
