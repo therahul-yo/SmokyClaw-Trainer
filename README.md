@@ -1,5 +1,10 @@
 # 🦞 SmokyClaw Trainer
 
+[![CI](https://github.com/therahul-yo/SmokyClaw-Trainer/actions/workflows/ci.yml/badge.svg)](https://github.com/therahul-yo/SmokyClaw-Trainer/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Stars](https://img.shields.io/github/stars/therahul-yo/SmokyClaw-Trainer)](https://github.com/therahul-yo/SmokyClaw-Trainer)
+[![Live](https://img.shields.io/badge/Live-smokyclaw--trainer.vercel.app-blue)](https://smokyclaw-trainer.vercel.app/)
+
 Solo interview-training system for Indian campus hiring tests and coding rounds
 — TCS NQT, Infosys SP, Wipro Elite NLTH, Capgemini, Python, SQL, aptitude, and
 DSA/LeetCode patterns — with in-browser Python and SQL execution, spaced
@@ -11,6 +16,16 @@ foundation, recognize the pattern, write the template, handle edge cases,
 explain complexity, and repeat weak areas until they become fast.
 
 **Live:** [smokyclaw-trainer.vercel.app](https://smokyclaw-trainer.vercel.app/)
+
+---
+
+## 🚀 Try it now
+
+**[→ smokyclaw-trainer.vercel.app](https://smokyclaw-trainer.vercel.app/)**
+
+No signup, no install. Runs entirely in your browser. Save your progress to your device.
+
+![SmokyClaw Trainer home page](docs/screenshot-home.png)
 
 ---
 
