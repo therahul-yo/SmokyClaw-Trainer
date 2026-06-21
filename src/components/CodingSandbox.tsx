@@ -25,6 +25,7 @@ export function CodingSandbox({
   const [code, setCode] = useState(item.starter);
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<CodingGradeResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [pyodideLoading, setPyodideLoading] = useState(true);
   const [hintsUsed, setHintsUsed] = useState(0);
   const [editorialUnlocked, setEditorialUnlocked] = useState(false);
@@ -44,6 +45,7 @@ export function CodingSandbox({
 
   const run = async () => {
     setRunning(true);
+    setError(null);
     setResult(null);
     const startedAt = Date.now();
     try {
@@ -59,6 +61,8 @@ export function CodingSandbox({
       ping();
       onAnswered?.(r.ok);
       if (r.ok && !item.complexityCheck) setEditorialUnlocked(true);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
     } finally {
       setRunning(false);
     }
@@ -262,6 +266,20 @@ export function CodingSandbox({
               </pre>
             )}
           </div>
+        )}
+
+        {error && (
+          <pre
+            className="text-xs p-2 overflow-x-auto whitespace-pre-wrap font-mono"
+            style={{
+              color: "var(--color-danger)",
+              background: "rgba(255, 68, 68, 0.06)",
+              border: "1px solid var(--color-danger)",
+            }}
+          >
+            <span style={{ color: "var(--color-text-muted)" }}>err   </span>
+            {error}
+          </pre>
         )}
 
         {needsComplexityCheck && item.complexityCheck && (

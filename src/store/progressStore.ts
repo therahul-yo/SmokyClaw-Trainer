@@ -14,6 +14,16 @@ export type RecognitionAttempt = {
   attemptedAt: number;
 };
 
+// Cap to keep the persisted progress blob under a safe localStorage
+// budget (most browsers cap at ~5MB; an unbounded attempts[] would
+// eventually throw QuotaExceededError and brick the app).
+const ATTEMPTS_CAP = 2000;
+
+function prune<T>(arr: T[]): T[] {
+  if (arr.length <= ATTEMPTS_CAP) return arr;
+  return arr.slice(arr.length - ATTEMPTS_CAP);
+}
+
 type ProgressState = {
   completedLessons: Record<string, LessonProgress>; // keyed by lessonId
   attempts: Attempt[];
@@ -50,13 +60,13 @@ export const useProgressStore = create<ProgressState>()(
 
       recordAttempt: (a) => {
         set((s) => ({
-          attempts: [...s.attempts, { ...a, attemptedAt: Date.now() }],
+          attempts: prune([...s.attempts, { ...a, attemptedAt: Date.now() }]),
         }));
       },
 
       recordRecognitionAttempt: (a) => {
         set((s) => ({
-          recognitionAttempts: [...s.recognitionAttempts, { ...a, attemptedAt: Date.now() }],
+          recognitionAttempts: prune([...s.recognitionAttempts, { ...a, attemptedAt: Date.now() }]),
         }));
       },
 
