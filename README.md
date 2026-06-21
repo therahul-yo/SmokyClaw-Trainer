@@ -25,8 +25,6 @@ explain complexity, and repeat weak areas until they become fast.
 
 No signup, no install. Runs entirely in your browser. Save your progress to your device.
 
-![SmokyClaw Trainer home page](docs/screenshot-home.png)
-
 ---
 
 ## What it does
