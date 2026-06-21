@@ -55,7 +55,10 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
   const [sections, setSections] = useState<PickedSection[]>([]);
   const [sectionIdx, setSectionIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [answerTimes, setAnswerTimes] = useState<Record<string, number>>({});
+  const [questionShownAt, setQuestionShownAt] = useState<Record<string, number>>({});
   const [deadlines, setDeadlines] = useState<number[]>([]);
+  const [runStartTs, setRunStartTs] = useState<number>(0);
   const [now, setNow] = useState(Date.now());
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
 
@@ -73,6 +76,7 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
     }));
     setSections(picked);
     const startTs = Date.now();
+    setRunStartTs(startTs);
     setDeadlines(
       blueprint.sections.map((_s, i) => {
         const prior = blueprint.sections
@@ -84,6 +88,24 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
     setSectionIdx(0);
     setPhase("section");
   };
+
+  // Track per-question "shown at" timestamp so finalize() can compute the
+  // real time each learner spent on each item instead of writing 0.
+  useEffect(() => {
+    if (phase !== "section") return;
+    const section = sections[sectionIdx];
+    if (!section) return;
+    setQuestionShownAt((prev) => {
+      const next = { ...prev };
+      const nowTs = Date.now();
+      for (const item of section.items) {
+        if (next[item.id] === undefined) next[item.id] = nowTs;
+      }
+      return next;
+    });
+    // Only re-run when the active section changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, sectionIdx, sections]);
 
   useEffect(() => {
     if (phase !== "section") return;
@@ -99,12 +121,38 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [now, deadlines, sectionIdx, sections.length, phase]);
 
+  const handleAnswer = (itemId: string, choiceIdx: number) => {
+    setAnswers((a) => ({ ...a, [itemId]: choiceIdx }));
+    // Record the wall-clock instant the learner settled on an answer; this is
+    // used at finalize() to compute the real per-question timeMs.
+    setAnswerTimes((prev) => {
+      if (prev[itemId] !== undefined) return prev;
+      return { ...prev, [itemId]: Date.now() };
+    });
+  };
+
   const finalize = () => {
+    const finalizedAt = Date.now();
     for (const sec of sections) {
       for (const item of sec.items) {
         const ans = answers[item.id];
         const correct = ans === item.answerIndex;
-        recordAttempt({ itemId: item.id, correct, timeMs: 0 });
+        const answeredAt = answerTimes[item.id];
+        const shownAt = questionShownAt[item.id] ?? runStartTs;
+        // Prefer the answered-at timestamp; fall back to the time the
+        // question was first shown; finally fall back to the run start so
+        // we never record 0 unless the user genuinely finished instantly.
+        const timeMs =
+          answeredAt !== undefined
+            ? Math.max(0, answeredAt - shownAt)
+            : Math.max(0, finalizedAt - shownAt);
+        recordAttempt({
+          itemId: item.id,
+          correct,
+          timeMs,
+          hintsUsed: 0,
+          gaveUp: false,
+        });
       }
     }
     setPhase("done");
@@ -215,9 +263,7 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
                               type="radio"
                               name={q.id}
                               checked={checked}
-                              onChange={() =>
-                                setAnswers((a) => ({ ...a, [q.id]: oi }))
-                              }
+                              onChange={() => handleAnswer(q.id, oi)}
                               className="mt-1 accent-[var(--color-accent)]"
                             />
                             <span className="text-sm">
