@@ -1,0 +1,6 @@
+# Default code owner for the whole repository.
+# Anyone listed here is automatically requested for review on every PR.
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner
+*       @therahul-yo
