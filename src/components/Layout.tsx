@@ -125,6 +125,46 @@ export function Layout({ children }: { children: ReactNode }) {
     >
       <BootOverlay />
 
+      {/* Skip-to-content link for keyboard users (a11y, WCAG 2.4.1 Bypass Blocks) */}
+      <a
+        href="#main-content"
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          top: "auto",
+          width: "1px",
+          height: "1px",
+          overflow: "hidden",
+          zIndex: 9999,
+        }}
+        onFocus={(e) => {
+          const el = e.currentTarget;
+          el.style.left = "8px";
+          el.style.top = "8px";
+          el.style.width = "auto";
+          el.style.height = "auto";
+          el.style.padding = "6px 12px";
+          el.style.background = "var(--color-accent)";
+          el.style.color = "var(--color-bg)";
+          el.style.fontWeight = "bold";
+          el.style.outline = "2px solid var(--color-amber)";
+        }}
+        onBlur={(e) => {
+          const el = e.currentTarget;
+          el.style.left = "-9999px";
+          el.style.top = "auto";
+          el.style.width = "1px";
+          el.style.height = "1px";
+          el.style.padding = "0";
+          el.style.background = "transparent";
+          el.style.color = "inherit";
+          el.style.fontWeight = "normal";
+          el.style.outline = "none";
+        }}
+      >
+        Skip to main content
+      </a>
+
       {/* Top bar — fixed height, ASCII frame */}
       <header
         className="shrink-0 flex items-center justify-between px-3 text-xs"
@@ -193,6 +233,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <div className="flex-1 flex min-h-0">
         <TreeNav />
         <main
+          id="main-content"
           className="flex-1 min-w-0 overflow-y-auto"
           style={{ background: "var(--color-bg)" }}
         >
