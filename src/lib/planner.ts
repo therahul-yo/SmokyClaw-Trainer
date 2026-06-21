@@ -59,6 +59,10 @@ export function generatePlan(input: PlanInput): StudyPlan {
   const itemPool = input.allItems.filter((i) => tracks.includes(i.track));
   const lessonPool = input.allLessons.filter((l) => tracks.includes(l.track));
 
+  // O(1) lookups for the due-review loop below — without this the inner
+  // itemPool.find() turns the per-day review pass into O(n*m).
+  const itemById = new Map(itemPool.map((q) => [q.id, q]));
+
   // Weight items by topic weakness.
   const scores = topicScores(input.attempts, itemPool);
   const weightedItems = itemPool
@@ -92,7 +96,7 @@ export function generatePlan(input: PlanInput): StudyPlan {
     // 1. Leitner-due items first (interleave from the global due set).
     for (const id of input.dueReviewIds) {
       if (placedItems.has(id) || !reviewSet.has(id)) continue;
-      const item = itemPool.find((q) => q.id === id);
+      const item = itemById.get(id);
       if (!item) continue;
       const m = itemMinutes(item);
       if (m > budget) break;
