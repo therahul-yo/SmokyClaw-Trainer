@@ -1,4 +1,5 @@
 import type { QuizItem } from "../types";
+import { hashString } from "./hash";
 
 // Wall-clock read routed through a helper so render-purity lint doesn't flag
 // the inherently time-dependent daily-challenge math at every call site.
@@ -26,16 +27,6 @@ export function yesterdayKey(now: number = Date.now()): string {
   const mm = String(y.getMonth() + 1).padStart(2, "0");
   const dd = String(y.getDate()).padStart(2, "0");
   return `${yy}-${mm}-${dd}`;
-}
-
-// Deterministic 32-bit hash from a string.
-function hashString(s: string): number {
-  let h = 2166136261 >>> 0;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619) >>> 0;
-  }
-  return h >>> 0;
 }
 
 // Pick today's challenge: deterministic by date, biased toward items the user

@@ -5,6 +5,7 @@ import type {
   TrackId,
   TrainingStage,
 } from "../types";
+import { hashString } from "./hash";
 
 const STAGE_ORDER: TrainingStage[] = [
   "foundation",
@@ -326,15 +327,6 @@ function weaknessRows(items: QuizItem[], attempts: Attempt[]) {
     .filter((row) => row.total >= 2 && row.wrong > 0)
     .sort((a, b) => b.wrong / b.total - a.wrong / a.total || b.wrong - a.wrong)
     .slice(0, 5);
-}
-
-function hashString(s: string): number {
-  let h = 2166136261 >>> 0;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619) >>> 0;
-  }
-  return h >>> 0;
 }
 
 function stablePick(items: QuizItem[], count: number, seed: string): QuizItem[] {

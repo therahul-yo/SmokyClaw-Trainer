@@ -15,6 +15,7 @@ import type {
   TrackId,
 } from "../types";
 import { todayKey } from "./daily";
+import { hashString } from "./hash";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -71,16 +72,10 @@ export type SmokeyInput = {
   blueprints: MockTestBlueprint[];
 };
 
-// ── small deterministic helpers ────────────────────────────────
-
-function hashString(s: string): number {
-  let h = 2166136261 >>> 0;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619) >>> 0;
-  }
-  return h >>> 0;
-}
+// Deterministic 32-bit FNV-1a hash lives in lib/hash.ts (shared with the
+// training-machine stable-picker and the daily-challenge picker — each
+// used to have an identical private copy that would drift on the first
+// refactor; see lib/hash.ts for the rationale).
 
 // Milliseconds from `now` (ms epoch) until the next local midnight.
 // Uses local-date components so the result is correct for non-UTC users
