@@ -97,6 +97,7 @@ describe("planner / generatePlan basics", () => {
       dueReviewIds: [],
       allItems: makeItems(10, "dsa"),
       allLessons: makeLessons(3, "dsa"),
+      now: nowPlusDays(0),
     });
     expect(plan.mode).toBe("cram");
     expect(plan.days.length).toBe(5);
@@ -112,6 +113,7 @@ describe("planner / generatePlan basics", () => {
       dueReviewIds: [],
       allItems: makeItems(10, "dsa"),
       allLessons: makeLessons(3, "dsa"),
+      now: nowPlusDays(0),
     });
     expect(plan.mode).toBe("thorough");
     expect(plan.days.length).toBe(30);
@@ -127,6 +129,7 @@ describe("planner / generatePlan basics", () => {
       dueReviewIds: [],
       allItems: makeItems(5, "dsa"),
       allLessons: makeLessons(2, "dsa"),
+      now: nowPlusDays(0),
     });
     expect(plan.days.length).toBe(1);
   });
@@ -141,6 +144,7 @@ describe("planner / generatePlan basics", () => {
       dueReviewIds: [],
       allItems: makeItems(5, "dsa"),
       allLessons: makeLessons(2, "dsa"),
+      now: nowPlusDays(0),
     });
     for (const d of plan.days) {
       expect(d.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
@@ -157,6 +161,7 @@ describe("planner / generatePlan basics", () => {
       dueReviewIds: [],
       allItems: makeItems(5, "dsa"),
       allLessons: makeLessons(2, "dsa"),
+      now: nowPlusDays(0),
     });
     expect(plan.days.map((d) => d.dayIndex)).toEqual([0, 1, 2, 3]);
   });
@@ -171,6 +176,7 @@ describe("planner / generatePlan basics", () => {
       dueReviewIds: [],
       allItems: [...makeItems(5, "dsa"), ...makeItems(5, "sql")],
       allLessons: [...makeLessons(2, "dsa"), ...makeLessons(2, "sql")],
+      now: nowPlusDays(0),
     });
     for (const d of plan.days) {
       // every placed lesson must be a sql lesson
@@ -195,6 +201,7 @@ describe("planner / mock-test markers", () => {
       dueReviewIds: [],
       allItems: makeItems(50, "dsa"),
       allLessons: makeLessons(10, "dsa"),
+      now: nowPlusDays(0),
     });
     expect(plan.mode).toBe("thorough");
     const marked = plan.days
@@ -214,6 +221,7 @@ describe("planner / mock-test markers", () => {
       dueReviewIds: [],
       allItems: makeItems(20, "dsa"),
       allLessons: makeLessons(5, "dsa"),
+      now: nowPlusDays(0),
     });
     expect(plan.mode).toBe("cram");
     const marked = plan.days.filter((d) => typeof d.note === "string");
@@ -231,6 +239,7 @@ describe("planner / mock-test markers", () => {
       dueReviewIds: [],
       allItems: makeItems(20, "dsa"),
       allLessons: makeLessons(5, "dsa"),
+      now: nowPlusDays(0),
     });
     expect(plan.mode).toBe("cram");
   });
@@ -245,6 +254,7 @@ describe("planner / mock-test markers", () => {
       dueReviewIds: [],
       allItems: makeItems(20, "dsa"),
       allLessons: makeLessons(5, "dsa"),
+      now: nowPlusDays(0),
     });
     expect(plan.mode).toBe("thorough");
   });
@@ -263,6 +273,7 @@ describe("planner / item placement invariants", () => {
       dueReviewIds: [],
       allItems: makeItems(30, "dsa"),
       allLessons: makeLessons(10, "dsa"),
+      now: nowPlusDays(0),
     });
     const seen = new Set<string>();
     for (const d of plan.days) {
@@ -283,6 +294,7 @@ describe("planner / item placement invariants", () => {
       dueReviewIds: [],
       allItems: makeItems(30, "dsa"),
       allLessons: makeLessons(10, "dsa"),
+      now: nowPlusDays(0),
     });
     const seen = new Set<string>();
     for (const d of plan.days) {
@@ -303,6 +315,7 @@ describe("planner / item placement invariants", () => {
       dueReviewIds: [],
       allItems: makeItems(30, "dsa"),
       allLessons: makeLessons(10, "dsa"),
+      now: nowPlusDays(0),
     });
     for (const d of plan.days) {
       // estMinutes is computed as dailyMinutes - budgetRemaining; never negative
@@ -325,6 +338,7 @@ describe("planner / todayBucket", () => {
       dueReviewIds: [],
       allItems: makeItems(20, "dsa"),
       allLessons: makeLessons(5, "dsa"),
+      now: nowPlusDays(0),
     });
   }
 
@@ -366,6 +380,7 @@ describe("planner / focus bias", () => {
       dueReviewIds: [],
       allItems: [...dsaItems, ...sqlItems],
       allLessons: [...makeLessons(5, "dsa"), ...makeLessons(5, "sql")],
+      now: nowPlusDays(0),
     });
     // For each day, the first two itemIds must come from the day's track
     for (let i = 0; i < plan.days.length; i++) {

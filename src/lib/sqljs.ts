@@ -40,28 +40,37 @@ function loadSqlJsScript(): Promise<void> {
 
 async function loadSqlJs(): Promise<SqlJsStatic> {
   if (sqlJsPromise) return sqlJsPromise;
-  try {
-    await loadSqlJsScript();
-    const sqlGlobal = globalThis as unknown as SqlJsGlobal;
-    if (!sqlGlobal.initSqlJs) {
-      throw new Error("sql.js loaded, but initSqlJs was not available");
+  sqlJsPromise = (async () => {
+    try {
+      await loadSqlJsScript();
+      const sqlGlobal = globalThis as unknown as SqlJsGlobal;
+      if (!sqlGlobal.initSqlJs) {
+        throw new Error("sql.js loaded, but initSqlJs was not available");
+      }
+      // Await inside the wrapper so a rejected init resets the singletons
+      // and a later call retries instead of replaying the cached rejection.
+      return await sqlGlobal.initSqlJs({
+        locateFile: () => SQLJS_WASM_URL,
+      });
+    } catch (err) {
+      sqlJsPromise = null;
+      scriptPromise = null;
+      throw err;
     }
-    sqlJsPromise = sqlGlobal.initSqlJs({
-      locateFile: () => SQLJS_WASM_URL,
-    });
-    return sqlJsPromise;
-  } catch (err) {
-    // Reset both singletons so a retry can succeed.
-    sqlJsPromise = null;
-    scriptPromise = null;
-    throw err;
-  }
+  })();
+  return sqlJsPromise;
 }
 
 function freshDb(SQL: SqlJsStatic, schema: SqlSchemaName): Database {
   const db = new SQL.Database();
-  // db.exec = SQLite WASM run-SQL method (sql.js Database#exec)
-  db.exec(getSqlSchema(schema));
+  try {
+    // db.exec = SQLite WASM run-SQL method (sql.js Database#exec)
+    db.exec(getSqlSchema(schema));
+  } catch (err) {
+    // Don't leak the handle if seeding the schema fails.
+    db.close();
+    throw err;
+  }
   return db;
 }
 

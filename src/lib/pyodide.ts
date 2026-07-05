@@ -63,7 +63,14 @@ export type PythonRunResult = {
 };
 
 export async function runPython(code: string): Promise<PythonRunResult> {
-  const py = await loadPyodide();
+  let py: PyodideAPI;
+  try {
+    py = await loadPyodide();
+  } catch (e) {
+    // Surface load failures (CDN down, offline) the same way as runtime
+    // errors so callers render a message instead of an unhandled rejection.
+    return { stdout: "", stderr: "", error: e instanceof Error ? e.message : String(e) };
+  }
   let stdout = "";
   let stderr = "";
   py.setStdout({ batched: (s) => { stdout += s; } });

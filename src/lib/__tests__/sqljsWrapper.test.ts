@@ -9,10 +9,9 @@
 //   2. runSql returns { columns, rows } for SELECT statements.
 //   3. runSql returns { columns: [], rows: [] } for DDL/DML (no result set).
 //   4. The Database is closed in a finally block (no leaked handles).
-//   5. CRITICAL (audit C2-C3): if initSqlJs is missing on globalThis after
-//      script load, loadSqlJs throws — that error is NOT cached in
-//      sqlJsPromise (good), but a previously-rejected initSqlJs promise
-//      IS cached and retries return the same rejection (audit C1 pattern).
+//   5. Audit C1 pattern (fixed): a rejected initSqlJs promise is NOT cached —
+//      the singleton resets on failure so the next call retries. Same for a
+//      missing initSqlJs global after script load.
 //   6. db.exec() with zero result sets → empty columns/rows.
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -37,18 +36,35 @@ interface FakeSqlJsStatic {
   Database: new () => FakeDatabase;
 }
 
+// `new SQL.Database()` needs a real constructor — a class whose constructor
+// returns the shared fake instance (arrow functions are not constructible).
+function databaseCtor(db: FakeDatabase): new () => FakeDatabase {
+  return class {
+    constructor() {
+      return db;
+    }
+  } as unknown as new () => FakeDatabase;
+}
+
+// Like real sql.js, each `new Database()` yields a fresh, independent db.
 function makeFakeSqlJs(execImpl: (q: string) => FakeQueryResult[]): FakeSqlJsStatic {
-  let closed = false;
-  const db: FakeDatabase = {
-    exec: vi.fn((q: string) => {
-      if (closed) throw new Error("db closed");
-      return execImpl(q);
-    }),
-    close: vi.fn(() => {
-      closed = true;
-    }),
+  return {
+    Database: class {
+      constructor() {
+        let closed = false;
+        const db: FakeDatabase = {
+          exec: vi.fn((q: string) => {
+            if (closed) throw new Error("db closed");
+            return execImpl(q);
+          }),
+          close: vi.fn(() => {
+            closed = true;
+          }),
+        };
+        return db;
+      }
+    } as unknown as new () => FakeDatabase,
   };
-  return { Database: vi.fn(() => db) };
 }
 
 // ── browser surface stub ─────────────────────────────────────────
@@ -60,15 +76,22 @@ type FakeScriptEl = {
   onerror: (() => void) | null;
 };
 let scriptElements: FakeScriptEl[] = [];
+// Optional hook run just before a fake script's onload fires — lets a test
+// simulate the real sql.js script defining `initSqlJs` on load.
+let onScriptLoad: (() => void) | null = null;
 
 function installDOM() {
   scriptElements = [];
+  onScriptLoad = null;
   (globalThis as unknown as { document: unknown }).document = {
     head: {
       appendChild: (el: FakeScriptEl) => {
         scriptElements.push(el);
         // Resolve script load asynchronously so callers can attach handlers.
-        setTimeout(() => el.onload?.(), 0);
+        setTimeout(() => {
+          onScriptLoad?.();
+          el.onload?.();
+        }, 0);
         return el;
       },
     },
@@ -140,7 +163,7 @@ describe("sqljs / runSql result handling", () => {
         closeCount += 1;
       }),
     };
-    const fakeSql: FakeSqlJsStatic = { Database: vi.fn(() => db) };
+    const fakeSql: FakeSqlJsStatic = { Database: databaseCtor(db) };
     (globalThis as unknown as { initSqlJs?: unknown }).initSqlJs = async () => fakeSql;
     const mod = await import("../sqljs");
     await mod.runSql("employees", "SELECT 1");
@@ -157,7 +180,7 @@ describe("sqljs / runSql result handling", () => {
         closeCount += 1;
       }),
     };
-    const fakeSql: FakeSqlJsStatic = { Database: vi.fn(() => db) };
+    const fakeSql: FakeSqlJsStatic = { Database: databaseCtor(db) };
     (globalThis as unknown as { initSqlJs?: unknown }).initSqlJs = async () => fakeSql;
     const mod = await import("../sqljs");
     await expect(mod.runSql("employees", "BAD SQL")).rejects.toThrow(/syntax error/);
@@ -178,7 +201,7 @@ describe("sqljs / singleton behavior", () => {
     expect(initSpy).toHaveBeenCalledTimes(1);
   });
 
-  it("CRITICAL (audit C1 pattern): rejected initSqlJs is cached and retries re-throw", async () => {
+  it("audit C1 pattern fixed: rejected initSqlJs is NOT cached — the next call retries", async () => {
     let initCalls = 0;
     (globalThis as unknown as { initSqlJs?: unknown }).initSqlJs = async () => {
       initCalls += 1;
@@ -187,8 +210,8 @@ describe("sqljs / singleton behavior", () => {
     const mod = await import("../sqljs");
     await expect(mod.runSql("employees", "SELECT 1")).rejects.toThrow(/wasm 404/);
     await expect(mod.runSql("employees", "SELECT 2")).rejects.toThrow(/wasm 404/);
-    // Only ONE init call because the rejected promise is cached.
-    expect(initCalls).toBe(1);
+    // The singleton resets on failure, so each call retries the init.
+    expect(initCalls).toBe(2);
   });
 
   it("throws when initSqlJs is missing on globalThis after script load", async () => {
@@ -209,10 +232,15 @@ describe("sqljs / singleton behavior", () => {
   });
 
   it("otherwise exactly one <script> tag is injected", async () => {
-    (globalThis as unknown as { initSqlJs?: unknown }).initSqlJs = async () =>
-      makeFakeSqlJs(() => [{ columns: ["x"], values: [[1]] }]);
+    // initSqlJs is absent until the injected script "loads" — mirroring how
+    // the real CDN script defines the global as a side effect of loading.
+    onScriptLoad = () => {
+      (globalThis as unknown as { initSqlJs?: unknown }).initSqlJs = async () =>
+        makeFakeSqlJs(() => [{ columns: ["x"], values: [[1]] }]);
+    };
     const mod = await import("../sqljs");
     await mod.runSql("employees", "SELECT 1");
+    await mod.runSql("social", "SELECT 2");
     expect(scriptElements).toHaveLength(1);
     expect(scriptElements[0]?.src).toMatch(/sql-wasm\.js$/);
   });

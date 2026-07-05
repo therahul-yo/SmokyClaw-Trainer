@@ -113,7 +113,7 @@ describe("pyodide / singleton behavior", () => {
     expect(mod.isPyodideLoaded()).toBe(true);
   });
 
-  it("CRITICAL (audit C1): a rejected loadPyodide promise is cached forever — retry returns the same rejection", async () => {
+  it("audit C1 fixed: a rejected loadPyodide is NOT cached — the next run retries", async () => {
     let callCount = 0;
     (globalThis as unknown as { window: unknown }).window = {
       loadPyodide: vi.fn(async () => {
@@ -124,9 +124,9 @@ describe("pyodide / singleton behavior", () => {
     const mod = await import("../pyodide");
     const r1 = await mod.runPython("a");
     const r2 = await mod.runPython("b");
-    // loadPyodide is only called once because pyodidePromise is set and
-    // never reset on failure.
-    expect(callCount).toBe(1);
+    // The singleton is reset on failure, so each run retries the load, and
+    // the failure surfaces as result.error instead of a thrown rejection.
+    expect(callCount).toBe(2);
     expect(r1.error).toContain("CDN down");
     expect(r2.error).toContain("CDN down");
   });

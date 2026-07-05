@@ -27,6 +27,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 20
+          cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
@@ -34,6 +35,3 @@ jobs:
 
       - name: Check (lint + validate + test + build)
         run: pnpm check
-
-      - name: Build
-        run: pnpm build

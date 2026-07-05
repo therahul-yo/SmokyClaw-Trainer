@@ -128,12 +128,18 @@ describe("smokey / cold-start advisory", () => {
 // ── streak-risk vs streak-win ──────────────────────────────────────
 
 describe("smokey / streak-risk advisory", () => {
+  // A "now" at 23:00 local on the CURRENT calendar day. The streak branches
+  // gate on getHours() >= 19 and compare attempt days against `now`'s day, and
+  // the attempt() helper anchors at the real Date.now() — so this must be
+  // derived from today, not a hardcoded date, or the fixtures drift apart.
+  function lateToday(): number {
+    const d = new Date();
+    d.setHours(23, 0, 0, 0);
+    return d.getTime();
+  }
+
   it("emits streak-risk when streak>=2, no solve today, late in day (>=19h local)", () => {
-    // Pick a `now` at 23:00 local. The streak-risk branch gates on getHours()
-    // returning >= 19. In TZ=America/Los_Angeles (per vitest.config), Date.now
-    // is local-aware. Use a recent UTC instant — Date#getHours on the host
-    // is what the code calls.
-    const lateLocal = new Date(2026, 5, 15, 23, 0, 0).getTime();
+    const lateLocal = lateToday();
     const input: SmokeyInput = {
       ...baseInput(),
       streak: { current: 3, longest: 5 },
@@ -150,7 +156,7 @@ describe("smokey / streak-risk advisory", () => {
   });
 
   it("does NOT emit streak-risk if user already solved today (streak-win instead)", () => {
-    const lateLocal = new Date(2026, 5, 15, 23, 0, 0).getTime();
+    const lateLocal = lateToday();
     const input: SmokeyInput = {
       ...baseInput(),
       streak: { current: 4, longest: 4 },
@@ -280,7 +286,9 @@ describe("smokey / mastery-win advisory", () => {
         attempt("i2", 2, true),
         attempt("i3", 3, true),
         attempt("i4", 5, true),
-        attempt("i5", 5, false),
+        // The one miss falls OUTSIDE the 14-day window, so recent accuracy
+        // is 4/4 = 100% (>= 90% with >= 4 attempts → mastery-win).
+        attempt("i5", 20, false),
       ],
     };
     const r = runSmokey(input, Date.now());

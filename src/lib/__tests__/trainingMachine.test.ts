@@ -1,112 +1,10 @@
-<<<<<<< HEAD
-import { describe, it, expect } from "vitest";
-import type { QuizItem } from "../../types";
-import { isMastered } from "../trainingMachine";
-
-function makeItem(difficulty: QuizItem["difficulty"]): QuizItem {
-  return {
-    id: "test-item",
-    track: "dsa",
-    topic: "arrays",
-    type: "mcq",
-    difficulty,
-    question: "q",
-    options: ["a", "b"],
-    answerIndex: 0,
-    explanation: "x",
-    tags: [],
-  } as QuizItem;
-}
-
-describe("isMastered (regression: hard items should not short-circuit)", () => {
-  it("returns false for a hard item that was correct but blew past the time target", () => {
-    const item = makeItem("hard");
-    const latest = {
-      itemId: item.id,
-      correct: true,
-      timeMs: 99_999_999,
-      attemptedAt: 0,
-      hintsUsed: 0,
-      gaveUp: false,
-      count: 1,
-    };
-    expect(isMastered(item, latest)).toBe(false);
-  });
-
-  it("returns false for a hard item that was correct but used hints", () => {
-    const item = makeItem("hard");
-    const latest = {
-      itemId: item.id,
-      correct: true,
-      timeMs: 1_000,
-      attemptedAt: 0,
-      hintsUsed: 99,
-      gaveUp: false,
-      count: 1,
-    };
-    expect(isMastered(item, latest)).toBe(false);
-  });
-
-  it("returns true for an easy/medium/hard item that was correct, fast, and hint-free", () => {
-    for (const difficulty of ["easy", "medium", "hard"] as const) {
-      const item = makeItem(difficulty);
-      const latest = {
-        itemId: item.id,
-        correct: true,
-        timeMs: 1_000,
-        attemptedAt: 0,
-        hintsUsed: 0,
-        gaveUp: false,
-        count: 1,
-      };
-      expect(isMastered(item, latest)).toBe(true);
-    }
-  });
-
-  it("returns false when correct is false regardless of difficulty", () => {
-    const item = makeItem("hard");
-    const latest = {
-      itemId: item.id,
-      correct: false,
-      timeMs: 1,
-      attemptedAt: 0,
-      hintsUsed: 0,
-      gaveUp: false,
-      count: 1,
-    };
-    expect(isMastered(item, latest)).toBe(false);
-  });
-
-  it("returns false when gaveUp is true regardless of difficulty", () => {
-    const item = makeItem("easy");
-    const latest = {
-      itemId: item.id,
-      correct: true,
-      timeMs: 1,
-      attemptedAt: 0,
-      hintsUsed: 0,
-      gaveUp: true,
-      count: 1,
-    };
-    expect(isMastered(item, latest)).toBe(false);
-  });
-
-  it("returns false when latest is undefined", () => {
-    expect(isMastered(makeItem("hard"), undefined)).toBe(false);
-  });
-});
-=======
 // Tests for src/lib/trainingMachine.ts.
 //
-// `isMastered` is private — we exercise it through the public
-// `getStageSummaries` API which surfaces the result via `mastered` and
-// `masteryPct` on each stage summary.
-//
-// Hard difficulty is a special case in `isMastered`: when item.difficulty
-// === "hard", BOTH the speed gate AND the hint gate are bypassed via the
-// `||` short-circuit. That's an audit-flagged bug (C6) — a hard item with
-// unlimited hints and slow time still counts as mastered. This test pins
-// the buggy current behavior so any future fix will be an intentional diff.
+// `isMastered` is exported so the hard-difficulty regression (audit C6) can
+// be pinned directly: a hard item must pass BOTH the speed gate and the
+// hint gate — difficulty no longer short-circuits either one. The rest of
+// the suite exercises the public `getStageSummaries` API, which surfaces
+// mastery via `mastered` and `masteryPct` on each stage summary.
 
 import { describe, it, expect } from "vitest";
 import {
@@ -114,6 +12,7 @@ import {
   inferTrainingStage,
   defaultSpeedTargetSec,
   latestAttemptsByItem,
+  isMastered,
 } from "../trainingMachine";
 import type { Attempt, McqItem, QuizItem } from "../../types";
 
@@ -154,6 +53,58 @@ function att(
   };
 }
 
+// ── isMastered direct regression (audit C6) ──────────────────────
+
+describe("isMastered (regression: hard items must not short-circuit)", () => {
+  it("returns false for a hard item that was correct but blew past the time target", () => {
+    const hard = item("hard-slow", "dsa", "dp", "hard");
+    const latest = {
+      ...att(hard.id, true, 0, { timeMs: 99_999_999, hintsUsed: 0 }),
+      count: 1,
+    };
+    expect(isMastered(hard, latest)).toBe(false);
+  });
+
+  it("returns false for a hard item that was correct but used hints", () => {
+    const hard = item("hard-hints", "dsa", "dp", "hard");
+    const latest = {
+      ...att(hard.id, true, 0, { timeMs: 1_000, hintsUsed: 99 }),
+      count: 1,
+    };
+    expect(isMastered(hard, latest)).toBe(false);
+  });
+
+  it("returns true for an easy/medium/hard item that was correct, fast, and hint-free", () => {
+    for (const difficulty of ["easy", "medium", "hard"] as const) {
+      const it = item(`clean-${difficulty}`, "dsa", "t", difficulty);
+      const latest = {
+        ...att(it.id, true, 0, { timeMs: 1_000, hintsUsed: 0 }),
+        count: 1,
+      };
+      expect(isMastered(it, latest)).toBe(true);
+    }
+  });
+
+  it("returns false when correct is false regardless of difficulty", () => {
+    const hard = item("hard-wrong", "dsa", "dp", "hard");
+    const latest = { ...att(hard.id, false, 0, { timeMs: 1 }), count: 1 };
+    expect(isMastered(hard, latest)).toBe(false);
+  });
+
+  it("returns false when gaveUp is true regardless of difficulty", () => {
+    const easy = item("easy-gaveup", "dsa", "t", "easy");
+    const latest = {
+      ...att(easy.id, true, 0, { timeMs: 1, gaveUp: true }),
+      count: 1,
+    };
+    expect(isMastered(easy, latest)).toBe(false);
+  });
+
+  it("returns false when latest is undefined", () => {
+    expect(isMastered(item("x", "dsa", "dp", "hard"), undefined)).toBe(false);
+  });
+});
+
 // ── isMastered behavior (via stage summaries) ────────────────────
 
 describe("trainingMachine / isMastered (driven through stage summaries)", () => {
@@ -163,7 +114,7 @@ describe("trainingMachine / isMastered (driven through stage summaries)", () => 
       item("easy-fast-clean", "dsa", "arrays", "easy"),
       // easy, slow, no hints → NOT mastered (speed gate fails)
       item("easy-slow-clean", "dsa", "arrays", "easy"),
-      // hard, slow, many hints → currently BUGGY-counts-as-mastered (audit C6)
+      // hard, slow, many hints → NOT mastered (both gates fail; audit C6 fix)
       item("hard-slow-manyhints", "dsa", "dp", "hard"),
       // hard, fast, no hints → mastered
       item("hard-fast-clean", "dsa", "dp", "hard"),
@@ -175,27 +126,20 @@ describe("trainingMachine / isMastered (driven through stage summaries)", () => 
     // easy mcq speed target = 60s for easy
     const attempts = [att("easy-fast-clean", true, 1, { timeMs: 5000, hintsUsed: 0 })];
     const stages = getStageSummaries(pool, attempts);
-    const foundation = stages.find((s) => s.id === "foundation")!;
-    // easy item goes to "foundation" via inferTrainingStage
-    expect(foundation.mastered).toBe(1);
+    // "arrays" topic routes easy items to core-patterns via inferTrainingStage
+    const core = stages.find((s) => s.id === "core-patterns")!;
+    expect(core.mastered).toBe(1);
   });
 
   it("easy + correct + slow + no hints → NOT mastered (speed gate fails)", () => {
     const pool = makePool();
     const attempts = [att("easy-slow-clean", true, 1, { timeMs: 999_999, hintsUsed: 0 })];
     const stages = getStageSummaries(pool, attempts);
-    const foundation = stages.find((s) => s.id === "foundation")!;
-    expect(foundation.mastered).toBe(0);
+    const core = stages.find((s) => s.id === "core-patterns")!;
+    expect(core.mastered).toBe(0);
   });
 
-  it("hard + correct + slow + many hints → mastered (audit C6 short-circuit bug)", () => {
-    // The current implementation:
-    //   speedPass = latest.timeMs <= targetMs || item.difficulty === "hard"
-    //   hintPass  = (latest.hintsUsed ?? 0) === 0 || item.difficulty === "hard"
-    // → both gates pass via the `|| difficulty === "hard"` short-circuit
-    // even though the time is way over the budget AND hints were used.
-    // This test pins that bug. A fix would change the OR to AND-NOT-hard
-    // and this test would have to be updated.
+  it("hard + correct + slow + many hints → NOT mastered (audit C6 fixed)", () => {
     const pool = makePool();
     const attempts = [
       att("hard-slow-manyhints", true, 1, { timeMs: 999_999, hintsUsed: 5 }),
@@ -203,7 +147,7 @@ describe("trainingMachine / isMastered (driven through stage summaries)", () => 
     const stages = getStageSummaries(pool, attempts);
     // hard items go to advanced-patterns
     const advanced = stages.find((s) => s.id === "advanced-patterns")!;
-    expect(advanced.mastered).toBe(1);
+    expect(advanced.mastered).toBe(0);
   });
 
   it("hard + correct + fast + no hints → mastered", () => {
@@ -215,7 +159,7 @@ describe("trainingMachine / isMastered (driven through stage summaries)", () => 
   });
 
   it("gaveUp=true blocks mastery even if correct", () => {
-    const pool = [item("x", "dsa", "arrays", "easy")];
+    const pool = [item("x", "dsa", "t", "easy")];
     const attempts = [att("x", true, 1, { timeMs: 1000, gaveUp: true })];
     const stages = getStageSummaries(pool, attempts);
     const foundation = stages.find((s) => s.id === "foundation")!;
@@ -223,7 +167,7 @@ describe("trainingMachine / isMastered (driven through stage summaries)", () => 
   });
 
   it("incorrect attempt blocks mastery", () => {
-    const pool = [item("x", "dsa", "arrays", "easy")];
+    const pool = [item("x", "dsa", "t", "easy")];
     const attempts = [att("x", false, 1, { timeMs: 1000 })];
     const stages = getStageSummaries(pool, attempts);
     const foundation = stages.find((s) => s.id === "foundation")!;
@@ -329,13 +273,16 @@ describe("trainingMachine / phase progression", () => {
     expect(Number.isInteger(f.masteryPct)).toBe(true);
   });
 
-  it("empty pool returns masteryPct=0 and gate=passed (0>=target trivially)", () => {
+  it("empty stages pass their gate and never block later stages", () => {
     const stages = getStageSummaries([], []);
-    expect(stages[0]?.total).toBe(0);
-    expect(stages[0]?.mastered).toBe(0);
-    expect(stages[0]?.masteryPct).toBe(0);
-    // previousPassed starts true, gate = 0 >= 85 ? passed : ... → passed
-    expect(stages[0]?.gate).toBe("passed");
+    for (const stage of stages) {
+      expect(stage.total).toBe(0);
+      expect(stage.mastered).toBe(0);
+      expect(stage.masteryPct).toBe(0);
+      // A stage with no items has nothing to master → passed, not a blocker.
+      expect(stage.gate).toBe("passed");
+      expect(stage.unlocked).toBe(true);
+    }
   });
 });
 
@@ -420,4 +367,3 @@ describe("trainingMachine / latestAttemptsByItem", () => {
     expect(map.get("b")?.count).toBe(1);
   });
 });
->>>>>>> origin/main

@@ -106,8 +106,8 @@ and tag the maintainer.
 
 ## Development setup
 
-Requires **Node 20+** and **pnpm** (Corepack will pick it up from
-`packageManager` once that lands).
+Requires **Node 20+** and **pnpm 10+** (Corepack picks the pinned version up
+from `packageManager` in `package.json`).
 
 ```bash
 git clone https://github.com/<you>/SmokyClaw-Trainer.git
