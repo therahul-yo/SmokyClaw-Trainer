@@ -34,7 +34,6 @@ export function MobileNav() {
               ? "2px solid var(--color-accent)"
               : "2px solid transparent",
           })}
-          aria-current={({ isActive }) => (isActive ? "page" : undefined)}
         >
           <span aria-hidden="true" style={{ fontSize: 16, lineHeight: 1 }}>{t.glyph}</span>
           <span style={{ fontSize: 9 }}>{t.label}</span>

@@ -83,7 +83,7 @@ vercel.json       # SPA rewrite to /index.html
 
 ## Run locally
 
-Requires Node 20+ and pnpm.
+Requires Node 20+ and pnpm 10+ (Corepack picks the pinned version up from `packageManager` in `package.json`).
 
 ```bash
 pnpm install

@@ -46,7 +46,7 @@ export function DailyChallengeCard() {
       recentWrongIds: wrongIds,
       yesterdayId: yesterdayItem?.id ?? null,
     });
-  }, [attempts]);
+  }, [attempts, yKey]);
 
   if (!item) return null;
 

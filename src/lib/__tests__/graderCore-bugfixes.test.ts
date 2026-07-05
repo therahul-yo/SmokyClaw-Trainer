@@ -28,7 +28,7 @@ vi.mock("../sqljs", () => ({
   runSql: vi.fn(),
 }));
 
-import { gradeMcq, gradeCoding, gradeSql } from "../grader";
+import { gradeMcq, gradeCoding, gradeSql, deepEqual } from "../grader";
 import { runPython } from "../pyodide";
 import { runSql } from "../sqljs";
 import type { CodingItem, McqItem, SqlItem } from "../../types";
@@ -122,11 +122,20 @@ describe("grader / deepEqual (via gradeCoding)", () => {
     expect(r.ok).toBe(true);
   });
 
-  it("treats undefined as NOT equal to null (different typeof)", async () => {
+  it("deepEqual treats undefined as NOT equal to null (different typeof)", () => {
+    // Pinned on deepEqual directly: through gradeCoding the harness output is
+    // JSON (which cannot carry undefined), and evaluateCodingRun deliberately
+    // normalizes a missing `got` to null via `r?.got ?? null`.
+    expect(deepEqual(undefined, null)).toBe(false);
+    expect(deepEqual(null, undefined)).toBe(false);
+  });
+
+  it("a harness row with a missing `got` field is normalized to null", async () => {
+    // JSON.stringify drops undefined-valued keys, so this exercises the
+    // `r?.got ?? null` fallback in evaluateCodingRun.
     mockRun([{ i: 0, got: undefined, err: null }]);
     const r = await gradeCoding({ ...codingItem, tests: [{ args: [null], expect: null }] }, "");
-    // typeof undefined !== typeof null → deepEqual returns false
-    expect(r.passed).toBe(0);
+    expect(r.passed).toBe(1);
   });
 
   it("matches nested objects and arrays element-wise", async () => {

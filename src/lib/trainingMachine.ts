@@ -245,8 +245,11 @@ export function getStageSummaries(
     const stageItems = items.filter((item) => inferTrainingStage(item) === stage.id);
     const attempted = stageItems.filter((item) => latest.has(item.id)).length;
     const scored = scorePool(stageItems, latest);
+    // A stage with no items has nothing to master and must not block later stages.
     const gate =
-      !previousPassed ? "locked" : scored.pct >= stage.targetPct ? "passed" : "train";
+      !previousPassed ? "locked"
+      : scored.total === 0 || scored.pct >= stage.targetPct ? "passed"
+      : "train";
     const summary: StageSummary = {
       ...stage,
       total: scored.total,

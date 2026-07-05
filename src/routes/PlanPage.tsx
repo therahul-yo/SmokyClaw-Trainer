@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllLessons, getAllQuizItems } from "../lib/contentLoader";
 import { todayBucket } from "../lib/planner";
@@ -239,6 +239,9 @@ export function PlanPage() {
     () => new Map(getAllLessons().map((l) => [l.id, l])),
     [],
   );
+  // Snapshot the clock once per mount so render stays pure; day-level
+  // granularity means drift within a visit doesn't matter.
+  const [nowTs] = useState(() => Date.now());
 
   if (!plan) {
     return (
@@ -266,7 +269,7 @@ export function PlanPage() {
   const today = todayBucket(plan);
   const daysLeft = Math.max(
     0,
-    Math.ceil((plan.deadline - Date.now()) / (24 * 60 * 60 * 1000)),
+    Math.ceil((plan.deadline - nowTs) / (24 * 60 * 60 * 1000)),
   );
 
   return (

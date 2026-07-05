@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import type {
   McqItem,
@@ -36,8 +36,8 @@ function MockTestRun({ blueprint }: { blueprint: MockTestBlueprint }) {
   const [answerTimes, setAnswerTimes] = useState<Record<string, number>>({});
   const [questionShownAt, setQuestionShownAt] = useState<Record<string, number>>({});
   const [deadlines, setDeadlines] = useState<number[]>([]);
-const [runStartTs, setRunStartTs] = useState<number>(0);
-const [now, setNow] = useState(0);
+  const [runStartTs, setRunStartTs] = useState<number>(0);
+  const [now, setNow] = useState(0);
   const recordAttempt = useProgressStore((s) => s.recordAttempt);
   const registerAttempt = useReviewQueueStore((s) => s.registerAttempt);
 
@@ -47,6 +47,21 @@ const [now, setNow] = useState(0);
     const t = setInterval(() => setNow(Date.now()), 500);
     return () => clearInterval(t);
   }, [phase]);
+
+  // Stamp per-question "shown at" timestamps so finalize() can compute the
+  // real time each learner spent on each item instead of writing 0. Called at
+  // every section transition (start, manual advance, timer auto-advance).
+  const markSectionShown = (section: PickedSection | undefined) => {
+    if (!section) return;
+    setQuestionShownAt((prev) => {
+      const next = { ...prev };
+      const nowTs = Date.now();
+      for (const item of section.items) {
+        if (next[item.id] === undefined) next[item.id] = nowTs;
+      }
+      return next;
+    });
+  };
 
   const start = () => {
     const pool = getAllQuizItems();
@@ -67,40 +82,14 @@ const [now, setNow] = useState(0);
     );
     setNow(startTs);
     setSectionIdx(0);
+    markSectionShown(picked[0]);
     setPhase("section");
   };
 
-  // Track per-question "shown at" timestamp so finalize() can compute the
-  // real time each learner spent on each item instead of writing 0.
-  useEffect(() => {
-    if (phase !== "section") return;
-    const section = sections[sectionIdx];
-    if (!section) return;
-    setQuestionShownAt((prev) => {
-      const next = { ...prev };
-      const nowTs = Date.now();
-      for (const item of section.items) {
-        if (next[item.id] === undefined) next[item.id] = nowTs;
-      }
-      return next;
-    });
-    // Only re-run when the active section changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, sectionIdx, sections]);
-
-  useEffect(() => {
-    if (phase !== "section") return;
-    const deadline = deadlines[sectionIdx];
-    if (!deadline) return;
-    if (now >= deadline) {
-      if (sectionIdx < sections.length - 1) {
-        setSectionIdx(sectionIdx + 1);
-      } else {
-        finalize();
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [now, deadlines, sectionIdx, sections.length, phase]);
+  const goToSection = (nextIdx: number) => {
+    markSectionShown(sections[nextIdx]);
+    setSectionIdx(nextIdx);
+  };
 
   const handleAnswer = (itemId: string, choiceIdx: number) => {
     setAnswers((a) => ({ ...a, [itemId]: choiceIdx }));
@@ -152,7 +141,7 @@ const [now, setNow] = useState(0);
     if (!deadline) return;
     const t = setTimeout(() => {
       if (sectionIdx < sections.length - 1) {
-        setSectionIdx(sectionIdx + 1);
+        goToSection(sectionIdx + 1);
       } else {
         finalize();
       }
@@ -172,11 +161,12 @@ const [now, setNow] = useState(0);
   const lowTime = remaining < 60_000;
 
   // Announce the countdown to assistive tech, but throttle the announcement so
-  // we don't spam the screen reader on every 500 ms tick.
+  // we don't spam the screen reader on every 500 ms tick. The label is snapped
+  // to a coarse bucket, and the aria-live region only re-announces when its
+  // text content actually changes:
   // - normal pace: announce once per minute
   // - last minute: announce once per 30 s
   // - last 10 s: announce every 10 s (so the user has time to react)
-  const lastSpokenRef = useRef<string>("");
   const bucket = remaining < 10_000
     ? 10_000
     : lowTime
@@ -189,9 +179,6 @@ const [now, setNow] = useState(0);
       : snapped < 60_000
         ? `${Math.max(1, Math.ceil(snapped / 1000))} seconds remaining`
         : `${Math.ceil(snapped / 60_000)} minutes remaining`;
-  if (spokenLabel !== lastSpokenRef.current) {
-    lastSpokenRef.current = spokenLabel;
-  }
 
   return (
     <div className="space-y-4">
@@ -324,7 +311,7 @@ const [now, setNow] = useState(0);
         {sectionIdx < sections.length - 1 ? (
           <BracketButton
             variant="primary"
-            onClick={() => setSectionIdx(sectionIdx + 1)}
+            onClick={() => goToSection(sectionIdx + 1)}
           >
             submit & next section →
           </BracketButton>

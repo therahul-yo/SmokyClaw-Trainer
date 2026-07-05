@@ -11,6 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OSS scaffolding: MIT license, contributing guide, code of conduct, security
   policy, GitHub Actions CI, issue & PR templates, Dependabot, CODEOWNERS.
 
+### Fixed
+- Toolchain: `packageManager` now pins pnpm 10 to match `pnpm-workspace.yaml`'s
+  `allowBuilds` field — pnpm 9 rejected the file, breaking install and CI.
+- Removed merge-conflict markers accidentally committed to
+  `trainingMachine.test.ts` and reconciled the two test suites.
+- `getStageSummaries`: a stage with zero items now counts as passed instead of
+  permanently locking every later stage.
+- `runPython` surfaces Pyodide load failures (CDN down / offline) as
+  `result.error` instead of an unhandled rejection.
+- sql.js wrapper: a rejected `initSqlJs` is no longer cached forever — the next
+  run retries; the database handle is closed if schema seeding throws.
+- Mock tests: removed a duplicate section auto-advance path and hook-order
+  violations; per-question "shown at" stamping now happens at section
+  transitions.
+- CI: pnpm store caching actually enabled (`cache: pnpm`), duplicate build
+  step removed.
+
 ## [0.2.0] - 2026-06-21
 
 ### Added

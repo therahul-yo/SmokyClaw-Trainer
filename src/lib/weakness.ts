@@ -48,8 +48,18 @@ export function weakestTopics(
   items: QuizItem[],
   limit = 5,
 ): TopicScore[] {
+  // The confidence gate counts RAW attempts (retries are still evidence),
+  // while correctRate/weakness stay deduped to the latest attempt per item.
+  const itemById = new Map(items.map((i) => [i.id, i]));
+  const rawCounts = new Map<string, number>();
+  for (const a of attempts) {
+    const item = itemById.get(a.itemId);
+    if (!item) continue;
+    const key = `${item.track}::${item.topic}`;
+    rawCounts.set(key, (rawCounts.get(key) ?? 0) + 1);
+  }
   return topicScores(attempts, items)
-    .filter((s) => s.attempts >= 2) // need at least 2 data points before flagging weak
+    .filter((s) => (rawCounts.get(`${s.track}::${s.topic}`) ?? 0) >= 2) // need at least 2 data points before flagging weak
     .sort((a, b) => b.weakness - a.weakness)
     .slice(0, limit);
 }
