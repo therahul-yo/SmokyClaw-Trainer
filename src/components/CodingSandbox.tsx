@@ -213,7 +213,7 @@ export function CodingSandbox({
                     t.pass ? "var(--color-success)" : "var(--color-danger)"
                   }`,
                   background: t.pass
-                    ? "rgba(255, 140, 0, 0.04)"
+                    ? "rgba(var(--accent-rgb), 0.04)"
                     : "rgba(255, 68, 68, 0.04)",
                 }}
               >

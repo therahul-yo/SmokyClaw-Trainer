@@ -206,7 +206,7 @@ export function SqlSandbox({
                   result.ok ? "var(--color-success)" : "var(--color-danger)"
                 }`,
                 background: result.ok
-                  ? "rgba(255, 140, 0, 0.05)"
+                  ? "rgba(var(--accent-rgb), 0.05)"
                   : "rgba(255, 68, 68, 0.05)",
               }}
             >

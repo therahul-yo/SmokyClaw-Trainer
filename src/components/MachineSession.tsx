@@ -429,7 +429,7 @@ export function MachineSession() {
                   style={{
                     color,
                     border,
-                    background: isActiveBlock ? "rgba(255, 140, 0, 0.05)" : "transparent",
+                    background: isActiveBlock ? "rgba(var(--accent-rgb), 0.05)" : "transparent",
                   }}
                 >
                   {blk.title.toUpperCase()}

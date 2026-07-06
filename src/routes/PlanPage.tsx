@@ -52,7 +52,7 @@ function DaySection({
         background: compact
           ? "var(--color-bg)"
           : highlighted
-            ? "rgba(255, 140, 0, 0.04)"
+            ? "rgba(var(--accent-rgb), 0.04)"
             : "var(--color-bg-alt)",
         border: highlighted
           ? "1px solid var(--color-accent)"

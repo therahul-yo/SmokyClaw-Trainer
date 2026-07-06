@@ -177,7 +177,7 @@ export function RecognitionDrill({ item, mode = "medium", onAnswered }: Props) {
               if (isSubmitted) {
                 if (isCorrectChoice) {
                   border = "2px solid var(--color-success)";
-                  bg = "rgba(255, 140, 0, 0.08)"; // accent success highlight
+                  bg = "rgba(var(--accent-rgb), 0.08)"; // accent success highlight
                   color = "var(--color-success)";
                 } else if (isSelected) {
                   border = "2px solid var(--color-danger)";

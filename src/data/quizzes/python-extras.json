@@ -5,6 +5,7 @@
     "topic": "data-types",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "Which of these is mutable?",
     "options": ["tuple", "frozenset", "list", "str"],
     "answerIndex": 2,
@@ -17,6 +18,7 @@
     "topic": "data-types",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "What does `a is b` return when `a = [1,2,3]` and `b = [1,2,3]`?",
     "options": ["True", "False", "TypeError", "depends on Python version"],
     "answerIndex": 1,
@@ -29,6 +31,7 @@
     "topic": "data-types",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "What's printed?\n```\ndef add(item, basket=[]):\n    basket.append(item)\n    return basket\nprint(add(1))\nprint(add(2))\n```",
     "options": ["[1] [2]", "[1] [1, 2]", "[1, 2] [1, 2]", "error"],
     "answerIndex": 1,
@@ -41,6 +44,7 @@
     "topic": "data-types",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "Which can NOT be a dict key?",
     "options": ["tuple of strings", "frozenset", "list", "int"],
     "answerIndex": 2,
@@ -53,6 +57,7 @@
     "topic": "data-types",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "What's the difference between `a.copy()` and `copy.deepcopy(a)` on `[[1,2],[3,4]]`?",
     "options": [
       "No difference",
@@ -70,6 +75,7 @@
     "topic": "syntax",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "Which is a valid list comprehension squaring even numbers from 0..9?",
     "options": [
       "[x*x for x in range(10) if x % 2 == 0]",
@@ -87,6 +93,7 @@
     "topic": "syntax",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "What's the memory difference between `sum(x*x for x in range(N))` and `sum([x*x for x in range(N)])` for large N?",
     "options": [
       "None",
@@ -104,6 +111,7 @@
     "topic": "functions",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "What does `*args` mean in a function signature?",
     "options": [
       "Variable-length keyword arguments",
@@ -121,6 +129,7 @@
     "topic": "functions",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Inside a closure, what does `nonlocal x` do?",
     "options": [
       "Declares `x` as a module-level global",
@@ -138,6 +147,7 @@
     "topic": "functions",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "Can a `lambda` contain multiple statements?",
     "options": [
       "Yes, separated by semicolons",
@@ -155,6 +165,7 @@
     "topic": "iterators",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "What happens on the second `for x in g:` over the same generator `g`?",
     "options": [
       "It restarts from the beginning",
@@ -172,6 +183,7 @@
     "topic": "iterators",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Which statement turns a function into a generator?",
     "options": ["`@generator`", "`return ... iter`", "`yield`", "`async def`"],
     "answerIndex": 2,
@@ -184,6 +196,7 @@
     "topic": "iterators",
     "type": "mcq",
     "difficulty": "hard",
+    "estMinutes": 3,
     "question": "What does `yield from sub_iter` do?",
     "options": [
       "Imports `sub_iter`",
@@ -201,6 +214,7 @@
     "topic": "exceptions",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "When does the `else` block in `try/except/else` execute?",
     "options": [
       "Always",
@@ -218,6 +232,7 @@
     "topic": "exceptions",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Why is bare `except:` discouraged?",
     "options": [
       "It's slower than `except Exception:`",
@@ -235,6 +250,7 @@
     "topic": "exceptions",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "What does `raise ValueError('bad') from e` do that plain `raise ValueError('bad')` doesn't?",
     "options": [
       "Nothing — they're equivalent",
@@ -252,6 +268,7 @@
     "topic": "decorators",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "`@decorator\\ndef f(): ...` is syntactic sugar for:",
     "options": ["`f = f(decorator)`", "`f = decorator(f)`", "`f = decorator()`", "`decorator(f())`"],
     "answerIndex": 1,
@@ -264,6 +281,7 @@
     "topic": "decorators",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Why use `@functools.wraps(fn)` inside your decorator's wrapper?",
     "options": [
       "It's required for the decorator to work",
@@ -281,6 +299,7 @@
     "topic": "decorators",
     "type": "mcq",
     "difficulty": "hard",
+    "estMinutes": 3,
     "question": "Stacked decorators: `@a\\n@b\\ndef f(): ...` is equivalent to which?",
     "options": ["`f = b(a(f))`", "`f = a(b(f))`", "`f = a(b)(f)`", "`f = f(a, b)`"],
     "answerIndex": 1,
@@ -293,6 +312,7 @@
     "topic": "oop",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "What's the difference between `@classmethod` and `@staticmethod`?",
     "options": [
       "No difference",
@@ -310,6 +330,7 @@
     "topic": "oop",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Which dunder controls `print(obj)` when `__str__` is NOT defined?",
     "options": ["`__repr__`", "`__format__`", "`__display__`", "It prints the object id"],
     "answerIndex": 0,
@@ -322,6 +343,7 @@
     "topic": "oop",
     "type": "mcq",
     "difficulty": "hard",
+    "estMinutes": 3,
     "question": "What's wrong with `class Bag: items = []` if you append to `self.items` in methods?",
     "options": [
       "Nothing",
@@ -339,6 +361,7 @@
     "topic": "stdlib",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "Which gives you the 3 most-common elements in a list?",
     "options": [
       "`sorted(lst)[:3]`",
@@ -356,6 +379,7 @@
     "topic": "stdlib",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "What's the time complexity of `deque.appendleft(x)` vs `list.insert(0, x)`?",
     "options": [
       "Both O(1)",
@@ -373,6 +397,7 @@
     "topic": "stdlib",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "Which builds a max-heap from `[3, 1, 4, 1, 5]`?",
     "options": [
       "`heapq.heapify([3,1,4,1,5])`",
@@ -390,6 +415,7 @@
     "topic": "stdlib",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "What does `@functools.cache` do to a function?",
     "options": [
       "Logs every call",
@@ -407,6 +433,7 @@
     "topic": "strings",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "Why is `out = ''; for s in parts: out += s` bad for large `parts`?",
     "options": [
       "It's a syntax error",
@@ -424,6 +451,7 @@
     "topic": "strings",
     "type": "mcq",
     "difficulty": "medium",
+    "estMinutes": 2,
     "question": "What does `'abc.txt'.rstrip('.txt')` return?",
     "options": ["'abc'", "'a'", "'abc.txt'", "Empty string"],
     "answerIndex": 1,
@@ -436,6 +464,7 @@
     "topic": "file-io",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "What's the recommended way to ensure a file is closed?",
     "options": [
       "Call `f.close()` at the end",
@@ -453,6 +482,7 @@
     "topic": "file-io",
     "type": "mcq",
     "difficulty": "easy",
+    "estMinutes": 1,
     "question": "Which is the safe way to read a 10GB file?",
     "options": [
       "`open(f).read()`",
@@ -470,6 +500,7 @@
     "topic": "advanced-python",
     "type": "mcq",
     "difficulty": "hard",
+    "estMinutes": 3,
     "question": "What is the output of running `a = 256; b = 256; x = 257; y = 257; print(a is b, x is y)` in CPython?",
     "options": [
       "True True",
@@ -487,6 +518,7 @@
     "topic": "advanced-python",
     "type": "mcq",
     "difficulty": "hard",
+    "estMinutes": 3,
     "question": "Which garbage collection mechanism in CPython is responsible for resolving reference cycles?",
     "options": [
       "Reference counting",
@@ -504,6 +536,7 @@
     "topic": "advanced-python",
     "type": "mcq",
     "difficulty": "hard",
+    "estMinutes": 3,
     "question": "Why does multithreading using Python's `threading` module fail to speed up CPU-bound operations in CPython?",
     "options": [
       "CPython does not support operating system threads.",
@@ -521,6 +554,7 @@
     "topic": "advanced-python",
     "type": "mcq",
     "difficulty": "hard",
+    "estMinutes": 3,
     "question": "What happens if a coroutine in an `asyncio` script executes a blocking synchronous call, such as a long-running CPU computation or a synchronous file write, without yielding?",
     "options": [
       "The event loop automatically schedules the block onto a worker thread.",

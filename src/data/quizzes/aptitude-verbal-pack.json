@@ -1,0 +1,271 @@
+[
+  {
+    "id": "apt-v-001",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Arrange the parts to form a meaningful sentence:\nP) not only improves memory\nQ) regular exercise\nR) but also reduces stress\nS) according to several studies",
+    "options": ["SQPR", "SQRP", "PQSR", "RQPS"],
+    "answerIndex": 0,
+    "explanation": "\"According to several studies, regular exercise not only improves memory but also reduces stress.\" The 'not only ... but also' pair must stay in order (P before R) with the subject (Q) in front — only SQPR keeps the correlative pair intact.",
+    "tags": ["para-jumble", "sentence-ordering"]
+  },
+  {
+    "id": "apt-v-002",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "The idiom 'to bite the bullet' means:",
+    "options": [
+      "to eat in a great hurry",
+      "to face a painful situation with courage",
+      "to start an unnecessary quarrel",
+      "to make a careless decision"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Bite the bullet' = force yourself to endure something unpleasant or difficult. From soldiers biting a bullet during field surgery before anaesthesia.",
+    "tags": ["idioms"]
+  },
+  {
+    "id": "apt-v-003",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "The idiom 'to let the cat out of the bag' means:",
+    "options": [
+      "to create confusion deliberately",
+      "to punish someone in public",
+      "to reveal a secret carelessly",
+      "to abandon a difficult task"
+    ],
+    "answerIndex": 2,
+    "explanation": "'Let the cat out of the bag' = disclose a secret, usually by accident.",
+    "tags": ["idioms"]
+  },
+  {
+    "id": "apt-v-004",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "One word for 'a person who can speak many languages':",
+    "options": ["orator", "polyglot", "bibliophile", "philanthropist"],
+    "answerIndex": 1,
+    "explanation": "Polyglot = someone who knows or uses several languages. An orator is a skilled public speaker; a bibliophile loves books; a philanthropist donates to good causes.",
+    "tags": ["one-word-substitution", "vocabulary"]
+  },
+  {
+    "id": "apt-v-005",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "One word for 'handwriting that cannot be read':",
+    "options": ["eligible", "ineligible", "illegible", "elegant"],
+    "answerIndex": 2,
+    "explanation": "Illegible = impossible to read. 'Eligible/ineligible' are about qualifying for something — a classic confusable pair in campus tests.",
+    "tags": ["one-word-substitution", "confusables"]
+  },
+  {
+    "id": "apt-v-006",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Choose the correct passive form of: 'The manager approved the request.'",
+    "options": [
+      "The request is approved by the manager.",
+      "The request was approved by the manager.",
+      "The request has approved by the manager.",
+      "The request was being approved by the manager."
+    ],
+    "answerIndex": 1,
+    "explanation": "Simple past active → simple past passive: was/were + past participle. 'The request was approved by the manager.'",
+    "tags": ["active-passive", "grammar"]
+  },
+  {
+    "id": "apt-v-007",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Choose the correct indirect speech for: She said, 'I am writing a letter now.'",
+    "options": [
+      "She said that she is writing a letter now.",
+      "She said that she was writing a letter then.",
+      "She said that I was writing a letter then.",
+      "She says that she was writing a letter now."
+    ],
+    "answerIndex": 1,
+    "explanation": "Reporting verb in past → present continuous becomes past continuous, 'I' becomes 'she', and 'now' becomes 'then'.",
+    "tags": ["direct-indirect-speech", "grammar"]
+  },
+  {
+    "id": "apt-v-008",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "Fill in the blank: 'By the time we reached the station, the train ___.'",
+    "options": ["leaves", "has left", "had left", "left"],
+    "answerIndex": 2,
+    "explanation": "Two past events — the earlier one (the train leaving) takes past perfect: 'had left'.",
+    "tags": ["tenses", "grammar"]
+  },
+  {
+    "id": "apt-v-009",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "Choose the correct preposition: 'The results were announced ___ the morning of the exam.'",
+    "options": ["in", "on", "at", "by"],
+    "answerIndex": 1,
+    "explanation": "With a specific morning/afternoon/evening of a particular day, use 'on': 'on the morning of the exam'. Plain 'in the morning' takes 'in'.",
+    "tags": ["prepositions", "grammar"]
+  },
+  {
+    "id": "apt-v-010",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "Fill in with the correct articles: 'He is ___ honest man and ___ university topper.'",
+    "options": ["a, an", "an, a", "an, an", "a, a"],
+    "answerIndex": 1,
+    "explanation": "Articles follow sound, not spelling: 'honest' starts with a vowel sound → 'an'; 'university' starts with a 'yu' consonant sound → 'a'.",
+    "tags": ["articles", "grammar"]
+  },
+  {
+    "id": "apt-v-011",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Choose the word closest in meaning to 'OBSOLETE':",
+    "options": ["absolute", "obscure", "outdated", "obstinate"],
+    "answerIndex": 2,
+    "explanation": "Obsolete = no longer in use, outdated. The distractors are look-alikes, not synonyms.",
+    "tags": ["vocabulary", "synonyms"]
+  },
+  {
+    "id": "apt-v-012",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Choose the word opposite in meaning to 'FRUGAL':",
+    "options": ["thrifty", "extravagant", "economical", "miserly"],
+    "answerIndex": 1,
+    "explanation": "Frugal = careful with money. Its opposite is extravagant. The other three are near-synonyms — a common trap.",
+    "tags": ["vocabulary", "antonyms"]
+  },
+  {
+    "id": "apt-v-013",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 2,
+    "question": "Read the passage:\n'Remote work grew rapidly after 2020. While employees report higher autonomy, managers cite challenges in mentoring junior staff, who miss the informal learning that happens in shared offices.'\n\nWhat is the main concern managers raise about remote work?",
+    "options": [
+      "Employees have become too autonomous.",
+      "Junior staff lose informal learning opportunities.",
+      "Offices have become too expensive to maintain.",
+      "Remote work grew faster than expected."
+    ],
+    "answerIndex": 1,
+    "explanation": "The passage says managers cite mentoring challenges because junior staff 'miss the informal learning that happens in shared offices' — that is the stated concern.",
+    "tags": ["reading-comprehension"]
+  },
+  {
+    "id": "apt-v-014",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "hard",
+    "estMinutes": 2,
+    "question": "Read the passage:\n'Electric vehicles produce zero tailpipe emissions, yet their overall footprint depends on how the electricity that charges them is generated. On coal-heavy grids, lifetime emissions can approach those of efficient petrol cars.'\n\nWhich conclusion does the passage best support?",
+    "options": [
+      "Electric vehicles pollute more than petrol cars.",
+      "Electric vehicles are always the cleanest option.",
+      "The climate benefit of electric vehicles depends on the electricity mix.",
+      "Coal power plants should be shut down immediately."
+    ],
+    "answerIndex": 2,
+    "explanation": "The passage qualifies the benefit ('depends on how the electricity is generated'), so the supported inference is that the grid mix determines the benefit — not that EVs are worse (too strong) or always cleaner (contradicted).",
+    "tags": ["reading-comprehension", "inference"]
+  },
+  {
+    "id": "apt-v-015",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Spot the part with the error: 'One of my friends (A) / have gone (B) / to Canada (C) / for higher studies (D)'",
+    "options": ["A", "B", "C", "D"],
+    "answerIndex": 1,
+    "explanation": "'One of + plural noun' takes a singular verb: 'One of my friends HAS gone.' Part B has the error.",
+    "tags": ["error-spotting", "subject-verb-agreement"]
+  },
+  {
+    "id": "apt-v-016",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Choose the best improvement for the underlined part: 'He denied to have stolen the documents.'",
+    "options": [
+      "No improvement",
+      "denied having stolen",
+      "denied to steal",
+      "denied from stealing"
+    ],
+    "answerIndex": 1,
+    "explanation": "'Deny' takes a gerund, not an infinitive: 'denied having stolen' (or 'denied stealing').",
+    "tags": ["sentence-improvement", "gerund-infinitive"]
+  },
+  {
+    "id": "apt-v-017",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "medium",
+    "estMinutes": 1,
+    "question": "Fill in the blank: 'The negotiations reached a ___ when neither side agreed to compromise.'",
+    "options": ["breakthrough", "consensus", "milestone", "deadlock"],
+    "answerIndex": 3,
+    "explanation": "Neither side compromising = talks stuck = a deadlock. The other options all imply progress.",
+    "tags": ["vocabulary-in-context", "cloze"]
+  },
+  {
+    "id": "apt-v-018",
+    "track": "aptitude",
+    "topic": "verbal",
+    "type": "mcq",
+    "difficulty": "easy",
+    "estMinutes": 1,
+    "question": "Choose the correctly spelt word:",
+    "options": ["occurence", "occurrence", "occurrance", "ocurrence"],
+    "answerIndex": 1,
+    "explanation": "'Occurrence' — double 'c', double 'r', '-ence' ending. One of the most common spelling questions in campus tests.",
+    "tags": ["spelling"]
+  }
+]

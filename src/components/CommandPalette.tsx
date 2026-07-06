@@ -279,7 +279,7 @@ function CommandPaletteInner({
         style={{
           background: "var(--color-bg-alt)",
           border: "1px solid var(--color-accent)",
-          boxShadow: "0 0 60px rgba(255, 140, 0, 0.2)",
+          boxShadow: "0 0 60px rgba(var(--accent-rgb), 0.2)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -356,7 +356,7 @@ function CommandPaletteInner({
                   className="w-full text-left px-3 py-1.5 flex items-center gap-3 transition-colors"
                   style={{
                     background: activeRow
-                      ? "rgba(255, 140, 0, 0.08)"
+                      ? "rgba(var(--accent-rgb), 0.08)"
                       : "transparent",
                     borderLeft: `2px solid ${activeRow ? "var(--color-accent)" : "transparent"}`,
                   }}

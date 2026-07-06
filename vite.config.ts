@@ -16,8 +16,8 @@ export default defineConfig({
         short_name: 'SmokyClaw',
         description:
           'Local-first trainer for TCS NQT / Infosys / Wipro / Capgemini hiring tests — Python, DSA, SQL, Aptitude. No signup, runs in your browser.',
-        theme_color: '#000000',
-        background_color: '#000000',
+        theme_color: '#0d1117',
+        background_color: '#0d1117',
         display: 'standalone',
         orientation: 'portrait',
         scope: '/',

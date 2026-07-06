@@ -45,7 +45,7 @@ export function ComplexityCheck({
             if (showResult) {
               border = c.correct ? "var(--color-success)" : "var(--color-danger)";
               bg = c.correct
-                ? "rgba(255, 140, 0, 0.07)"
+                ? "rgba(var(--accent-rgb), 0.07)"
                 : "rgba(255, 68, 68, 0.07)";
               fg = c.correct ? "var(--color-success)" : "var(--color-danger)";
             } else {
