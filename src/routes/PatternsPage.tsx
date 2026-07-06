@@ -138,7 +138,7 @@ export function PatternsPage() {
                             ? "var(--color-accent)"
                             : "var(--color-text-dim)",
                           background: passed
-                            ? "rgba(255, 140, 0, 0.04)"
+                            ? "rgba(var(--accent-rgb), 0.04)"
                             : "transparent",
                         }}
                         title={it.type === "mcq" ? it.question : it.prompt}

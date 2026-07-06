@@ -1,39 +1,47 @@
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "highlight.js/styles/github-dark.css";
 
 /* ───────────────────────────────────────────────────────────────
-   Terminal aesthetic — pitch black, orange accent, cream text.
+   Modern dark IDE theme — slate surfaces, indigo accent.
+   Terminal chrome (prompts, paths, code) stays mono; prose is Inter.
    ─────────────────────────────────────────────────────────────── */
 
 @theme {
-  /* Base palette — pitch black + orange + cream */
-  --color-bg:           #000000;
-  --color-bg-alt:       #050505;
-  --color-bg-card:      #0d0d0d;
-  --color-bg-card-hover:#161616;
-  --color-bg-sel:       #1a1208;
+  /* Base palette — deep slate + indigo */
+  --color-bg:           #0d1117;
+  --color-bg-alt:       #11161f;
+  --color-bg-card:      #161b26;
+  --color-bg-card-hover:#1c2230;
+  --color-bg-sel:       #1a2035;
 
-  --color-border:       #2a1a08;
-  --color-border-bright:#4a2e10;
+  --color-border:       #252c3b;
+  --color-border-bright:#39415a;
 
-  --color-text:         #f5ead3;   /* cream */
-  --color-text-dim:     #b69772;   /* dim cream */
-  --color-text-muted:   #9b9b9b;   /* light gray — WCAG AA on #000 (~7:1) */
+  --color-text:         #e6e9f0;   /* cool near-white */
+  --color-text-dim:     #a7b0c0;
+  --color-text-muted:   #8b95a7;   /* WCAG AA on #0d1117 (~6:1) */
 
-  --color-accent:       #ff8c00;   /* primary orange */
-  --color-accent-dim:   #cc6e00;
-  --color-amber:        #ffb84d;   /* lighter warm — hints */
-  --color-amber-dim:    #aa7530;
-  --color-cyan:         #ffd9a3;   /* warm cream for links */
-  --color-magenta:      #ff5fbe;   /* rare */
+  --color-accent:       #818cf8;   /* indigo */
+  --color-accent-dim:   #5b64c8;
+  --color-amber:        #e3b341;   /* warm highlight — hints */
+  --color-amber-dim:    #9e7b28;
+  --color-cyan:         #79c0ff;   /* links / paths */
+  --color-magenta:      #d2a8ff;   /* rare */
 
-  --color-success:      #ff8c00;   /* orange */
-  --color-danger:       #ff4444;   /* red */
-  --color-warning:      #ffb84d;
+  --color-success:      #3fb950;   /* green */
+  --color-danger:       #f85149;   /* red */
+  --color-warning:      #e3b341;
 
-  --font-sans: "JetBrains Mono", ui-monospace, "Cascadia Code", Menlo, monospace;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Menlo, monospace;
+}
+
+:root {
+  /* Accent as raw RGB so components can tint backgrounds at any alpha. */
+  --accent-rgb: 129, 140, 248;
+  --radius: 8px;
+  --radius-sm: 6px;
 }
 
 /* Base reset & background */
@@ -42,55 +50,57 @@ html, body, #root {
   margin: 0;
   background: var(--color-bg);
   color: var(--color-text);
-  font-family: var(--font-mono);
-  font-feature-settings: "calt" 1, "liga" 0;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-body {
-  /* Subtle scanline texture — very faint */
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255, 140, 0, 0.015) 0,
-      rgba(255, 140, 0, 0.015) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-  background-attachment: fixed;
+code, pre, kbd, samp, .font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "calt" 1, "liga" 0;
 }
 
-/* Override Tailwind's default rounded corners — terminal has none */
-*, *::before, *::after {
-  border-radius: 0 !important;
+/* Soft rounded corners on structural surfaces. Cards across the app are
+   plain divs/lis styled inline with the shared surface variables, so the
+   attribute selectors catch them without touching every component. */
+section, button, input, select, textarea, pre, dialog,
+.cm-editor,
+div[style*="--color-bg-card"], li[style*="--color-bg-card"],
+div[style*="--color-bg-alt"], li[style*="--color-bg-alt"],
+label[style*="--color-bg"], a[style*="--color-bg"] {
+  border-radius: var(--radius);
+}
+code { border-radius: var(--radius-sm); }
+
+/* Keyboard focus — a visible ring, IDE-style */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
-/* Hide scrollbars but keep scroll */
+/* Scrollbars — slim slate */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--color-bg); }
-::-webkit-scrollbar-thumb { background: var(--color-border-bright); }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-bright); border-radius: 8px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
 
 /* Selection */
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-bg);
+  background: rgba(var(--accent-rgb), 0.35);
+  color: var(--color-text);
 }
 
-/* Custom utilities — terminal building blocks */
+/* Custom utilities — kept for compatibility with existing components.
+   The CRT glow is retired; headings stand on weight and color alone. */
 @layer utilities {
-  .crt-glow {
-    text-shadow: 0 0 1px currentColor, 0 0 12px rgba(255, 140, 0, 0.35);
-  }
-  .crt-glow-amber {
-    text-shadow: 0 0 1px currentColor, 0 0 10px rgba(255, 184, 77, 0.3);
-  }
+  .crt-glow { text-shadow: none; }
+  .crt-glow-amber { text-shadow: none; }
   .border-bracket {
     border: 1px solid var(--color-border-bright);
   }
   .border-double-bracket {
-    border: 3px double var(--color-border-bright);
+    border: 1px solid var(--color-border-bright);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.08);
   }
 }
 
@@ -115,38 +125,35 @@ body {
 }
 
 /* ──────────────────────────────────────────────
-   Markdown lesson content — terminal-styled prose
+   Markdown lesson content — clean reading prose
    ────────────────────────────────────────────── */
-.prose-lesson { font-family: var(--font-mono); }
-.prose-lesson h1 { @apply text-2xl font-bold mt-8 mb-4; color: var(--color-accent); }
-.prose-lesson h1::before { content: "## "; color: var(--color-text-muted); }
-.prose-lesson h2 { @apply text-xl font-semibold mt-8 mb-3 pb-1; color: var(--color-accent); border-bottom: 1px solid var(--color-border-bright); }
-.prose-lesson h2::before { content: "### "; color: var(--color-text-muted); }
-.prose-lesson h3 { @apply text-lg font-semibold mt-6 mb-2; color: var(--color-amber); }
-.prose-lesson h3::before { content: "#### "; color: var(--color-text-muted); }
-.prose-lesson p  { @apply my-3 leading-7; color: var(--color-text); }
-.prose-lesson ul { @apply my-3 space-y-1; list-style: none; padding-left: 0; }
-.prose-lesson ul > li::before { content: "▸ "; color: var(--color-accent); }
+.prose-lesson { font-family: var(--font-sans); }
+.prose-lesson h1 { @apply text-2xl font-bold mt-8 mb-4 tracking-tight; color: var(--color-text); }
+.prose-lesson h2 { @apply text-xl font-semibold mt-8 mb-3 pb-1 tracking-tight; color: var(--color-text); border-bottom: 1px solid var(--color-border); }
+.prose-lesson h3 { @apply text-lg font-semibold mt-6 mb-2; color: var(--color-accent); }
+.prose-lesson p  { @apply my-3 leading-7; color: var(--color-text-dim); }
+.prose-lesson ul { @apply my-3 space-y-1; list-style: disc; padding-left: 1.4rem; }
+.prose-lesson ul > li::marker { color: var(--color-accent); }
 .prose-lesson ol { @apply my-3 space-y-1; padding-left: 1.5rem; }
-.prose-lesson li { @apply leading-7; color: var(--color-text); }
+.prose-lesson ol > li::marker { color: var(--color-text-muted); }
+.prose-lesson li { @apply leading-7; color: var(--color-text-dim); }
 .prose-lesson a  { color: var(--color-cyan); text-decoration: underline; text-underline-offset: 2px; }
-.prose-lesson strong { color: var(--color-accent); font-weight: 600; }
+.prose-lesson strong { color: var(--color-text); font-weight: 600; }
 .prose-lesson em { font-style: italic; color: var(--color-amber); }
-.prose-lesson blockquote { border-left: 2px solid var(--color-accent); padding-left: 1rem; margin: 1rem 0; color: var(--color-text-dim); }
-.prose-lesson blockquote::before { content: "│ "; color: var(--color-text-muted); }
-.prose-lesson hr { border: 0; border-top: 1px dashed var(--color-border-bright); margin: 2rem 0; }
-.prose-lesson hr::before {
-  content: "── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─ ── ─";
-  display: block;
-  color: var(--color-text-muted);
-  text-align: center;
-  letter-spacing: -2px;
+.prose-lesson blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding: 0.25rem 1rem;
+  margin: 1rem 0;
+  color: var(--color-text-dim);
+  background: rgba(var(--accent-rgb), 0.05);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
+.prose-lesson hr { border: 0; border-top: 1px solid var(--color-border); margin: 2rem 0; }
 .prose-lesson table { @apply w-full my-4 border-collapse; }
-.prose-lesson th { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--color-border-bright); color: var(--color-accent); font-weight: 600; }
-.prose-lesson td { padding: 0.5rem; border-bottom: 1px solid var(--color-border); color: var(--color-text); }
+.prose-lesson th { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--color-border-bright); color: var(--color-text); font-weight: 600; }
+.prose-lesson td { padding: 0.5rem; border-bottom: 1px solid var(--color-border); color: var(--color-text-dim); }
 .prose-lesson code {
-  padding: 0.05rem 0.35rem;
+  padding: 0.1rem 0.4rem;
   background: var(--color-bg-card);
   color: var(--color-amber);
   font-size: 0.9em;
@@ -156,29 +163,18 @@ body {
   margin: 1rem 0;
   padding: 1rem;
   overflow-x: auto;
-  background: #1a1a1a;
-  border: 1px solid var(--color-border-bright);
-  position: relative;
-}
-.prose-lesson pre::before {
-  content: "─── code ─────────────────────────────────────────";
-  display: block;
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  margin: -0.5rem -0.25rem 0.5rem;
-  letter-spacing: 0;
-  white-space: nowrap;
-  overflow: hidden;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
 }
 .prose-lesson pre code { background: transparent; color: var(--color-text); padding: 0; border: 0; }
 
 /* ──────────────────────────────────────────────
-   CodeMirror — terminal skin
+   CodeMirror — dark IDE skin
    ────────────────────────────────────────────── */
-.cm-editor { border: 1px solid var(--color-border-bright) !important; background: var(--color-bg-alt) !important; }
-.cm-editor.cm-focused { outline: 1px solid var(--color-accent) !important; }
-.cm-gutters { background: var(--color-bg) !important; border-right: 1px solid var(--color-border) !important; color: var(--color-text-muted) !important; }
+.cm-editor { border: 1px solid var(--color-border) !important; background: var(--color-bg-alt) !important; overflow: hidden; }
+.cm-editor.cm-focused { outline: none !important; border-color: var(--color-accent) !important; box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15); }
+.cm-gutters { background: var(--color-bg-alt) !important; border-right: 1px solid var(--color-border) !important; color: var(--color-text-muted) !important; }
 .cm-activeLine { background: var(--color-bg-sel) !important; }
 .cm-activeLineGutter { background: var(--color-bg-sel) !important; color: var(--color-accent) !important; }
 .cm-cursor { border-left-color: var(--color-accent) !important; border-left-width: 2px !important; }
-.cm-selectionBackground { background: rgba(255, 140, 0, 0.18) !important; }
+.cm-selectionBackground { background: rgba(var(--accent-rgb), 0.25) !important; }

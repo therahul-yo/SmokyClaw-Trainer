@@ -71,7 +71,7 @@ export function Stopwatch({ estMinutes }: Props) {
           running ? "var(--color-border-bright)" : "var(--color-border)"
         }`,
         background: running
-          ? "rgba(255, 140, 0, 0.04)"
+          ? "rgba(var(--accent-rgb), 0.04)"
           : "transparent",
       }}
     >

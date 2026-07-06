@@ -18,7 +18,7 @@ function CardLink({
 }) {
   const border =
     variant === "accent" ? "var(--color-accent)" : "var(--color-border-bright)";
-  const bg = variant === "accent" ? "rgba(255, 140, 0, 0.04)" : "var(--color-bg-alt)";
+  const bg = variant === "accent" ? "rgba(var(--accent-rgb), 0.04)" : "var(--color-bg-alt)";
   return (
     <Link
       to={to}
@@ -92,7 +92,7 @@ export function DailyTargetCard() {
       to="/plan"
       className="block px-3 py-3 font-mono transition-colors hover:brightness-110"
       style={{
-        background: "rgba(255, 140, 0, 0.04)",
+        background: "rgba(var(--accent-rgb), 0.04)",
         border: "1px solid var(--color-accent)",
       }}
     >

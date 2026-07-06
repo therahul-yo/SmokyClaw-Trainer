@@ -62,7 +62,7 @@ export function DailyChallengeCard() {
       className="block px-3 py-3 font-mono transition-colors hover:brightness-110"
       style={{
         background: completed
-          ? "rgba(255, 140, 0, 0.04)"
+          ? "rgba(var(--accent-rgb), 0.04)"
           : "var(--color-bg-alt)",
         border: `1px solid ${
           completed ? "var(--color-accent)" : "var(--color-amber)"
