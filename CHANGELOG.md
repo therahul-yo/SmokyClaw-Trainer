@@ -10,6 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - OSS scaffolding: MIT license, contributing guide, code of conduct, security
   policy, GitHub Actions CI, issue & PR templates, Dependabot, CODEOWNERS.
+- **18 new verbal MCQs** (`aptitude-verbal-pack.json`) covering the real
+  TCS NQT / Infosys verbal syllabus — reading comprehension, error spotting,
+  sentence improvement, para jumbles, idioms, one-word substitution,
+  active/passive, direct/indirect speech, tenses, prepositions, articles,
+  vocabulary-in-context, and spelling. The verbal pool (30) now satisfies
+  every mock-test blueprint (largest section needs 25).
+- Full editorials for `py-c-001..003` — hints, examples, constraints, brute
+  force, verified optimal solution, and complexity check for second-largest,
+  valid-palindrome, and count-vowels.
+- `estMinutes` on all 205 MCQs that were missing it (difficulty-based:
+  easy 1 / medium 2 / hard 3), so the planner budgets real time per item.
+  `pnpm validate` now passes with zero warnings.
 
 ### Fixed
 - Toolchain: `packageManager` now pins pnpm 10 to match `pnpm-workspace.yaml`'s
